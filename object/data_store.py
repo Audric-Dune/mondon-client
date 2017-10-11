@@ -1,9 +1,12 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from itertools import groupby
+from time import time
+
 from object.base_de_donnee import DataBase
 
-from time import time
+
 current_time = time()
 
 
@@ -17,35 +20,33 @@ class DataStore:
         new_data = DataBase.get_speeds(self.start * 1000, self.end * 1000)
         if not new_data:
             return False
-        self.data = self.clean_data_no(new_data)
+        self.data = self.clean_data_per_second(new_data)
         return True
 
-    @staticmethod
-    def clean_data_no(new_data):
-        return [(value[0] / 1000, value[1]) for value in new_data]
+    def clean_data_per_second(self, new_data):
+        clean_data = []  # Stock les valeurs nettoyées
 
-    def clean_data_second(self, new_data):
-        start = self.start * 1000
-        end = self.end * 1000
-        clean_data = []
-        while start < end:
-            start_fenetre = start
-            data_fenetre = []
-            for data in new_data:
-                ts = data[0]
-                value = data[1]
-                if start_fenetre <= ts < start_fenetre + 1000:
-                    data_fenetre.append(value)
-                else:
-                    if data_fenetre:
-                        value = sum(data_fenetre)/len(data_fenetre)
-                    else:
-                        value = -10
-                    ts = start_fenetre / 1000
-                    tuple = (ts, value)
-                    clean_data.append(tuple)
-                    break
-            start += 1000
+        # Groupe les valeurs par secondes entières
+        grouped = groupby(new_data, lambda v: int(v[0] / 1000))
+
+        # Génère un dictionnaire avec pour clé la seconde et pour valeur la liste des vitesses
+        # pour cette seconde
+        values_per_second = {}
+        for second, data_for_second in grouped:
+            values_per_second[second] = [value[1] for value in data_for_second]
+
+        # On boucle sur chaque seconde entre `start` et `end` (inclus) et calcule une vitesse pour
+        # ces secondes.
+        for i in range(int(self.start), int(self.end) + 1):  # On inclus `end`
+            # Récupère les vitesses pour la seconde `i`.
+            # Retourne un tableau vide si il n'y a pas de vitesses associées avec cette seconde
+            ts = i
+            values = values_per_second.get(ts, [])
+            # Si on a trouvé des vitesses pour cette seconde, on prend la moyenne, sinon -10
+            speed = sum(values) / len(values) if values else -10
+            # Stocke dans clean_data
+            clean_data.append((ts, speed))
+
         return clean_data
 
     def clean_data(self, new_data):
