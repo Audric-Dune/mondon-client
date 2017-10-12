@@ -3,8 +3,7 @@
 
 from itertools import groupby
 from time import time
-
-from object.base_de_donnee import DataBase
+from object.base_de_donnee import Database
 
 
 current_time = time()
@@ -17,7 +16,7 @@ class DataStore:
         self.end = end
 
     def add_data(self):
-        new_data = DataBase.get_speeds(self.start * 1000, self.end * 1000)
+        new_data = Database.get_speeds(self.start * 1000, self.end * 1000)
         if not new_data:
             return False
         self.data = self.clean_data_per_second(new_data)
