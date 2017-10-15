@@ -10,6 +10,7 @@ def timestamp_to_hour(timestamp):
     locale.setlocale(locale.LC_TIME, '')
     return datetime.fromtimestamp(timestamp).strftime('%H:%M:%S')
 
+
 def timestamp_to_hour_little(timestamp):
     locale.setlocale(locale.LC_TIME, '')
     return datetime.fromtimestamp(timestamp).strftime('%Hh%M')
