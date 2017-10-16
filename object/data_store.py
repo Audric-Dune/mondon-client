@@ -19,7 +19,8 @@ class DataStore:
         new_data = Database.get_speeds(self.start * 1000, self.end * 1000)
         if not new_data:
             return False
-        self.data = self.clean_data_no(new_data)
+        self.data = self.clean_data_per_second(new_data)
+        self.data = self.clean_data(self.data)
         return True
 
     @staticmethod
@@ -49,6 +50,28 @@ class DataStore:
             speed = sum(values) / len(values) if values else -0.001
             # Stocke dans clean_data
             clean_data.append((ts, speed))
+        return clean_data
+
+    @staticmethod
+    def clean_data(data_per_second):
+        last_time = 0
+        count_no_value = 0
+        for data in data_per_second:
+            if data[1] >= 0:
+                last_time = data[0]
+        clean_data = []
+        previous_data = -0.001
+        for data in data_per_second:
+            if data[0] > last_time:
+                break
+            else:
+                if data[1] >= 0 or count_no_value > 4:
+                    clean_data.append((data[0], data[1]))
+                    previous_data = data[1]
+                    count_no_value = 0
+                else:
+                    clean_data.append((data[0], previous_data))
+                    count_no_value += 1
         return clean_data
 
     def bisect(self, start_ts):
