@@ -54,21 +54,31 @@ class DataStore:
 
     @staticmethod
     def clean_data(data_per_second):
-        last_time = 0
-        count_no_value = 0
+        last_time = 0 # Stock la dernière valeur de vitesse
+        count_no_value = 0 # Stock le nombre de fois qu'on a remplacé une valeur
+
+        # Récupère le ts de la dernière valeur
         for data in data_per_second:
             if data[1] >= 0:
                 last_time = data[0]
-        clean_data = []
-        previous_data = -0.001
+
+        clean_data = [] # Sotck les données clean
+        previous_data = -0.001 # Stock la dernière valeur précédente de vitesse
+
+        # On analyse chaque seconde du tableau de data par seconde
         for data in data_per_second:
+            # Test d'arrêt lorsqu'on arrive à la dernière vitesse enregistrée
             if data[0] > last_time:
                 break
             else:
+                # Si on a une vitesse enregistrée on la met dans le tableau de data clean
+                # Si on a pas de donnée depuis 5sec on considère que se n'est pas juste un lag de l'automate
                 if data[1] >= 0 or count_no_value > 4:
                     clean_data.append((data[0], data[1]))
                     previous_data = data[1]
                     count_no_value = 0
+                # Si on a pas de vitesse on considère que c'est un lag de l'autmate
+                # et on remplace la valuer vide par la value précécente
                 else:
                     clean_data.append((data[0], previous_data))
                     count_no_value += 1
