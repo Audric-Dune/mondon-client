@@ -30,35 +30,27 @@ class TabArretMenu(QWidget):
         hbox = QHBoxLayout(self)
         hbox.setContentsMargins(0, 0, 0, 0)
 
-        #hbox.addStretch()
-
         vbox_matin = QVBoxLayout()
         titre = QLabel("Liste des arrêts machine (Equipe du matin)")
         titre.setAlignment(Qt.AlignCenter)
         titre.setFixedHeight(20)
         titre.setStyleSheet("QLabel {color: rgb(255, 255, 255); font-size: 16px; background-color: #2c3e50}")
-        # titre.setContentsMargins(5, 5, 5, 5)
         vbox_matin.addWidget(titre)
         tab_arret_matin = TabArret(self, moment="matin")
         vbox_matin.addWidget(tab_arret_matin)
 
         hbox.addLayout(vbox_matin)
 
-        #hbox.addStretch()
-
         vbox_soir = QVBoxLayout()
         titre = QLabel("Liste des arrêts machine (Equipe du soir)")
         titre.setAlignment(Qt.AlignCenter)
         titre.setFixedHeight(20)
         titre.setStyleSheet("QLabel {color: rgb(255, 255, 255); font-size: 16px; background-color: #2c3e50}")
-        # titre.setContentsMargins(5, 5, 5, 5)
         vbox_soir.addWidget(titre)
         tab_arret_soir = TabArret(self, moment="soir")
         vbox_soir.addWidget(tab_arret_soir)
 
         hbox.addLayout(vbox_soir)
-
-        #hbox.addStretch()
 
         self.setLayout(hbox)
 
@@ -76,5 +68,5 @@ class TabArretMenu(QWidget):
         draw_rectangle(p, 0, 0, self.width(), self.height(), color_blanc)
 
     def draw(self, p):
-        # self.draw_fond(p)
+        self.draw_fond(p)
         pass

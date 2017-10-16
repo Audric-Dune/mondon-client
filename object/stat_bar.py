@@ -109,11 +109,10 @@ class StatBar(QWidget):
         low_speeds = list(filter(speed_is_low, speeds))
 
         result = sum(speeds) / 60
-        total_time = len(speeds)
         time_at_0 = len(low_speeds)
 
         if ts_actuel < end_ts:
-            maxi = 172.5 * total_time / 6000
+            maxi = 172.5 * (ts_actuel - start_ts) / 6000
         else:
             maxi = 172.5 * (end_ts - start_ts) / 6000
         if maxi > 0:

@@ -32,9 +32,9 @@ class Window(QMainWindow):
         stat_menu.setFixedHeight(150)
         vbox.addWidget(stat_menu)
 
-        # tab_arret_menu = TabArretMenu(parent=central_widget)
-        # chart.setSizePolicy(QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding))
-        # vbox.addWidget(tab_arret_menu)
+        tab_arret_menu = TabArretMenu(parent=central_widget)
+        chart.setSizePolicy(QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding))
+        vbox.addWidget(tab_arret_menu)
 
         central_widget.setLayout(vbox)
         self.setCentralWidget(central_widget)

@@ -76,7 +76,7 @@ class ChartMenu(QWidget):
     def update_button(self):
         self.bt_jour_plus.setEnabled(self.day_ago > 0)
         self.bt_zoom_moins.setEnabled(self.zoom > 1)
-        # self.bt_zoom_plus.setEnabled(16 > self.zoom)
+        self.bt_zoom_plus.setEnabled(32 > self.zoom)
 
     def set_buttons_geometry(self):
         self.bt_jour_plus.setGeometry((self.width() - button_size + 400) / 2,
