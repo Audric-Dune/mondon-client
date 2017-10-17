@@ -139,23 +139,53 @@ class TabArret(QWidget):
 
     def update_label(self):
         index = 0
-        for i in range(14):
-            self.labels_hours[i].setText("")
-            self.labels_hours[i].setStyleSheet(
-                "QLabel {color: rgb(255, 255, 255); font-size: 14px; background-color: rgb(44, 62, 80)}")
-            self.labels_time[i].setText("")
-            self.labels_time[i].setStyleSheet(
-                "QLabel {color: rgb(255, 255, 255); font-size: 14px; background-color: rgb(44, 62, 80)}")
-        for value in self.data:
-            if value[1] > 900:
-                self.labels_time[index].setStyleSheet(
-                    "QLabel {color: rgb(230, 126, 34); font-size: 14px; background-color: rgb(44, 62, 80)}")
-            if value[1] > 1800:
-                self.labels_time[index].setStyleSheet(
-                    "QLabel {color: rgb(192, 57, 43); font-size: 14px; background-color: rgb(44, 62, 80)}")
-            self.labels_hours[index].setText(timestamp_to_hour_little(value[0]))
-            self.labels_time[index].setText(str(timedelta(seconds=round(value[1]))))
-            index += 1
+        # Boucle sur les 15 valeur possibles
+        for i in range(15):
+            # Si on a des données à afficher, on affiche l'heure et le temps
+            if i < len(self.data):
+                current_data = self.data[i]
+                hour = current_data[0]
+                temps = current_data[1]
+                # Mis à jour des textes
+                self.labels_hours[index].setText(timestamp_to_hour_little(hour))
+                self.labels_time[index].setText(str(timedelta(seconds=round(temps))))
+                # Mis à jour des couleurs
+                if temps <= 15 * 60:  # Moins de 15 minutes
+                    self.labels_time[i].setStyleSheet("""
+                        QLabel {
+                            color: rgb(255, 255, 255);
+                            font-size: 14px;
+                            background-color: rgb(44, 62, 80)
+                        }
+                    """)
+                elif temps <= 30 * 60:  # Entre 15 minutes et 30 minutes
+                    self.labels_time[i].setStyleSheet("""
+                        QLabel {
+                            color: rgb(230, 126, 34);
+                            font-size: 14px;
+                            background-color: rgb(44, 62, 80)
+                        }
+                    """)
+                else:  # Plus de 30 minutes
+                    self.labels_time[i].setStyleSheet("""
+                        QLabel {
+                            color: rgb(230, 126, 34);
+                            font-size: 14px;
+                            background-color: rgb(44, 62, 80)
+                        }
+                    """)
+            else:
+                # Reset les labels avec un string vide
+                self.labels_hours[i].setText("")
+                self.labels_time[i].setText("")
+                # Reset la couleur en blanc
+                self.labels_time[i].setStyleSheet("""
+                    QLabel {
+                        color: rgb(255, 255, 255);
+                        font-size: 14px;
+                        background-color: rgb(44, 62, 80)
+                    }
+                """)
 
     def get_setting(self, prev_live, prev_day_ago, prev_zoom):
         self.day_ago = settings_store.day_ago
