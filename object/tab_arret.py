@@ -31,7 +31,6 @@ class TabArret(QWidget):
         data_store_manager.add_listener(self.update_new_data)
 
     def create_grid(self, index):
-        print('start create_grid')
         grid = QGridLayout()
         grid.setSpacing(0)
         for line in range(5):
@@ -54,11 +53,9 @@ class TabArret(QWidget):
                 "QLabel {color: rgb(255, 255, 255); font-size: 14px; background-color: rgb(44, 62, 80)}")
             grid.addWidget(self.labels_time[index], line, 2)
             index += 1
-        print('end create_grid')
         return grid
 
     def create_grid_title(self):
-        print('start create_grid_title')
         grid = QGridLayout()
         grid.setSpacing(0)
         label_index = QLabel("Num")
@@ -79,11 +76,9 @@ class TabArret(QWidget):
         labels_time.setStyleSheet(
             "QLabel {color: rgb(255, 255, 255); font-size: 14px; background-color: rgb(44, 62, 80)}")
         grid.addWidget(labels_time, 0, 2)
-        print('end create_grid_title')
         return grid
 
     def init_widgets(self):
-        print('start init_widgets')
         hbox = QHBoxLayout()
         hbox.setContentsMargins(0, 0, 0, 0)
         hbox.addStretch()
@@ -97,10 +92,8 @@ class TabArret(QWidget):
             hbox.addLayout(vbox)
             hbox.addStretch()
         self.setLayout(hbox)
-        print('end init_widgets')
 
     def get_data(self):
-        print('start get_data')
         speeds = data_store_manager.store.data
         ts = timestamp_at_day_ago(self.day_ago)
 
@@ -143,10 +136,8 @@ class TabArret(QWidget):
             time_at_0 = end - start
             data.append((start, time_at_0))
         self.data = data
-        print('end get_data')
 
     def update_label(self):
-        print('start update_label')
         index = 0
         # Boucle sur les 15 valeur possibles
         for i in range(15):
@@ -195,36 +186,25 @@ class TabArret(QWidget):
                         background-color: rgb(44, 62, 80)
                     }
                 """)
-        print('end update_label')
 
     def get_setting(self, prev_live, prev_day_ago, prev_zoom):
-        print('start update_label')
         self.day_ago = settings_store.day_ago
         self.get_data()
         self.update_label()
         self.update()
-        print('end update_label')
 
     def update_new_data(self):
-        print('start update_new_data')
         self.get_data()
         self.update_label()
-        print('end update_new_data')
 
     def paintEvent(self, event):
-        print('start paintEvent')
         p = QPainter()
         p.begin(self)
         self.draw(p)
         p.end()
-        print('end paintEvent')
 
     def draw_fond(self, p):
-        print('start draw_fond')
         draw_rectangle(p, 0, 0, self.width(), self.height(), color_bleu_gris)
-        print('end draw_fond')
 
     def draw(self, p):
-        print('start draw_fond')
         self.draw_fond(p)
-        print('end draw_fond')
