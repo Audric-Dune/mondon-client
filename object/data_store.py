@@ -50,38 +50,28 @@ class DataStore:
             speed = sum(values) / len(values) if values else -0.001
             # Stocke dans clean_data
             clean_data.append((ts, speed))
+
         return clean_data
 
     @staticmethod
     def clean_data(data_per_second):
-        last_time = 0 # Stock la dernière valeur de vitesse
-        count_no_value = 0 # Stock le nombre de fois qu'on a remplacé une valeur
+        clean_data = []  # Stock les valeurs nettoyées
 
-        # Récupère le ts de la dernière valeur
-        for data in data_per_second:
-            if data[1] >= 0:
-                last_time = data[0]
+        # Groupe les valeurs par vitesse consécutive
+        grouped = groupby(data_per_second, lambda v: v[1])
 
-        clean_data = [] # Sotck les données clean
-        previous_data = -0.001 # Stock la dernière valeur précédente de vitesse
+        previous_speed = -0.001
+        for speed, data_for_speed in grouped:
+            # Convertit l'itérateur en liste
+            data_for_speed = list(data_for_speed)
+            # Si la vitesse est une "abscence de vitesse" et si il y en a moins de 5 consécutive,
+            # On remplace la vitesse par la vitesse précédente
+            if speed == -0.001 and len(data_for_speed) < 5:
+                data_for_speed = [(data[0], previous_speed) for data in data_for_speed]
+            # Ajoute les valeurs au tableau de données clean
+            clean_data += data_for_speed
+            previous_speed = speed
 
-        # On analyse chaque seconde du tableau de data par seconde
-        for data in data_per_second:
-            # Test d'arrêt lorsqu'on arrive à la dernière vitesse enregistrée
-            if data[0] > last_time:
-                break
-            else:
-                # Si on a une vitesse enregistrée on la met dans le tableau de data clean
-                # Si on a pas de donnée depuis 5sec on considère que se n'est pas juste un lag de l'automate
-                if data[1] >= 0 or count_no_value > 4:
-                    clean_data.append((data[0], data[1]))
-                    previous_data = data[1]
-                    count_no_value = 0
-                # Si on a pas de vitesse on considère que c'est un lag de l'autmate
-                # et on remplace la valuer vide par la value précécente
-                else:
-                    clean_data.append((data[0], previous_data))
-                    count_no_value += 1
         return clean_data
 
     def bisect(self, start_ts):
