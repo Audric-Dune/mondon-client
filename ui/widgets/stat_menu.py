@@ -2,19 +2,13 @@
 # -*- coding: utf-8 -*-
 
 # Importation des module PyQt5
-from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QHBoxLayout, QWidget, QSizePolicy, QLabel
-from PyQt5.QtWidgets import QPushButton
-from PyQt5.QtCore import Qt, QRectF, QTimer, QSize
-from PyQt5.QtGui import QBrush, QColor, QPainter, QPen, QIcon
-from param.param import *
-from datetime import datetime, timedelta
-from object.data_store_manager import *
-from object.base_de_donnee import *
-from object.stat_legend import StatLegend
-from object.stat_bar import StatBar
-from object.settings_store import *
-from fonction.gestion_timestamp import *
-from fonction.draw_fonction import draw_rectangle, draw_text, draw_rectangle_radius
+from PyQt5.QtGui import QPainter
+from PyQt5.QtWidgets import QHBoxLayout, QWidget, QSizePolicy
+from stores.data_store_manager import data_store_manager
+from ui.widgets.stat_bar import StatBar
+from ui.widgets.stat_legend import StatLegend
+
+from stores.settings_store import settings_store
 
 
 class StatMenu(QWidget):

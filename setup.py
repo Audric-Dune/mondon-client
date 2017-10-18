@@ -3,7 +3,7 @@ from cx_Freeze import setup, Executable
 
 build_exe_options = {"packages": ["os"],
                      "excludes": ["tkinter"],
-                     "include_files":["img", "object", "param", "fonction"]}
+                     "include_files": ["img", "object", "param", "fonction"]}
 
 base = None
 if sys.platform == "win32":
@@ -15,5 +15,5 @@ setup(  name = "DUNE production bobine",
         options = {"build_exe": build_exe_options},
         executables = [Executable(script="main.py",
                                   base=base,
-                                  icon="img/logo_dune_production.ico",
+                                  icon="assets/icons/logo_dune_production.ico",
                                   targetName="DUNE production bobines.exe")])

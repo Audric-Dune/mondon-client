@@ -32,4 +32,5 @@ class SettingsStore:
     def set_zoom(self, zoom):
         self.set(zoom=zoom)
 
+
 settings_store = SettingsStore()

@@ -1,9 +1,10 @@
-from PyQt5.QtCore import Qt, QRectF, QTimer
-from PyQt5.QtGui import QBrush, QColor, QPainter, QPen, QPainterPath
+from PyQt5.QtCore import Qt, QRectF
+from PyQt5.QtGui import QBrush, QColor, QPen, QPainterPath
 
 
 def draw_rectangle(p, x, y, width, height, color):
     p.fillRect(x, y, width, height, QColor(color[0], color[1], color[2]))
+
 
 def draw_rectangle_radius(p, x, y, width, height, color):
     path = QPainterPath()

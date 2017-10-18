@@ -3,7 +3,8 @@
 
 from itertools import groupby
 from time import time
-from object.base_de_donnee import Database
+
+from lib.base_de_donnee import Database
 
 
 current_time = time()

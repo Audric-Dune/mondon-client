@@ -1,32 +1,22 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from object.logger import logger
+from lib.logger import logger
 logger.log_app_start()
 
 import sys
-import sqlite3
-import _thread
-import locale
-import time
-
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication
 
-from object.base_de_donnee import *
-from object.window import *
-from object.chart import *
-from object.chart_menu import *
+from param import window_height, window_width
+from ui.window import Window
 
-from fonction.gestion_timestamp import *
-
-from param.param import *
 
 logger.log("INITIALISATION", "Création de la QApplication avec les paramètres: {}".format(sys.argv))
 app = QApplication(sys.argv)
 
 logger.log("INITIALISATION", "Définition de l'icone de l'application")
-app.setWindowIcon(QIcon("img/logo_dune_production.ico"))
+app.setWindowIcon(QIcon("assets/icons/logo_dune_production.ico"))
 
 logger.log("INITIALISATION", "Création de la Window")
 window = Window()

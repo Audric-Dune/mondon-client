@@ -1,16 +1,20 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Importation des module PyQt5
-from PyQt5.QtWidgets import QWidget
+from PyQt5.QtCore import QSize
+from PyQt5.QtGui import QPainter, QIcon
 from PyQt5.QtWidgets import QPushButton
-from PyQt5.QtCore import Qt, QRectF, QTimer, QSize
-from PyQt5.QtGui import QBrush, QColor, QPainter, QPen, QIcon
-from param.param import *
-from object.data_store_manager import *
-from object.settings_store import *
-from fonction.gestion_timestamp import *
-from fonction.draw_fonction import draw_rectangle, draw_text
+from PyQt5.QtWidgets import QWidget
+from ui.utils.drawing import draw_rectangle, draw_text
+from ui.utils.timestamp import timestamp_at_day_ago, timestamp_to_date
+from param import (
+    button_size,
+    color_blanc,
+    color_bleu_gris,
+    padding_button,
+    style_button,
+)
+from stores.settings_store import settings_store
 
 
 class ChartMenu(QWidget):
@@ -106,7 +110,7 @@ class ChartMenu(QWidget):
         self.bt_jour_plus = QPushButton("", self)
         self.bt_jour_plus.clicked.connect(self.jour_plus)
         self.bt_jour_plus.setStyleSheet(style_button)
-        img = QIcon("img/fleche_suivant.png")
+        img = QIcon("assets/images/fleche_suivant.png")
         self.bt_jour_plus.setIconSize(size)
         self.bt_jour_plus.setIcon(img)
 
@@ -114,7 +118,7 @@ class ChartMenu(QWidget):
         self.bt_jour_moins = QPushButton("", self)
         self.bt_jour_moins.clicked.connect(self.jour_moins)
         self.bt_jour_moins.setStyleSheet(style_button)
-        img = QIcon("img/fleche_precedent.png")
+        img = QIcon("assets/images/fleche_precedent.png")
         self.bt_jour_moins.setIcon(img)
         self.bt_jour_moins.setIconSize(size)
 
@@ -122,7 +126,7 @@ class ChartMenu(QWidget):
         self.bt_zoom_plus = QPushButton("", self)
         self.bt_zoom_plus.clicked.connect(self.zoom_plus)
         self.bt_zoom_plus.setStyleSheet(style_button)
-        img = QIcon("img/zoom_plus.png")
+        img = QIcon("assets/images/zoom_plus.png")
         self.bt_zoom_plus.setIcon(img)
         self.bt_zoom_plus.setIconSize(size)
 
@@ -130,7 +134,7 @@ class ChartMenu(QWidget):
         self.bt_zoom_moins = QPushButton("", self)
         self.bt_zoom_moins.clicked.connect(self.zoom_moins)
         self.bt_zoom_moins.setStyleSheet(style_button)
-        img = QIcon("img/zoom_moins.png")
+        img = QIcon("assets/images/zoom_moins.png")
         self.bt_zoom_moins.setIcon(img)
         self.bt_zoom_moins.setIconSize(size)
 

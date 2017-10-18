@@ -1,12 +1,11 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from object.base_de_donnee import *
-from fonction.gestion_timestamp import *
-from PyQt5.QtCore import QTimer
-from object.settings_store import *
-from object.data_store import *
 import threading
+
+from ui.utils.timestamp import timestamp_at_day_ago, timestamp_at_time
+from stores.data_store import DataStore
+from stores.settings_store import settings_store
 
 
 class DataStoreManager:
