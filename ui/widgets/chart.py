@@ -11,6 +11,7 @@ from ui.utils.timestamp import (
     timestamp_at_time,
     timestamp_au_debut_de_hour,
 )
+from ui.widgets.mondon_widget import MondonWidget
 from param import (
     chart_margin_bottom,
     chart_margin_left,
@@ -32,19 +33,14 @@ from stores.data_store_manager import data_store_manager
 from stores.settings_store import settings_store
 
 
-class Chart(QWidget):
+class Chart(MondonWidget):
     def __init__(self, parent):
         super(Chart, self).__init__(parent=parent)
-        settings_store.add_listener(self.on_settings_changed)
-        data_store_manager.add_listener(self.update)
         self.drag_offset = 0
         self.mouse_move_pos = None
 
-    def get_chart_width(self):
-        return self.width() - chart_margin_left - chart_margin_right
-
-    def get_chart_height(self):
-        return self.height() - chart_margin_top - chart_margin_bottom
+    def on_data_changed(self):
+        self.update()
 
     def on_settings_changed(self, prev_live, prev_day_ago, prev_zoom):
         if prev_zoom != settings_store.zoom:
@@ -52,6 +48,12 @@ class Chart(QWidget):
             self.drag_offset = ratio * self.drag_offset + ratio * self.get_chart_width() / 2 - self.get_chart_width() / 2
             self.adjust_drag_offset()
             self.update()
+
+    def get_chart_width(self):
+        return self.width() - chart_margin_left - chart_margin_right
+
+    def get_chart_height(self):
+        return self.height() - chart_margin_top - chart_margin_bottom
 
     def mousePressEvent(self, event):
         self.mouse_move_pos = None

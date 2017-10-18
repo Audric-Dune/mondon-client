@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5.QtGui import QPainter
-from PyQt5.QtWidgets import QWidget
 
 from ui.utils.drawing import draw_rectangle, draw_text
+from ui.widgets.mondon_widget import MondonWidget
 from param import (
     color_blanc,
     color_rouge,
@@ -15,7 +15,7 @@ from param import (
 )
 
 
-class Bar(QWidget):
+class Bar(MondonWidget):
     def __init__(self, parent, percent):
         super(Bar, self).__init__(parent=parent)
         self.percent = percent

@@ -2,27 +2,23 @@
 # -*- coding: utf-8 -*-
 
 import threading
+from PyQt5.QtCore import pyqtSignal, QObject
 
 from ui.utils.timestamp import timestamp_at_day_ago, timestamp_at_time
 from stores.data_store import DataStore
 from stores.settings_store import settings_store
 
 
-class DataStoreManager:
+class DataStoreManager(QObject):
+    DATA_CHANGED_SIGNAL = pyqtSignal()
+
     def __init__(self):
-        self.listeners = []
+        super(DataStoreManager, self).__init__()
         self.dic_data_store = {}
         self.store = None
         self.refresh_timer = None
-        settings_store.add_listener(self.get_store)
+        settings_store.SETTINGS_CHANGED_SIGNAL.connect(self.get_store)
         self.get_store()
-
-    def add_listener(self, fonction):
-        self.listeners.append(fonction)
-
-    def call_listener(self):
-        for fonction in self.listeners:
-            fonction()
 
     def get_store(self, *args):
         jour = timestamp_at_day_ago(settings_store.day_ago)
@@ -55,7 +51,7 @@ class DataStoreManager:
             self.refresh_timer.cancel()
         # self.get_most_recent_store().add_data()
         if self.store.add_data() or force_refresh:
-            self.call_listener()
+            self.DATA_CHANGED_SIGNAL.emit()
         self.refresh_timer = threading.Timer(1, self.refresh_data)
         self.refresh_timer.start()
 

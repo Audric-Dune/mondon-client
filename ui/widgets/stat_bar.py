@@ -16,9 +16,10 @@ from ui.utils.timestamp import (
     timestamp_to_day,
 )
 from ui.widgets.bar import Bar
+from ui.widgets.mondon_widget import MondonWidget
 
 
-class StatBar(QWidget):
+class StatBar(MondonWidget):
     def __init__(self, parent, titre, moment):
         super(StatBar, self).__init__(parent=parent)
         self.moment = moment
@@ -51,9 +52,13 @@ class StatBar(QWidget):
         self.vbox.addWidget(self.arret)
 
         self.setLayout(self.vbox)
+        self.update_widgets()
 
-        data_store_manager.add_listener(self.update_bar)
-        settings_store.add_listener(self.get_setting)
+    def on_settings_changed(self, prev_live, prev_day_ago, prev_zoom):
+        self.day_ago = settings_store.day_ago
+        self.update_widgets()
+
+    def on_data_changed(self):
         self.update_widgets()
 
     def paintEvent(self, event):
@@ -61,13 +66,6 @@ class StatBar(QWidget):
         p.begin(self)
         self.draw(p)
         p.end()
-
-    def get_setting(self, prev_live, prev_day_ago, prev_zoom):
-        self.day_ago = settings_store.day_ago
-        self.update_widgets()
-
-    def update_bar(self):
-        self.update_widgets()
 
     def update_widgets(self):
         self.get_stat()

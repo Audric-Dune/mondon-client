@@ -15,9 +15,10 @@ from ui.utils.timestamp import (
     timestamp_to_day,
     timestamp_to_hour_little,
 )
+from ui.widgets.mondon_widget import MondonWidget
 
 
-class TabArret(QWidget):
+class TabArret(MondonWidget):
     def __init__(self, parent, moment):
         super(TabArret, self).__init__(parent=parent)
         self.moment = moment
@@ -27,8 +28,16 @@ class TabArret(QWidget):
         self.labels_time = []
         self.init_widgets()
         self.get_data()
-        settings_store.add_listener(self.get_setting)
-        data_store_manager.add_listener(self.update_new_data)
+
+    def on_settings_changed(self, prev_live, prev_day_ago, prev_zoom):
+        self.day_ago = settings_store.day_ago
+        self.get_data()
+        self.update_label()
+        self.update()
+
+    def on_data_changed(self):
+        self.get_data()
+        self.update_label()
 
     def create_grid(self, index):
         grid = QGridLayout()
@@ -186,16 +195,6 @@ class TabArret(QWidget):
                         background-color: rgb(44, 62, 80)
                     }
                 """)
-
-    def get_setting(self, prev_live, prev_day_ago, prev_zoom):
-        self.day_ago = settings_store.day_ago
-        self.get_data()
-        self.update_label()
-        self.update()
-
-    def update_new_data(self):
-        self.get_data()
-        self.update_label()
 
     def paintEvent(self, event):
         p = QPainter()

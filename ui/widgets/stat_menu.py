@@ -5,19 +5,17 @@
 from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import QHBoxLayout, QWidget, QSizePolicy
 from stores.data_store_manager import data_store_manager
+from stores.settings_store import settings_store
+from ui.widgets.mondon_widget import MondonWidget
 from ui.widgets.stat_bar import StatBar
 from ui.widgets.stat_legend import StatLegend
 
-from stores.settings_store import settings_store
 
-
-class StatMenu(QWidget):
+class StatMenu(MondonWidget):
     def __init__(self, parent):
         super(StatMenu, self).__init__(parent=parent)
         self.day_ago = 0
         self.init_widgets()
-        settings_store.add_listener(self.get_setting)
-        data_store_manager.add_listener(self.update)
 
     def init_widgets(self):
         hbox = QHBoxLayout(self)
@@ -41,8 +39,11 @@ class StatMenu(QWidget):
 
         self.setLayout(hbox)
 
-    def get_setting(self, prev_live, prev_day_ago, prev_zoom):
+    def on_settings_changed(self, prev_live, prev_day_ago, prev_zoom):
         self.day_ago = settings_store.day_ago
+        self.update()
+
+    def on_data_changed(self):
         self.update()
 
     def paintEvent(self, event):

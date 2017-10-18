@@ -7,9 +7,10 @@ from PyQt5.QtWidgets import QTextEdit, QVBoxLayout, QWidget
 
 from param import color_bleu_gris
 from ui.utils.drawing import draw_rectangle
+from ui.widgets.mondon_widget import MondonWidget
 
 
-class StatLegend(QWidget):
+class StatLegend(MondonWidget):
     def __init__(self, parent):
         super(StatLegend, self).__init__(parent=parent)
         self.init_widgets()

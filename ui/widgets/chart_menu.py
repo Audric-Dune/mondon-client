@@ -7,6 +7,7 @@ from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtWidgets import QWidget
 from ui.utils.drawing import draw_rectangle, draw_text
 from ui.utils.timestamp import timestamp_at_day_ago, timestamp_to_date
+from ui.widgets.mondon_widget import MondonWidget
 from param import (
     button_size,
     color_blanc,
@@ -17,16 +18,15 @@ from param import (
 from stores.settings_store import settings_store
 
 
-class ChartMenu(QWidget):
+class ChartMenu(MondonWidget):
     def __init__(self, parent):
         super(ChartMenu, self).__init__(parent=parent)
-        settings_store.add_listener(self.get_setting)
         self.day_ago = 0
         self.zoom = 0
         self.draw_button()
         self.update_button()
 
-    def get_setting(self, prev_live, prev_day_ago, prev_zoom):
+    def on_settings_changed(self, prev_live, prev_day_ago, prev_zoom):
         self.day_ago = settings_store.day_ago
         self.zoom = settings_store.zoom
         self.update_button()
