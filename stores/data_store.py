@@ -17,12 +17,15 @@ class DataStore:
         self.end = end
 
     def add_data(self):
-        new_data = Database.get_speeds(self.start * 1000, self.end * 1000)
-        if not new_data:
+        try:
+            new_data = Database.get_speeds(self.start * 1000, self.end * 1000)
+            if not new_data:
+                return False
+            self.data = self.clean_data_per_second(new_data)
+            self.data = self.clean_data(self.data)
+            return True
+        except:
             return False
-        self.data = self.clean_data_per_second(new_data)
-        self.data = self.clean_data(self.data)
-        return True
 
     @staticmethod
     def clean_data_no(new_data):
@@ -97,3 +100,11 @@ class DataStore:
             elif data[0] >= end:
                 break
         return sum(result) / len(result) if result else -1
+
+    def get_last_speed(self):
+        if self.data:
+            for data in self.data:
+                if data[1] > 0:
+                    last_data = data
+            return last_data
+        return None

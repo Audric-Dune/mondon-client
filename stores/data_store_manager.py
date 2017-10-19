@@ -53,14 +53,14 @@ class DataStoreManager(QObject):
         if self.refresh_timer:
             self.refresh_timer.cancel()
 
-        # Récupération du DataStore le plus récent (celui d'aujourd'hui)
-        current_store = self.get_current_store()
         # Récupération du DataStore du jour qui est actuellement affiché
+        current_store = self.get_current_store()
+        # Récupération du DataStore le plus récent (celui d'aujourd'hui)
         most_recent_store = self.get_most_recent_store()
 
         # Création d'un "set" des DataStore à mettre à jour.
         # Le set s'occupe automatiquement d'enlevé les valeurs dupliquées, donc
-        # on n'essayera pa de mettre à jour le même DataStore deux fois si le
+        # on n'essayera pas de mettre à jour le même DataStore deux fois si le
         # DataStore actuellement affiché est aussi le plus récent
         stores_to_update = set([current_store, most_recent_store])
 
@@ -75,7 +75,7 @@ class DataStoreManager(QObject):
             self.DATA_CHANGED_SIGNAL.emit()
 
         # Ré-exécute la fonction dans 1 seconde
-        self.refresh_timer = threading.Timer(1, self.refresh_data)
+        self.refresh_timer = threading.Timer(0.5, self.refresh_data)
         self.refresh_timer.start()
 
 data_store_manager = DataStoreManager()

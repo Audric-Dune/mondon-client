@@ -14,24 +14,30 @@ from constants.dimensions import (
     padding_button,
 )
 from constants.stylesheets import button_stylesheet
+from stores.data_store_manager import data_store_manager
 from stores.settings_store import settings_store
 from ui.utils.drawing import draw_rectangle, draw_text
-from ui.utils.timestamp import timestamp_at_day_ago, timestamp_to_date
+from ui.utils.timestamp import timestamp_at_day_ago, timestamp_to_date, timestamp_to_hour, timestamp_now
 from ui.widgets.mondon_widget import MondonWidget
 
 
 class ChartMenu(MondonWidget):
     def __init__(self, parent):
         super(ChartMenu, self).__init__(parent=parent)
+        self.last_speed = None
         self.day_ago = 0
         self.zoom = 0
-        self.draw_button()
+        self.init_button()
         self.update_button()
 
     def on_settings_changed(self, prev_live, prev_day_ago, prev_zoom):
         self.day_ago = settings_store.day_ago
         self.zoom = settings_store.zoom
         self.update_button()
+        self.update()
+
+    def on_data_changed(self):
+        self.last_speed = data_store_manager.get_most_recent_store().get_last_speed()
         self.update()
 
     def paintEvent(self, event):
@@ -57,6 +63,26 @@ class ChartMenu(MondonWidget):
                   align="C",
                   font_size=22,
                   text=date)
+
+    def draw_speed_actuelle(self, p):
+        text = "0"
+        if self.last_speed:
+            speed = self.last_speed[1]
+            if timestamp_now() > self.last_speed[0]:
+                speed = "0"
+            time = timestamp_to_hour(self.last_speed[0])
+            text = "{speed} m/min".format(speed=speed)
+        text_width = 400
+        text_height = 50
+        draw_text(p,
+                  x=150,
+                  y=(self.height() - text_height) / 2,
+                  width=text_width,
+                  height=text_height,
+                  color=color_blanc,
+                  align="G",
+                  font_size=22,
+                  text=text)
 
     @staticmethod
     def zoom_moins():
@@ -106,7 +132,7 @@ class ChartMenu(MondonWidget):
                                  100,
                                  button_size)
 
-    def draw_button(self):
+    def init_button(self):
         size = QSize(button_size - padding_button, button_size - padding_button)
         # Bouton jour plus
         self.bt_jour_plus = QPushButton("", self)
@@ -148,4 +174,5 @@ class ChartMenu(MondonWidget):
     def draw(self, p):
         self.draw_fond(p)
         self.draw_date(p)
+        self.draw_speed_actuelle(p)
         self.set_buttons_geometry()
