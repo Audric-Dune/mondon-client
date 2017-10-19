@@ -65,7 +65,7 @@ class ChartMenu(MondonWidget):
                   text=date)
 
     def draw_speed_actuelle(self, p):
-        text = "0"
+        text = "0 m/min"
         if self.last_speed:
             speed = self.last_speed[1]
             if timestamp_now() > self.last_speed[0]:
