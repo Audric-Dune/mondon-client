@@ -104,7 +104,7 @@ class TabArret(MondonWidget):
         self.setLayout(hbox)
 
     def get_data(self):
-        speeds = data_store_manager.store.data
+        speeds = data_store_manager.get_current_store().data
         ts = timestamp_at_day_ago(self.day_ago)
 
         vendredi = timestamp_to_day(ts) == "Vendredi"

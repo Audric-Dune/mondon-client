@@ -86,7 +86,7 @@ class StatBar(MondonWidget):
 
     def get_stat(self):
         ts_actuel = timestamp_now()
-        speeds = data_store_manager.store.data
+        speeds = data_store_manager.get_current_store().data
         ts = timestamp_at_day_ago(self.day_ago)
 
         vendredi = timestamp_to_day(ts) == "Vendredi"

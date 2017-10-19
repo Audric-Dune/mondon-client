@@ -220,7 +220,7 @@ class Chart(MondonWidget):
                     diff = current_diff
             if -ech / 2 <= diff < ech / 2:
                 self.draw_secondaire_x_axis(p, i)
-            speed = data_store_manager.store.get_speed(t, t + ech)
+            speed = data_store_manager.get_current_store().get_speed(t, t + ech)
             self.draw_speed(p, i, speed)
             t += ech
             i += 1
