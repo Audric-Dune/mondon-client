@@ -3,9 +3,10 @@
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPainter
-from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QWidget, QLabel
-from param import color_blanc
-from stores.data_store_manager import data_store_manager
+from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel
+
+from constants.colors import color_blanc
+from constants.stylesheets import white_title_label_stylesheet
 from stores.settings_store import settings_store
 from ui.utils.drawing import draw_rectangle
 from ui.widgets.mondon_widget import MondonWidget
@@ -33,7 +34,7 @@ class TabArretMenu(MondonWidget):
         titre = QLabel("Liste des arrêts machine (Equipe du matin)")
         titre.setAlignment(Qt.AlignCenter)
         titre.setFixedHeight(20)
-        titre.setStyleSheet("QLabel {color: rgb(255, 255, 255); font-size: 16px; background-color: #2c3e50}")
+        titre.setStyleSheet(white_title_label_stylesheet)
         vbox_matin.addWidget(titre)
         tab_arret_matin = TabArret(self, moment="matin")
         vbox_matin.addWidget(tab_arret_matin)
@@ -44,7 +45,7 @@ class TabArretMenu(MondonWidget):
         titre = QLabel("Liste des arrêts machine (Equipe du soir)")
         titre.setAlignment(Qt.AlignCenter)
         titre.setFixedHeight(20)
-        titre.setStyleSheet("QLabel {color: rgb(255, 255, 255); font-size: 16px; background-color: #2c3e50}")
+        titre.setStyleSheet(white_title_label_stylesheet)
         vbox_soir.addWidget(titre)
         tab_arret_soir = TabArret(self, moment="soir")
         vbox_soir.addWidget(tab_arret_soir)

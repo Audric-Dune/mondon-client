@@ -3,22 +3,8 @@
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPainter
-from PyQt5.QtWidgets import QWidget
-from ui.utils.drawing import draw_rectangle, draw_text
-from ui.utils.timestamp import (
-    hour_in_timestamp,
-    timestamp_at_day_ago,
-    timestamp_at_time,
-    timestamp_au_debut_de_hour,
-)
-from ui.widgets.mondon_widget import MondonWidget
-from param import (
-    chart_margin_bottom,
-    chart_margin_left,
-    chart_margin_right,
-    chart_margin_top,
-    chart_min_hour,
-    chart_max_hour,
+
+from constants.colors import (
     color_blanc,
     color_bleu_gris,
     color_gris_clair,
@@ -27,10 +13,26 @@ from param import (
     color_noir,
     color_rouge,
     color_vert,
+)
+from constants.dimensions import (
+    chart_margin_bottom,
+    chart_margin_left,
+    chart_margin_right,
+    chart_margin_top,
+    chart_min_hour,
+    chart_max_hour,
     width_grille,
 )
 from stores.data_store_manager import data_store_manager
 from stores.settings_store import settings_store
+from ui.utils.drawing import draw_rectangle, draw_text
+from ui.utils.timestamp import (
+    hour_in_timestamp,
+    timestamp_at_day_ago,
+    timestamp_at_time,
+    timestamp_au_debut_de_hour,
+)
+from ui.widgets.mondon_widget import MondonWidget
 
 
 class Chart(MondonWidget):

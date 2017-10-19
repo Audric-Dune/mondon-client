@@ -2,10 +2,17 @@
 # -*- coding: utf-8 -*-
 
 from datetime import timedelta
+
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPainter
-from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QWidget, QLabel, QGridLayout
-from param import color_bleu_gris
+from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel, QGridLayout
+
+from constants.colors import color_bleu_gris
+from constants.stylesheets import (
+    orange_label_stylesheet,
+    red_label_stylesheet,
+    white_label_stylesheet,
+)
 from stores.data_store_manager import data_store_manager
 from stores.settings_store import settings_store
 from ui.utils.drawing import draw_rectangle
@@ -46,20 +53,17 @@ class TabArret(MondonWidget):
             label_index = QLabel(str(index + 1))
             label_index.setFixedWidth(40)
             label_index.setAlignment(Qt.AlignCenter)
-            label_index.setStyleSheet(
-                "QLabel {color: rgb(255, 255, 255); font-size: 14px; background-color: rgb(44, 62, 80)}")
+            label_index.setStyleSheet(white_label_stylesheet)
             grid.addWidget(label_index, line, 0)
             self.labels_hours.append(QLabel())
             self.labels_hours[index].setAlignment(Qt.AlignCenter)
             self.labels_hours[index].setFixedWidth(80)
-            self.labels_hours[index].setStyleSheet(
-                "QLabel {color: rgb(255, 255, 255); font-size: 14px; background-color: rgb(44, 62, 80)}")
+            self.labels_hours[index].setStyleSheet(white_label_stylesheet)
             grid.addWidget(self.labels_hours[index], line, 1)
             self.labels_time.append(QLabel())
             self.labels_time[index].setAlignment(Qt.AlignCenter)
             self.labels_time[index].setFixedWidth(80)
-            self.labels_time[index].setStyleSheet(
-                "QLabel {color: rgb(255, 255, 255); font-size: 14px; background-color: rgb(44, 62, 80)}")
+            self.labels_time[index].setStyleSheet(white_label_stylesheet)
             grid.addWidget(self.labels_time[index], line, 2)
             index += 1
         return grid
@@ -70,20 +74,17 @@ class TabArret(MondonWidget):
         label_index = QLabel("Num")
         label_index.setFixedWidth(40)
         label_index.setAlignment(Qt.AlignCenter)
-        label_index.setStyleSheet(
-            "QLabel {color: rgb(255, 255, 255); font-size: 14px; background-color: rgb(44, 62, 80)}")
+        label_index.setStyleSheet(white_label_stylesheet)
         grid.addWidget(label_index, 0, 0)
         labels_hours = QLabel("Heure")
         labels_hours.setAlignment(Qt.AlignCenter)
         labels_hours.setFixedWidth(80)
-        labels_hours.setStyleSheet(
-            "QLabel {color: rgb(255, 255, 255); font-size: 14px; background-color: rgb(44, 62, 80)}")
+        labels_hours.setStyleSheet(white_label_stylesheet)
         grid.addWidget(labels_hours, 0, 1)
         labels_time = QLabel("Temps")
         labels_time.setAlignment(Qt.AlignCenter)
         labels_time.setFixedWidth(80)
-        labels_time.setStyleSheet(
-            "QLabel {color: rgb(255, 255, 255); font-size: 14px; background-color: rgb(44, 62, 80)}")
+        labels_time.setStyleSheet(white_label_stylesheet)
         grid.addWidget(labels_time, 0, 2)
         return grid
 
@@ -160,41 +161,17 @@ class TabArret(MondonWidget):
                 self.labels_time[i].setText(str(timedelta(seconds=round(temps))))
                 # Mis à jour des couleurs
                 if temps <= 15 * 60:  # Moins de 15 minutes
-                    self.labels_time[i].setStyleSheet("""
-                        QLabel {
-                            color: rgb(255, 255, 255);
-                            font-size: 14px;
-                            background-color: rgb(44, 62, 80)
-                        }
-                    """)
+                    self.labels_time[i].setStyleSheet(white_label_stylesheet)
                 elif temps <= 30 * 60:  # Entre 15 minutes et 30 minutes
-                    self.labels_time[i].setStyleSheet("""
-                        QLabel {
-                            color: rgb(230, 126, 34);
-                            font-size: 14px;
-                            background-color: rgb(44, 62, 80)
-                        }
-                    """)
+                    self.labels_time[i].setStyleSheet(orange_label_stylesheet)
                 else:  # Plus de 30 minutes
-                    self.labels_time[i].setStyleSheet("""
-                        QLabel {
-                            color: rgb(230, 126, 34);
-                            font-size: 14px;
-                            background-color: rgb(44, 62, 80)
-                        }
-                    """)
+                    self.labels_time[i].setStyleSheet(red_label_stylesheet)
             else:
                 # Reset les labels avec un string vide
                 self.labels_hours[i].setText("")
                 self.labels_time[i].setText("")
                 # Reset la couleur en blanc
-                self.labels_time[i].setStyleSheet("""
-                    QLabel {
-                        color: rgb(255, 255, 255);
-                        font-size: 14px;
-                        background-color: rgb(44, 62, 80)
-                    }
-                """)
+                self.labels_time[i].setStyleSheet(white_label_stylesheet)
 
     def paintEvent(self, event):
         p = QPainter()

@@ -2,10 +2,13 @@
 # -*- coding: utf-8 -*-
 
 from datetime import timedelta
+
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPainter
-from PyQt5.QtWidgets import QLabel, QSizePolicy, QVBoxLayout, QWidget
-from param import color_bleu_gris
+from PyQt5.QtWidgets import QLabel, QSizePolicy, QVBoxLayout
+
+from constants.colors import color_bleu_gris
+from constants.stylesheets import white_title_label_stylesheet
 from stores.data_store_manager import data_store_manager
 from stores.settings_store import settings_store
 from ui.utils.drawing import draw_rectangle
@@ -33,18 +36,18 @@ class StatBar(MondonWidget):
 
         self.title = QLabel(titre, self)
         self.title.setAlignment(Qt.AlignLeft)
-        self.title.setStyleSheet("QLabel {color: rgb(255, 255, 255); font-size: 16px;}")
+        self.title.setStyleSheet(white_title_label_stylesheet)
 
         self.bar = Bar(parent=self, percent=round(self.percent, 1))
         self.bar.setSizePolicy(QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding))
 
         self.metre = QLabel(self)
         self.metre.setAlignment(Qt.AlignLeft)
-        self.metre.setStyleSheet("QLabel {color: rgb(255, 255, 255); font-size: 16px;}")
+        self.metre.setStyleSheet(white_title_label_stylesheet)
 
         self.arret = QLabel(self)
         self.arret.setAlignment(Qt.AlignLeft)
-        self.arret.setStyleSheet("QLabel {color: rgb(255, 255, 255); font-size: 16px;}")
+        self.arret.setStyleSheet(white_title_label_stylesheet)
 
         self.vbox.addWidget(self.title)
         self.vbox.addWidget(self.bar)

@@ -3,9 +3,7 @@
 
 from PyQt5.QtGui import QPainter
 
-from ui.utils.drawing import draw_rectangle, draw_text
-from ui.widgets.mondon_widget import MondonWidget
-from param import (
+from constants.colors import (
     color_blanc,
     color_rouge,
     color_orange,
@@ -13,6 +11,8 @@ from param import (
     color_bleu,
     color_bleu_gris,
 )
+from ui.utils.drawing import draw_rectangle, draw_text
+from ui.widgets.mondon_widget import MondonWidget
 
 
 class Bar(MondonWidget):

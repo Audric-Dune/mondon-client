@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QSizePolicy
-from param import chart_menu_height
+
+from constants.dimensions import chart_menu_height
 from stores.data_store_manager import data_store_manager
 from ui.widgets.chart import Chart
 from ui.widgets.chart_menu import ChartMenu

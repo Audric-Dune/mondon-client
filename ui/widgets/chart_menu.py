@@ -4,18 +4,20 @@
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QPainter, QIcon
 from PyQt5.QtWidgets import QPushButton
-from PyQt5.QtWidgets import QWidget
+
+from constants.colors import (
+    color_blanc,
+    color_bleu_gris,
+)
+from constants.dimensions import (
+    button_size,
+    padding_button,
+)
+from constants.stylesheets import button_stylesheet
+from stores.settings_store import settings_store
 from ui.utils.drawing import draw_rectangle, draw_text
 from ui.utils.timestamp import timestamp_at_day_ago, timestamp_to_date
 from ui.widgets.mondon_widget import MondonWidget
-from param import (
-    button_size,
-    color_blanc,
-    color_bleu_gris,
-    padding_button,
-    style_button,
-)
-from stores.settings_store import settings_store
 
 
 class ChartMenu(MondonWidget):
@@ -100,16 +102,16 @@ class ChartMenu(MondonWidget):
                                        button_size,
                                        button_size)
         self.bt_live.setGeometry(10,
-                                (self.height() - button_size) / 2,
-                                100,
-                                button_size)
+                                 (self.height() - button_size) / 2,
+                                 100,
+                                 button_size)
 
     def draw_button(self):
         size = QSize(button_size - padding_button, button_size - padding_button)
         # Bouton jour plus
         self.bt_jour_plus = QPushButton("", self)
         self.bt_jour_plus.clicked.connect(self.jour_plus)
-        self.bt_jour_plus.setStyleSheet(style_button)
+        self.bt_jour_plus.setStyleSheet(button_stylesheet)
         img = QIcon("assets/images/fleche_suivant.png")
         self.bt_jour_plus.setIconSize(size)
         self.bt_jour_plus.setIcon(img)
@@ -117,7 +119,7 @@ class ChartMenu(MondonWidget):
         # Bouton jour moins
         self.bt_jour_moins = QPushButton("", self)
         self.bt_jour_moins.clicked.connect(self.jour_moins)
-        self.bt_jour_moins.setStyleSheet(style_button)
+        self.bt_jour_moins.setStyleSheet(button_stylesheet)
         img = QIcon("assets/images/fleche_precedent.png")
         self.bt_jour_moins.setIcon(img)
         self.bt_jour_moins.setIconSize(size)
@@ -125,7 +127,7 @@ class ChartMenu(MondonWidget):
         # Bouton zoom plus
         self.bt_zoom_plus = QPushButton("", self)
         self.bt_zoom_plus.clicked.connect(self.zoom_plus)
-        self.bt_zoom_plus.setStyleSheet(style_button)
+        self.bt_zoom_plus.setStyleSheet(button_stylesheet)
         img = QIcon("assets/images/zoom_plus.png")
         self.bt_zoom_plus.setIcon(img)
         self.bt_zoom_plus.setIconSize(size)
@@ -133,7 +135,7 @@ class ChartMenu(MondonWidget):
         # Bouton zoom moins
         self.bt_zoom_moins = QPushButton("", self)
         self.bt_zoom_moins.clicked.connect(self.zoom_moins)
-        self.bt_zoom_moins.setStyleSheet(style_button)
+        self.bt_zoom_moins.setStyleSheet(button_stylesheet)
         img = QIcon("assets/images/zoom_moins.png")
         self.bt_zoom_moins.setIcon(img)
         self.bt_zoom_moins.setIconSize(size)
@@ -141,7 +143,7 @@ class ChartMenu(MondonWidget):
         # Bouton live
         self.bt_live = QPushButton("En direct", self)
         self.bt_live.clicked.connect(self.live)
-        self.bt_live.setStyleSheet(style_button)
+        self.bt_live.setStyleSheet(button_stylesheet)
 
     def draw(self, p):
         self.draw_fond(p)

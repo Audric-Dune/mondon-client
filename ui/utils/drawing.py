@@ -3,10 +3,12 @@ from PyQt5.QtGui import QBrush, QColor, QPen, QPainterPath
 
 
 def draw_rectangle(p, x, y, width, height, color):
+    color = color.rgb_components
     p.fillRect(x, y, width, height, QColor(color[0], color[1], color[2]))
 
 
 def draw_rectangle_radius(p, x, y, width, height, color):
+    color = color.rgb_components
     path = QPainterPath()
     path.addRoundedRect(QRectF(x, y, width, height), height/2, height/2)
     p.fillPath(path, QColor(color[0], color[1], color[2]))
@@ -20,6 +22,7 @@ def draw_text(p, x, y, width, height, color, align, font_size, text):
         Qt.SquareCap,
         Qt.BevelJoin,
     )
+    color = color.rgb_components
     pen.setColor(QColor(color[0], color[1], color[2]))
     p.setPen(pen)
     font = p.font()

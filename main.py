@@ -8,9 +8,8 @@ import sys
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication
 
-from param import window_height, window_width
+from constants.dimensions import window_height, window_width
 from ui.window import Window
-
 
 logger.log("INITIALISATION", "Création de la QApplication avec les paramètres: {}".format(sys.argv))
 app = QApplication(sys.argv)

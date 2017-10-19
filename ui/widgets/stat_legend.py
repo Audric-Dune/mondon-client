@@ -3,9 +3,10 @@
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPainter
-from PyQt5.QtWidgets import QTextEdit, QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QTextEdit, QVBoxLayout
 
-from param import color_bleu_gris
+from constants.colors import color_bleu_gris
+from constants.stylesheets import white_text_edit_stylesheet
 from ui.utils.drawing import draw_rectangle
 from ui.widgets.mondon_widget import MondonWidget
 
@@ -22,19 +23,19 @@ class StatLegend(MondonWidget):
         titre.setReadOnly(True)
         titre.setAlignment(Qt.AlignVCenter)
         titre.setFixedHeight(30)
-        titre.setStyleSheet("QTextEdit {background-color: #2c3e50; color: rgb(255, 255, 255); font-size: 14px;}")
+        titre.setStyleSheet(white_text_edit_stylesheet)
         vbox.addWidget(titre)
 
         info_max = QTextEdit("100%: Production théorique à 172.5m/min de moyenne", self)
         info_max.setReadOnly(True)
         info_max.setAlignment(Qt.AlignVCenter)
-        info_max.setStyleSheet("QTextEdit {background-color: #2c3e50; color: rgb(255, 255, 255); font-size: 14px;}")
+        info_max.setStyleSheet(white_text_edit_stylesheet)
         vbox.addWidget(info_max)
 
         info_82 = QTextEdit("82%: Production théorique avec changement de bobine mère", self)
         info_82.setReadOnly(True)
         info_82.setAlignment(Qt.AlignVCenter)
-        info_82.setStyleSheet("QTextEdit {background-color: #2c3e50; color: rgb(255, 255, 255); font-size: 14px;}")
+        info_82.setStyleSheet(white_text_edit_stylesheet)
         vbox.addWidget(info_82)
 
         vbox.addStretch()
