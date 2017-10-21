@@ -68,8 +68,6 @@ class ChartMenu(MondonWidget):
         text = "0 m/min"
         if self.last_speed:
             speed = self.last_speed[1]
-            if timestamp_now() > self.last_speed[0]:
-                speed = "0"
             time = timestamp_to_hour(self.last_speed[0])
             text = "{speed} m/min".format(speed=speed)
         text_width = 400

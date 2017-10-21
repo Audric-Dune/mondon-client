@@ -104,7 +104,7 @@ class DataStore:
     def get_last_speed(self):
         if self.data:
             for data in self.data:
-                if data[1] > 0:
+                if data[1] >= 0:
                     last_data = data
             return last_data
         return None
