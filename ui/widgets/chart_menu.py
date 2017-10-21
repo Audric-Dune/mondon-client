@@ -82,8 +82,9 @@ class ChartMenu(MondonWidget):
     def live():
         settings_store.set_day_ago(0)
 
-    def test(self, event):
-        print("test")
+    def create_window_live_speed(self, event):
+        # ici j'aimerais bien créer la nouvelle window avec la fonction create_window_live_speed dans application
+        print("create_window_live_speed")
 
     def update_button(self):
         self.bt_jour_plus.setEnabled(self.day_ago > 0)
@@ -153,7 +154,7 @@ class ChartMenu(MondonWidget):
 
     def init_widget(self):
         live_speed = LiveSpeed(self)
-        live_speed.mouseDoubleClickEvent = self.test
+        live_speed.mouseDoubleClickEvent = self.create_window_live_speed
         live_speed_width = 150
         live_speed_height = 50
         live_speed.setGeometry(150, (chart_menu_height - live_speed_height) / 2, live_speed_width, live_speed_height)
