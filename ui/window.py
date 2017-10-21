@@ -8,6 +8,7 @@ from stores.data_store_manager import data_store_manager
 from ui.widgets.chart import Chart
 from ui.widgets.chart_menu import ChartMenu
 from ui.widgets.stat_menu import StatMenu
+from ui.widgets.live_speed import LiveSpeed
 from ui.widgets.tab_arret_menu import TabArretMenu
 
 
@@ -38,6 +39,8 @@ class Window(QMainWindow):
 
         central_widget.setLayout(vbox)
         self.setCentralWidget(central_widget)
+
+        live_speed = LiveSpeed()
 
     def closeEvent(self, QCloseEvent):
         data_store_manager.cancel_refresh()
