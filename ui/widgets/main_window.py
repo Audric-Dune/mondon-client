@@ -4,7 +4,6 @@
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QSizePolicy
 
 from constants.dimensions import chart_menu_height
-from stores.data_store_manager import data_store_manager
 from ui.widgets.chart import Chart
 from ui.widgets.chart_menu import ChartMenu
 from ui.widgets.stat_menu import StatMenu
@@ -12,9 +11,9 @@ from ui.widgets.tab_arret_menu import TabArretMenu
 
 
 class MainWindow(QMainWindow):
-    def __init__(self, parentApp, parent=None):
-        super(MainWindow, self).__init__(parent)
-        self.parentApp = parentApp
+    def __init__(self, on_close):
+        super(MainWindow, self).__init__(None)
+        self.on_close = on_close
 
     def initialisation(self):
         central_widget = QWidget(self)
@@ -41,5 +40,4 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(central_widget)
 
     def closeEvent(self, QCloseEvent):
-        self.parentApp.windows.remove(self)
-        self.parentApp.on_close_window()
+        self.on_close()

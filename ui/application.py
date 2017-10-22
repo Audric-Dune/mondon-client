@@ -1,59 +1,67 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
+
 from lib.logger import logger
 
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication
 
-from constants.dimensions import window_height, window_width
+from constants.dimensions import window_height, window_width, width_windown_live_speed
 from stores.data_store_manager import data_store_manager
-from stores.windows_store import windows_store
-from ui.widgets.tracker_window import TrackerWindow
-from ui.widgets.main_window import MainWindow
 
 
 class Application(QApplication):
 
-    def __init__(self, argv=None):
+    def __init__(self, argv=[]):
         super(Application, self).__init__(argv)
-        self.windows = []
-        self.__create_main_window()
-        windows_store.NEW_WINDOWS_CHANGED_SIGNAL.connect(self._handle_new_windows_changed)
+        self.main_window = None
+        self.tracker_window = None
 
-    def on_new_windows_changed(self):
-        self.create_window_live_speed()
+    def on_close_main_window(self):
+        self.main_window = None
+        self.close_data_store_manager()
 
-    def _handle_new_windows_changed(self):
-        try:
-            self.on_new_windows_changed()
-        except Exception as e:
-            logger.log(type(self), "Erreur pendant l'exécution de `on_windows_changed`: {}".format(e))
+    def on_close_tracker_window(self):
+        self.tracker_window = None
+        self.close_data_store_manager()
 
-    def on_close_window(self):
-        # Fonction qui se charge de stopper le refresh data lorsque la derniere fenetre de l'application est fermée
-        if not self.windows:
+    def close_data_store_manager(self):
+        # Fonction qui se charge de stopper le refresh data lorsque
+        # la derniere fenetre de l'application est fermée
+        if not self.main_window and self.tracker_window:
             data_store_manager.cancel_refresh()
 
-    def __create_main_window(self):
-        logger.log("INITIALISATION", "Création de la Window")
-        main_window = MainWindow(self)
+    @staticmethod
+    def focus_window(window):
+        window.setWindowState(window.windowState() & ~Qt.WindowMinimized | Qt.WindowActive)
+        window.raise_()
+        window.activateWindow()
 
-        logger.log("INITIALISATION", "Configuration de la Window")
-        main_window.initialisation()
-        main_window.setWindowTitle("DUNE Production bobine")
-        main_window.resize(window_width, window_height)
-        main_window.setMinimumSize(window_width, window_height)
+    def create_main_window(self):
+        if self.main_window:
+            self.focus_window(self.main_window)
+        else:
+            from ui.widgets.main_window import MainWindow
+            logger.log("INITIALISATION", "Création de la Window")
+            self.main_window = MainWindow(self.on_close_main_window)
 
-        logger.log("INITIALISATION", "Affichage de MainWindow")
-        main_window.show()
-        self.windows.append(main_window)
+            logger.log("INITIALISATION", "Configuration de la Window")
+            self.main_window.initialisation()
+            self.main_window.setWindowTitle("DUNE Production bobine")
+            self.main_window.resize(window_width, window_height)
+            self.main_window.setMinimumSize(window_width, window_height)
 
-    def create_window_live_speed(self):
-        tracker_window = TrackerWindow(self)
+            logger.log("INITIALISATION", "Affichage de MainWindow")
+            self.main_window.show()
 
-        tracker_window.initialisation()
-        tracker_window.setFixedSize(160, 60)
+    def create_tracker_window(self):
+        if self.tracker_window:
+            self.focus_window(self.tracker_window)
+        else:
+            from ui.widgets.tracker_window import TrackerWindow
+            self.tracker_window = TrackerWindow(self.on_close_tracker_window)
+            self.tracker_window.setFixedSize(width_windown_live_speed, 60)
+            self.tracker_window.setWindowTitle("DUNE Tracker")
+            self.tracker_window.show()
 
-        tracker_window.setWindowTitle("Tracker")
-
-        tracker_window.show()
-        self.windows.append(tracker_window)
+app = Application()

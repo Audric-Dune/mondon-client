@@ -37,12 +37,12 @@ class LiveSpeed(MondonWidget):
         text_width = self.width()
         text_height = self.height()
         draw_text(p,
-                  x=0,
+                  x=10,
                   y=0,
                   width=text_width,
                   height=text_height,
                   color=color_blanc,
-                  align="C",
+                  align="G",
                   font_size=22,
                   text=text)
 

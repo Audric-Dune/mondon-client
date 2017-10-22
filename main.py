@@ -8,12 +8,10 @@ import sys
 import sqlite3  # Import obligatoire pour la création du .exe
 from PyQt5.QtGui import QIcon
 
-from ui.application import Application
-
-logger.log("INITIALISATION", "Création de la QApplication avec les paramètres: {}".format(sys.argv))
-app = Application(sys.argv)
+from ui.application import app
 
 logger.log("INITIALISATION", "Définition de l'icone de l'application")
 app.setWindowIcon(QIcon("assets/icons/logo_dune_production.ico"))
+app.create_main_window()
 
 sys.exit(app.exec_())

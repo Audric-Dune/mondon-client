@@ -16,7 +16,7 @@ from constants.dimensions import (
 )
 from constants.stylesheets import button_stylesheet
 from stores.settings_store import settings_store
-from stores.windows_store import windows_store
+from ui.application import app
 from ui.utils.drawing import draw_rectangle, draw_text
 from ui.utils.timestamp import timestamp_at_day_ago, timestamp_to_date
 from ui.widgets.mondon_widget import MondonWidget
@@ -84,7 +84,7 @@ class ChartMenu(MondonWidget):
         settings_store.set_day_ago(0)
 
     def create_window_live_speed(self, event):
-        windows_store.set()
+        app.create_tracker_window()
 
     def update_button(self):
         self.bt_jour_plus.setEnabled(self.day_ago > 0)
