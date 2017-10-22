@@ -16,6 +16,7 @@ from constants.dimensions import (
 )
 from constants.stylesheets import button_stylesheet
 from stores.settings_store import settings_store
+from stores.windows_store import windows_store
 from ui.utils.drawing import draw_rectangle, draw_text
 from ui.utils.timestamp import timestamp_at_day_ago, timestamp_to_date
 from ui.widgets.mondon_widget import MondonWidget
@@ -83,8 +84,7 @@ class ChartMenu(MondonWidget):
         settings_store.set_day_ago(0)
 
     def create_window_live_speed(self, event):
-        # ici j'aimerais bien créer la nouvelle window avec la fonction create_window_live_speed dans application
-        print("create_window_live_speed")
+        windows_store.set()
 
     def update_button(self):
         self.bt_jour_plus.setEnabled(self.day_ago > 0)
@@ -157,7 +157,10 @@ class ChartMenu(MondonWidget):
         live_speed.mouseDoubleClickEvent = self.create_window_live_speed
         live_speed_width = 150
         live_speed_height = 50
-        live_speed.setGeometry(150, (chart_menu_height - live_speed_height) / 2, live_speed_width, live_speed_height)
+        live_speed.setGeometry(150,
+                               (chart_menu_height - live_speed_height) / 2,
+                               live_speed_width,
+                               live_speed_height)
 
     def draw(self, p):
         self.draw_fond(p)

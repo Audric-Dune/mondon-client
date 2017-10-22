@@ -12,8 +12,9 @@ from ui.widgets.tab_arret_menu import TabArretMenu
 
 
 class MainWindow(QMainWindow):
-    def __init__(self, parent=None):
+    def __init__(self, parentApp, parent=None):
         super(MainWindow, self).__init__(parent)
+        self.parentApp = parentApp
 
     def initialisation(self):
         central_widget = QWidget(self)
@@ -40,4 +41,5 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(central_widget)
 
     def closeEvent(self, QCloseEvent):
-        data_store_manager.cancel_refresh()
+        self.parentApp.windows.remove(self)
+        self.parentApp.on_close_window()

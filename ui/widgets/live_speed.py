@@ -3,11 +3,11 @@
 
 from PyQt5.QtGui import QPainter
 
-from constants.colors import color_blanc
+from constants.colors import color_blanc, color_bleu_gris
 
 from stores.data_store_manager import data_store_manager
 from ui.widgets.mondon_widget import MondonWidget
-from ui.utils.drawing import draw_text
+from ui.utils.drawing import draw_rectangle, draw_text
 
 
 class LiveSpeed(MondonWidget):
@@ -26,6 +26,9 @@ class LiveSpeed(MondonWidget):
         self.draw(p)
         p.end()
 
+    def draw_fond(self, p):
+        draw_rectangle(p, 0, 0, self.width(), self.height(), color_bleu_gris)
+
     def draw_speed_actuelle(self, p):
         text = "0 m/min"
         if self.last_speed:
@@ -39,9 +42,10 @@ class LiveSpeed(MondonWidget):
                   width=text_width,
                   height=text_height,
                   color=color_blanc,
-                  align="G",
+                  align="C",
                   font_size=22,
                   text=text)
 
     def draw(self, p):
+        self.draw_fond(p)
         self.draw_speed_actuelle(p)
