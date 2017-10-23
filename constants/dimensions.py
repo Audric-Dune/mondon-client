@@ -25,4 +25,4 @@ window_margin_bottom = 10
 window_width = 1200
 window_height = 600
 # Taille de fenêtre vitesse actuelle
-width_windown_live_speed = 190
+width_windown_live_speed = 250

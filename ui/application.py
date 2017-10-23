@@ -28,7 +28,7 @@ class Application(QApplication):
     def close_data_store_manager(self):
         # Fonction qui se charge de stopper le refresh data lorsque
         # la derniere fenetre de l'application est fermée
-        if not self.main_window and self.tracker_window:
+        if not self.main_window and not self.tracker_window:
             data_store_manager.cancel_refresh()
 
     @staticmethod
