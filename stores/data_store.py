@@ -13,23 +13,24 @@ current_time = time()
 class DataStore:
     def __init__(self, start, end):
         self.data = []
+        self.arrets = []
+        self.dechets = []
         self.start = start
         self.end = end
 
     def add_data(self):
         try:
+            print("add_data")
             new_data = Database.get_speeds(self.start * 1000, self.end * 1000)
-            if not new_data:
+            new_arret = Database.get_arret(self.start * 1000, self.end * 1000)
+            new_dechet = Database.get_dechet(self.start * 1000, self.end * 1000)
+            if not new_data or not new_arret or not new_dechet:
                 return False
             self.data = self.clean_data_per_second(new_data)
             self.data = self.clean_data(self.data)
             return True
         except:
             return False
-
-    @staticmethod
-    def clean_data_no(new_data):
-        return [(value[0] / 1000, value[1]) for value in new_data]
 
     def clean_data_per_second(self, new_data):
         clean_data = []  # Stock les valeurs nettoyées

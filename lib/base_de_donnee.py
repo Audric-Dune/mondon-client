@@ -105,3 +105,45 @@ class Database:
             .format(start_time=start_time, end_time=end_time)
         speeds = cls._run_query(query, (start_time, end_time))
         return speeds
+
+    @classmethod
+    def get_arret(cls, start_time, end_time):
+        """
+        Récupère les arrêts en base de donnée compris entre une plage de timestamp dans l'ordre chronologique
+        :param start_time: Timestamp minimum de l'arrêt
+        :param end_time: Timestamp maximum de l'arrêt
+        :return: Une liste
+        """
+        print(start_time, end_time)
+        query = "SELECT start, end, type, raison " \
+                "FROM mondon_arret " \
+                "WHERE start > ? AND start <= ?" \
+                "ORDER BY start"\
+            .format(start_time=start_time, end_time=end_time)
+        arrets = cls._run_query(query, (start_time, end_time))
+        return arrets
+
+
+    @classmethod
+    def save_arret(cls, start, end, type, raison):
+        print("save en arret", start, end, type, raison)
+
+    @classmethod
+    def get_dechet(cls, start_time, end_time):
+        """
+        Récupère les déchets en base de donnée compris entre une plage de timestamp dans l'ordre chronologique
+        :param start_time: Timestamp minimum du déchet
+        :param end_time: Timestamp maximum du déhet
+        :return: Une liste
+        """
+        query = "SELECT id, arret_start, type, masse, piste, couleur, grammage_papier, grammage_polypro " \
+                "FROM mondon_dechet " \
+                "WHERE arret_start > ? AND arret_start <= ?" \
+                "ORDER BY arret_start"\
+            .format(start_time=start_time, end_time=end_time)
+        dechets = cls._run_query(query, (start_time, end_time))
+        return dechets
+
+    @classmethod
+    def save_dechet(cls, id, arret_start, type, masse, piste, couleur, grammage_papier, grammage_polypro):
+        print("save déchet", id, arret_start, type, masse, piste, couleur, grammage_papier, grammage_polypro)
