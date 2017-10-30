@@ -107,7 +107,7 @@ class TabArret(MondonWidget):
         speeds = data_store_manager.get_current_store().data
         ts = timestamp_at_day_ago(self.day_ago)
 
-        vendredi = timestamp_to_day(ts) == "Vendredi"
+        vendredi = timestamp_to_day(ts) == "vendredi"
         start = 6
         mid = 13 if vendredi else 14
         end = 20 if vendredi else 22

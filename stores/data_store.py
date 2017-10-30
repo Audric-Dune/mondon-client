@@ -20,11 +20,11 @@ class DataStore:
 
     def add_data(self):
         try:
-            print("add_data")
             new_data = Database.get_speeds(self.start * 1000, self.end * 1000)
-            new_arret = Database.get_arret(self.start * 1000, self.end * 1000)
-            new_dechet = Database.get_dechet(self.start * 1000, self.end * 1000)
-            if not new_data or not new_arret or not new_dechet:
+            # new_arret = Database.get_arret(self.start * 1000, self.end * 1000)
+            # new_dechet = Database.get_dechet(self.start * 1000, self.end * 1000)
+            # if not new_data or not new_arret or not new_dechet:
+            if not new_data:
                 return False
             self.data = self.clean_data_per_second(new_data)
             self.data = self.clean_data(self.data)
@@ -71,7 +71,7 @@ class DataStore:
             data_for_speed = list(data_for_speed)
             # Si la vitesse est une "abscence de vitesse" et si il y en a moins de 5 consécutive,
             # On remplace la vitesse par la vitesse précédente
-            if speed == -0.001 and len(data_for_speed) < 5:
+            if speed == -0.001 and len(data_for_speed) < 10:
                 data_for_speed = [(data[0], previous_speed) for data in data_for_speed]
             # Ajoute les valeurs au tableau de données clean
             clean_data += data_for_speed

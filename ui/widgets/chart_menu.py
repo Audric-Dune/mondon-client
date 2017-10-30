@@ -155,7 +155,7 @@ class ChartMenu(MondonWidget):
     def init_widget(self):
         live_speed = LiveSpeed(self)
         live_speed.mouseDoubleClickEvent = self.create_window_live_speed
-        live_speed_width = 150
+        live_speed_width = 180
         live_speed_height = 50
         live_speed.setGeometry(150,
                                (chart_menu_height - live_speed_height) / 2,
