@@ -4,6 +4,12 @@
 from itertools import groupby
 from time import time
 
+from ui.utils.timestamp import (
+    timestamp_at_day_ago,
+    timestamp_at_time,
+    timestamp_to_day
+)
+
 from lib.base_de_donnee import Database
 
 
@@ -11,7 +17,8 @@ current_time = time()
 
 
 class DataStore:
-    def __init__(self, start, end):
+    def __init__(self, start, end, day_ago):
+        self.day_ago = day_ago
         self.data = []
         self.arrets = []
         self.dechets = []
@@ -21,16 +28,67 @@ class DataStore:
     def add_data(self):
         try:
             new_data = Database.get_speeds(self.start * 1000, self.end * 1000)
-            # new_arret = Database.get_arret(self.start * 1000, self.end * 1000)
-            # new_dechet = Database.get_dechet(self.start * 1000, self.end * 1000)
-            # if not new_data or not new_arret or not new_dechet:
             if not new_data:
                 return False
             self.data = self.clean_data_per_second(new_data)
             self.data = self.clean_data(self.data)
+            arrets_data = self.list_new_arret()
             return True
         except:
             return False
+
+    def list_new_arret(self):
+        """
+        S'occupe de créer la liste des arrêts machines du store par rapport aux nouvelles données
+        :return: Un tableau de tuple de timestamp (début de l'arrêt, durrée de l'arrêt)
+        """
+        # Récupère la liste des vitesses
+        speeds = self.data
+        # Récupère le timestamp du jours du store
+        ts = timestamp_at_day_ago(self.day_ago)
+        # Test si on est un vendredi
+        vendredi = timestamp_to_day(ts) == "vendredi"
+        # Les équipes commence toujours à 6H
+        start = 6
+        # La fin de journée est 22h sauf le vendredi 20h
+        end = 20 if vendredi else 22
+        # Définit les bornes de recherche d'arrêt dans les données
+        start_ts = timestamp_at_time(ts, hours=start)
+        end_ts = timestamp_at_time(ts, hours=end)
+        # Initialisation des variables
+        speed_is_0 = False
+        arrets = []
+        start = 0
+        end = 0
+        # On boucle sur le tableau de vitesse de store
+        for value in speeds:
+            # On test si la vitesse est dans la borne de recherche
+            if value[0] < end_ts:
+                # On test si la vitesse est inférieure à 60
+                # On assimile une vitesse inférieure à 60 à machine à l'arrêt
+                if 0 <= value[1] <= 60:
+                    # Si on est pas déja dans un arrêt on définit le début de l'arrêt
+                    if not speed_is_0:
+                        start = value[0]
+                    end = value[0]
+                    speed_is_0 = True
+                # Si on vient de sortir d'un arrêt et qu'il a durée plus de 30s, on ajoute l'arrêt à la liste d'arrêts
+                elif speed_is_0:
+                    time_at_0 = end - start
+                    if time_at_0 > 30:
+                        arrets.append((start, end))
+                    start = 0
+                    end = 0
+                    speed_is_0 = False
+                else:
+                    continue
+        # Si on sort de la boucle avec un arrêt en cours on ajoute le dernière arrêt à la liste d'arrêts
+        if speed_is_0:
+            time_at_0 = end - start
+            if time_at_0 > 30:
+                arrets.append((start, end))
+        print(arrets)
+        return arrets
 
     def clean_data_per_second(self, new_data):
         clean_data = []  # Stock les valeurs nettoyées

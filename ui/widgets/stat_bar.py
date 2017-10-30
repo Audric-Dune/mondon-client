@@ -120,6 +120,8 @@ class StatBar(MondonWidget):
             maxi = 172.5 * (end_ts - start_ts) / 6000
         if maxi > 0:
             percent = result / maxi
+            if percent > 100:
+                percent = 100
         else:
             percent = 0
         if result <= 0:

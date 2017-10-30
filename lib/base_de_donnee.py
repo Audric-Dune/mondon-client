@@ -11,7 +11,7 @@ class Database:
     """
     S'occupe de maintenir une connexion à une base de données SQLite3 et d'exécuter des requêtes
     """
-    DATABASE_LOCATION = 'I:\data_prod_bob/mondon.db'  # Où le fichier SQLite de la base de données est stocké.
+    DATABASE_LOCATION = 'I:\data_prod_bob\mondon_copie_30_10_17_arret_dechet.db'  # Où le fichier SQLite de la base de données est stocké.
     MAX_ATTEMPT_ON_ERROR = 3  # Nombre de fois que l'on réessaye d'exécuter une requête SQL avant
                               # d'abandonner en cas d'erreurs qui n'ont rien à voir avec la requête
                               # elle même. Par exemple, si la base de données est vérouillée parce
@@ -114,7 +114,6 @@ class Database:
         :param end_time: Timestamp maximum de l'arrêt
         :return: Une liste
         """
-        print(start_time, end_time)
         query = "SELECT start, end, type, raison " \
                 "FROM mondon_arret " \
                 "WHERE start > ? AND start <= ?" \
@@ -122,11 +121,6 @@ class Database:
             .format(start_time=start_time, end_time=end_time)
         arrets = cls._run_query(query, (start_time, end_time))
         return arrets
-
-
-    @classmethod
-    def save_arret(cls, start, end, type, raison):
-        print("save en arret", start, end, type, raison)
 
     @classmethod
     def get_dechet(cls, start_time, end_time):
@@ -144,6 +138,3 @@ class Database:
         dechets = cls._run_query(query, (start_time, end_time))
         return dechets
 
-    @classmethod
-    def save_dechet(cls, id, arret_start, type, masse, piste, couleur, grammage_papier, grammage_polypro):
-        print("save déchet", id, arret_start, type, masse, piste, couleur, grammage_papier, grammage_polypro)

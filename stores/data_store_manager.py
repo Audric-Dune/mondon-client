@@ -28,7 +28,7 @@ class DataStoreManager(QObject):
         else:
             start = timestamp_at_time(jour, hours=6)
             end = timestamp_at_time(jour, hours=22)
-            self.current_store = DataStore(start, end)
+            self.current_store = DataStore(start, end, settings_store.day_ago)
             self.dic_data_store[jour_str] = self.current_store
         self.refresh_data(force_refresh=True)
 
