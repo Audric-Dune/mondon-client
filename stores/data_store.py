@@ -33,9 +33,52 @@ class DataStore:
             self.data = self.clean_data_per_second(new_data)
             self.data = self.clean_data(self.data)
             arrets_data = self.list_new_arret()
+            arrets_database = Database.get_arret(self.start * 1000, self.end * 1000)
+            self.arrets = self.create_list_arret(arrets_data, arrets_database)
             return True
         except:
             return False
+
+    @staticmethod
+    def create_list_arret(arrets_data, arrets_database):
+        """
+        S'occupe de fusionner les arrêts déterminés avec les data et les arrêts contenus en base de donnée
+        Si un arrêt_data n'est pas dans la base de donnée, il l'insert
+        Si un arrêt_data n'est pas à jour, il l'update
+        :param arrets_data: liste des arrêts déterminés avec les data
+        :param arrets_database: liste des arrêts de la base de donnée
+        :return: liste d'object "Arret" du store en cours
+        """
+        from ui.widgets.arret import Arret
+        arrets = []
+        # On parcours l'ensemble des arrêts déterminés avec les data
+        for arret in arrets_data:
+            arret_start = arret[0]
+            arret_end = arret[1]
+            # Pour chaque "arret_data" on parcour les arrêts de la base de donnée si il y en a
+            if arrets_database:
+                for arret_database in arrets_database:
+                    # Si "arret_data" correspond à l'arrêt base donnée
+                    # on regarde si la fin de l'arrêt à besoin d'être mis à jours
+                    # Dans tous les cas on ajout un object "Arret" à la liste des arrêts
+                    if arret_start == arret_database[0]:
+                        if arret_end == arret_database[1]:
+                            arrets.append(Arret(arret_database))
+                            break
+                    # Sinon on ajoute l'arrêt en base de donnée et on ajoute l'object "Arret" à la liste des arrêts
+                    else:
+                        arret_data = [arret_start, arret_end, "NULL", "NULL"]
+                        arret = Arret(arret_data)
+                        arret.create_on_database()
+                        arrets.append(arret_object)
+            # Si il n'y a pas d'arrêt en base de donnée on ajoute l'arrêt en base de donnée et on ajoute l'object
+            # "Arret" à la liste des arrêts
+            else:
+                arret_data = [arret_start, arret_end, "NULL", "NULL"]
+                arret_object = Arret(arret_data)
+                arret_object.create_on_database()
+                arrets.append(arret_object)
+        return arrets
 
     def list_new_arret(self):
         """
@@ -82,12 +125,11 @@ class DataStore:
                     speed_is_0 = False
                 else:
                     continue
-        # Si on sort de la boucle avec un arrêt en cours on ajoute le dernière arrêt à la liste d'arrêts
+        # Si on sort de la boucle avec un arrêt en cours on ajoute le dernier arrêt à la liste d'arrêts
         if speed_is_0:
             time_at_0 = end - start
             if time_at_0 > 30:
                 arrets.append((start, end))
-        print(arrets)
         return arrets
 
     def clean_data_per_second(self, new_data):

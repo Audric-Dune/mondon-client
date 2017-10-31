@@ -123,6 +123,23 @@ class Database:
         return arrets
 
     @classmethod
+    def create_arret(cls, start_arret, end_arret):
+        """
+        Ajoute l'arrêt en base donnée
+        :param start_arret: Timestamp début de l'arrêt
+        :param end_arret: Timestamp fin de l'arrêt
+        """
+        try:
+            cls._run_query("INSERT INTO mondon_arret VALUES (?, ?, ?, ?)", (start_arret, end_arret, "NULL", "NULL"))
+        except sqlite3.IntegrityError as e:
+            # IntegrityError veut dire que l'on essaye d'insérer une vitesse avec un timestamp
+            # qui existe déjà dans la base de données.
+            # Dans ce cas, on considère que cette valeur n'a pas besoin d'être insérée et on
+            # ignore l'exception.
+            logger.log("DATABASE", "(Ignorée) IntegrityError: {}".format(e))
+            pass
+
+    @classmethod
     def get_dechet(cls, start_time, end_time):
         """
         Récupère les déchets en base de donnée compris entre une plage de timestamp dans l'ordre chronologique
