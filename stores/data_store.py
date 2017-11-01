@@ -35,6 +35,7 @@ class DataStore:
             arrets_data = self.list_new_arret()
             arrets_database = Database.get_arret(self.start * 1000, self.end * 1000)
             self.arrets = self.create_list_arret(arrets_data, arrets_database)
+            print(self.arrets)
             return True
         except:
             return False
@@ -62,15 +63,15 @@ class DataStore:
                     # on regarde si la fin de l'arrêt à besoin d'être mis à jours
                     # Dans tous les cas on ajout un object "Arret" à la liste des arrêts
                     if arret_start == arret_database[0]:
-                        if arret_end == arret_database[1]:
-                            arrets.append(Arret(arret_database))
-                            break
+                        arret_data = [arret_start, arret_end, arret_database[2], arret_database[3]]
+                        arret = Arret(arret_data)
+                        if arret_end != arret_database[1]:
+                            arret.update()
+                        arrets.append(arret)
                     # Sinon on ajoute l'arrêt en base de donnée et on ajoute l'object "Arret" à la liste des arrêts
                     else:
-                        arret_data = [arret_start, arret_end, "NULL", "NULL"]
-                        arret = Arret(arret_data)
                         arret.create_on_database()
-                        arrets.append(arret_object)
+                    arrets.append(arret)
             # Si il n'y a pas d'arrêt en base de donnée on ajoute l'arrêt en base de donnée et on ajoute l'object
             # "Arret" à la liste des arrêts
             else:
@@ -115,10 +116,10 @@ class DataStore:
                         start = value[0]
                     end = value[0]
                     speed_is_0 = True
-                # Si on vient de sortir d'un arrêt et qu'il a durée plus de 30s, on ajoute l'arrêt à la liste d'arrêts
+                # Si on vient de sortir d'un arrêt et qu'il a durée plus de 10s, on ajoute l'arrêt à la liste d'arrêts
                 elif speed_is_0:
                     time_at_0 = end - start
-                    if time_at_0 > 30:
+                    if time_at_0 > 10:
                         arrets.append((start, end))
                     start = 0
                     end = 0

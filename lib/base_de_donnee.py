@@ -11,7 +11,7 @@ class Database:
     """
     S'occupe de maintenir une connexion à une base de données SQLite3 et d'exécuter des requêtes
     """
-    DATABASE_LOCATION = 'I:\data_prod_bob\mondon_copie_30_10_17_arret_dechet.db'  # Où le fichier SQLite de la base de données est stocké.
+    DATABASE_LOCATION = '/Users/audricperrin/Desktop/github/mondon.db'  # Où le fichier SQLite de la base de données est stocké.
     MAX_ATTEMPT_ON_ERROR = 3  # Nombre de fois que l'on réessaye d'exécuter une requête SQL avant
                               # d'abandonner en cas d'erreurs qui n'ont rien à voir avec la requête
                               # elle même. Par exemple, si la base de données est vérouillée parce
@@ -138,6 +138,17 @@ class Database:
             # ignore l'exception.
             logger.log("DATABASE", "(Ignorée) IntegrityError: {}".format(e))
             pass
+
+    @classmethod
+    def update_arret(cls, start_arret, end_arret, type_arret, raison_arret):
+        """
+        Met à jour un arret
+        :param start_arret: Début de l'arrêt (clé pour retrouver l'arret en base de donnée)
+        :param end_arret: Fin de l'arret
+        :param type_arret: Type d'arret
+        :param raison_arret: Raison de l'arret
+        """
+        pass
 
     @classmethod
     def get_dechet(cls, start_time, end_time):
