@@ -16,8 +16,8 @@ class Arret(MondonWidget):
     def create_on_database(self):
         Database.create_arret(start_arret=self.start, end_arret=self.end)
 
-    def update_on_database(self):
+    def update_end_arret_on_database(self):
         Database.update_arret(start_arret=self.start,
-                              end_arret=self.end,
-                              type_arret=self.type,
-                              raison_arret=self.raison)
+                              end_arret=None,
+                              type_arret=None,
+                              raison_arret=None)

@@ -11,7 +11,7 @@ class Database:
     """
     S'occupe de maintenir une connexion à une base de données SQLite3 et d'exécuter des requêtes
     """
-    DATABASE_LOCATION = '/Users/audricperrin/Desktop/github/mondon.db'  # Où le fichier SQLite de la base de données est stocké.
+    DATABASE_LOCATION = 'I:\data_prod_bob\mondon_arret.db'  # Où le fichier SQLite de la base de données est stocké.
     MAX_ATTEMPT_ON_ERROR = 3  # Nombre de fois que l'on réessaye d'exécuter une requête SQL avant
                               # d'abandonner en cas d'erreurs qui n'ont rien à voir avec la requête
                               # elle même. Par exemple, si la base de données est vérouillée parce
