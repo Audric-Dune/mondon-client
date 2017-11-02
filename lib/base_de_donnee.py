@@ -152,7 +152,6 @@ class Database:
                 "SET end = ?, type = ?, raison = ? " \
                 "WHERE start = ?" \
             .format(end_arret, type_arret, raison_arret, start_arret)
-        print(query, (end_arret, type_arret, raison_arret, start_arret))
         try:
             cls._run_query(query, (end_arret, type_arret, raison_arret, start_arret))
         except sqlite3.IntegrityError as e:

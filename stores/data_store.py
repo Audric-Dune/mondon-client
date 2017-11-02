@@ -42,25 +42,43 @@ class DataStore:
             return False
 
     def dic_arret_from_database(self, list_arrets_database):
+        """
+        S'occupe de créer les objects Arret et de les joindres au dictionnaire du store
+        :param list_arrets_database: Tableau d'arret contenue en base de donnée pour le store
+        """
+        # On parcours le tableau d'arret contenue en base de donnée
         for arret_database in list_arrets_database:
             start_arret = arret_database[0]
+            # Si l'arret et deja dans le dictionnaire on ne fait rien
+            # La clé du dictionnaire est le début de l'arret
             if self.dic_arret.get(start_arret):
                 continue
+            # Sinon on ajoute un object Arret au dictionnaire avec les datas de la base de donnée
             else:
                 from ui.widgets.arret import Arret
-                print(arret_database)
                 object_arret = Arret(arret_database)
                 self.dic_arret[start_arret] = object_arret
 
     def update_dic_arret(self, list_arrets_data):
+        """
+        S'occupe de créer un nouvelle arret en base de donnée si besoin
+        Met a jour la fin d'un Arret contenue dans le dictionnaire si besoin
+        :param list_arrets_data: Un tableau de tuple (start, end) définit par les vitesses de la base de donnée
+        """
+        # On parcours le tableau d'arret définit par les vitesses de la base de donnée
         for tuple_arret_data in list_arrets_data:
             start_arret = tuple_arret_data[0]
             end_arret = tuple_arret_data[1]
+            # Si l'arret et deja dans le dictionnaire on test si la fin de l'arret est a jour
+            # La clé du dictionnaire est le début de l'arret
             if self.dic_arret.get(start_arret):
                 object_arret = self.dic_arret.get(start_arret)
+                # Si la fin de l'arret n'est pas jour on l'update
                 if object_arret.end != end_arret:
                     object_arret.end = end_arret
                     object_arret.update_arret()
+            # Sinon on ajoute un object Arret au dictionnaire
+            # On utilise les datas définit parles vitesses de la base de donnée
             else:
                 from ui.widgets.arret import Arret
                 arret_data = [start_arret, end_arret, "NULL", "NULL"]
