@@ -20,7 +20,7 @@
 #*.tar
 *.zip
 build
-mondon.db
+*.db
 
 # Logs and databases #
 ######################

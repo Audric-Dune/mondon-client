@@ -48,6 +48,7 @@ class DataStore:
                 continue
             else:
                 from ui.widgets.arret import Arret
+                print(arret_database)
                 object_arret = Arret(arret_database)
                 self.dic_arret[start_arret] = object_arret
 

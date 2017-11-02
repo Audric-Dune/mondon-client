@@ -10,8 +10,8 @@ class Arret(MondonWidget):
         super(Arret, self).__init__(None)
         self.start = arret_data[0]
         self.end = arret_data[1]
-        self.type = arret_data[2]
-        self.raison = arret_data[3]
+        self.type = arret_data[2] or "NULL"
+        self.raison = arret_data[3] or "NULL"
         self.create_on_database()
 
     def create_on_database(self):
