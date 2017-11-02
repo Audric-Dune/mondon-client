@@ -149,10 +149,10 @@ class Database:
         :param raison_arret: Raison de l'arret
         """
         query = "UPDATE mondon_arret " \
-                "SET end = {}, type = {}, raison = {} " \
-                "WHERE start = {}" \
+                "SET end = ?, type = ?, raison = ? " \
+                "WHERE start = ?" \
             .format(end_arret, type_arret, raison_arret, start_arret)
-        print(query)
+        print(query, (end_arret, type_arret, raison_arret, start_arret))
         try:
             cls._run_query(query, (end_arret, type_arret, raison_arret, start_arret))
         except sqlite3.IntegrityError as e:
