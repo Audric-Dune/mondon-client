@@ -148,7 +148,19 @@ class Database:
         :param type_arret: Type d'arret
         :param raison_arret: Raison de l'arret
         """
-        pass
+        query = "UPDATE mondon_arret " \
+                "SET  end = ?, type = ?, raison = ? " \
+                "WHERE arret_start = ?" \
+            .format(end_arret, type_arret, raison_arret, start_arret)
+        try:
+            cls._run_query(query, (end_arret, type_arret, raison_arret, start_arret))
+        except sqlite3.IntegrityError as e:
+            # IntegrityError veut dire que l'on essaye d'insérer une vitesse avec un timestamp
+            # qui existe déjà dans la base de données.
+            # Dans ce cas, on considère que cette valeur n'a pas besoin d'être insérée et on
+            # ignore l'exception.
+            logger.log("DATABASE", "(Ignorée) IntegrityError: {}".format(e))
+            pass
 
     @classmethod
     def get_dechet(cls, start_time, end_time):

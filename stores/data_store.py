@@ -33,14 +33,23 @@ class DataStore:
                 return False
             self.data = self.clean_data_per_second(new_data)
             self.data = self.clean_data(self.data)
-            list_arrets_data = self.list_new_arret_data()
-            print(list_arrets_data)
             list_arrets_database = Database.get_arret(self.start, self.end)
-            print(list_arrets_database)
+            self.dic_arret_from_database(list_arrets_database)
+            list_arrets_data = self.list_new_arret_data()
             self.update_dic_arret(list_arrets_data)
             return True
         except:
             return False
+
+    def dic_arret_from_database(self, list_arrets_database):
+        for arret_database in list_arrets_database:
+            start_arret = arret_database[0]
+            if self.dic_arret.get(start_arret):
+                continue
+            else:
+                from ui.widgets.arret import Arret
+                object_arret = Arret(arret_database)
+                self.dic_arret[start_arret] = object_arret
 
     def update_dic_arret(self, list_arrets_data):
         for tuple_arret_data in list_arrets_data:
@@ -49,7 +58,8 @@ class DataStore:
             if self.dic_arret.get(start_arret):
                 object_arret = self.dic_arret.get(start_arret)
                 if object_arret.end != end_arret:
-                    object_arret.update_end_arret_on_database(start_arret=start_arret, end_arret=end_arret)
+                    object_arret.end = end_arret
+                    object_arret.update_arret()
             else:
                 from ui.widgets.arret import Arret
                 arret_data = [start_arret, end_arret, "NULL", "NULL"]
