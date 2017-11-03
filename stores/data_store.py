@@ -37,9 +37,32 @@ class DataStore:
             self.dic_arret_from_database(list_arrets_database)
             list_arrets_data = self.list_new_arret_data()
             self.update_dic_arret(list_arrets_data)
+            self.arrets = self.convert_dic_to_array(self.dic_arret)
             return True
         except:
             return False
+
+    @staticmethod
+    def convert_dic_to_array(dic):
+        """
+        Convertie un dictionnaire (clé:start_arret, valeur:Arret) en un tableau de [start, end, type, raison]
+        :param dic: Dictionnaire d'arrêt
+        :return: Un tableau de data d'arret [start, end, type, raison]
+        """
+        # Initialisation du tableau à retourner
+        array = []
+        # Parcours les valeurs du dictionnaire
+        for value in dic.items():
+            # value[1] est l'object Arret du dictionnaire
+            # Assigne les valeurs de l'arrêt dans tab
+            start = value[1].start
+            end = value[1].end
+            type = value[1].type
+            raison = value[1].raison
+            tab = [start, end, type, raison]
+            # Ajoute tab au tableau à retourner
+            array.append(tab)
+        return array
 
     def dic_arret_from_database(self, list_arrets_database):
         """
