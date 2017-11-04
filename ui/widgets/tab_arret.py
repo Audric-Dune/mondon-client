@@ -7,7 +7,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel, QGridLayout
 
-from constants.colors import color_bleu_gris, color_vert, color_rouge, color_orange
+from constants.colors import color_bleu_gris
 from constants.stylesheets import orange_label_stylesheet, red_label_stylesheet, white_label_stylesheet
 from constants.dimensions import width_col_num, width_col_hour, width_col_time, width_col_type, width_col_raison
 from stores.data_store_manager import data_store_manager
@@ -123,31 +123,47 @@ class TabArret(MondonWidget):
         self.setLayout(hbox)
 
     def get_arret(self):
+        """
+        S'occupe de créer une liste d'object Arret pour le moment de la journée courante
+        :return:
+        """
+        # Récupere le store courant
         store = data_store_manager.get_current_store()
+        # Stock la liste des arrets trier par ordre croissant (par rapport au start)
         arrets = store.arrets
+        # Récupere le dictionnaire des arrets
         dic_arret = store.dic_arret
+        # Récupere le timestamp du jours actuel
         ts = timestamp_at_day_ago(self.day_ago)
 
+        # Check si on est un vendredi
+        # Dans ce cas les équipes travail 7h (6h-13h,13h-21h)
         vendredi = timestamp_to_day(ts) == "vendredi"
         start = 6
         mid = 13 if vendredi else 14
         end = 20 if vendredi else 22
 
+        # Deffinit les bornes de sélection des arret en fonction du moment de la journée (matin ou soir)
         if self.moment == "matin":
             end = mid
         if self.moment == "soir":
             start = mid
-
         start_ts = timestamp_at_time(ts, hours=start)
         end_ts = timestamp_at_time(ts, hours=end)
 
+        # Initialise la liste d'arret
         list_arret = []
+        # Parcours la liste des arret
         for arret in arrets:
             start_arret = arret[0]
             end_arret = arret[1]
+            # Si le debut de l'arret est compris dans les bornes de selection
             if end_ts >= start_arret >= start_ts:
+                # Et si la fin de l'arret est bien definit
                 if end_arret > 0:
+                    # On ajoute a la liste des arrets l'object Arret stocké dans le dictionnaire
                     list_arret.append(dic_arret[start_arret])
+            # Sinon on arrete la boucle
             else:
                 break
         self.list_arret = list_arret
