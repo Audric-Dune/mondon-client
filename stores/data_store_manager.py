@@ -11,6 +11,9 @@ from stores.settings_store import settings_store
 
 class DataStoreManager(QObject):
     DATA_CHANGED_SIGNAL = pyqtSignal()
+    NEW_ARRET_SIGNAL = pyqtSignal('unsigned long long', #start_arret
+                                  'unsigned long long'  #day_ago
+                                  )
 
     def __init__(self):
         super(DataStoreManager, self).__init__()
@@ -49,6 +52,11 @@ class DataStoreManager(QObject):
     def get_current_store(self):
         return self.current_store
 
+    def get_store_at_day_ago(self, day_ago):
+        jour = timestamp_at_day_ago(day_ago)
+        jour_str = str(jour)
+        return self.dic_data_store[jour_str]
+
     def refresh_data(self, force_refresh=False):
         if self.refresh_timer:
             self.refresh_timer.cancel()
@@ -67,8 +75,11 @@ class DataStoreManager(QObject):
         # Mets à jour les stores
         should_refresh = force_refresh
         for store in stores_to_update:
-            new_data = store.add_data()
+            new_data, list_new_arret = store.add_data()
             should_refresh = new_data or should_refresh
+            if list_new_arret:
+                for start_arret in list_new_arret:
+                    self.NEW_ARRET_SIGNAL.emit(start_arret, store.day_ago)
 
         # Envois un signal que les data ont changées si nécessaire
         if should_refresh:

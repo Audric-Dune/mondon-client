@@ -17,6 +17,7 @@ class Application(QApplication):
         self.main_window = None
         self.tracker_window = None
         self.dic_arret_window = {}
+        data_store_manager.NEW_ARRET_SIGNAL.connect(self.create_arret_window)
 
     def on_close_main_window(self):
         self.main_window = None
@@ -68,17 +69,17 @@ class Application(QApplication):
             self.tracker_window.setWindowTitle("DUNE Tracker")
             self.tracker_window.show()
 
-    def create_arret_window(self):
-        start_arret = 1
-        # if self.dic_arret_window[start_arret]:
-        #     self.focus_window(self.dic_arret_window[start_arret])
-        # else:
-        from ui.widgets.arret_window import ArretWindow
-        arret_window = ArretWindow(self.on_close_arret_window)
-        self.dic_arret_window[start_arret] = arret_window
-        arret_window.setFixedSize(width_windown_live_speed, 60)
-        arret_window.setWindowTitle("Gestion d'un arrêt")
-        arret_window.show()
+    def create_arret_window(self, start_arret, day_ago):
+        if self.dic_arret_window[start_arret]:
+            self.focus_window(self.dic_arret_window[start_arret])
+        else:
+            object_arret = data_store_manager.get_store_at_day_ago(day_ago).dic_arret[start_arret]
+            from ui.widgets.arret_window import ArretWindow
+            arret_window = ArretWindow(self.on_close_arret_window, object_arret)
+            self.dic_arret_window[start_arret] = arret_window
+            arret_window.setFixedSize(width_windown_live_speed, 60)
+            arret_window.setWindowTitle("Gestion d'un arrêt")
+            arret_window.show()
 
 
 app = Application()

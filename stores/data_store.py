@@ -24,12 +24,13 @@ class DataStore:
         self.data = []
         self.dic_arret = {}
         self.arrets = []
+        self.list_new_arret = []
 
     def add_data(self):
         try:
             new_data = Database.get_speeds(self.start * 1000, self.end * 1000)
             if not new_data:
-                return False
+                return False, []
             self.data = self.clean_data_per_second(new_data)
             self.data = self.clean_data(self.data)
             list_arrets_database = Database.get_arret(self.start, self.end)
@@ -37,9 +38,10 @@ class DataStore:
             list_arrets_data = self.list_new_arret_data()
             self.update_dic_arret(list_arrets_data)
             self.arrets = self.convert_dic_to_array(self.dic_arret)
-            return True
+            print(self.list_new_arret)
+            return True, self.list_new_arret
         except:
-            return False
+            return False, []
 
     @staticmethod
     def convert_dic_to_array(dic):
@@ -87,6 +89,7 @@ class DataStore:
         Met a jour la fin d'un Arret contenue dans le dictionnaire si besoin
         :param list_arrets_data: Un tableau de tuple (start, end) définit par les vitesses de la base de donnée
         """
+        self.list_new_arret = []
         # On parcours le tableau d'arret définit par les vitesses de la base de donnée
         for tuple_arret_data in list_arrets_data:
             start_arret = tuple_arret_data[0]
@@ -106,6 +109,7 @@ class DataStore:
                 arret_data = [start_arret, end_arret, "NULL", "NULL"]
                 object_arret = Arret(arret_data)
                 self.dic_arret[start_arret] = object_arret
+                self.list_new_arret.append(start_arret)
 
     def list_new_arret_data(self):
         """

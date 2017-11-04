@@ -143,7 +143,7 @@ class TabArret(MondonWidget):
         mid = 13 if vendredi else 14
         end = 20 if vendredi else 22
 
-        # Deffinit les bornes de sélection des arret en fonction du moment de la journée (matin ou soir)
+        # Definit les bornes de sélection des arret en fonction du moment de la journée (matin ou soir)
         if self.moment == "matin":
             end = mid
         if self.moment == "soir":
@@ -163,7 +163,7 @@ class TabArret(MondonWidget):
                 if end_arret > 0:
                     # On ajoute a la liste des arrets l'object Arret stocké dans le dictionnaire
                     list_arret.append(dic_arret[start_arret])
-            # Sinon on arrete la boucle
+            # Sinon on continue la boucle
             else:
                 continue
         self.list_arret = list_arret

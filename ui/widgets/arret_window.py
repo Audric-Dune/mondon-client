@@ -11,9 +11,9 @@ from ui.widgets.live_speed import LiveSpeed
 
 
 class ArretWindow(QMainWindow):
-    def __init__(self, on_close):
+    def __init__(self, on_close, arret):
         super(ArretWindow, self).__init__(None)
-        # self.arret = arret
+        self.arret = arret
         self.live_speed = LiveSpeed(self)
         self.on_close = on_close
         self.init_widget()
@@ -24,5 +24,4 @@ class ArretWindow(QMainWindow):
         self.live_speed.setGeometry(5, 5, live_speed_width-10, live_speed_height)
 
     def closeEvent(self, event):
-        # self.on_close(self.arret.start)
-        pass
+        self.on_close(self.arret.start)
