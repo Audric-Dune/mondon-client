@@ -18,13 +18,12 @@ current_time = time()
 
 class DataStore:
     def __init__(self, start, end, day_ago):
+        self.start = start
+        self.end = end
         self.day_ago = day_ago
         self.data = []
         self.dic_arret = {}
         self.arrets = []
-        self.dechets = []
-        self.start = start
-        self.end = end
 
     def add_data(self):
         try:

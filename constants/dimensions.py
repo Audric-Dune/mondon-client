@@ -26,3 +26,9 @@ window_width = 1200
 window_height = 600
 # Taille de fenêtre vitesse actuelle
 width_windown_live_speed = 250
+# Tableau arret
+width_col_num = 50
+width_col_hour = 80
+width_col_time = 80
+width_col_type = 120
+width_col_raison = 600 - width_col_num - width_col_hour - width_col_time - width_col_type
