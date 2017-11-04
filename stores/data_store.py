@@ -100,7 +100,7 @@ class DataStore:
                     object_arret.end = end_arret
                     object_arret.update_arret()
             # Sinon on ajoute un object Arret au dictionnaire
-            # On utilise les datas définit parles vitesses de la base de donnée
+            # On utilise les datas définit par les vitesses de la base de donnée
             else:
                 from ui.widgets.arret import Arret
                 arret_data = [start_arret, end_arret, "NULL", "NULL"]

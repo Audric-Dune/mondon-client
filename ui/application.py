@@ -16,6 +16,7 @@ class Application(QApplication):
         super(Application, self).__init__(argv)
         self.main_window = None
         self.tracker_window = None
+        self.dic_arret_window = {}
 
     def on_close_main_window(self):
         self.main_window = None
@@ -24,6 +25,9 @@ class Application(QApplication):
     def on_close_tracker_window(self):
         self.tracker_window = None
         self.close_data_store_manager()
+
+    def on_close_arret_window(self, start_arret):
+        del self.dic_arret_window[start_arret]
 
     def close_data_store_manager(self):
         # Fonction qui se charge de stopper le refresh data lorsque
@@ -63,5 +67,18 @@ class Application(QApplication):
             self.tracker_window.setFixedSize(width_windown_live_speed, 60)
             self.tracker_window.setWindowTitle("DUNE Tracker")
             self.tracker_window.show()
+
+    def create_arret_window(self):
+        start_arret = 1
+        # if self.dic_arret_window[start_arret]:
+        #     self.focus_window(self.dic_arret_window[start_arret])
+        # else:
+        from ui.widgets.arret_window import ArretWindow
+        arret_window = ArretWindow(self.on_close_arret_window)
+        self.dic_arret_window[start_arret] = arret_window
+        arret_window.setFixedSize(width_windown_live_speed, 60)
+        arret_window.setWindowTitle("Gestion d'un arrêt")
+        arret_window.show()
+
 
 app = Application()

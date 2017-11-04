@@ -165,7 +165,7 @@ class TabArret(MondonWidget):
                     list_arret.append(dic_arret[start_arret])
             # Sinon on arrete la boucle
             else:
-                break
+                continue
         self.list_arret = list_arret
 
     def update_label(self):
