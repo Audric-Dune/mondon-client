@@ -70,7 +70,7 @@ class Application(QApplication):
             self.tracker_window.show()
 
     def create_arret_window(self, start_arret, day_ago):
-        if self.dic_arret_window[start_arret]:
+        if self.dic_arret_window.get(start_arret):
             self.focus_window(self.dic_arret_window[start_arret])
         else:
             object_arret = data_store_manager.get_store_at_day_ago(day_ago).dic_arret[start_arret]
