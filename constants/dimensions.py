@@ -32,3 +32,7 @@ width_col_hour = 80
 width_col_time = 80
 width_col_type = 120
 width_col_raison = 600 - width_col_num - width_col_hour - width_col_time - width_col_type
+# Window arret
+window_arret_width = 500
+window_arret_height_init = 135
+padding_arret = 5

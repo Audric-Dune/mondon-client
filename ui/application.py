@@ -6,7 +6,12 @@ from lib.logger import logger
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication
 
-from constants.dimensions import window_height, window_width, width_windown_live_speed
+from constants.dimensions import (window_height,
+                                  window_width,
+                                  width_windown_live_speed,
+                                  window_arret_width,
+                                  window_arret_height_init,
+                                  )
 from stores.data_store_manager import data_store_manager
 
 
@@ -77,7 +82,7 @@ class Application(QApplication):
             from ui.widgets.arret_window import ArretWindow
             arret_window = ArretWindow(self.on_close_arret_window, object_arret)
             self.dic_arret_window[start_arret] = arret_window
-            arret_window.setFixedSize(width_windown_live_speed, 60)
+            arret_window.resize(window_arret_width, window_arret_height_init)
             arret_window.setWindowTitle("Gestion d'un arrêt")
             arret_window.show()
 
