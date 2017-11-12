@@ -36,7 +36,10 @@ class DataStore:
             self.dic_arret_from_database(list_arrets_database)
             list_arrets_data = self.list_new_arret_data()
             list_new_arret = self.update_dic_arret(list_arrets_data)
+            list_raisons = Database.get_raison(self.start, self.end)
+            self.add_raisons_to_arret(list_raisons, self.dic_arret)
             self.arrets = self.convert_dic_to_array(self.dic_arret)
+            print(self.arrets)
             return True, list_new_arret
         except:
             return False, []
@@ -44,9 +47,9 @@ class DataStore:
     @staticmethod
     def convert_dic_to_array(dic):
         """
-        Convertie un dictionnaire (clé:start_arret, valeur:Arret) en un tableau de [start, end, type, raison]
+        Convertie un dictionnaire (clé:start_arret, valeur:Arret) en un tableau de [start, end]
         :param dic: Dictionnaire d'arrêt
-        :return: Un tableau de data d'arret [start, end, type, raison]
+        :return: Un tableau de data d'arret [start, end]
         """
         # Initialisation du tableau à retourner
         array = []
@@ -56,12 +59,41 @@ class DataStore:
             # Assigne les valeurs de l'arrêt dans tab
             start = value[1].start
             end = value[1].end
-            type = value[1].type
-            raison = value[1].raison
-            tab = [start, end, type, raison]
+            raisons = value[1].raisons
+            tab = [start, end, raisons]
             # Ajoute tab au tableau à retourner
             array.append(tab)
         return array
+
+    def add_raisons_to_arret(self, list_raisons, dic_arret):
+        for raison in list_raisons:
+            start_raison = raison[1]
+            id_raison = raison[0]
+            arret_object = self.check_start_raison(dic_arret, start_raison)
+            if arret_object:
+                if self.check_id_raison(arret_object, id_raison):
+                    continue
+                else:
+                    from ui.widgets.raison import Raison
+                    raison_object = Raison(raison)
+                    arret_object.raisons.append(raison_object)
+
+    @staticmethod
+    def check_start_raison(dic_arret, start):
+        for value in dic_arret.items():
+            start_arret = value[0]
+            if start_arret == start:
+                return value[1]
+        return False
+
+    @staticmethod
+    def check_id_raison(arret_object, id):
+        list_raisons = arret_object.raisons
+        for raison in list_raisons:
+            raison_id = raison.id
+            if raison_id == id:
+                return True
+        return False
 
     def dic_arret_from_database(self, list_arrets_database):
         """
@@ -104,7 +136,7 @@ class DataStore:
             # On utilise les datas définit par les vitesses de la base de donnée
             else:
                 from ui.widgets.arret import Arret
-                arret_data = [start_arret, end_arret, "NULL", "NULL"]
+                arret_data = [start_arret, end_arret]
                 object_arret = Arret(arret_data)
                 self.dic_arret[start_arret] = object_arret
                 list_new_arret.append(start_arret)
@@ -229,6 +261,7 @@ class DataStore:
         return sum(result) / len(result) if result else -1
 
     def get_last_speed(self):
+        last_data = 0
         if self.data:
             for data in self.data:
                 if data[1] >= 0:

@@ -114,7 +114,7 @@ class Database:
         :param end_time: Timestamp maximum de l'arrêt
         :return: Une liste
         """
-        query = "SELECT start, end, type, raison " \
+        query = "SELECT start, end " \
                 "FROM mondon_arret " \
                 "WHERE start > ? AND start <= ?" \
                 "ORDER BY start"\
@@ -130,7 +130,7 @@ class Database:
         :param end_arret: Timestamp fin de l'arrêt
         """
         try:
-            cls._run_query("INSERT INTO mondon_arret VALUES (?, ?, ?, ?)", (start_arret, end_arret, "NULL", "NULL"))
+            cls._run_query("INSERT INTO mondon_arret VALUES (?, ?)", (start_arret, end_arret))
         except sqlite3.IntegrityError as e:
             # IntegrityError veut dire que l'on essaye d'insérer une vitesse avec un timestamp
             # qui existe déjà dans la base de données.
@@ -140,20 +140,18 @@ class Database:
             pass
 
     @classmethod
-    def update_arret(cls, start_arret, end_arret, type_arret, raison_arret):
+    def update_arret(cls, start_arret, end_arret):
         """
         Met à jour un arret
         :param start_arret: Début de l'arrêt (clé pour retrouver l'arret en base de donnée)
         :param end_arret: Fin de l'arret
-        :param type_arret: Type d'arret
-        :param raison_arret: Raison de l'arret
         """
         query = "UPDATE mondon_arret " \
-                "SET end = ?, type = ?, raison = ? " \
+                "SET end = ?" \
                 "WHERE start = ?" \
-            .format(end_arret, type_arret, raison_arret, start_arret)
+            .format(end_arret, start_arret)
         try:
-            cls._run_query(query, (end_arret, type_arret, raison_arret, start_arret))
+            cls._run_query(query, (end_arret, start_arret))
         except sqlite3.IntegrityError as e:
             # IntegrityError veut dire que l'on essaye d'insérer une vitesse avec un timestamp
             # qui existe déjà dans la base de données.
@@ -161,6 +159,22 @@ class Database:
             # ignore l'exception.
             logger.log("DATABASE", "(Ignorée) IntegrityError: {}".format(e))
             pass
+
+    @classmethod
+    def get_raison(cls, start_time, end_time):
+        """
+        Récupère les raisons d'arret en base de donnée compris entre une plage de timestamp dans l'ordre chronologique
+        :param start_time: Timestamp minimum de l'arrêt
+        :param end_time: Timestamp maximum de l'arrêt
+        :return: Une liste de raisons d'arret
+        """
+        query = "SELECT id, start_arret, type_arret, raison_arret, duree " \
+                "FROM mondon_raison_arret " \
+                "WHERE start_arret > ? AND start_arret <= ?" \
+                "ORDER BY start_arret"\
+            .format(start_time=start_time, end_time=end_time)
+        raisons = cls._run_query(query, (start_time, end_time))
+        return raisons
 
     @classmethod
     def get_dechet(cls, start_time, end_time):

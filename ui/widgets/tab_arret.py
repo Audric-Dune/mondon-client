@@ -176,13 +176,9 @@ class TabArret(MondonWidget):
                 current_arret = self.list_arret[i]
                 hour = current_arret.start
                 temps = current_arret.end - current_arret.start
-                type = current_arret.type
-                raison = current_arret.raison
                 # Mis à jour des textes
                 self.labels_hours[i].setText(timestamp_to_hour_little(hour))
                 self.labels_time[i].setText(str(timedelta(seconds=round(temps))))
-                self.labels_type[i].setText(type)
-                self.labels_raison[i].setText(raison)
                 # Mis à jour des couleurs
                 if temps <= 15 * 60:  # Moins de 15 minutes
                     self.labels_time[i].setStyleSheet(white_label_stylesheet)
