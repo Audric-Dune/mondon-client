@@ -66,20 +66,36 @@ class DataStore:
         return array
 
     def add_raisons_to_arret(self, list_raisons, dic_arret):
+        """
+        Ajoute les raisons enregistrées dans la base de donnée a son arret associé
+        :param list_raisons: Liste des raisons que l'on récupère de la base de donnée
+        :param dic_arret: Dictionnaire des arrêts mis a jours précedemment
+        """
+        # On parcour les raisons de la base de donnée
         for raison in list_raisons:
             start_raison = raison[1]
             id_raison = raison[0]
+            # Test si le start de la raison correspond au start d'un arret
             arret_object = self.check_start_raison(dic_arret, start_raison)
             if arret_object:
+                # Test si la raison est déja renseigné dans l'object Arret
                 if self.check_id_raison(arret_object, id_raison):
+                    # Si oui on ne fait rien
                     continue
                 else:
+                    # Sinon on crée un object raison est on l'insert dans le tableau de raison de l'arret
                     from ui.widgets.raison import Raison
                     raison_object = Raison(raison)
                     arret_object.raisons.append(raison_object)
 
     @staticmethod
     def check_start_raison(dic_arret, start):
+        """
+        Permet d'identifer un arret dans un dictionnaire d'arret avec la valeur start
+        :param dic_arret: Dictionnaire d'arret
+        :param start: Valeur du start arret recherché
+        :return: l'object arret trouvé ou False
+        """
         for value in dic_arret.items():
             start_arret = value[0]
             if start_arret == start:
@@ -88,6 +104,12 @@ class DataStore:
 
     @staticmethod
     def check_id_raison(arret_object, id):
+        """
+        Permet de checker si une raison est déja présente dans le tableau de raison d'un arret
+        :param arret_object: Object arret ou l'on test
+        :param id: Id que l'on recherche dans l'arret
+        :return: True si la raison est présente, False si on ne l'a trouve pas
+        """
         list_raisons = arret_object.raisons
         for raison in list_raisons:
             raison_id = raison.id
