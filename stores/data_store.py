@@ -39,7 +39,6 @@ class DataStore:
             list_raisons = Database.get_raison(self.start, self.end)
             self.add_raisons_to_arret(list_raisons, self.dic_arret)
             self.arrets = self.convert_dic_to_array(self.dic_arret)
-            print(self.arrets)
             return True, list_new_arret
         except:
             return False, []

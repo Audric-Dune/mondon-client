@@ -20,6 +20,11 @@ def timestamp_to_date(timestamp):
     return datetime.fromtimestamp(timestamp).strftime('%A %d %B %Y')
 
 
+def timestamp_to_date_little(timestamp):
+    locale.setlocale(locale.LC_TIME, '')
+    return datetime.fromtimestamp(timestamp).strftime('%d/%m/%y')
+
+
 def timestamp_to_day(timestamp):
     locale.setlocale(locale.LC_TIME, '')
     return datetime.fromtimestamp(timestamp).strftime('%A')

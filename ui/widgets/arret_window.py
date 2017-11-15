@@ -14,8 +14,8 @@ class ArretWindow(QMainWindow):
     def __init__(self, on_close, arret):
         super(ArretWindow, self).__init__(None)
         self.arret = arret
-        self.arret_window_title = ArretWindowTitle(self)
-        self.arret_window_select_type = ArretWindowSelectType(self)
+        self.arret_window_title = ArretWindowTitle(arret, parent=self)
+        #self.arret_window_select_type = ArretWindowSelectType(self)
         self.on_close = on_close
         self.init_widget()
 
@@ -24,10 +24,10 @@ class ArretWindow(QMainWindow):
                                             padding_arret,
                                             window_arret_width-padding_arret*2,
                                             60-padding_arret*2)
-        self.arret_window_select_type.setGeometry(padding_arret,
-                                                  60,
-                                                  window_arret_width-padding_arret*2,
-                                                  80-padding_arret*2)
+        #self.arret_window_select_type.setGeometry(padding_arret,
+                                                  #60,
+                                                  #window_arret_width-padding_arret*2,
+                                                  #80-padding_arret*2)
 
     def test(self):
         app.agrandi_arret_window(self.arret.start)
