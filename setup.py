@@ -3,7 +3,7 @@ from cx_Freeze import setup, Executable
 
 build_exe_options = {"packages": ["os"],
                      "excludes": ["tkinter"],
-                     "include_files": ["assets", "constants", "lib", "stores", "ui"]}
+                     "include_files": ["assets", "constants", "lib", "stores", "ui", "qobjects"]}
 
 base = None
 if sys.platform == "win32":
