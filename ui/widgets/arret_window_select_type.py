@@ -7,7 +7,7 @@ from PyQt5.QtCore import QSize
 
 from constants.colors import color_bleu_gris
 
-from constants.dimensions import padding_button
+from constants.dimensions import padding_button, window_arret_width, button_size
 
 from constants.stylesheets import button_stylesheet
 
@@ -30,16 +30,16 @@ class ArretWindowSelectType(MondonWidget):
         self.update()
 
     def init_button(self):
-        button_width = 100
-        button_height = self.height()
+        button_width = 200
+        button_height = button_size
         self.bt_prevu.setStyleSheet(button_stylesheet)
-        self.bt_prevu.setGeometry(10,
-                                  10,
+        self.bt_prevu.setGeometry(padding_button,
+                                  15,
                                   button_width,
                                   button_height)
         self.bt_imprevu.setStyleSheet(button_stylesheet)
-        self.bt_imprevu.setGeometry(self.width()-10-button_width,
-                                    10,
+        self.bt_imprevu.setGeometry(window_arret_width-padding_button*2-button_width,
+                                    15,
                                     button_width,
                                     button_height)
 
