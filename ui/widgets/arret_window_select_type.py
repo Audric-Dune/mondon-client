@@ -24,7 +24,6 @@ class ArretWindowSelectType(MondonWidget):
         self.init_button()
 
     def draw_fond(self, p):
-        print(self.width(), self.height())
         draw_rectangle(p, 0, 0, self.width(), self.height(), color_bleu_gris)
 
     def on_data_changed(self):

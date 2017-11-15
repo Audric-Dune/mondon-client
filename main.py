@@ -13,5 +13,7 @@ from ui.application import app
 logger.log("INITIALISATION", "Définition de l'icone de l'application")
 app.setWindowIcon(QIcon("assets/icons/logo_dune_production.ico"))
 app.create_main_window()
+from stores.data_store_manager import data_store_manager
+data_store_manager.refresh_data()
 
 sys.exit(app.exec_())

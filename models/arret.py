@@ -1,11 +1,11 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from ui.widgets.mondon_widget import MondonWidget
+from PyQt5.QtCore import QObject
 from lib.base_de_donnee import Database
 
 
-class Arret(MondonWidget):
+class Arret(QObject):
     def __init__(self, arret_data):
         super(Arret, self).__init__(None)
         self.start = arret_data[0]

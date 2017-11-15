@@ -20,8 +20,38 @@ class DataStoreManager(QObject):
         self.dic_data_store = {}
         self.current_store = None
         self.refresh_timer = None
-        settings_store.SETTINGS_CHANGED_SIGNAL.connect(self.update_current_store)
+        settings_store.SETTINGS_CHANGED_SIGNAL.connect(self.handle_settings_change)
         self.update_current_store()
+
+    def handle_settings_change(self):
+        self.update_current_store()
+        self.refresh_data(force_refresh=True)
+
+    def refresh_once(self, force_refresh):
+        # Récupération du DataStore du jour qui est actuellement affiché
+        current_store = self.get_current_store()
+        # Récupération du DataStore le plus récent (celui d'aujourd'hui)
+        most_recent_store = self.get_most_recent_store()
+
+        # Création d'un "set" des DataStore à mettre à jour.
+        # Le set s'occupe automatiquement d'enlevé les valeurs dupliquées, donc
+        # on n'essayera pas de mettre à jour le même DataStore deux fois si le
+        # DataStore actuellement affiché est aussi le plus récent
+        stores_to_update = set([current_store, most_recent_store])
+
+        # Mets à jour les stores
+        should_refresh = force_refresh
+        for store in stores_to_update:
+            new_data, list_new_arret = store.add_data()
+            should_refresh = new_data or should_refresh
+            if list_new_arret:
+                for start_arret in list_new_arret:
+                    print("Nouvelle arret")
+                    self.NEW_ARRET_SIGNAL.emit(start_arret, store.day_ago)
+
+        # Envois un signal que les data ont changées si nécessaire
+        if should_refresh:
+            self.DATA_CHANGED_SIGNAL.emit()
 
     def update_current_store(self, *args):
         jour = timestamp_at_day_ago(settings_store.day_ago)
@@ -33,7 +63,6 @@ class DataStoreManager(QObject):
             end = timestamp_at_time(jour, hours=22)
             self.current_store = DataStore(start, end, settings_store.day_ago)
             self.dic_data_store[jour_str] = self.current_store
-        self.refresh_data(force_refresh=True)
 
     def cancel_refresh(self):
         if self.refresh_timer:
@@ -60,31 +89,7 @@ class DataStoreManager(QObject):
     def refresh_data(self, force_refresh=False):
         if self.refresh_timer:
             self.refresh_timer.cancel()
-
-        # Récupération du DataStore du jour qui est actuellement affiché
-        current_store = self.get_current_store()
-        # Récupération du DataStore le plus récent (celui d'aujourd'hui)
-        most_recent_store = self.get_most_recent_store()
-
-        # Création d'un "set" des DataStore à mettre à jour.
-        # Le set s'occupe automatiquement d'enlevé les valeurs dupliquées, donc
-        # on n'essayera pas de mettre à jour le même DataStore deux fois si le
-        # DataStore actuellement affiché est aussi le plus récent
-        stores_to_update = set([current_store, most_recent_store])
-
-        # Mets à jour les stores
-        should_refresh = force_refresh
-        for store in stores_to_update:
-            new_data, list_new_arret = store.add_data()
-            should_refresh = new_data or should_refresh
-            if list_new_arret:
-                for start_arret in list_new_arret:
-                    self.NEW_ARRET_SIGNAL.emit(start_arret, store.day_ago)
-
-        # Envois un signal que les data ont changées si nécessaire
-        if should_refresh:
-            self.DATA_CHANGED_SIGNAL.emit()
-
+        self.refresh_once(force_refresh)
         # Ré-exécute la fonction dans 1 seconde
         self.refresh_timer = threading.Timer(0.5, self.refresh_data)
         self.refresh_timer.start()

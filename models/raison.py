@@ -1,11 +1,10 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from ui.widgets.mondon_widget import MondonWidget
-# from lib.base_de_donnee import Database
+from PyQt5.QtCore import QObject
 
 
-class Raison(MondonWidget):
+class Raison(QObject):
     def __init__(self, raison_data):
         super(Raison, self).__init__(None)
         self.id = raison_data[0]

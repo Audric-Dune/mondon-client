@@ -1,11 +1,11 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from ui.widgets.mondon_widget import MondonWidget
+from PyQt5.QtCore import QObject
 from lib.base_de_donnee import Database
 
 
-class Dechet(MondonWidget):
+class Dechet(QObject):
     def __init__(self, dechet_data):
         super(Dechet, self).__init__()
         self.id = dechet_data[0]

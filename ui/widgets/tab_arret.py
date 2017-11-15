@@ -124,7 +124,7 @@ class TabArret(MondonWidget):
 
     def get_arret(self):
         """
-        S'occupe de créer une liste d'qobjects Arret pour le moment de la journée courante
+        S'occupe de créer une liste d'models Arret pour le moment de la journée courante
         :return:
         """
         # Récupere le store courant
@@ -161,7 +161,7 @@ class TabArret(MondonWidget):
             if end_ts >= start_arret >= start_ts:
                 # Et si la fin de l'arret est bien definit
                 if end_arret > 0:
-                    # On ajoute a la liste des arrets l'qobjects Arret stocké dans le dictionnaire
+                    # On ajoute a la liste des arrets l'models Arret stocké dans le dictionnaire
                     list_arret.append(dic_arret[start_arret])
             # Sinon on continue la boucle
             else:
