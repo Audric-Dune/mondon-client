@@ -1,8 +1,6 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from lib.logger import logger
-
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication
 
@@ -12,6 +10,7 @@ from constants.dimensions import (window_height,
                                   window_arret_width,
                                   window_arret_height_init,
                                   )
+from lib.logger import logger
 from stores.data_store_manager import data_store_manager
 
 
@@ -51,7 +50,7 @@ class Application(QApplication):
         if self.main_window:
             self.focus_window(self.main_window)
         else:
-            from ui.widgets.main_window import MainWindow
+            from ui.windows.main_window import MainWindow
             logger.log("INITIALISATION", "Création de la Window")
             self.main_window = MainWindow(self.on_close_main_window)
 
@@ -68,7 +67,7 @@ class Application(QApplication):
         if self.tracker_window:
             self.focus_window(self.tracker_window)
         else:
-            from ui.widgets.tracker_window import TrackerWindow
+            from ui.windows.tracker_window import TrackerWindow
             self.tracker_window = TrackerWindow(self.on_close_tracker_window)
             self.tracker_window.setFixedSize(width_windown_live_speed, 60)
             self.tracker_window.setWindowTitle("DUNE Tracker")
@@ -79,7 +78,7 @@ class Application(QApplication):
             self.focus_window(self.dic_arret_window[start_arret])
         else:
             object_arret = data_store_manager.get_store_at_day_ago(day_ago).dic_arret[start_arret]
-            from ui.widgets.arret_window import ArretWindow
+            from ui.windows.arret_window import ArretWindow
             arret_window = ArretWindow(self.on_close_arret_window, object_arret)
             self.dic_arret_window[start_arret] = arret_window
             arret_window.resize(window_arret_width, window_arret_height_init)

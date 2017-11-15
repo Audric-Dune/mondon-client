@@ -4,14 +4,12 @@
 from itertools import groupby
 from time import time
 
+from lib.base_de_donnee import Database
 from ui.utils.timestamp import (
     timestamp_at_day_ago,
     timestamp_at_time,
     timestamp_to_day
 )
-
-from lib.base_de_donnee import Database
-
 
 current_time = time()
 
@@ -54,7 +52,7 @@ class DataStore:
         array = []
         # Parcours les valeurs du dictionnaire
         for value in dic.items():
-            # value[1] est l'object Arret du dictionnaire
+            # value[1] est l'qobjects Arret du dictionnaire
             # Assigne les valeurs de l'arrêt dans tab
             start = value[1].start
             end = value[1].end
@@ -77,13 +75,13 @@ class DataStore:
             # Test si le start de la raison correspond au start d'un arret
             arret_object = self.check_start_raison(dic_arret, start_raison)
             if arret_object:
-                # Test si la raison est déja renseigné dans l'object Arret
+                # Test si la raison est déja renseigné dans l'qobjects Arret
                 if self.check_id_raison(arret_object, id_raison):
                     # Si oui on ne fait rien
                     continue
                 else:
-                    # Sinon on crée un object raison est on l'insert dans le tableau de raison de l'arret
-                    from ui.widgets.raison import Raison
+                    # Sinon on crée un qobjects raison est on l'insert dans le tableau de raison de l'arret
+                    from qobjects.raison import Raison
                     raison_object = Raison(raison)
                     arret_object.raisons.append(raison_object)
 
@@ -93,7 +91,7 @@ class DataStore:
         Permet d'identifer un arret dans un dictionnaire d'arret avec la valeur start
         :param dic_arret: Dictionnaire d'arret
         :param start: Valeur du start arret recherché
-        :return: l'object arret trouvé ou False
+        :return: l'qobjects arret trouvé ou False
         """
         for value in dic_arret.items():
             start_arret = value[0]
@@ -128,9 +126,9 @@ class DataStore:
             # La clé du dictionnaire est le début de l'arret
             if self.dic_arret.get(start_arret):
                 continue
-            # Sinon on ajoute un object Arret au dictionnaire avec les datas de la base de donnée
+            # Sinon on ajoute un qobjects Arret au dictionnaire avec les datas de la base de donnée
             else:
-                from ui.widgets.arret import Arret
+                from qobjects.arret import Arret
                 object_arret = Arret(arret_database)
                 self.dic_arret[start_arret] = object_arret
 
@@ -153,10 +151,10 @@ class DataStore:
                 if object_arret.end != end_arret:
                     object_arret.end = end_arret
                     object_arret.update_arret()
-            # Sinon on ajoute un object Arret au dictionnaire
+            # Sinon on ajoute un qobjects Arret au dictionnaire
             # On utilise les datas définit par les vitesses de la base de donnée
             else:
-                from ui.widgets.arret import Arret
+                from qobjects.arret import Arret
                 arret_data = [start_arret, end_arret]
                 object_arret = Arret(arret_data)
                 self.dic_arret[start_arret] = object_arret
