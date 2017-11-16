@@ -7,6 +7,7 @@ from constants.dimensions import padding_arret, window_arret_width
 
 from ui.widgets.arret_window_title import ArretWindowTitle
 from ui.widgets.arret_window_select_type import ArretWindowSelectType
+from ui.widgets.arret_window_select_raison import ArretWindowSelectRaison
 
 
 class ArretWindow(QMainWindow):
@@ -30,7 +31,8 @@ class ArretWindow(QMainWindow):
         self.setCentralWidget(self.central_widget)
 
     def update_widget(self):
-        pass
+        arret_window_raison = ArretWindowSelectRaison(self.arret, parent=self.central_widget)
+        self.vbox.addWidget(arret_window_raison)
 
     def closeEvent(self, event):
         self.on_close(self.arret.start)
