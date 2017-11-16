@@ -69,7 +69,7 @@ class Application(QApplication):
         else:
             from ui.windows.tracker_window import TrackerWindow
             self.tracker_window = TrackerWindow(self.on_close_tracker_window)
-            self.tracker_window.setFixedSize(width_windown_live_speed, 60)
+            self.tracker_window.setFixedHeight(width_windown_live_speed, 60)
             self.tracker_window.setWindowTitle("DUNE Tracker")
             self.tracker_window.show()
 
@@ -81,7 +81,6 @@ class Application(QApplication):
             from ui.windows.arret_window import ArretWindow
             arret_window = ArretWindow(self.on_close_arret_window, object_arret)
             self.dic_arret_window[start_arret] = arret_window
-            arret_window.setFixedSize(window_arret_width, window_arret_height_init)
             arret_window.setWindowTitle("Gestion d'un arrêt")
             arret_window.show()
 

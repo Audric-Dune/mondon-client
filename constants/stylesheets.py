@@ -2,6 +2,7 @@ from constants.colors import (
     color_blanc,
     color_bleu_gris,
     color_gris_moyen,
+    color_gris_fonce,
     color_orange,
     color_rouge,
     color_vert,
@@ -20,13 +21,15 @@ def create_qlabel_stylesheet(background_color=color_bleu_gris, color=color_blanc
     """.format(
         background_color=background_color.hex_string,
         color=color.hex_string,
-        font_size=font_size,
+        font_size=font_size
     )
 
 white_label_stylesheet = create_qlabel_stylesheet(color=color_blanc)
 orange_label_stylesheet = create_qlabel_stylesheet(color=color_orange)
 red_label_stylesheet = create_qlabel_stylesheet(color=color_rouge)
 white_title_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, font_size="16px")
+white_20_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, font_size="20px")
+white_24_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, font_size="24px")
 
 button_stylesheet = """
     QPushButton {{
@@ -63,7 +66,7 @@ button_stylesheet_unselected = """
         font-size: 22px;
     }}
     QPushButton:hover {{
-        background-color: {color_vert_moyen};
+        background-color: {color_gris_fonce};
     }}
     QPushButton:pressed {{
         border-style: solid;
@@ -79,6 +82,7 @@ button_stylesheet_unselected = """
     color_vert_moyen=color_vert_moyen.hex_string,
     color_vert=color_vert.hex_string,
     color_gris_moyen=color_gris_moyen.hex_string,
+    color_gris_fonce=color_gris_fonce.hex_string,
     color_rouge=color_rouge.hex_string,
 )
 

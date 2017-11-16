@@ -2,15 +2,14 @@
 # -*- coding: utf-8 -*-
 
 from datetime import timedelta
+from PyQt5.QtWidgets import QLabel, QHBoxLayout
 from PyQt5.QtGui import QPainter
+from PyQt5.QtCore import Qt
 
-from constants.colors import color_blanc, color_bleu_gris
+from constants.colors import color_bleu_gris
+from constants.stylesheets import white_20_label_stylesheet, white_24_label_stylesheet
 
-from constants.dimensions import (
-    padding_arret,
-)
-
-from ui.utils.drawing import draw_rectangle, draw_text
+from ui.utils.drawing import draw_rectangle
 from ui.utils.timestamp import timestamp_to_hour_little, timestamp_to_date_little
 from ui.widgets.mondon_widget import MondonWidget
 
@@ -19,12 +18,17 @@ class ArretWindowTitle(MondonWidget):
     def __init__(self, arret, parent):
         super(ArretWindowTitle, self).__init__(parent=parent)
         self.arret = arret
+        self.label_date = QLabel()
+        self.label_hour = QLabel()
+        self.label_duration = QLabel()
+        self.update_widget()
+        self.init_widget()
 
     def draw_fond(self, p):
         draw_rectangle(p, 0, 0, self.width(), self.height(), color_bleu_gris)
 
     def on_data_changed(self):
-        self.update()
+        self.update_widget()
 
     def paintEvent(self, event):
         p = QPainter()
@@ -32,47 +36,23 @@ class ArretWindowTitle(MondonWidget):
         self.draw(p)
         p.end()
 
-    def draw_date(self, p):
-        start_time = self.arret.start
-        text = str(timestamp_to_date_little(start_time))
-        draw_text(p,
-                  x=padding_arret,
-                  y=0,
-                  width=120,
-                  height=50,
-                  color=color_blanc,
-                  align="G",
-                  font_size=18,
-                  text=text)
+    def init_widget(self):
+        hbox = QHBoxLayout()
+        self.label_date.setStyleSheet(white_20_label_stylesheet)
+        self.label_date.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+        hbox.addWidget(self.label_date)
+        self.label_duration.setStyleSheet(white_24_label_stylesheet)
+        self.label_duration.setAlignment(Qt.AlignCenter)
+        hbox.addWidget(self.label_duration)
+        self.label_hour.setStyleSheet(white_20_label_stylesheet)
+        self.label_hour.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        hbox.addWidget(self.label_hour)
+        self.setLayout(hbox)
 
-    def draw_hour(self, p):
-        start_time = self.arret.start
-        text = str(timestamp_to_hour_little(start_time))
-        draw_text(p,
-                  x=self.width()-120-padding_arret,
-                  y=0,
-                  width=120,
-                  height=50,
-                  color=color_blanc,
-                  align="D",
-                  font_size=18,
-                  text=text)
-
-    def draw_duration(self, p):
-        duration_ts = self.arret.end - self.arret.start
-        text = str(timedelta(seconds=round(duration_ts)))
-        draw_text(p,
-                  x=(self.width()-120)/2,
-                  y=0,
-                  width=120,
-                  height=50,
-                  color=color_blanc,
-                  align="C",
-                  font_size=22,
-                  text=text)
+    def update_widget(self):
+        self.label_date.setText(str(timestamp_to_date_little(self.arret.start)))
+        self.label_hour.setText(str(timestamp_to_hour_little(self.arret.start)))
+        self.label_duration.setText(str(timedelta(seconds=round(self.arret.end - self.arret.start))))
 
     def draw(self, p):
         self.draw_fond(p)
-        self.draw_date(p)
-        self.draw_hour(p)
-        self.draw_duration(p)
