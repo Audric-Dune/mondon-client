@@ -12,9 +12,10 @@ from ui.widgets.arret_window_select_type import ArretWindowSelectType
 class ArretWindow(QMainWindow):
     def __init__(self, on_close, arret):
         super(ArretWindow, self).__init__(None)
+        arret.ARRET_CHANGED_SIGNAL.connect(self.update_widget)
         self.arret = arret
         self.arret_window_title = ArretWindowTitle(arret, parent=self)
-        self.arret_window_select_type = ArretWindowSelectType(self)
+        self.arret_window_select_type = ArretWindowSelectType(arret, parent=self)
         self.on_close = on_close
         self.init_widget()
 
@@ -27,6 +28,9 @@ class ArretWindow(QMainWindow):
                                                   60,
                                                   window_arret_width-padding_arret*2,
                                                   80-padding_arret*2)
+
+    def update_widget(self):
+        print("SIGNAL ARRET CHANGED")
 
     def closeEvent(self, event):
         self.on_close(self.arret.start)

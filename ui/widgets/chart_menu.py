@@ -50,7 +50,7 @@ class ChartMenu(MondonWidget):
     def draw_date(self, p):
         ts = timestamp_at_day_ago(self.day_ago)
         date = timestamp_to_date(ts)
-        text_width = 400
+        text_width = 450
         text_height = 50
         draw_text(p,
                   x=(self.width() - text_width) / 2,
@@ -92,11 +92,11 @@ class ChartMenu(MondonWidget):
         self.bt_zoom_plus.setEnabled(32 > self.zoom)
 
     def set_buttons_geometry(self):
-        self.bt_jour_plus.setGeometry((self.width() - button_size + 400) / 2,
+        self.bt_jour_plus.setGeometry((self.width() - button_size + 450) / 2,
                                       (self.height() - button_size) / 2,
                                       button_size,
                                       button_size)
-        self.bt_jour_moins.setGeometry((self.width() - button_size - 400) / 2,
+        self.bt_jour_moins.setGeometry((self.width() - button_size - 450) / 2,
                                        (self.height() - button_size) / 2,
                                        button_size,
                                        button_size)
