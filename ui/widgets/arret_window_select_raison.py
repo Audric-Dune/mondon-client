@@ -5,10 +5,11 @@ from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import QFormLayout, QPushButton, QLabel
 
 from constants.colors import color_bleu_gris
+from constants.param import LIST_CHOIX_RAISON_PREVU
 
 from constants.dimensions import button_size
 
-from constants.stylesheets import button_stylesheet, button_stylesheet_unselected
+from constants.stylesheets import button_stylesheet, button_stylesheet_unselected, white_label_stylesheet
 
 from ui.utils.drawing import draw_rectangle
 from ui.widgets.mondon_widget import MondonWidget
@@ -35,20 +36,16 @@ class ArretWindowSelectRaison(MondonWidget):
         button.clicked.connect(lambda: self.onclick(index))
 
     def init_widget(self):
-        list_label = [
-            "Changement bobine papier",
-            "Changement bobine polypro",
-            "Changement bobine papier et polypro",
-            "Mise en place clichés",
-            "Fin de journée"
-        ]
+        list_label = LIST_CHOIX_RAISON_PREVU
         button = []
         qformlayout = QFormLayout()
         index = 0
-        for label in list_label:
+        for label_text in list_label:
             button.append(QPushButton(str(index)))
             self.connect_button(button[index], index)
-            qformlayout.addRow(button[index], QLabel(label))
+            label = QLabel(label_text)
+            label.setStyleSheet(white_label_stylesheet)
+            qformlayout.addRow(button[index], label)
             index += 1
         self.setLayout(qformlayout)
 

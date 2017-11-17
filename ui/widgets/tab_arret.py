@@ -8,6 +8,12 @@ from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel, QGridLayout
 
 from constants.colors import color_bleu_gris
+from constants.param import \
+    DEBUT_PROD_MATIN,\
+    FIN_PROD_SOIR,\
+    FIN_PROD_SOIR_VENDREDI, \
+    DEBUT_PROD_SOIR,\
+    FIN_PROD_MATIN_VENDREDI
 from constants.stylesheets import orange_label_stylesheet, red_label_stylesheet, white_label_stylesheet
 from constants.dimensions import width_col_num, width_col_hour, width_col_time, width_col_type, width_col_raison
 from stores.data_store_manager import data_store_manager
@@ -139,9 +145,9 @@ class TabArret(MondonWidget):
         # Check si on est un vendredi
         # Dans ce cas les équipes travail 7h (6h-13h,13h-21h)
         vendredi = timestamp_to_day(ts) == "vendredi"
-        start = 6
-        mid = 13 if vendredi else 14
-        end = 20 if vendredi else 22
+        start = DEBUT_PROD_MATIN
+        mid = FIN_PROD_MATIN_VENDREDI if vendredi else DEBUT_PROD_SOIR
+        end = FIN_PROD_SOIR_VENDREDI if vendredi else FIN_PROD_SOIR
 
         # Definit les bornes de sélection des arret en fonction du moment de la journée (matin ou soir)
         if self.moment == "matin":

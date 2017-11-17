@@ -3,6 +3,7 @@
 
 from itertools import groupby
 from time import time
+from constants.param import DEBUT_PROD_MATIN, FIN_PROD_SOIR, FIN_PROD_SOIR_VENDREDI, VITESSE_LIMITE_ASSIMILATION_ARRET
 
 from lib.base_de_donnee import Database
 from ui.utils.timestamp import (
@@ -173,9 +174,9 @@ class DataStore:
         # Test si on est un vendredi
         vendredi = timestamp_to_day(ts) == "vendredi"
         # Les équipes commence toujours à 6H
-        start = 6
+        start = DEBUT_PROD_MATIN
         # La fin de journée est 22h sauf le vendredi 20h
-        end = 20 if vendredi else 22
+        end = FIN_PROD_SOIR_VENDREDI if vendredi else FIN_PROD_SOIR
         # Définit les bornes de recherche d'arrêt dans les données
         start_ts = timestamp_at_time(ts, hours=start)
         end_ts = timestamp_at_time(ts, hours=end)
@@ -190,7 +191,7 @@ class DataStore:
             if value[0] < end_ts:
                 # On test si la vitesse est inférieure à 60
                 # On assimile une vitesse inférieure à 60 à machine à l'arrêt
-                if 0 <= value[1] <= 60:
+                if 0 <= value[1] <= VITESSE_LIMITE_ASSIMILATION_ARRET:
                     # Si on est pas déja dans un arrêt on définit le début de l'arrêt
                     if not speed_is_0:
                         start = value[0]

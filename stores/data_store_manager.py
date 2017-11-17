@@ -4,6 +4,8 @@
 import threading
 from PyQt5.QtCore import pyqtSignal, QObject
 
+from constants.param import DEBUT_PROD_MATIN, FIN_PROD_SOIR
+
 from ui.utils.timestamp import timestamp_at_day_ago, timestamp_at_time
 from stores.data_store import DataStore
 from stores.settings_store import settings_store
@@ -58,8 +60,8 @@ class DataStoreManager(QObject):
         if self.dic_data_store.get(jour_str):
             self.current_store = self.dic_data_store[jour_str]
         else:
-            start = timestamp_at_time(jour, hours=6)
-            end = timestamp_at_time(jour, hours=22)
+            start = timestamp_at_time(jour, hours=DEBUT_PROD_MATIN)
+            end = timestamp_at_time(jour, hours=FIN_PROD_SOIR)
             self.current_store = DataStore(start, end, settings_store.day_ago)
             self.dic_data_store[jour_str] = self.current_store
 

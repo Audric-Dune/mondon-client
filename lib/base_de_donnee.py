@@ -4,6 +4,7 @@
 import sqlite3
 from time import sleep
 
+from constants.param import DATABASE_LOCATION
 from lib.logger import logger
 
 
@@ -11,7 +12,6 @@ class Database:
     """
     S'occupe de maintenir une connexion à une base de données SQLite3 et d'exécuter des requêtes
     """
-    DATABASE_LOCATION = '../mondon.db'  # Où le fichier SQLite de la base de données est stocké.
     MAX_ATTEMPT_ON_ERROR = 3  # Nombre de fois que l'on réessaye d'exécuter une requête SQL avant
                               # d'abandonner en cas d'erreurs qui n'ont rien à voir avec la requête
                               # elle même. Par exemple, si la base de données est vérouillée parce
@@ -33,8 +33,8 @@ class Database:
         Crée une nouvelle connexion à la base de données.
         :return: Une nouvelle connexion à la base de données
         """
-        logger.log("DATABASE", "Connection à la base de données {}".format(cls.DATABASE_LOCATION))
-        conn = sqlite3.connect(cls.DATABASE_LOCATION)
+        logger.log("DATABASE", "Connection à la base de données {}".format(DATABASE_LOCATION))
+        conn = sqlite3.connect(DATABASE_LOCATION)
         return conn
 
     @classmethod
