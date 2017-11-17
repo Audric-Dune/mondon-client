@@ -21,4 +21,13 @@ LIST_CHOIX_RAISON_PREVU = [
             "Démarrage production sans réglage",
             "Fin de journée"
             ]
+# Liste choix de raison d'un arrêt imprévu
+LIST_CHOIX_RAISON_IMPREVU = [
+            "Casse",
+            "Mauvais encollage axes cartons",
+            "Problème buse colle à chaud",
+            "Entretien machine",
+            "Essai technique",
+            "Maintenance"
+            ]
 
