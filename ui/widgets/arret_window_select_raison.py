@@ -11,9 +11,10 @@ from constants.param import LIST_CHOIX_RAISON_PREVU, LIST_CHOIX_RAISON_IMPREVU
 from constants.stylesheets import \
     check_box_off_stylesheet,\
     check_box_on_stylesheet,\
-    check_box_unselected_stylesheet,\
-    white_20_label_stylesheet,\
-    disable_20_label_stylesheet
+    check_box_unselected_stylesheet, \
+    white_title_label_stylesheet,\
+    disable_16_label_stylesheet,\
+    dropdown_stylesheet
 
 from ui.utils.drawing import draw_rectangle
 from ui.widgets.mondon_widget import MondonWidget
@@ -28,6 +29,7 @@ class ArretWindowSelectRaison(MondonWidget):
         self.items = []
         self.buttons = []
         self.raison_index_selected = -1
+        self.last_raison_index = -1
         self.text_drop_down_selected = None
         self.vbox = QVBoxLayout()
         self.init_widget()
@@ -41,30 +43,42 @@ class ArretWindowSelectRaison(MondonWidget):
     def update_widget(self):
         index = 0
         while index < len(self.buttons):
-            if self.raison_index_selected == index:
+            if self.raison_index_selected < 0:
+                self.buttons[index].setStyleSheet(check_box_off_stylesheet)
+                self.buttons[index].setIcon(QIcon())
+                if self.items[index][0] == "label":
+                    self.items[index][1].setStyleSheet(white_title_label_stylesheet)
+                if self.items[index][0] == "dropdown":
+                    self.items[index][1].setDisabled(True)
+                    self.items[index][1].setCurrentIndex(0)
+            elif self.raison_index_selected == index:
                 self.buttons[index].setStyleSheet(check_box_on_stylesheet)
                 img = QIcon("assets/images/white_cross.png")
                 self.buttons[index].setIcon(img)
-                size = QSize(20, 20)
+                size = QSize(24, 24)
                 self.buttons[index].setIconSize(size)
                 if self.items[index][0] == "label":
-                    self.items[index][1].setStyleSheet(white_20_label_stylesheet)
+                    self.items[index][1].setStyleSheet(white_title_label_stylesheet)
                 if self.items[index][0] == "dropdown":
                     self.items[index][1].setDisabled(False)
             else:
                 self.buttons[index].setStyleSheet(check_box_unselected_stylesheet)
                 self.buttons[index].setIcon(QIcon())
                 if self.items[index][0] == "label":
-                    self.items[index][1].setStyleSheet(disable_20_label_stylesheet)
+                    self.items[index][1].setStyleSheet(disable_16_label_stylesheet)
                 if self.items[index][0] == "dropdown":
                     self.items[index][1].setDisabled(True)
-                    print(self.list_choix[index][1][0])
                     self.items[index][1].setCurrentIndex(0)
             index += 1
         pass
 
     def onclick(self, index):
         self.raison_index_selected = index
+        if self.last_raison_index == index:
+            self.raison_index_selected = -1
+            self.last_raison_index = -1
+        else:
+            self.last_raison_index = index
         self.text_drop_down_selected = None
         self.arret.add_raison_cache(index, None)
 
@@ -89,13 +103,14 @@ class ArretWindowSelectRaison(MondonWidget):
             hbox = QHBoxLayout()
             hbox.addWidget(self.buttons[index])
             hbox.addWidget(self.items[index][1])
+            hbox.addStretch(1)
             self.vbox.addLayout(hbox)
             index += 1
         self.setLayout(self.vbox)
 
     def create_check_button(self, index):
         button = QPushButton("")
-        button.setFixedSize(20, 20)
+        button.setFixedSize(24, 24)
         button.setStyleSheet(check_box_off_stylesheet)
         self.connect_button(button, index)
         return button
@@ -103,7 +118,7 @@ class ArretWindowSelectRaison(MondonWidget):
     @staticmethod
     def create_label(text):
         label = QLabel(text)
-        label.setStyleSheet(white_20_label_stylesheet)
+        label.setStyleSheet(white_title_label_stylesheet)
         return label
 
     def create_dropdown(self, array):
@@ -111,6 +126,7 @@ class ArretWindowSelectRaison(MondonWidget):
         for value in array:
             dropdown.addItem(value)
         dropdown.activated[str].connect(self.style_choice)
+        dropdown.setStyleSheet(dropdown_stylesheet)
         dropdown.setDisabled(True)
         return dropdown
 

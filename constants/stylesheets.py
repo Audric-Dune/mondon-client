@@ -31,7 +31,7 @@ orange_label_stylesheet = create_qlabel_stylesheet(color=color_orange)
 red_label_stylesheet = create_qlabel_stylesheet(color=color_rouge)
 white_title_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, font_size="16px")
 white_20_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, font_size="20px")
-disable_20_label_stylesheet = create_qlabel_stylesheet(color=color_gris_moyen, font_size="20px")
+disable_16_label_stylesheet = create_qlabel_stylesheet(color=color_gris_moyen, font_size="16px")
 white_24_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, font_size="24px")
 
 # ____________BUTTON STYLESHEET____________
@@ -96,7 +96,7 @@ button_stylesheet_unselected = """
 check_box_off_stylesheet = """
     QPushButton {{
         background-color: {color_blanc};
-        border-radius: 2;
+        border-radius: 2px;
     }}
     QPushButton:hover {{
         background-color: {color_vert_moyen};
@@ -119,8 +119,7 @@ check_box_off_stylesheet = """
 check_box_on_stylesheet = """
     QPushButton {{
         background-color: {color_vert_fonce};
-        background-image: url(assets/images/white_cross.png);
-        border-radius: 2;
+        border-radius: 2px;
     }}
     QPushButton:hover {{
         background-color: {color_vert_fonce};
@@ -143,7 +142,7 @@ check_box_on_stylesheet = """
 check_box_unselected_stylesheet = """
     QPushButton {{
         background-color: {color_gris_moyen};
-        border-radius: 2;
+        border-radius: 2px;
     }}
     QPushButton:hover {{
         background-color: {color_vert_moyen};
@@ -174,4 +173,68 @@ white_text_edit_stylesheet = """
 """.format(
     color_bleu_gris=color_bleu_gris.hex_string,
     color_blanc=color_blanc.hex_string,
+)
+
+# ____________DROPDOWN EDIT STYLESHEET____________
+
+dropdown_stylesheet = """
+    QComboBox {{
+        border: none;
+        background-color: {color_blanc};
+        color: black;
+        height: 24px;
+        width: 250px;
+        font-size: 16px;
+    }}
+    
+    QComboBox::disabled {{
+        background-color: {color_gris_fonce};
+        color: {color_gris_moyen};
+    }}
+    
+    QComboBox::drop-down {{
+        border: none;
+    }}
+    
+    QComboBox::down-arrow {{
+        image: url(assets/images/arrow_down_vert_fonce.png);
+        padding-right: 5px;
+        width: 15px;
+        height: 15px;
+        border: none;
+    }}
+    
+    QComboBox::down-arrow::disabled {{
+        image: url(assets/images/arrow_down_gris_moyen.png);
+    }}
+    
+    QComboBox::down-arrow::hover {{
+        image: url(assets/images/arrow_down_vert_moyen.png);
+    }}
+    
+    QComboBox QListView{{
+        background-color: {color_blanc};
+    }}
+    
+    QComboBox::item:alternate {{
+        background: {color_blanc};
+    }}
+    
+    QComboBox::item:selected {{
+        background: {color_vert_fonce};
+        color: {color_blanc};
+        height: 24px;
+    }}
+    
+    QComboBox::indicator{{
+        border: none;
+    }}
+""".format(
+    color_blanc=color_blanc.hex_string,
+    color_vert_fonce=color_vert_fonce.hex_string,
+    color_vert_moyen=color_vert_moyen.hex_string,
+    color_vert=color_vert.hex_string,
+    color_gris_moyen=color_gris_moyen.hex_string,
+    color_gris_fonce=color_gris_fonce.hex_string,
+    color_rouge=color_rouge.hex_string,
 )
