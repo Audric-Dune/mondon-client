@@ -34,11 +34,17 @@ class ArretWindowSelectType(MondonWidget):
     def on_click_bt_prevu(self):
         self.bt_prevu.setStyleSheet(button_stylesheet)
         self.bt_imprevu.setStyleSheet(button_stylesheet_unselected)
+        if self.arret.type_cache == "Prévu":
+            self.bt_prevu.setStyleSheet(button_stylesheet)
+            self.bt_imprevu.setStyleSheet(button_stylesheet)
         self.arret.add_type_cache("Prévu")
 
     def on_click_bt_imprevu(self):
         self.bt_prevu.setStyleSheet(button_stylesheet_unselected)
         self.bt_imprevu.setStyleSheet(button_stylesheet)
+        if self.arret.type_cache == "Imprévu":
+            self.bt_prevu.setStyleSheet(button_stylesheet)
+            self.bt_imprevu.setStyleSheet(button_stylesheet)
         self.arret.add_type_cache("Imprévu")
 
     def init_widget(self):

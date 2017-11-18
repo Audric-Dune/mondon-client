@@ -1,15 +1,19 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtGui import QPainter
-from PyQt5.QtWidgets import QFormLayout, QPushButton, QLabel
+from PyQt5.QtGui import QPainter, QIcon
+from PyQt5.QtCore import QSize
+from PyQt5.QtWidgets import QPushButton, QLabel, QComboBox, QHBoxLayout, QVBoxLayout
 
 from constants.colors import color_bleu_gris
-from constants.param import LIST_CHOIX_RAISON_PREVU
+from constants.param import LIST_CHOIX_RAISON_PREVU, LIST_CHOIX_RAISON_IMPREVU
 
-from constants.dimensions import button_size
-
-from constants.stylesheets import button_stylesheet, button_stylesheet_unselected, white_label_stylesheet
+from constants.stylesheets import \
+    check_box_off_stylesheet,\
+    check_box_on_stylesheet,\
+    check_box_unselected_stylesheet,\
+    white_20_label_stylesheet,\
+    disable_20_label_stylesheet
 
 from ui.utils.drawing import draw_rectangle
 from ui.widgets.mondon_widget import MondonWidget
@@ -18,8 +22,14 @@ from ui.widgets.mondon_widget import MondonWidget
 class ArretWindowSelectRaison(MondonWidget):
     def __init__(self, arret, parent=None):
         super(ArretWindowSelectRaison, self).__init__(parent=parent)
+        arret.ARRET_RAISON_CHANGED_SIGNAL.connect(self.update_widget)
         self.arret = arret
-        self.raison_index_selected = None
+        self.list_choix = LIST_CHOIX_RAISON_PREVU if self.arret.type_cache == "Prévu" else LIST_CHOIX_RAISON_IMPREVU
+        self.items = []
+        self.buttons = []
+        self.raison_index_selected = -1
+        self.text_drop_down_selected = None
+        self.vbox = QVBoxLayout()
         self.init_widget()
 
     def draw_fond(self, p):
@@ -28,26 +38,81 @@ class ArretWindowSelectRaison(MondonWidget):
     def on_data_changed(self):
         self.update()
 
-    @staticmethod
-    def onclick(index):
-        print(index)
+    def update_widget(self):
+        index = 0
+        while index < len(self.buttons):
+            if self.raison_index_selected == index:
+                self.buttons[index].setStyleSheet(check_box_on_stylesheet)
+                img = QIcon("assets/images/white_cross.png")
+                self.buttons[index].setIcon(img)
+                size = QSize(20, 20)
+                self.buttons[index].setIconSize(size)
+                if self.items[index][0] == "label":
+                    self.items[index][1].setStyleSheet(white_20_label_stylesheet)
+                if self.items[index][0] == "dropdown":
+                    self.items[index][1].setDisabled(False)
+            else:
+                self.buttons[index].setStyleSheet(check_box_unselected_stylesheet)
+                self.buttons[index].setIcon(QIcon())
+                if self.items[index][0] == "label":
+                    self.items[index][1].setStyleSheet(disable_20_label_stylesheet)
+                if self.items[index][0] == "dropdown":
+                    self.items[index][1].setDisabled(True)
+                    print(self.list_choix[index][1][0])
+                    self.items[index][1].setCurrentIndex(0)
+            index += 1
+        pass
+
+    def onclick(self, index):
+        self.raison_index_selected = index
+        self.text_drop_down_selected = None
+        self.arret.add_raison_cache(index, None)
 
     def connect_button(self, button, index):
         button.clicked.connect(lambda: self.onclick(index))
 
+    def style_choice(self, text):
+        self.text_drop_down_selected = text
+        self.arret.add_raison_cache(self.raison_index_selected, text)
+
     def init_widget(self):
-        list_label = LIST_CHOIX_RAISON_PREVU
-        button = []
-        qformlayout = QFormLayout()
         index = 0
-        for label_text in list_label:
-            button.append(QPushButton(str(index)))
-            self.connect_button(button[index], index)
-            label = QLabel(label_text)
-            label.setStyleSheet(white_label_stylesheet)
-            qformlayout.addRow(button[index], label)
+        for tupple in self.list_choix:
+            format = tupple[0]
+            value = tupple[1]
+            if format == "label":
+                self.items.append((format, self.create_label(value)))
+                self.buttons.append(self.create_check_button(index))
+            elif format == "dropdown":
+                self.items.append((format, self.create_dropdown(value)))
+                self.buttons.append(self.create_check_button(index))
+            hbox = QHBoxLayout()
+            hbox.addWidget(self.buttons[index])
+            hbox.addWidget(self.items[index][1])
+            self.vbox.addLayout(hbox)
             index += 1
-        self.setLayout(qformlayout)
+        self.setLayout(self.vbox)
+
+    def create_check_button(self, index):
+        button = QPushButton("")
+        button.setFixedSize(20, 20)
+        button.setStyleSheet(check_box_off_stylesheet)
+        self.connect_button(button, index)
+        return button
+
+    @staticmethod
+    def create_label(text):
+        label = QLabel(text)
+        label.setStyleSheet(white_20_label_stylesheet)
+        return label
+
+    def create_dropdown(self, array):
+        dropdown = QComboBox()
+        for value in array:
+            dropdown.addItem(value)
+        dropdown.activated[str].connect(self.style_choice)
+        dropdown.setDisabled(True)
+        return dropdown
 
     def paintEvent(self, event):
         p = QPainter()

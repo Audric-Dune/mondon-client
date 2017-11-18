@@ -1,5 +1,5 @@
 # Database location
-DATABASE_LOCATION = 'I:\data_prod_bob/mondon_arret.db'
+DATABASE_LOCATION = '../mondon.db'
 
 # Hypothèse
 VITESSE_LIMITE_ASSIMILATION_ARRET = 60
@@ -14,20 +14,28 @@ FIN_PROD_SOIR_VENDREDI = 20
 
 # Liste choix de raison d'un arrêt prévu
 LIST_CHOIX_RAISON_PREVU = [
-            "Changement bobine papier",
-            "Changement bobine polypro",
-            "Réglage nouvelle production",
-            "Changement bobine papier et polypro",
-            "Démarrage production sans réglage",
-            "Fin de journée"
-            ]
+    ("label", "Changement bobine papier"),
+    ("label", "Changement bobine polypro"),
+    ("label", "Réglage nouvelle production"),
+    ("label", "Changement bobine papier et polypro"),
+    ("label", "Démarrage production sans réglage"),
+    ("label", "Fin de journée")
+    ]
 # Liste choix de raison d'un arrêt imprévu
+# Définition dropdown
+DROPDOWN_CASSE = [
+    "Sélectionner une casse",
+    "Casse calandre",
+    "Casse enrouleur",
+    "Casse dérouleur papier",
+    "Casse dérouleur polypro"
+    ]
 LIST_CHOIX_RAISON_IMPREVU = [
-            "Casse",
-            "Mauvais encollage axes cartons",
-            "Problème buse colle à chaud",
-            "Entretien machine",
-            "Essai technique",
-            "Maintenance"
-            ]
+    ("dropdown", DROPDOWN_CASSE),
+    ("label", "Mauvais encollage axes cartons"),
+    ("label", "Problème buse colle à chaud"),
+    ("label", "Entretien machine"),
+    ("label", "Essai technique"),
+    ("label", "Maintenance")
+    ]
 
