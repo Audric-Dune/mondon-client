@@ -1,18 +1,17 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtWidgets import QMainWindow, QPushButton
-from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QSize
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QMainWindow, QPushButton
 
 from constants.dimensions import (
     padding_button,
     width_windown_live_speed
 )
-
 from constants.stylesheets import button_stylesheet
 from ui.application import app
-from ui.widgets.live_speed import LiveSpeed
+from ui.widgets.chart.live_speed import LiveSpeed
 
 
 class TrackerWindow(QMainWindow):

@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import QTextEdit, QVBoxLayout
 from constants.colors import color_bleu_gris
 from constants.stylesheets import white_text_edit_stylesheet
 from ui.utils.drawing import draw_rectangle
-from ui.widgets.mondon_widget import MondonWidget
+from ui.widgets.public.mondon_widget import MondonWidget
 
 
 class StatLegend(MondonWidget):

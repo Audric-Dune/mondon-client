@@ -4,10 +4,9 @@
 from PyQt5.QtGui import QPainter
 
 from constants.colors import color_blanc, color_bleu_gris
-
 from stores.data_store_manager import data_store_manager
-from ui.widgets.mondon_widget import MondonWidget
 from ui.utils.drawing import draw_rectangle, draw_text
+from ui.widgets.public.mondon_widget import MondonWidget
 
 
 class LiveSpeed(MondonWidget):

@@ -1,23 +1,20 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtGui import QPainter, QIcon
 from PyQt5.QtCore import QSize
-from PyQt5.QtWidgets import QPushButton, QLabel, QComboBox, QHBoxLayout, QVBoxLayout, QStyleFactory
+from PyQt5.QtGui import QPainter, QIcon
+from PyQt5.QtWidgets import QPushButton, QLabel, QComboBox, QHBoxLayout, QVBoxLayout
 
 from constants.colors import color_bleu_gris
 from constants.param import LIST_CHOIX_RAISON_PREVU, LIST_CHOIX_RAISON_IMPREVU
-
 from constants.stylesheets import \
-    check_box_off_stylesheet,\
-    check_box_on_stylesheet,\
+    check_box_off_stylesheet, \
+    check_box_on_stylesheet, \
     check_box_unselected_stylesheet, \
-    white_title_label_stylesheet,\
-    disable_16_label_stylesheet,\
-    dropdown_stylesheet
-
+    white_title_label_stylesheet, \
+    disable_16_label_stylesheet
 from ui.utils.drawing import draw_rectangle
-from ui.widgets.mondon_widget import MondonWidget
+from ui.widgets.public.mondon_widget import MondonWidget
 
 
 class ArretWindowSelectRaison(MondonWidget):

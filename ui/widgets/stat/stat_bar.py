@@ -18,8 +18,8 @@ from ui.utils.timestamp import (
     timestamp_now,
     timestamp_to_day,
 )
-from ui.widgets.bar import Bar
-from ui.widgets.mondon_widget import MondonWidget
+from ui.widgets.public.mondon_widget import MondonWidget
+from ui.widgets.stat.bar import Bar
 
 
 class StatBar(MondonWidget):

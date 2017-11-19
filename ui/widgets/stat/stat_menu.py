@@ -4,10 +4,11 @@
 # Importation des module PyQt5
 from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import QHBoxLayout, QSizePolicy
+
 from stores.settings_store import settings_store
-from ui.widgets.mondon_widget import MondonWidget
-from ui.widgets.stat_bar import StatBar
-from ui.widgets.stat_legend import StatLegend
+from ui.widgets.public.mondon_widget import MondonWidget
+from ui.widgets.stat.stat_bar import StatBar
+from ui.widgets.stat.stat_legend import StatLegend
 
 
 class StatMenu(MondonWidget):

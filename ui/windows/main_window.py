@@ -4,10 +4,10 @@
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QSizePolicy
 
 from constants.dimensions import chart_menu_height
-from ui.widgets.chart import Chart
-from ui.widgets.chart_menu import ChartMenu
-from ui.widgets.stat_menu import StatMenu
-from ui.widgets.tab_arret_menu import TabArretMenu
+from ui.widgets.chart.chart import Chart
+from ui.widgets.chart.chart_menu import ChartMenu
+from ui.widgets.stat.stat_menu import StatMenu
+from ui.widgets.tableau_arret.tab_arret_menu import TabArretMenu
 
 
 class MainWindow(QMainWindow):

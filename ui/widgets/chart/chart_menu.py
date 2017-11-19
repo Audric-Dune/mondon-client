@@ -19,8 +19,8 @@ from stores.settings_store import settings_store
 from ui.application import app
 from ui.utils.drawing import draw_rectangle, draw_text
 from ui.utils.timestamp import timestamp_at_day_ago, timestamp_to_date
-from ui.widgets.mondon_widget import MondonWidget
-from ui.widgets.live_speed import LiveSpeed
+from ui.widgets.chart.live_speed import LiveSpeed
+from ui.widgets.public.mondon_widget import MondonWidget
 
 
 class ChartMenu(MondonWidget):

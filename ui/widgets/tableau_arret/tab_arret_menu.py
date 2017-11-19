@@ -9,8 +9,8 @@ from constants.colors import color_blanc
 from constants.stylesheets import white_title_label_stylesheet
 from stores.settings_store import settings_store
 from ui.utils.drawing import draw_rectangle
-from ui.widgets.mondon_widget import MondonWidget
-from ui.widgets.tab_arret import TabArret
+from ui.widgets.public.mondon_widget import MondonWidget
+from ui.widgets.tableau_arret.tab_arret import TabArret
 
 
 class TabArretMenu(MondonWidget):

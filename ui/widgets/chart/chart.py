@@ -32,7 +32,7 @@ from ui.utils.timestamp import (
     timestamp_at_time,
     timestamp_au_debut_de_hour,
 )
-from ui.widgets.mondon_widget import MondonWidget
+from ui.widgets.public.mondon_widget import MondonWidget
 
 
 class Chart(MondonWidget):

@@ -8,14 +8,14 @@ from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel, QGridLayout
 
 from constants.colors import color_bleu_gris
+from constants.dimensions import width_col_num, width_col_hour, width_col_time, width_col_type, width_col_raison
 from constants.param import \
-    DEBUT_PROD_MATIN,\
-    FIN_PROD_SOIR,\
+    DEBUT_PROD_MATIN, \
+    FIN_PROD_SOIR, \
     FIN_PROD_SOIR_VENDREDI, \
-    DEBUT_PROD_SOIR,\
+    DEBUT_PROD_SOIR, \
     FIN_PROD_MATIN_VENDREDI
 from constants.stylesheets import orange_label_stylesheet, red_label_stylesheet, white_label_stylesheet
-from constants.dimensions import width_col_num, width_col_hour, width_col_time, width_col_type, width_col_raison
 from stores.data_store_manager import data_store_manager
 from stores.settings_store import settings_store
 from ui.utils.drawing import draw_rectangle
@@ -25,7 +25,7 @@ from ui.utils.timestamp import (
     timestamp_to_day,
     timestamp_to_hour_little,
 )
-from ui.widgets.mondon_widget import MondonWidget
+from ui.widgets.public.mondon_widget import MondonWidget
 
 
 class TabArret(MondonWidget):

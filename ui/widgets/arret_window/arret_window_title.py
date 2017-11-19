@@ -2,16 +2,16 @@
 # -*- coding: utf-8 -*-
 
 from datetime import timedelta
-from PyQt5.QtWidgets import QLabel, QHBoxLayout
-from PyQt5.QtGui import QPainter
+
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QPainter
+from PyQt5.QtWidgets import QLabel, QHBoxLayout
 
 from constants.colors import color_bleu_gris
 from constants.stylesheets import white_20_label_stylesheet, white_24_label_stylesheet
-
 from ui.utils.drawing import draw_rectangle
 from ui.utils.timestamp import timestamp_to_hour_little, timestamp_to_date_little
-from ui.widgets.mondon_widget import MondonWidget
+from ui.widgets.public.mondon_widget import MondonWidget
 
 
 class ArretWindowTitle(MondonWidget):
