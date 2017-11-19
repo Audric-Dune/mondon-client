@@ -3,7 +3,7 @@
 
 from PyQt5.QtGui import QPainter, QIcon
 from PyQt5.QtCore import QSize
-from PyQt5.QtWidgets import QPushButton, QLabel, QComboBox, QHBoxLayout, QVBoxLayout
+from PyQt5.QtWidgets import QPushButton, QLabel, QComboBox, QHBoxLayout, QVBoxLayout, QStyleFactory
 
 from constants.colors import color_bleu_gris
 from constants.param import LIST_CHOIX_RAISON_PREVU, LIST_CHOIX_RAISON_IMPREVU
@@ -126,7 +126,7 @@ class ArretWindowSelectRaison(MondonWidget):
         for value in array:
             dropdown.addItem(value)
         dropdown.activated[str].connect(self.style_choice)
-        dropdown.setStyleSheet(dropdown_stylesheet)
+        # dropdown.setStyleSheet(dropdown_stylesheet)
         dropdown.setDisabled(True)
         return dropdown
 

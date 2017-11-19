@@ -181,15 +181,17 @@ dropdown_stylesheet = """
     QComboBox {{
         border: none;
         background-color: {color_blanc};
+        border-radius: 2px;
         color: black;
+        box-shadow: none;
         height: 24px;
-        width: 250px;
+        width: 240px;
         font-size: 16px;
     }}
     
     QComboBox::disabled {{
         background-color: {color_gris_fonce};
-        color: {color_gris_moyen};
+        color: {color_blanc};
     }}
     
     QComboBox::drop-down {{
@@ -212,23 +214,15 @@ dropdown_stylesheet = """
         image: url(assets/images/arrow_down_vert_moyen.png);
     }}
     
-    QComboBox QListView{{
+    QComboBox QAbstractItemView {{
         background-color: {color_blanc};
-    }}
-    
-    QComboBox::item:alternate {{
-        background: {color_blanc};
-    }}
-    
-    QComboBox::item:selected {{
-        background: {color_vert_fonce};
-        color: {color_blanc};
-        height: 24px;
-    }}
-    
-    QComboBox::indicator{{
+        selection-background-color: {color_vert_fonce};
+        selection-border: none;
         border: none;
+        font-size: 16px;
+        overflow: hidden;
     }}
+    
 """.format(
     color_blanc=color_blanc.hex_string,
     color_vert_fonce=color_vert_fonce.hex_string,
