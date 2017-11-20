@@ -7,7 +7,7 @@ from PyQt5.QtGui import QPainter
 from PyQt5.Qt import Qt
 
 from constants.colors import color_gris_fonce, color_vert_fonce, color_blanc
-from constants.stylesheets import disable_16_label_stylesheet, black_16_label_stylesheet
+from constants.stylesheets import disable_16_label_stylesheet, black_16_label_stylesheet, white_16_label_stylesheet
 
 from ui.utils.drawing import draw_rectangle
 
@@ -138,10 +138,12 @@ class PopupItem(QWidget):
     def eventFilter(self, object, event):
         if event.type() == QEvent.Enter:
             self.hover = True
+            self.label.setStyleSheet(white_16_label_stylesheet)
             self.update()
             return True
         if event.type() == QEvent.Leave:
             self.hover = False
+            self.label.setStyleSheet(black_16_label_stylesheet)
             self.update()
             return True
         if event.type() == QEvent.MouseButtonRelease:
@@ -150,11 +152,12 @@ class PopupItem(QWidget):
         return False
 
     def init_label(self, text):
-        label = QLabel(text)
-        label.setFixedHeight(30)
+        self.label = QLabel(text)
+        self.label.setFixedHeight(30)
+        self.label.setStyleSheet(black_16_label_stylesheet)
         hbox = QHBoxLayout(self)
         hbox.setContentsMargins(0, 0, 0, 0)
-        hbox.addWidget(label)
+        hbox.addWidget(self.label)
         self.setLayout(hbox)
 
     def paintEvent(self, event):
@@ -164,7 +167,7 @@ class PopupItem(QWidget):
         p.end()
 
     def draw_fond(self, p):
-        color = color_vert_fonce if self.hover else color_gris_fonce
+        color = color_vert_fonce if self.hover else color_blanc
         draw_rectangle(p, 0, 0, self.width(), self.height(), color)
 
     def draw(self, p):
