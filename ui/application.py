@@ -69,7 +69,7 @@ class Application(QApplication):
         else:
             from ui.windows.tracker_window import TrackerWindow
             self.tracker_window = TrackerWindow(self.on_close_tracker_window)
-            self.tracker_window.setFixedHeight(width_windown_live_speed, 60)
+            self.tracker_window.setFixedSize(width_windown_live_speed, 60)
             self.tracker_window.setWindowTitle("DUNE Tracker")
             self.tracker_window.show()
 

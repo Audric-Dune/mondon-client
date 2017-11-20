@@ -16,7 +16,7 @@ class Color:
 
 
 # Gestion des couleurs
-color_noir = Color('#000000')
+color_noir = Color('#262626')
 color_blanc = Color('#FFFFFF')
 
 color_bleu_gris = Color('#2C3E50')

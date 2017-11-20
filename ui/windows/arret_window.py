@@ -3,7 +3,7 @@
 
 from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout
-from ui.widgets.arret_window.arret_window_dropdown import ArretWindowDropdown
+# from ui.widgets.arret_window.arret_window_dropdown import ArretWindowDropdown
 from ui.widgets.arret_window.arret_window_title import ArretWindowTitle
 from ui.widgets.arret_window.arret_window_select_raison import ArretWindowSelectRaison
 from ui.widgets.arret_window.arret_window_select_type import ArretWindowSelectType
@@ -33,28 +33,24 @@ class ArretWindow(QMainWindow):
         self.setCentralWidget(self.central_widget)
 
     def update_widget(self):
-        if self.arret.type_cache == "Dropdown":
-            self.arret_window_dropdown = ArretWindowDropdown(parent=self.central_widget)
-            self.arret_window_dropdown.setFixedHeight(60)
-            self.vbox.addWidget(self.arret_window_dropdown)
-        # if not self.arret_window_raison:
-        #     self.arret_window_raison = ArretWindowSelectRaison(self.arret, parent=self.central_widget)
-        #     self.vbox.addWidget(self.arret_window_raison)
-        #     self.last_type_selected = self.arret.type_cache
-        # elif self.arret.type_cache == self.last_type_selected:
-        #     self.vbox.removeWidget(self.arret_window_raison)
-        #     self.arret_window_raison.deleteLater()
-        #     self.arret.remove_type()
-        #     self.arret.remove_raison()
-        #     self.arret_window_raison = None
-        #     self.last_type_selected = None
-        # else:
-        #     self.vbox.removeWidget(self.arret_window_raison)
-        #     self.arret_window_raison.deleteLater()
-        #     self.arret.remove_raison()
-        #     self.arret_window_raison = ArretWindowSelectRaison(self.arret, parent=self.central_widget)
-        #     self.vbox.addWidget(self.arret_window_raison)
-        #     self.last_type_selected = self.arret.type_cache
+        if not self.arret_window_raison:
+            self.arret_window_raison = ArretWindowSelectRaison(self.arret, parent=self.central_widget)
+            self.vbox.addWidget(self.arret_window_raison)
+            self.last_type_selected = self.arret.type_cache
+        elif self.arret.type_cache == self.last_type_selected:
+            self.vbox.removeWidget(self.arret_window_raison)
+            self.arret_window_raison.deleteLater()
+            self.arret.remove_type()
+            self.arret.remove_raison()
+            self.arret_window_raison = None
+            self.last_type_selected = None
+        else:
+            self.vbox.removeWidget(self.arret_window_raison)
+            self.arret_window_raison.deleteLater()
+            self.arret.remove_raison()
+            self.arret_window_raison = ArretWindowSelectRaison(self.arret, parent=self.central_widget)
+            self.vbox.addWidget(self.arret_window_raison)
+            self.last_type_selected = self.arret.type_cache
         # Utilisation d'un QTimer pour redimensionner la window
         QTimer.singleShot(0, self.resize_window)
 

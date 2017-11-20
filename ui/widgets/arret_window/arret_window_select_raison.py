@@ -3,7 +3,7 @@
 
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QPainter, QIcon
-from PyQt5.QtWidgets import QPushButton, QLabel, QComboBox, QHBoxLayout, QVBoxLayout
+from PyQt5.QtWidgets import QPushButton, QLabel, QHBoxLayout, QVBoxLayout
 
 from constants.colors import color_bleu_gris
 from constants.param import LIST_CHOIX_RAISON_PREVU, LIST_CHOIX_RAISON_IMPREVU
@@ -14,6 +14,7 @@ from constants.stylesheets import \
     white_title_label_stylesheet, \
     disable_16_label_stylesheet
 from ui.utils.drawing import draw_rectangle
+from ui.widgets.public.dropdown import Dropdown
 from ui.widgets.public.mondon_widget import MondonWidget
 
 
@@ -38,16 +39,17 @@ class ArretWindowSelectRaison(MondonWidget):
         self.update()
 
     def update_widget(self):
+        print("update_widget")
         index = 0
         while index < len(self.buttons):
+            print(index)
             if self.raison_index_selected < 0:
                 self.buttons[index].setStyleSheet(check_box_off_stylesheet)
                 self.buttons[index].setIcon(QIcon())
                 if self.items[index][0] == "label":
                     self.items[index][1].setStyleSheet(white_title_label_stylesheet)
                 if self.items[index][0] == "dropdown":
-                    self.items[index][1].setDisabled(True)
-                    self.items[index][1].setCurrentIndex(0)
+                    self.items[index][1].set_activated(False)
             elif self.raison_index_selected == index:
                 self.buttons[index].setStyleSheet(check_box_on_stylesheet)
                 img = QIcon("assets/images/white_cross.png")
@@ -57,17 +59,15 @@ class ArretWindowSelectRaison(MondonWidget):
                 if self.items[index][0] == "label":
                     self.items[index][1].setStyleSheet(white_title_label_stylesheet)
                 if self.items[index][0] == "dropdown":
-                    self.items[index][1].setDisabled(False)
+                    self.items[index][1].set_activated(True)
             else:
                 self.buttons[index].setStyleSheet(check_box_unselected_stylesheet)
                 self.buttons[index].setIcon(QIcon())
                 if self.items[index][0] == "label":
                     self.items[index][1].setStyleSheet(disable_16_label_stylesheet)
                 if self.items[index][0] == "dropdown":
-                    self.items[index][1].setDisabled(True)
-                    self.items[index][1].setCurrentIndex(0)
+                    self.items[index][1].set_activated(False)
             index += 1
-        pass
 
     def onclick(self, index):
         self.raison_index_selected = index
@@ -95,7 +95,7 @@ class ArretWindowSelectRaison(MondonWidget):
                 self.items.append((format, self.create_label(value)))
                 self.buttons.append(self.create_check_button(index))
             elif format == "dropdown":
-                self.items.append((format, self.create_dropdown(value)))
+                self.items.append((format, self.create_dropdown(value[1], value[0])))
                 self.buttons.append(self.create_check_button(index))
             hbox = QHBoxLayout()
             hbox.addWidget(self.buttons[index])
@@ -118,13 +118,14 @@ class ArretWindowSelectRaison(MondonWidget):
         label.setStyleSheet(white_title_label_stylesheet)
         return label
 
-    def create_dropdown(self, array):
-        dropdown = QComboBox()
+    def create_dropdown(self, array, placeholder=None):
+        dropdown = Dropdown()
+        if placeholder:
+            dropdown.set_placeholder(placeholder)
         for value in array:
-            dropdown.addItem(value)
-        dropdown.activated[str].connect(self.style_choice)
-        # dropdown.setStyleSheet(dropdown_stylesheet)
-        dropdown.setDisabled(True)
+            dropdown.add_item(value)
+        # dropdown.activated[str].connect(self.style_choice)
+        dropdown.set_activated(False)
         return dropdown
 
     def paintEvent(self, event):

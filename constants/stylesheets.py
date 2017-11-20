@@ -8,11 +8,12 @@ from constants.colors import (
     color_vert,
     color_vert_fonce,
     color_vert_moyen,
+    color_noir
 )
 
 # ____________LABEL STYLESHEET____________
 
-def create_qlabel_stylesheet(background_color=color_bleu_gris, color=color_blanc, font_size="14px"):
+def create_qlabel_stylesheet(background_color=None, color=color_blanc, font_size="14px"):
     return """
         QLabel {{
             background-color: {background_color};
@@ -20,18 +21,19 @@ def create_qlabel_stylesheet(background_color=color_bleu_gris, color=color_blanc
             font-size: {font_size};
         }}
     """.format(
-        background_color=background_color.hex_string,
+        background_color=background_color.hex_string if background_color else "transparent",
         color=color.hex_string,
         font_size=font_size
     )
 
-white_label_stylesheet = create_qlabel_stylesheet(color=color_blanc)
+white_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, background_color=color_bleu_gris)
 test_label_stylesheet = create_qlabel_stylesheet(color=color_orange, background_color=color_vert, font_size="14px")
 orange_label_stylesheet = create_qlabel_stylesheet(color=color_orange)
 red_label_stylesheet = create_qlabel_stylesheet(color=color_rouge)
-white_title_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, font_size="16px")
+white_title_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, background_color=color_bleu_gris, font_size="16px")
 white_20_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, font_size="20px")
 disable_16_label_stylesheet = create_qlabel_stylesheet(color=color_gris_moyen, font_size="16px")
+black_16_label_stylesheet = create_qlabel_stylesheet(color=color_noir, font_size="16px")
 white_24_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, font_size="24px")
 
 # ____________BUTTON STYLESHEET____________

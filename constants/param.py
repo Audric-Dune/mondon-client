@@ -23,17 +23,23 @@ LIST_CHOIX_RAISON_PREVU = [
     ]
 # Liste choix de raison d'un arrêt imprévu
 # Définition dropdown
-DROPDOWN_CASSE = [
-    "Sélectionner une casse",
+DROPDOWN_CASSE = ("Sélectionner une casse...", [
     "Casse calandre",
     "Casse enrouleur",
     "Casse dérouleur papier",
     "Casse dérouleur polypro"
-    ]
+    ])
+DROPDOWN_TEST = ("Sélectionner un test...", [
+    "Test calandre",
+    "Test enrouleur",
+    "Test dérouleur papier",
+    "Test dérouleur polypro"
+    ])
 LIST_CHOIX_RAISON_IMPREVU = [
     ("dropdown", DROPDOWN_CASSE),
     ("label", "Mauvais encollage axes cartons"),
     ("label", "Problème buse colle à chaud"),
+    ("dropdown", DROPDOWN_TEST),
     ("label", "Entretien machine"),
     ("label", "Essai technique"),
     ("label", "Maintenance")
