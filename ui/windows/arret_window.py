@@ -5,6 +5,7 @@ from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout
 from ui.widgets.arret_window.arret_window_dropdown import ArretWindowDropdown
 from ui.widgets.arret_window.arret_window_title import ArretWindowTitle
+from ui.widgets.arret_window.arret_window_select_raison import ArretWindowSelectRaison
 from ui.widgets.arret_window.arret_window_select_type import ArretWindowSelectType
 
 

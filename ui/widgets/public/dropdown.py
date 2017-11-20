@@ -77,7 +77,7 @@ class DropdownPopup(QWidget):
     def __init__(self, parent=None):
         super(DropdownPopup, self).__init__(parent=parent)
         self.vbox = QVBoxLayout(self)
-        self.setWindowFlags(Qt.CustomizeWindowHint)
+        self.setWindowFlags(Qt.Tool | Qt.FramelessWindowHint | Qt.FramelessWindowHint)
         self.installEventFilter(self)
         self.show()
 
