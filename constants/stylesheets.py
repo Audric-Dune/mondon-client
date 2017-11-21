@@ -121,6 +121,7 @@ button_dropdown_stylesheet = """
     QPushButton {{
         background-color: {color_blanc};
         color: {color_noir};
+        padding-left: 5px;
         font-size: 16px;
         border-style: none;
         text-align:left;

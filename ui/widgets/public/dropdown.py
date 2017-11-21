@@ -100,7 +100,7 @@ class DropdownPopup(QWidget):
         item = PopupItem(item_label)
         item.ITEM_CLICKED.connect(self.item_clicked)
         self.vbox.addWidget(item)
-        self.vbox.setContentsMargins(0, 0, 0, 0)
+        self.vbox.setContentsMargins(5, 0, 0, 0)
         self.vbox.setSpacing(0)
         self.setLayout(self.vbox)
 
