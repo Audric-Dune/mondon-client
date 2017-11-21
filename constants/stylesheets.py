@@ -3,6 +3,7 @@ from constants.colors import (
     color_bleu_gris,
     color_gris_moyen,
     color_gris_fonce,
+    color_gris_clair,
     color_orange,
     color_rouge,
     color_vert,
@@ -92,6 +93,54 @@ button_stylesheet_unselected = """
     color_gris_moyen=color_gris_moyen.hex_string,
     color_gris_fonce=color_gris_fonce.hex_string,
     color_rouge=color_rouge.hex_string,
+)
+
+button_arrow_stylesheet = """
+    QPushButton {{
+        background-color: {color_blanc};
+        border: none;
+    }}
+    QPushButton:pressed {{
+        border-style: solid;
+        border-width: 2px;
+        border-color: {color_rouge};
+    }}
+    QPushButton:disabled {{
+        background-color: {color_gris_moyen};
+    }}
+""".format(
+    color_blanc=color_blanc.hex_string,
+    color_vert_fonce=color_vert_fonce.hex_string,
+    color_vert_moyen=color_vert_moyen.hex_string,
+    color_vert=color_vert.hex_string,
+    color_gris_moyen=color_gris_moyen.hex_string,
+    color_rouge=color_rouge.hex_string,
+)
+
+button_dropdown_stylesheet = """
+    QPushButton {{
+        background-color: {color_blanc};
+        color: {color_noir};
+        font-size: 16px;
+        border-style: none;
+        text-align:left;
+    }}
+    QPushButton:hover {{
+        color: {color_vert_moyen};
+    }}
+    QPushButton:disabled {{
+        background-color: {color_gris_moyen};
+        color: {color_gris_clair};
+    }}
+""".format(
+    color_blanc=color_blanc.hex_string,
+    color_vert_fonce=color_vert_fonce.hex_string,
+    color_vert_moyen=color_vert_moyen.hex_string,
+    color_vert=color_vert.hex_string,
+    color_gris_moyen=color_gris_moyen.hex_string,
+    color_rouge=color_rouge.hex_string,
+    color_noir=color_noir.hex_string,
+    color_gris_clair=color_gris_clair.hex_string
 )
 
 # ____________CHECK BOX STYLESHEET____________
