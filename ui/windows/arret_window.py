@@ -20,7 +20,6 @@ class ArretWindow(QMainWindow):
         self.arret_window_title = ArretWindowTitle(self.arret, parent=self.central_widget)
         self.arret_window_select_type = ArretWindowSelectType(self.arret, parent=self.central_widget)
         self.arret_window_raison = None
-        self.arret_window_dropdown = None
         self.last_type_selected = None
         self.init_widget()
 

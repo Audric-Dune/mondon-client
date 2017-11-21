@@ -1,5 +1,5 @@
 # Database location
-DATABASE_LOCATION = 'I:\data_prod_bob/mondon_arret.db'
+DATABASE_LOCATION = '../mondon.db'
 
 # Hypothèse
 VITESSE_LIMITE_ASSIMILATION_ARRET = 60
@@ -29,17 +29,10 @@ DROPDOWN_CASSE = ("Sélectionner une casse...", [
     "Casse dérouleur papier",
     "Casse dérouleur polypro"
     ])
-DROPDOWN_TEST = ("Sélectionner un test...", [
-    "Test calandre",
-    "Test enrouleur",
-    "Test dérouleur papier",
-    "Test dérouleur polypro"
-    ])
 LIST_CHOIX_RAISON_IMPREVU = [
     ("dropdown", DROPDOWN_CASSE),
     ("label", "Mauvais encollage axes cartons"),
     ("label", "Problème buse colle à chaud"),
-    ("dropdown", DROPDOWN_TEST),
     ("label", "Entretien machine"),
     ("label", "Essai technique"),
     ("label", "Maintenance")

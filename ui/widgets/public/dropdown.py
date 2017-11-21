@@ -90,8 +90,8 @@ class DropdownPopup(QWidget):
     def __init__(self, parent=None):
         super(DropdownPopup, self).__init__(parent=parent)
         self.vbox = QVBoxLayout(self)
-        self.setWindowFlags(Qt.Tool | Qt.FramelessWindowHint)
-        # self.setWindowFlags(Qt.FramelessWindowHint
+        # self.setWindowFlags(Qt.Tool | Qt.FramelessWindowHint)
+        self.setWindowFlags(Qt.FramelessWindowHint)
         self.installEventFilter(self)
         self.show_popup = True
         self.show()
@@ -100,7 +100,7 @@ class DropdownPopup(QWidget):
         item = PopupItem(item_label)
         item.ITEM_CLICKED.connect(self.item_clicked)
         self.vbox.addWidget(item)
-        self.vbox.setContentsMargins(5, 0, 0, 0)
+        self.vbox.setContentsMargins(0, 0, 0, 0)
         self.vbox.setSpacing(0)
         self.setLayout(self.vbox)
 
@@ -147,7 +147,7 @@ class PopupItem(QWidget):
         self.label.setFixedHeight(30)
         self.label.setStyleSheet(black_16_label_stylesheet)
         hbox = QHBoxLayout(self)
-        hbox.setContentsMargins(0, 0, 0, 0)
+        hbox.setContentsMargins(5, 0, 0, 0)
         hbox.addWidget(self.label)
         self.setLayout(hbox)
 
