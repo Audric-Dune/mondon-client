@@ -16,6 +16,8 @@ from ui.utils.drawing import draw_rectangle
 
 
 class Dropdown(QWidget):
+    VALUE_SELECTED_SIGNAL = pyqtSignal(str)
+
     def __init__(self, parent=None):
         super(Dropdown, self).__init__(parent=parent)
         self.hbox = QHBoxLayout(self)
@@ -42,6 +44,7 @@ class Dropdown(QWidget):
 
     def update_value_selected(self, value):
         self.bt_dropdown.setText(value)
+        self.VALUE_SELECTED_SIGNAL.emit(value)
 
     def set_activated(self, bool):
         self.update_widget(bool)

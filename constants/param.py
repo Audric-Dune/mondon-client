@@ -23,12 +23,16 @@ LIST_CHOIX_RAISON_PREVU = [
     ]
 # Liste choix de raison d'un arrêt imprévu
 # Définition dropdown
-DROPDOWN_CASSE = ("Sélectionner une casse...", [
-    "Casse calandre",
-    "Casse enrouleur",
-    "Casse dérouleur papier",
-    "Casse dérouleur polypro"
-    ])
+DROPDOWN_MODEL = {"titre": str, "placeholder": str, "values": []}
+# DROPDOWN_CASSE = ("Sélectionner une casse...", [
+#     "Casse calandre",
+#     "Casse enrouleur",
+#     "Casse dérouleur papier",
+#     "Casse dérouleur polypro"
+#     ])
+values = ["Casse calandre", "Casse enrouleur", "Casse dérouleur papier", "Casse dérouleur polypro"]
+DROPDOWN_CASSE = {"titre": "Casse", "placeholder": "Sélectionner une casse...", "values": values}
+
 LIST_CHOIX_RAISON_IMPREVU = [
     ("dropdown", DROPDOWN_CASSE),
     ("label", "Mauvais encollage axes cartons"),

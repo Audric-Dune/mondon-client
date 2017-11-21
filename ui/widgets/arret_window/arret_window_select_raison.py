@@ -39,10 +39,8 @@ class ArretWindowSelectRaison(MondonWidget):
         self.update()
 
     def update_widget(self):
-        print("update_widget")
         index = 0
         while index < len(self.buttons):
-            print(index)
             if self.raison_index_selected < 0:
                 self.buttons[index].setStyleSheet(check_box_off_stylesheet)
                 self.buttons[index].setIcon(QIcon())
@@ -95,7 +93,7 @@ class ArretWindowSelectRaison(MondonWidget):
                 self.items.append((format, self.create_label(value)))
                 self.buttons.append(self.create_check_button(index))
             elif format == "dropdown":
-                self.items.append((format, self.create_dropdown(value[1], value[0])))
+                self.items.append((format, self.create_dropdown(value)))
                 self.buttons.append(self.create_check_button(index))
             hbox = QHBoxLayout()
             hbox.addWidget(self.buttons[index])
@@ -118,13 +116,12 @@ class ArretWindowSelectRaison(MondonWidget):
         label.setStyleSheet(white_title_label_stylesheet)
         return label
 
-    def create_dropdown(self, array, placeholder=None):
+    def create_dropdown(self, data_dropdown):
         dropdown = Dropdown()
-        if placeholder:
-            dropdown.set_placeholder(placeholder)
-        for value in array:
+        dropdown.set_placeholder(data_dropdown["placeholder"])
+        for value in data_dropdown["values"]:
             dropdown.add_item(value)
-        # dropdown.activated[str].connect(self.style_choice)
+        dropdown.VALUE_SELECTED_SIGNAL.connect(self.style_choice)
         dropdown.set_activated(False)
         return dropdown
 
