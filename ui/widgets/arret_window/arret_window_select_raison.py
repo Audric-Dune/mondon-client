@@ -1,7 +1,7 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtCore import QSize
+from PyQt5.QtCore import QSize, pyqtSignal
 from PyQt5.QtGui import QPainter, QIcon
 from PyQt5.QtWidgets import QPushButton, QLabel, QHBoxLayout, QVBoxLayout
 
@@ -19,6 +19,8 @@ from ui.widgets.public.mondon_widget import MondonWidget
 
 
 class ArretWindowSelectRaison(MondonWidget):
+    VALIDATION_CONDITION = pyqtSignal(bool)
+
     def __init__(self, arret, parent=None):
         super(ArretWindowSelectRaison, self).__init__(parent=parent)
         arret.ARRET_RAISON_CHANGED_SIGNAL.connect(self.update_widget)
@@ -26,9 +28,9 @@ class ArretWindowSelectRaison(MondonWidget):
         self.list_choix = LIST_CHOIX_RAISON_PREVU if self.arret.type_cache == "Prévu" else LIST_CHOIX_RAISON_IMPREVU
         self.items = []
         self.buttons = []
+        self.validation_condition = False
         self.raison_index_selected = -1
         self.last_raison_index = -1
-        self.text_drop_down_selected = None
         self.vbox = QVBoxLayout()
         self.init_widget()
 
@@ -67,22 +69,32 @@ class ArretWindowSelectRaison(MondonWidget):
                     self.items[index][1].set_activated(False)
             index += 1
 
-    def onclick(self, index):
+    def onclick_button(self, index):
         self.raison_index_selected = index
         if self.last_raison_index == index:
             self.raison_index_selected = -1
             self.last_raison_index = -1
+            self.VALIDATION_CONDITION.emit(False)
+            self.validation_condition = False
         else:
             self.last_raison_index = index
-        self.text_drop_down_selected = None
+            if self.items[index][0] == "label":
+                self.arret.add_raison_cache(index, None)
+                self.validation_condition = True
+                print("VALIDATION_CONDITION.emit")
+                self.VALIDATION_CONDITION.emit(True)
+            else:
+                self.arret.add_raison_cache(index, None)
+                self.VALIDATION_CONDITION.emit(False)
         self.arret.add_raison_cache(index, None)
 
     def connect_button(self, button, index):
-        button.clicked.connect(lambda: self.onclick(index))
+        button.clicked.connect(lambda: self.onclick_button(index))
 
     def style_choice(self, text):
-        self.text_drop_down_selected = text
         self.arret.add_raison_cache(self.raison_index_selected, text)
+        self.validation_condition = True
+        self.VALIDATION_CONDITION.emit(True)
 
     def init_widget(self):
         index = 0

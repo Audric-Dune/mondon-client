@@ -28,9 +28,6 @@ class ArretWindowSelectType(MondonWidget):
     def on_data_changed(self):
         self.update()
 
-    def on_click_bt_dropdown(self):
-        self.arret.add_type_cache("Dropdown")
-
     def on_click_bt_prevu(self):
         self.bt_prevu.setStyleSheet(button_stylesheet)
         self.bt_imprevu.setStyleSheet(button_stylesheet_unselected)
@@ -55,9 +52,6 @@ class ArretWindowSelectType(MondonWidget):
         self.bt_imprevu.setFixedSize(200, button_size)
         self.bt_imprevu.setStyleSheet(button_stylesheet)
         hbox.addWidget(self.bt_imprevu)
-        # self.bt_dropdown.setFixedSize(200, button_size)
-        # self.bt_dropdown.setStyleSheet(button_stylesheet)
-        # hbox.addWidget(self.bt_dropdown)
 
         self.setLayout(hbox)
 

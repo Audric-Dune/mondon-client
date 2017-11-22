@@ -16,7 +16,7 @@ class Arret(QObject):
         self.raisons = []
         self.type_cache = None
         self.raison_cache_index = None
-        self.dropdown_cache_index = None
+        self.dropdown_cache_text = None
         # self.create_on_database()
 
     def create_on_database(self):
@@ -29,9 +29,9 @@ class Arret(QObject):
         self.type_cache = type
         self.ARRET_TYPE_CHANGED_SIGNAL.emit()
 
-    def add_raison_cache(self, index_raison, index_dropdown):
+    def add_raison_cache(self, index_raison, text_dropdown):
         self.raison_cache_index = index_raison
-        self.dropdown_cache_index = index_dropdown
+        self.dropdown_cache_text = text_dropdown
         self.ARRET_RAISON_CHANGED_SIGNAL.emit()
 
     def remove_type(self):
@@ -39,6 +39,4 @@ class Arret(QObject):
 
     def remove_raison(self):
         self.raison_cache_index = None
-        self.dropdown_cache_index = None
-
-
+        self.dropdown_cache_text = None
