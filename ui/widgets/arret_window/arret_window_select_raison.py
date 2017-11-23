@@ -19,8 +19,13 @@ from ui.widgets.public.mondon_widget import MondonWidget
 
 
 class ArretWindowSelectRaison(MondonWidget):
+    # Création du signal qui indique que les conditions pour valider la sélection on changé
     VALIDATION_CONDITION = pyqtSignal(bool)
 
+    """
+    Bloc sélection raison de la window arret
+    Affiche le temps de l'arret, l'heure de début et le jour
+    """
     def __init__(self, arret, parent=None):
         super(ArretWindowSelectRaison, self).__init__(parent=parent)
         arret.ARRET_RAISON_CHANGED_SIGNAL.connect(self.update_widget)
@@ -31,111 +36,237 @@ class ArretWindowSelectRaison(MondonWidget):
         self.validation_condition = False
         self.raison_index_selected = -1
         self.last_raison_index = -1
+        # _____INITIALISATION WIDGET_____
         self.vbox = QVBoxLayout()
         self.init_widget()
 
-    def draw_fond(self, p):
-        draw_rectangle(p, 0, 0, self.width(), self.height(), color_bleu_gris)
-
-    def on_data_changed(self):
-        self.update()
-
-    def update_widget(self):
-        index = 0
-        while index < len(self.buttons):
-            if self.raison_index_selected < 0:
-                self.buttons[index].setStyleSheet(check_box_off_stylesheet)
-                self.buttons[index].setIcon(QIcon())
-                if self.items[index][0] == "label":
-                    self.items[index][1].setStyleSheet(white_title_label_stylesheet)
-                if self.items[index][0] == "dropdown":
-                    self.items[index][1].set_activated(False)
-            elif self.raison_index_selected == index:
-                self.buttons[index].setStyleSheet(check_box_on_stylesheet)
-                img = QIcon("assets/images/white_cross.png")
-                self.buttons[index].setIcon(img)
-                size = QSize(24, 24)
-                self.buttons[index].setIconSize(size)
-                if self.items[index][0] == "label":
-                    self.items[index][1].setStyleSheet(white_title_label_stylesheet)
-                if self.items[index][0] == "dropdown":
-                    self.items[index][1].set_activated(True)
-            else:
-                self.buttons[index].setStyleSheet(check_box_unselected_stylesheet)
-                self.buttons[index].setIcon(QIcon())
-                if self.items[index][0] == "label":
-                    self.items[index][1].setStyleSheet(disable_16_label_stylesheet)
-                if self.items[index][0] == "dropdown":
-                    self.items[index][1].set_activated(False)
-            index += 1
-
-    def onclick_button(self, index):
-        self.raison_index_selected = index
-        if self.last_raison_index == index:
-            self.raison_index_selected = -1
-            self.last_raison_index = -1
-            self.VALIDATION_CONDITION.emit(False)
-            self.validation_condition = False
-        else:
-            self.last_raison_index = index
-            if self.items[index][0] == "label":
-                self.arret.add_raison_cache(index, None)
-                self.validation_condition = True
-                print("VALIDATION_CONDITION.emit")
-                self.VALIDATION_CONDITION.emit(True)
-            else:
-                self.arret.add_raison_cache(index, None)
-                self.VALIDATION_CONDITION.emit(False)
-        self.arret.add_raison_cache(index, None)
-
-    def connect_button(self, button, index):
-        button.clicked.connect(lambda: self.onclick_button(index))
-
-    def style_choice(self, text):
-        self.arret.add_raison_cache(self.raison_index_selected, text)
-        self.validation_condition = True
-        self.VALIDATION_CONDITION.emit(True)
-
     def init_widget(self):
+        """
+        Initialise les layouts et insère les labels et dropdown définit dans les params du programme
+        """
         index = 0
+        # On parcour la liste de choix définit dans les params du programme
         for tupple in self.list_choix:
+            # La première valeur correspond au format
             format = tupple[0]
+            # La 2e valeur correspond au donnée
             value = tupple[1]
+            # On crée un item qui correspond au format
             if format == "label":
                 self.items.append((format, self.create_label(value)))
-                self.buttons.append(self.create_check_button(index))
             elif format == "dropdown":
                 self.items.append((format, self.create_dropdown(value)))
-                self.buttons.append(self.create_check_button(index))
+            # On crée la checkbox liée a l'item
+            self.buttons.append(self.create_check_button(index))
+            # On initialise un layout horisontal et on ajoute le boutton et l'item
             hbox = QHBoxLayout()
             hbox.addWidget(self.buttons[index])
             hbox.addWidget(self.items[index][1])
             hbox.addStretch(1)
+            # On ajout le layout horisontal au layout principal vertical
             self.vbox.addLayout(hbox)
             index += 1
+        # On ajout set le layout vertical
         self.setLayout(self.vbox)
 
-    def create_check_button(self, index):
-        button = QPushButton("")
-        button.setFixedSize(24, 24)
+    def update_widget(self):
+        """
+        Met a jour les styles des widgets
+        """
+        index = 0
+        # On parcour l'ensemble des checkboxs
+        while index < len(self.buttons):
+            # Si aucun boutton n'est sélectionné
+            if self.raison_index_selected < 0:
+                # On initialise la ligne boutton
+                self.initialise_line(button=self.buttons[index], item=self.items[index])
+            # Si le boutton est sélectionné
+            elif self.raison_index_selected == index:
+                # On active la ligne boutton
+                self.activate_line(button=self.buttons[index], item=self.items[index])
+            # Sinon un autre boutton est sélectionné
+            else:
+                # On désactive la ligne boutton
+                self.disable_line(button=self.buttons[index], item=self.items[index])
+            index += 1
+
+    @staticmethod
+    def initialise_line(button, item):
+        """
+        S'occupe d'initialiser une ligne
+        :param button: le boutton de la ligne
+        :param item: l'item de la ligne
+        """
+        format = item[0]
+        object = item[1]
+        # On met le style check box sur off
         button.setStyleSheet(check_box_off_stylesheet)
+        # On remove l'icon au cas ou
+        button.setIcon(QIcon())
+        # Si l'item est un label on le passe en blanc
+        if format == "label":
+            object.setStyleSheet(white_title_label_stylesheet)
+        # Si l'item est une dropdown on la désactive
+        if format == "dropdown":
+            object.set_activated(False)
+
+    def activate_line(self, button, item):
+        """
+        S'occupe d'activer une ligne
+        :param button: le boutton de la ligne
+        :param item: l'item de la ligne
+        """
+        format = item[0]
+        object = item[1]
+        # On met le style check box sur on
+        button.setStyleSheet(check_box_on_stylesheet)
+        # On met l'icon check
+        self.set_icon_check_on_checkbox(button)
+        # Si l'item est un label on le passe en blanc
+        if format == "label":
+            object.setStyleSheet(white_title_label_stylesheet)
+        # Si l'item est une dropdown on l'active
+        if format == "dropdown":
+            object.set_activated(True)
+
+    @staticmethod
+    def disable_line(button, item):
+        """
+        S'occupe de désactiver une ligne
+        :param button: le boutton de la ligne
+        :param item: l'item de la ligne
+        """
+        format = item[0]
+        object = item[1]
+        # On met le style check box sur unselected
+        button.setStyleSheet(check_box_unselected_stylesheet)
+        # On remove l'icon au cas ou
+        button.setIcon(QIcon())
+        # Si l'item est un label on le passe en gris
+        if format == "label":
+            object.setStyleSheet(disable_16_label_stylesheet)
+        # Si l'item est une dropdown on la désactive
+        if format == "dropdown":
+            object.set_activated(False)
+
+    def onclick_button(self, index):
+        """
+        S'occupe de gérer le click sur une checkbox
+        :param index: l'index du boutton clické
+        """
+        # On met a jour la variable qui stocke l'index du boutton séléctionné
+        self.raison_index_selected = index
+        # Si on click sur une checkbox déja sélectionnée
+        if self.last_raison_index == index:
+            # On réinitialise les variable qui stocke l'index et l'ancien index du boutton séléctionné
+            self.raison_index_selected = -1
+            self.last_raison_index = -1
+            # On indique que les conditions pour valider ne sont plus OK
+            self.validation_condition = False
+            self.VALIDATION_CONDITION.emit(False)
+        else:
+            # On met a jour l'ancien index sélectionné
+            self.last_raison_index = index
+            # Si c'est un label les conditions pour valider sont OK
+            if self.items[index][0] == "label":
+                # On indique que les conditions pour valider sont OK
+                self.validation_condition = True
+                self.VALIDATION_CONDITION.emit(True)
+            else:
+                # On indique que les conditions pour valider ne sont plus OK
+                self.validation_condition = False
+                self.VALIDATION_CONDITION.emit(False)
+        # On met a jour la variable mémoire de séléction d'une raison dans l'object Arret
+        self.arret.add_raison_cache(index, None)
+
+    def style_choice(self, text):
+        """
+        S'occupe de gérer la sélection dans une dropdown
+        :param text: le texte sélectionné
+        """
+        # On met a jour la variable mémoire de séléction d'une raison dans l'object Arret
+        self.arret.add_raison_cache(self.raison_index_selected, text)
+        # On indique que les conditions pour valider sont OK
+        self.validation_condition = True
+        self.VALIDATION_CONDITION.emit(True)
+
+    def connect_button(self, button, index):
+        """
+        S'occupe de créer une connection entre la fonction onclick_button et un boutton
+        :param button: Le boutton a connecter
+        :param index: L'index du boutton a connecter
+        """
+        button.clicked.connect(lambda: self.onclick_button(index))
+
+    def create_check_button(self, index):
+        """
+        S'occupe de créer une chexbox
+        :param index: index du boutton
+        :return: Le boutton initialisé
+        """
+        # On crée un boutton vide
+        button = QPushButton("")
+        # On set sa taille
+        button.setFixedSize(24, 24)
+        # On met le style a off
+        button.setStyleSheet(check_box_off_stylesheet)
+        # On appel la fonction de connection
         self.connect_button(button, index)
         return button
 
     @staticmethod
+    def set_icon_check_on_checkbox(button):
+        """
+        S'occupe de check une checkbox
+        :param button: Le boutton a checker
+        """
+        # On importe l'image de check
+        img = QIcon("assets/images/white_cross.png")
+        # On set l'image de check au bouton
+        button.setIcon(img)
+        # On initialise la taille de l'image
+        size = QSize(24, 24)
+        button.setIconSize(size)
+
+    @staticmethod
     def create_label(text):
+        """
+        S'occupe de créer un label
+        :param text: Texte du label
+        :return: Le texte initialisé
+        """
+        # On crée un label avec son texte
         label = QLabel(text)
+        # On met la couleur du texte en blanc
         label.setStyleSheet(white_title_label_stylesheet)
         return label
 
     def create_dropdown(self, data_dropdown):
+        """
+        S'occupe de créer une dropdown
+        :param data_dropdown: Les données de la dropdown
+        :return: La dropdown initialisée
+        """
+        # On crée l'object Dropdown
         dropdown = Dropdown()
+        # On crée set son placeholder
         dropdown.set_placeholder(data_dropdown["placeholder"])
+        # On parcour les valeurs a insérer dans la dropdown
         for value in data_dropdown["values"]:
+            # On ajoute la valeur a la dropdown
             dropdown.add_item(value)
+        # On connect la dropdown a la fonction style_choice
         dropdown.VALUE_SELECTED_SIGNAL.connect(self.style_choice)
+        # On désactive la dropdown
         dropdown.set_activated(False)
         return dropdown
+
+    def draw_fond(self, p):
+        """
+        Dessine un rectangle de la taille du bloc
+        :param p: parametre de dessin
+        """
+        draw_rectangle(p, 0, 0, self.width(), self.height(), color_bleu_gris)
 
     def paintEvent(self, event):
         p = QPainter()

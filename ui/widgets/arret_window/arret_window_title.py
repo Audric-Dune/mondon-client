@@ -15,6 +15,10 @@ from ui.widgets.public.mondon_widget import MondonWidget
 
 
 class ArretWindowTitle(MondonWidget):
+    """
+    Bloc titre de la window arret
+    Affiche le temps de l'arret, l'heure de début et le jour
+    """
     def __init__(self, arret, parent):
         super(ArretWindowTitle, self).__init__(parent=parent)
         self.arret = arret
@@ -24,19 +28,10 @@ class ArretWindowTitle(MondonWidget):
         self.update_widget()
         self.init_widget()
 
-    def draw_fond(self, p):
-        draw_rectangle(p, 0, 0, self.width(), self.height(), color_bleu_gris)
-
-    def on_data_changed(self):
-        self.update_widget()
-
-    def paintEvent(self, event):
-        p = QPainter()
-        p.begin(self)
-        self.draw(p)
-        p.end()
-
     def init_widget(self):
+        """
+        Initialise le layout et insère les labels date du jour, durée d'arret et heure de début
+        """
         hbox = QHBoxLayout()
         self.label_date.setStyleSheet(white_20_label_stylesheet)
         self.label_date.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
@@ -50,9 +45,32 @@ class ArretWindowTitle(MondonWidget):
         self.setLayout(hbox)
 
     def update_widget(self):
+        """
+        Met a jour les textes des labels date du jour, durée d'arret et heure de début
+        """
         self.label_date.setText(str(timestamp_to_date_little(self.arret.start)))
         self.label_hour.setText(str(timestamp_to_hour_little(self.arret.start)))
         self.label_duration.setText(str(timedelta(seconds=round(self.arret.end - self.arret.start))))
+
+    def on_data_changed(self):
+        """
+        Fonction héritée de mondon_widget
+        Est appelé automatiquement après modification des data
+        """
+        self.update_widget()
+
+    def paintEvent(self, event):
+        p = QPainter()
+        p.begin(self)
+        self.draw(p)
+        p.end()
+
+    def draw_fond(self, p):
+        """
+        Dessine un rectangle de la taille du bloc
+        :param p: parametre de dessin
+        """
+        draw_rectangle(p, 0, 0, self.width(), self.height(), color_bleu_gris)
 
     def draw(self, p):
         self.draw_fond(p)
