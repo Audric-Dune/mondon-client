@@ -16,11 +16,19 @@ from ui.utils.drawing import draw_rectangle
 
 
 class Dropdown(QWidget):
+    # Signal émit lorsque l'on sélectionne un item dans la liste déroulante
+    # Retourne le string de l'item
     VALUE_SELECTED_SIGNAL = pyqtSignal(str)
 
+    """
+    Object générique dropdown
+    """
     def __init__(self, parent=None):
         super(Dropdown, self).__init__(parent=parent)
-        self.hbox = QHBoxLayout(self)
+        self.activated = False
+        self.show_popup = False
+        self.placeholder = None
+        # _____INITIALISATION WIDGET_____
         self.bt_dropdown = QPushButton(self)
         self.bt_dropdown.setStyleSheet(button_dropdown_stylesheet)
         self.bt_dropdown.clicked.connect(self.display_popup)
@@ -29,14 +37,31 @@ class Dropdown(QWidget):
         self.bt_arrow_dropdown.clicked.connect(self.display_popup)
         img = QIcon("assets/images/arrow_down_vert_fonce.png")
         self.bt_arrow_dropdown.setIcon(img)
-        self.placeholder = None
-        self.activated = False
         self.popup = DropdownPopup()
         self.popup.hide()
         self.popup.POPUP_HIDE.connect(self.display_popup)
         self.popup.ITEM_CLICKED.connect(self.update_value_selected)
-        self.show_popup = False
         self.init_widget()
+
+    def init_widget(self):
+        hbox = QHBoxLayout(self)
+        self.bt_dropdown.setFixedSize(250, 24)
+        hbox.addWidget(self.bt_dropdown)
+        self.bt_arrow_dropdown.setFixedSize(24, 24)
+        hbox.addWidget(self.bt_arrow_dropdown)
+        hbox.setContentsMargins(0, 0, 0, 0)
+        hbox.setSpacing(0)
+        self.setLayout(hbox)
+
+    def update_widget(self, bool):
+        self.activated = bool
+        if bool:
+            self.bt_dropdown.setDisabled(False)
+            self.bt_arrow_dropdown.setDisabled(False)
+        else:
+            self.bt_dropdown.setDisabled(True)
+            self.bt_arrow_dropdown.setDisabled(True)
+            self.set_placeholder()
 
     def add_item(self, item_label):
         if self.popup:
@@ -50,8 +75,7 @@ class Dropdown(QWidget):
         self.update_widget(bool)
 
     def set_placeholder(self, placeholder=None):
-        if placeholder:
-            self.placeholder = placeholder
+        self.placeholder = placeholder
         self.bt_dropdown.setText(self.placeholder)
 
     def display_popup(self):
@@ -66,25 +90,6 @@ class Dropdown(QWidget):
             self.popup.show_popup = True
             self.show_popup = True
 
-    def update_widget(self, bool):
-        self.activated = bool
-        if bool:
-            self.bt_dropdown.setDisabled(False)
-            self.bt_arrow_dropdown.setDisabled(False)
-        else:
-            self.bt_dropdown.setDisabled(True)
-            self.bt_arrow_dropdown.setDisabled(True)
-            self.set_placeholder()
-
-    def init_widget(self):
-        self.bt_dropdown.setFixedSize(250, 24)
-        self.hbox.addWidget(self.bt_dropdown)
-        self.bt_arrow_dropdown.setFixedSize(24, 24)
-        self.hbox.addWidget(self.bt_arrow_dropdown)
-        self.hbox.setContentsMargins(0, 0, 0, 0)
-        self.hbox.setSpacing(0)
-        self.setLayout(self.hbox)
-
 
 class DropdownPopup(QWidget):
     POPUP_HIDE = pyqtSignal()
@@ -93,8 +98,8 @@ class DropdownPopup(QWidget):
     def __init__(self, parent=None):
         super(DropdownPopup, self).__init__(parent=parent)
         self.vbox = QVBoxLayout(self)
-        # self.setWindowFlags(Qt.Tool | Qt.FramelessWindowHint)
-        self.setWindowFlags(Qt.FramelessWindowHint)
+        self.setWindowFlags(Qt.Tool | Qt.FramelessWindowHint)
+        # self.setWindowFlags(Qt.FramelessWindowHint)
         self.installEventFilter(self)
         self.show_popup = True
         self.show()
@@ -129,6 +134,15 @@ class PopupItem(QWidget):
         self.hover = False
         self.installEventFilter(self)
 
+    def init_label(self, text):
+        self.label = QLabel(text)
+        self.label.setFixedHeight(30)
+        self.label.setStyleSheet(black_16_label_stylesheet)
+        hbox = QHBoxLayout(self)
+        hbox.setContentsMargins(5, 0, 0, 0)
+        hbox.addWidget(self.label)
+        self.setLayout(hbox)
+
     def eventFilter(self, object, event):
         if event.type() == QEvent.Enter:
             self.hover = True
@@ -144,15 +158,6 @@ class PopupItem(QWidget):
             self.ITEM_CLICKED.emit(self.item_label)
             return True
         return False
-
-    def init_label(self, text):
-        self.label = QLabel(text)
-        self.label.setFixedHeight(30)
-        self.label.setStyleSheet(black_16_label_stylesheet)
-        hbox = QHBoxLayout(self)
-        hbox.setContentsMargins(5, 0, 0, 0)
-        hbox.addWidget(self.label)
-        self.setLayout(hbox)
 
     def paintEvent(self, event):
         p = QPainter()

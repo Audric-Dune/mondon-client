@@ -22,6 +22,7 @@ class ArretWindowTitle(MondonWidget):
     def __init__(self, arret, parent):
         super(ArretWindowTitle, self).__init__(parent=parent)
         self.arret = arret
+        # _____INITIALISATION WIDGET_____
         self.label_date = QLabel()
         self.label_hour = QLabel()
         self.label_duration = QLabel()

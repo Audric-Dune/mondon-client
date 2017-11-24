@@ -18,6 +18,7 @@ class ArretWindowValidation(MondonWidget):
     """
     def __init__(self, parent=None):
         super(ArretWindowValidation, self).__init__(parent=parent)
+        # _____INITIALISATION WIDGET_____
         self.bt_validation = QPushButton("Validation", self)
         self.bt_validation.clicked.connect(self.on_click_bt_validation)
         self.init_widget()
