@@ -51,16 +51,21 @@ class ArretWindowSelectRaison(MondonWidget):
             format = tupple[0]
             # La 2e valeur correspond au donnée
             value = tupple[1]
+            # On initialise un layout horisontal et on ajoute le boutton
+            hbox = QHBoxLayout()
+            # On crée la checkbox liée a l'item
+            self.buttons.append(self.create_check_button(index))
+            # On ajoute la check box au layout
+            hbox.addWidget(self.buttons[index])
             # On crée un item qui correspond au format
             if format == "label":
                 self.items.append((format, self.create_label(value)))
             elif format == "dropdown":
                 self.items.append((format, self.create_dropdown(value, index)))
-            # On crée la checkbox liée a l'item
-            self.buttons.append(self.create_check_button(index))
-            # On initialise un layout horisontal et on ajoute le boutton et l'item
-            hbox = QHBoxLayout()
-            hbox.addWidget(self.buttons[index])
+                # On ajoute un label titre au layout
+                label_dropdown = QLabel(value["titre"])
+                label_dropdown.setStyleSheet(white_title_label_stylesheet)
+                hbox.addWidget(label_dropdown)
             hbox.addWidget(self.items[index][1])
             hbox.addStretch(1)
             # On ajout le layout horisontal au layout principal vertical
@@ -104,6 +109,7 @@ class ArretWindowSelectRaison(MondonWidget):
             object.setStyleSheet(white_title_label_stylesheet)
         # Si l'item est une dropdown on la désactive
         if format == "dropdown":
+            object.hide()
             object.set_activated(False)
 
     def activate_line(self, button, item):
@@ -123,6 +129,7 @@ class ArretWindowSelectRaison(MondonWidget):
             object.setStyleSheet(white_title_label_stylesheet)
         # Si l'item est une dropdown on l'active
         if format == "dropdown":
+            object.show()
             object.set_activated(True)
 
     def onclick_button(self, index):
@@ -246,6 +253,7 @@ class ArretWindowSelectRaison(MondonWidget):
         dropdown.VALUE_SELECTED_SIGNAL.connect(self.style_choice)
         # On désactive la dropdown
         dropdown.set_activated(False)
+        dropdown.hide()
         return dropdown
 
     def draw_fond(self, p):
