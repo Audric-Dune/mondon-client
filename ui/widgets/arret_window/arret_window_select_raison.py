@@ -21,7 +21,8 @@ from ui.widgets.public.mondon_widget import MondonWidget
 class ArretWindowSelectRaison(MondonWidget):
     # Création du signal qui indique que les conditions pour valider la sélection on changé
     VALIDATION_CONDITION_SIGNAL = pyqtSignal(bool)
-
+    # _____DEFINITION CONSTANTE CLASS_____
+    SIZE = QSize(24, 24)
     """
     Bloc sélection raison de la window arret
     Affiche le temps de l'arret, l'heure de début et le jour
@@ -194,15 +195,14 @@ class ArretWindowSelectRaison(MondonWidget):
         # On crée un boutton vide
         button = QPushButton("")
         # On set sa taille
-        button.setFixedSize(24, 24)
+        button.setFixedSize(self.SIZE)
         # On met le style a off
         button.setStyleSheet(check_box_off_stylesheet)
         # On appel la fonction de connection
         self.connect_button(button, index)
         return button
 
-    @staticmethod
-    def set_icon_check_on_checkbox(button):
+    def set_icon_check_on_checkbox(self,button):
         """
         S'occupe de check une checkbox
         :param button: Le boutton a checker
@@ -212,8 +212,7 @@ class ArretWindowSelectRaison(MondonWidget):
         # On set l'image de check au bouton
         button.setIcon(img)
         # On initialise la taille de l'image
-        size = QSize(24, 24)
-        button.setIconSize(size)
+        button.setIconSize(self.SIZE)
 
     @staticmethod
     def create_label(text):

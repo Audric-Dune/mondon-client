@@ -15,7 +15,8 @@ from ui.widgets.public.mondon_widget import MondonWidget
 class ArretWindowAjoutRaison(MondonWidget):
     # Signal émit lorsque l'on veut ajouter une raison
     ADD_RAISON_SIGNAL = pyqtSignal()
-
+    # _____DEFINITION CONSTANTE CLASS_____
+    BUTTON_WIDTH = 200
     """
     Bloc de validation d'une raison d'arret
     S'active uniquement si on a séléctionné une raison
@@ -32,7 +33,7 @@ class ArretWindowAjoutRaison(MondonWidget):
         Initialise le layout et insère le bouton validation
         """
         hbox = QHBoxLayout()
-        self.bt_add.setFixedSize(200, button_size)
+        self.bt_add.setFixedSize(self.BUTTON_WIDTH, button_size)
         self.bt_add.setStyleSheet(button_stylesheet)
         hbox.addWidget(self.bt_add)
 

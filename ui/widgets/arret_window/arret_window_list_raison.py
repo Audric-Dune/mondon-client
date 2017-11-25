@@ -1,25 +1,22 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtCore import QSize, pyqtSignal
-from PyQt5.QtGui import QPainter, QIcon
-from PyQt5.QtWidgets import QPushButton, QLabel, QHBoxLayout, QVBoxLayout
+from PyQt5.QtGui import QPainter
+from PyQt5.Qt import Qt
+from PyQt5.QtWidgets import QLabel, QHBoxLayout, QVBoxLayout
 
 from constants.colors import color_bleu_gris
-from constants.param import LIST_CHOIX_RAISON_PREVU, LIST_CHOIX_RAISON_IMPREVU
 from constants.stylesheets import \
-    check_box_off_stylesheet, \
-    check_box_on_stylesheet, \
-    check_box_unselected_stylesheet, \
-    white_title_label_stylesheet, \
-    disable_16_label_stylesheet
+    gray_title_label_stylesheet, \
+    red_title_label_stylesheet
 from ui.utils.drawing import draw_rectangle
-from ui.widgets.public.dropdown import Dropdown
 from ui.widgets.public.mondon_widget import MondonWidget
 
 
 class ArretWindowListRaison(MondonWidget):
-
+    # _____DEFINITION CONSTANTE CLASS_____
+    WIDTH_TYPE = 120
+    HEIGHT_LINE = 24
     """
     Bloc de visualisation des raison de la window arret
     Affiche la liste des raisons ajouter a l'arret
@@ -30,6 +27,7 @@ class ArretWindowListRaison(MondonWidget):
         self.list_layout_raison = {}
         # _____INITIALISATION WIDGET_____
         self.vbox = QVBoxLayout(self)
+        self.vbox.setContentsMargins(5, 10, 5, 10)
         self.initial_line = self.create_initial_line()
         self.init_widget()
 
@@ -79,43 +77,47 @@ class ArretWindowListRaison(MondonWidget):
             self.vbox.addLayout(line_raison)
             self.update_widget()
 
-    @staticmethod
-    def create_initial_line():
+    def create_initial_line(self):
         """
         S'occupe de créer une ligne si l'arret contient aucune raison
-        :return: Le layout de la line
+        :return: Le layout de la ligne
         """
         # Création widget horizontal
         hbox = QHBoxLayout()
         # Création du label
         initial_label = QLabel("Aucune raison renseignée pour cette arrêt")
-        # On met le label en blanc
-        initial_label.setStyleSheet(white_title_label_stylesheet)
+        initial_label.setFixedHeight(self.HEIGHT_LINE)
+        initial_label.setAlignment(Qt.AlignCenter)
+        # On met le label en rouge
+        initial_label.setStyleSheet(red_title_label_stylesheet)
         # On ajoute le label au layout
         hbox.addWidget(initial_label)
         return hbox
 
-    @staticmethod
-    def create_line_raison(raison):
+    def create_line_raison(self, raison):
         """
         S'occupe de créer une ligne si l'arret contient aucune raison
-        :return: Le layout de la line
+        :return: Le layout de la ligne
         """
         # Création widget horizontal
         hbox = QHBoxLayout()
         # Création du label type
         type_label = QLabel(raison.type)
-        # On met le label en blanc
-        type_label.setStyleSheet(white_title_label_stylesheet)
+        # On met le label en couleur en fonction du type et on définit la largeur
+        stylesheet = gray_title_label_stylesheet if raison.type == "Prévu" else red_title_label_stylesheet
+        type_label.setStyleSheet(stylesheet)
+        type_label.setAlignment(Qt.AlignCenter)
+        type_label.setFixedWidth(self.WIDTH_TYPE)
+        type_label.setFixedHeight(self.HEIGHT_LINE)
         # On ajoute le label au layout
         hbox.addWidget(type_label)
         # Création du label raison
         raison_label = QLabel(raison.raison)
-        # On met le label en blanc
-        raison_label.setStyleSheet(white_title_label_stylesheet)
+        # On met le label en couleur en fonction du type et on définit la largeur
+        raison_label.setStyleSheet(stylesheet)
         # On ajoute le label au layout
         hbox.addWidget(raison_label)
-        hbox.addStretch(1)
+        hbox.setSpacing(0)
         return hbox
 
     @staticmethod

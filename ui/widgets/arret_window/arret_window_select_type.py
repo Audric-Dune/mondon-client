@@ -12,6 +12,8 @@ from ui.widgets.public.mondon_widget import MondonWidget
 
 
 class ArretWindowSelectType(MondonWidget):
+    # _____DEFINITION CONSTANTE CLASS_____
+    BUTTON_WIDTH = 200
     """
     Bloc sélection du type d'arret
     Affiche et met a jour le style des boutons "Prévu" et "Imprévu"
@@ -32,10 +34,10 @@ class ArretWindowSelectType(MondonWidget):
         Initialise le layout et insère les labels date du jour, durée d'arret et heure de début
         """
         hbox = QHBoxLayout()
-        self.bt_prevu.setFixedSize(200, button_size)
+        self.bt_prevu.setFixedSize(self.BUTTON_WIDTH, button_size)
         self.bt_prevu.setStyleSheet(button_stylesheet)
         hbox.addWidget(self.bt_prevu)
-        self.bt_imprevu.setFixedSize(200, button_size)
+        self.bt_imprevu.setFixedSize(self.BUTTON_WIDTH, button_size)
         self.bt_imprevu.setStyleSheet(button_stylesheet)
         hbox.addWidget(self.bt_imprevu)
 
