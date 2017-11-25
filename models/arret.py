@@ -84,12 +84,15 @@ class Arret(QObject):
         # Emet un signal qui indique qu'il y a une modification sur la sélection des raisons
         self.ARRET_RAISON_CHANGED_SIGNAL.emit()
 
-    def remove_raison_cache(self, index_raison):
+    def remove_raison_cache(self, index_raison=None):
         """
         Supprime l'index du tableau des indexs sélectionnés lorsqu'on le déselectionne
         :param index_raison: Index a supprimer
         """
-        del self.raison_cache_index[index_raison]
+        if index_raison:
+            del self.raison_cache_index[index_raison]
+        else:
+            self.raison_cache_index = {}
 
     def remove_type(self):
         """
@@ -97,8 +100,15 @@ class Arret(QObject):
         """
         self.type_cache = None
 
-    def remove_raison(self):
+    def remove_raison(self, raison):
         """
-        Reinitialise la liste des raisons sélectionnées
+        Supprime l'object du tableau des raisons
         """
-        self.raison_cache_index = {}
+        # On parcour la liste des objects raisons
+        for object_raison in self.raisons:
+            # On regarde si la raison de l'object = la raison recherché
+            if object_raison.raison == raison:
+                object_raison.del_raison_on_database()
+                self.raisons.remove(object_raison)
+                object_raison.deleteLater()
+                break

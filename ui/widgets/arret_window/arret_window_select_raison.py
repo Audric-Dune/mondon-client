@@ -107,10 +107,9 @@ class ArretWindowSelectRaison(MondonWidget):
         # Si l'item est un label on le passe en blanc
         if format == "label":
             object.setStyleSheet(white_title_label_stylesheet)
-        # Si l'item est une dropdown on la désactive
+        # Si l'item est une dropdown on la cache
         if format == "dropdown":
             object.hide()
-            object.set_activated(False)
 
     def activate_line(self, button, item):
         """
@@ -127,10 +126,9 @@ class ArretWindowSelectRaison(MondonWidget):
         # Si l'item est un label on le passe en blanc
         if format == "label":
             object.setStyleSheet(white_title_label_stylesheet)
-        # Si l'item est une dropdown on l'active
+        # Si l'item est une dropdown on l'affiche
         if format == "dropdown":
             object.show()
-            object.set_activated(True)
 
     def onclick_button(self, index):
         """
@@ -251,8 +249,7 @@ class ArretWindowSelectRaison(MondonWidget):
             dropdown.add_item(value)
         # On connect la dropdown a la fonction style_choice
         dropdown.VALUE_SELECTED_SIGNAL.connect(self.style_choice)
-        # On désactive la dropdown
-        dropdown.set_activated(False)
+        # On cache la dropdown
         dropdown.hide()
         return dropdown
 

@@ -22,3 +22,6 @@ class Raison(QObject):
             type_arret=self.type,
             raison_arret=self.raison,
             duree=self.duree)
+
+    def del_raison_on_database(self):
+        Database.delete_raison_arret(self.id)

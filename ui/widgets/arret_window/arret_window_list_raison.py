@@ -1,14 +1,17 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtGui import QPainter
+from PyQt5.QtGui import QPainter, QIcon
 from PyQt5.Qt import Qt
-from PyQt5.QtWidgets import QLabel, QHBoxLayout, QVBoxLayout
+from PyQt5.QtWidgets import QLabel, QHBoxLayout, QVBoxLayout, QPushButton
+from PyQt5.QtCore import QSize, QMargins
 
 from constants.colors import color_bleu_gris
 from constants.stylesheets import \
     gray_title_label_stylesheet, \
-    red_title_label_stylesheet
+    red_title_label_stylesheet, \
+    button_gray_cross_stylesheet,\
+    button_red_cross_stylesheet
 from ui.utils.drawing import draw_rectangle
 from ui.widgets.public.mondon_widget import MondonWidget
 
@@ -17,6 +20,9 @@ class ArretWindowListRaison(MondonWidget):
     # _____DEFINITION CONSTANTE CLASS_____
     WIDTH_TYPE = 120
     HEIGHT_LINE = 24
+    SIZE = QSize(24, 24)
+    VBOX_SPACING = 5
+    VBOX_MARGIN = QMargins(10, 10, 10, 10)
     """
     Bloc de visualisation des raison de la window arret
     Affiche la liste des raisons ajouter a l'arret
@@ -27,7 +33,8 @@ class ArretWindowListRaison(MondonWidget):
         self.list_layout_raison = {}
         # _____INITIALISATION WIDGET_____
         self.vbox = QVBoxLayout(self)
-        self.vbox.setContentsMargins(5, 10, 5, 10)
+        self.vbox.setContentsMargins(self.VBOX_MARGIN)
+        self.vbox.setSpacing(self.VBOX_SPACING)
         self.initial_line = self.create_initial_line()
         self.init_widget()
 
@@ -57,7 +64,7 @@ class ArretWindowListRaison(MondonWidget):
     def update_widget(self):
         # On récupère la liste des raisons sotcké dans l'object Arret
         list_raison = self.arret.raisons
-        # On regarde si il ya plus de raison dans l'object Arret que dans le layout
+        # On regarde si il y a plus de raison dans l'object Arret que dans le layout
         if len(list_raison) > len(self.list_layout_raison):
             # Si il n'y a pas de ligne, on supprime la ligne initiale
             if len(self.list_layout_raison) == 0:
@@ -96,7 +103,7 @@ class ArretWindowListRaison(MondonWidget):
 
     def create_line_raison(self, raison):
         """
-        S'occupe de créer une ligne si l'arret contient aucune raison
+        S'occupe de créer une ligne associé a une raison
         :return: Le layout de la ligne
         """
         # Création widget horizontal
@@ -104,8 +111,8 @@ class ArretWindowListRaison(MondonWidget):
         # Création du label type
         type_label = QLabel(raison.type)
         # On met le label en couleur en fonction du type et on définit la largeur
-        stylesheet = gray_title_label_stylesheet if raison.type == "Prévu" else red_title_label_stylesheet
-        type_label.setStyleSheet(stylesheet)
+        label_stylesheet = gray_title_label_stylesheet if raison.type == "Prévu" else red_title_label_stylesheet
+        type_label.setStyleSheet(label_stylesheet)
         type_label.setAlignment(Qt.AlignCenter)
         type_label.setFixedWidth(self.WIDTH_TYPE)
         type_label.setFixedHeight(self.HEIGHT_LINE)
@@ -114,26 +121,48 @@ class ArretWindowListRaison(MondonWidget):
         # Création du label raison
         raison_label = QLabel(raison.raison)
         # On met le label en couleur en fonction du type et on définit la largeur
-        raison_label.setStyleSheet(stylesheet)
+        raison_label.setStyleSheet(label_stylesheet)
         # On ajoute le label au layout
         hbox.addWidget(raison_label)
+        # On crée un bouton pour supprimer la ligne
+        bt_cross = QPushButton()
+        img = QIcon("assets/images/white_cross.png")
+        bt_cross.setIcon(img)
+        bt_cross.setFixedSize(self.SIZE)
+        bt_cross_stylesheet = button_gray_cross_stylesheet if raison.type == "Prévu" else button_red_cross_stylesheet
+        bt_cross.setStyleSheet(bt_cross_stylesheet)
+        bt_cross.clicked.connect(lambda: self.delete_line_raison(raison.raison))
+        # On ajoute le bouton au layout
+        hbox.addWidget(bt_cross)
         hbox.setSpacing(0)
         return hbox
 
-    @staticmethod
-    def clear_layout(layout):
+    def delete_line_raison(self, raison):
+        """
+        S'occupe de supprimer une ligne raison
+        :param raison: La raison a supprimer
+        """
+        # Supprime l'object Raison dans l'object Arret
+        self.arret.remove_raison(raison)
+        # Réinitialise la liste des layout raison
+        self.list_layout_raison = {}
+        self.clear_layout(self.vbox)
+        self.init_widget()
+
+    def clear_layout(self, layout):
         """
         Supprime tous les enfant d'un layout
         :param layout: Le layout a clear
         :return:
         """
-        # On boucle jusqu'a se que le layout soit vide
-        while layout.count():
-            # On sélectionne le premiere enfant
-            child = layout.takeAt(0)
-            # Si c'est un widget on le supprime
-            if child.widget():
-                child.widget().deleteLater()
+        if layout is not None:
+            while layout.count():
+                item = layout.takeAt(0)
+                widget = item.widget()
+                if widget is not None:
+                    widget.deleteLater()
+                else:
+                    self.clear_layout(item.layout())
 
     def draw_fond(self, p):
         """

@@ -120,6 +120,34 @@ button_arrow_stylesheet = """
     color_rouge=color_rouge.hex_string,
 )
 
+button_red_cross_stylesheet = """
+    QPushButton {{
+        background-color: {color_rouge};
+        border: none;
+    }}
+""".format(
+    color_blanc=color_blanc.hex_string,
+    color_vert_fonce=color_vert_fonce.hex_string,
+    color_vert_moyen=color_vert_moyen.hex_string,
+    color_vert=color_vert.hex_string,
+    color_gris_moyen=color_gris_moyen.hex_string,
+    color_rouge=color_rouge.hex_string,
+)
+
+button_gray_cross_stylesheet = """
+    QPushButton {{
+        background-color: {color_gris_moyen};
+        border: none;
+    }}
+""".format(
+    color_blanc=color_blanc.hex_string,
+    color_vert_fonce=color_vert_fonce.hex_string,
+    color_vert_moyen=color_vert_moyen.hex_string,
+    color_vert=color_vert.hex_string,
+    color_gris_moyen=color_gris_moyen.hex_string,
+    color_rouge=color_rouge.hex_string,
+)
+
 button_dropdown_stylesheet = """
     QPushButton {{
         background-color: {color_blanc};

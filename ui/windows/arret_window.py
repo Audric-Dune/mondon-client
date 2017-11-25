@@ -114,7 +114,7 @@ class ArretWindow(QMainWindow):
         self.remove_arret_window_select_raison()
         self.remove_arret_window_ajout_raison()
         # Réinitialise les variable mémoire de l'object arret
-        self.arret.remove_raison()
+        self.arret.remove_raison_cache()
         self.arret.remove_type()
         # Utilisation d'un QTimer pour redimensionner la window
         # (on attend que les fonctions ci-dessus soit réellement exécuté)
@@ -149,7 +149,7 @@ class ArretWindow(QMainWindow):
         """
         self.vbox.removeWidget(self.arret_window_select_raison)
         self.arret_window_select_raison.deleteLater()
-        self.arret.remove_raison()
+        self.arret.remove_raison_cache()
         self.arret_window_select_raison = None
 
     def remove_arret_window_ajout_raison(self):
