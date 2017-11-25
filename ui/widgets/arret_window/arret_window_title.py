@@ -60,18 +60,18 @@ class ArretWindowTitle(MondonWidget):
         """
         self.update_widget()
 
-    def paintEvent(self, event):
-        p = QPainter()
-        p.begin(self)
-        self.draw(p)
-        p.end()
-
     def draw_fond(self, p):
         """
         Dessine un rectangle de la taille du bloc
         :param p: parametre de dessin
         """
         draw_rectangle(p, 0, 0, self.width(), self.height(), color_bleu_gris)
+
+    def paintEvent(self, event):
+        p = QPainter()
+        p.begin(self)
+        self.draw(p)
+        p.end()
 
     def draw(self, p):
         self.draw_fond(p)
