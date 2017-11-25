@@ -10,9 +10,15 @@ from models.raison import Raison
 
 
 class Arret(QObject):
+    # Création du signal qui indique que le type d'arret selectionné a changé
     ARRET_TYPE_CHANGED_SIGNAL = pyqtSignal()
+    # Création du signal qui indique qu'il y a une modification sur la sélection des raisons
     ARRET_RAISON_CHANGED_SIGNAL = pyqtSignal()
 
+    """
+    Object model qui stocke edes information sur un arret
+    S'occupe de modifier la base de donnée si besoin
+    """
     def __init__(self, arret_data):
         super(Arret, self).__init__(None)
         self.start = arret_data[0]
@@ -23,35 +29,76 @@ class Arret(QObject):
         # self.create_on_database()
 
     def create_on_database(self):
+        """
+        S'occupe de créer l'arret en base de donnée
+        """
         Database.create_arret(start_arret=self.start, end_arret=self.end)
 
     def update_arret(self):
+        """
+        S'occupe de mettre a jours l'arret en base de donnée
+        """
         Database.update_arret(start_arret=self.start, end_arret=self.end)
 
     def add_raison_on_database(self):
-        for index, raison in self.raison_cache_index.items():
+        """
+        Est appelé lorsque l'on click sur ajouter dans la window arret
+        S'occupe de créer les objects raisons
+        """
+        # On parcour tous les index sélectionner
+        for index, value_item in self.raison_cache_index.items():
+            # On génère un id aléatoire
             random_id = random.randint(0, 1e15)
-            if raison:
-                raison_arret = raison
+            # Le dictionnaire raison_cache_index contient en clé l'index et en valeur
+            # la valeur de la dropdown sélectionné (ou None si c'est pas une dropdown)
+            # Si il y a une valeur dans value item
+            if value_item:
+                # La raison est la valeur de l'item
+                raison_arret = value_item
+            # Sinon on sélectionne la liste des arrets en fonction du type d'aret
             else:
                 list_raison = LIST_CHOIX_RAISON_PREVU if self.type_cache == "Prévu" else LIST_CHOIX_RAISON_IMPREVU
+                # On récupère la valeur de l'index dans la liste
                 raison_arret = list_raison[index][1]
+            # On range les données définient ci-dessus
             data_raison = [random_id, self.start, self.type_cache, raison_arret, None]
+            # On crée notre object raison
             self.raisons.append(Raison(data_raison))
 
     def add_type_cache(self, type):
+        """
+        Garde en mémoire le type sélectionné
+        :param type: Le type sélectionné
+        """
         self.type_cache = type
+        # Emet un signal lorsque le type d'arret change
         self.ARRET_TYPE_CHANGED_SIGNAL.emit()
 
     def add_raison_cache(self, index_raison, text_dropdown):
+        """
+        Stock les raisons sélectionnées dans un tableau
+        :param index_raison: l'index de la raison sélectionné
+        :param text_dropdown: La valeur de la dropdown ou None si ce n'est pas une dropdown
+        """
         self.raison_cache_index[index_raison] = text_dropdown
+        # Emet un signal qui indique qu'il y a une modification sur la sélection des raisons
         self.ARRET_RAISON_CHANGED_SIGNAL.emit()
 
     def remove_raison_cache(self, index_raison):
+        """
+        Supprime l'index du tableau des indexs sélectionnés lorsqu'on le déselectionne
+        :param index_raison: Index a supprimer
+        """
         del self.raison_cache_index[index_raison]
 
     def remove_type(self):
+        """
+        Reinitialise le type d'arret sélectionné
+        """
         self.type_cache = None
 
     def remove_raison(self):
+        """
+        Reinitialise la liste des raisons sélectionnées
+        """
         self.raison_cache_index = {}
