@@ -177,6 +177,24 @@ class Database:
         return raisons
 
     @classmethod
+    def create_raison_arret(cls, id, start_arret, type_arret, raison_arret, duree=None):
+        query = "INSERT INTO mondon_raison_arret VALUES (?, ?, ?, ?, ?)"\
+            .format(id=id,
+                    start_arret=start_arret,
+                    type_arret=type_arret,
+                    raison_arret=raison_arret,
+                    duree=duree)
+        try:
+            cls._run_query(query, (id, start_arret, type_arret, raison_arret, duree))
+        except sqlite3.IntegrityError as e:
+            # IntegrityError veut dire que l'on essaye d'insérer une vitesse avec un timestamp
+            # qui existe déjà dans la base de données.
+            # Dans ce cas, on considère que cette valeur n'a pas besoin d'être insérée et on
+            # ignore l'exception.
+            logger.log("DATABASE", "(Ignorée) IntegrityError: {}".format(e))
+            pass
+
+    @classmethod
     def get_dechet(cls, start_time, end_time):
         """
         Récupère les déchets en base de donnée compris entre une plage de timestamp dans l'ordre chronologique

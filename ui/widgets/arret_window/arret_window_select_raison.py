@@ -20,7 +20,7 @@ from ui.widgets.public.mondon_widget import MondonWidget
 
 class ArretWindowSelectRaison(MondonWidget):
     # Création du signal qui indique que les conditions pour valider la sélection on changé
-    VALIDATION_CONDITION = pyqtSignal(bool)
+    VALIDATION_CONDITION_SIGNAL = pyqtSignal(bool)
 
     """
     Bloc sélection raison de la window arret
@@ -163,7 +163,7 @@ class ArretWindowSelectRaison(MondonWidget):
             self.last_raison_index = -1
             # On indique que les conditions pour valider ne sont plus OK
             self.validation_condition = False
-            self.VALIDATION_CONDITION.emit(False)
+            self.VALIDATION_CONDITION_SIGNAL.emit(False)
         else:
             # On met a jour l'ancien index sélectionné
             self.last_raison_index = index
@@ -171,11 +171,11 @@ class ArretWindowSelectRaison(MondonWidget):
             if self.items[index][0] == "label":
                 # On indique que les conditions pour valider sont OK
                 self.validation_condition = True
-                self.VALIDATION_CONDITION.emit(True)
+                self.VALIDATION_CONDITION_SIGNAL.emit(True)
             else:
                 # On indique que les conditions pour valider ne sont plus OK
                 self.validation_condition = False
-                self.VALIDATION_CONDITION.emit(False)
+                self.VALIDATION_CONDITION_SIGNAL.emit(False)
         # On met a jour la variable mémoire de séléction d'une raison dans l'object Arret
         self.arret.add_raison_cache(index, None)
 
@@ -188,7 +188,7 @@ class ArretWindowSelectRaison(MondonWidget):
         self.arret.add_raison_cache(self.raison_index_selected, text)
         # On indique que les conditions pour valider sont OK
         self.validation_condition = True
-        self.VALIDATION_CONDITION.emit(True)
+        self.VALIDATION_CONDITION_SIGNAL.emit(True)
 
     def connect_button(self, button, index):
         """

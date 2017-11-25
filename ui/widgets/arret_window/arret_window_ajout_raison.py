@@ -3,6 +3,7 @@
 
 from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import QPushButton, QHBoxLayout
+from PyQt5.QtCore import pyqtSignal
 
 from constants.colors import color_bleu_gris
 from constants.dimensions import button_size
@@ -11,16 +12,19 @@ from ui.utils.drawing import draw_rectangle
 from ui.widgets.public.mondon_widget import MondonWidget
 
 
-class ArretWindowValidation(MondonWidget):
+class ArretWindowAjoutRaison(MondonWidget):
+    # Signal émit lorsque l'on veut ajouter une raison
+    ADD_RAISON_SIGNAL = pyqtSignal()
+
     """
     Bloc de validation d'une raison d'arret
     S'active uniquement si on a séléctionné une raison
     """
     def __init__(self, parent=None):
-        super(ArretWindowValidation, self).__init__(parent=parent)
+        super(ArretWindowAjoutRaison, self).__init__(parent=parent)
         # _____INITIALISATION WIDGET_____
-        self.bt_validation = QPushButton("Validation", self)
-        self.bt_validation.clicked.connect(self.on_click_bt_validation)
+        self.bt_add = QPushButton("Ajouter", self)
+        self.bt_add.clicked.connect(self.on_click_bt_add)
         self.init_widget()
 
     def init_widget(self):
@@ -28,17 +32,17 @@ class ArretWindowValidation(MondonWidget):
         Initialise le layout et insère le bouton validation
         """
         hbox = QHBoxLayout()
-        self.bt_validation.setFixedSize(200, button_size)
-        self.bt_validation.setStyleSheet(button_stylesheet)
-        hbox.addWidget(self.bt_validation)
+        self.bt_add.setFixedSize(200, button_size)
+        self.bt_add.setStyleSheet(button_stylesheet)
+        hbox.addWidget(self.bt_add)
 
         self.setLayout(hbox)
 
-    def on_click_bt_validation(self):
+    def on_click_bt_add(self):
         """
-        Appel la fonction add_raison_on_database pour ajouter la raison en base de donnée
+        Emet un signal lorsque l'on click sur le bouton ajouter
         """
-        print("VALIDATION_CLICK")
+        self.ADD_RAISON_SIGNAL.emit()
 
     def draw_fond(self, p):
         """

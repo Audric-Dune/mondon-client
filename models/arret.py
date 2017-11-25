@@ -1,8 +1,12 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import random
+
 from PyQt5.QtCore import QObject, pyqtSignal
 from lib.base_de_donnee import Database
+from constants.param import LIST_CHOIX_RAISON_PREVU, LIST_CHOIX_RAISON_IMPREVU
+from models.raison import Raison
 
 
 class Arret(QObject):
@@ -28,6 +32,16 @@ class Arret(QObject):
     def add_type_cache(self, type):
         self.type_cache = type
         self.ARRET_TYPE_CHANGED_SIGNAL.emit()
+
+    def add_raison_on_database(self):
+        random_id = random.randint(0, 1e15)
+        if self.dropdown_cache_text:
+            raison_arret = self.dropdown_cache_text
+        else:
+            list_raison = LIST_CHOIX_RAISON_PREVU if self.type_cache == "Prévu" else LIST_CHOIX_RAISON_IMPREVU
+            raison_arret = list_raison[self.raison_cache_index][1]
+        data_raison = [random_id, self.start, self.type_cache, raison_arret, None]
+        self.raisons.append(Raison(data_raison))
 
     def add_raison_cache(self, index_raison, text_dropdown):
         self.raison_cache_index = index_raison

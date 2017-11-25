@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5.QtCore import QObject
+from lib.base_de_donnee import Database
 
 
 class Raison(QObject):
@@ -12,3 +13,12 @@ class Raison(QObject):
         self.type = raison_data[2]
         self.raison = raison_data[3]
         self.duree = raison_data[4] or "NULL"
+        self.add_raison_on_database()
+
+    def add_raison_on_database(self):
+        Database.create_raison_arret(
+            id=self.id,
+            start_arret=self.start,
+            type_arret=self.type,
+            raison_arret=self.raison,
+            duree=self.duree)

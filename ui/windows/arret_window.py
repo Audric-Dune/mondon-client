@@ -6,7 +6,8 @@ from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout
 from ui.widgets.arret_window.arret_window_title import ArretWindowTitle
 from ui.widgets.arret_window.arret_window_select_raison import ArretWindowSelectRaison
 from ui.widgets.arret_window.arret_window_select_type import ArretWindowSelectType
-from ui.widgets.arret_window.arret_window_validation import ArretWindowValidation
+from ui.widgets.arret_window.arret_window_ajout_raison import ArretWindowAjoutRaison
+from ui.widgets.arret_window.arret_window_list_raison import ArretWindowListRaison
 
 
 class ArretWindow(QMainWindow):
@@ -24,9 +25,10 @@ class ArretWindow(QMainWindow):
         self.central_widget = QWidget(self)
         self.vbox = QVBoxLayout(self.central_widget)
         self.arret_window_title = ArretWindowTitle(self.arret, parent=self.central_widget)
+        self.arret_window_list_raison = ArretWindowListRaison(self.arret, parent=self.central_widget)
         self.arret_window_select_type = ArretWindowSelectType(self.arret, parent=self.central_widget)
         self.arret_window_select_raison = None
-        self.arret_window_validation = None
+        self.arret_window_ajout_raison = None
         self.init_widget()
 
     def init_widget(self):
@@ -36,8 +38,8 @@ class ArretWindow(QMainWindow):
         # On fixe la taille du bloc titre pour rendre le bloc selection type maitre
         self.arret_window_title.setFixedHeight(60)
         self.vbox.addWidget(self.arret_window_title)
+        self.vbox.addWidget(self.arret_window_list_raison)
         self.vbox.addWidget(self.arret_window_select_type)
-
         # On ajoute le layout au widget central (permet de gérer les marges de la fenêtre
         self.central_widget.setLayout(self.vbox)
         self.setCentralWidget(self.central_widget)
@@ -58,7 +60,7 @@ class ArretWindow(QMainWindow):
             # Si oui, on supprime le bloc sélection raison
             self.remove_arret_window_select_raison()
             # On supprime le bloc validation, si il y en a une
-            self.remove_arret_window_validation()
+            self.remove_arret_window_ajout_raison()
             # On met a jour la valeur type d'arret stocker en mémoire dans l'objet Arret
             self.arret.remove_type()
             # On supprime le type d'arret stocker en mémoire
@@ -69,7 +71,7 @@ class ArretWindow(QMainWindow):
             self.remove_arret_window_select_raison()
             self.create_arret_window_select_raison()
             # On supprime le bloc validation, si il y en a une
-            self.remove_arret_window_validation()
+            self.remove_arret_window_ajout_raison()
             # On stocke le type d'arret en mémoire
             self.last_type_selected = self.arret.type_cache
         # Utilisation d'un QTimer pour redimensionner la window
@@ -84,17 +86,29 @@ class ArretWindow(QMainWindow):
         # On regarde si on a émis un signal pour créé le bloc validation
         # On vérifie que le bloc validation n'existe pas
         # On vérifie si les conditions de validation sont réunis
-        if validation and not self.arret_window_validation and self.arret_window_select_raison.validation_condition:
+        if validation and not self.arret_window_ajout_raison and self.arret_window_select_raison.validation_condition:
             self.create_arret_window_validation()
         # On regarde si on a émis un signal pour créé le bloc validation
         # On vérifie si le bloc validation existe
         # On vérifie si les conditions de validation sont réunis
-        elif validation and self.arret_window_validation and self.arret_window_select_raison.validation_condition:
+        elif validation and self.arret_window_ajout_raison and self.arret_window_select_raison.validation_condition:
             # Dans ce cas on a rien à faire
             pass
         else:
             # Sinon on supprime le bloc validation
-            self.remove_arret_window_validation()
+            self.remove_arret_window_ajout_raison()
+        # Utilisation d'un QTimer pour redimensionner la window
+        # (on attend que les fonctions ci-dessus soit réellement exécuté)
+        QTimer.singleShot(0, self.resize_window)
+
+    def update_widget_from_add_raison(self):
+        """
+        S'occupe d'appeler la fonction de l'object arret pour ajouter une raison en base de donnée
+        Met a jour la fenetre
+        """
+        self.arret.add_raison_on_database()
+        # Met a jour la liste des raisons
+        self.arret_window_list_raison.update_widget()
         # Utilisation d'un QTimer pour redimensionner la window
         # (on attend que les fonctions ci-dessus soit réellement exécuté)
         QTimer.singleShot(0, self.resize_window)
@@ -102,11 +116,11 @@ class ArretWindow(QMainWindow):
     def create_arret_window_select_raison(self):
         """
         S'occupe de créé le bloc selection raison
-        On connect le signal VALIDATION_CONDITION à la fonction update_widget_from_validation
+        On connect le signal VALIDATION_CONDITION_SIGNAL à la fonction update_widget_from_validation
         On ajoute le bloc sélection raison au layout
         """
         self.arret_window_select_raison = ArretWindowSelectRaison(self.arret, parent=self.central_widget)
-        self.arret_window_select_raison.VALIDATION_CONDITION.connect(self.update_widget_from_validation)
+        self.arret_window_select_raison.VALIDATION_CONDITION_SIGNAL.connect(self.update_widget_from_validation)
         self.vbox.addWidget(self.arret_window_select_raison)
 
     def create_arret_window_validation(self):
@@ -114,8 +128,9 @@ class ArretWindow(QMainWindow):
         S'occupe de créé le bloc validation
         On ajoute le bloc validation au layout
         """
-        self.arret_window_validation = ArretWindowValidation()
-        self.vbox.addWidget(self.arret_window_validation)
+        self.arret_window_ajout_raison = ArretWindowAjoutRaison()
+        self.arret_window_ajout_raison.ADD_RAISON_SIGNAL.connect(self.update_widget_from_add_raison)
+        self.vbox.addWidget(self.arret_window_ajout_raison)
 
     def remove_arret_window_select_raison(self):
         """
@@ -130,7 +145,7 @@ class ArretWindow(QMainWindow):
         self.arret.remove_raison()
         self.arret_window_select_raison = None
 
-    def remove_arret_window_validation(self):
+    def remove_arret_window_ajout_raison(self):
         """
         S'occupe de supprimer le bloc selection validation
         On retire le bloc selection validation au layout
@@ -138,10 +153,10 @@ class ArretWindow(QMainWindow):
         On initialise la variable qui stock le bloc selection validation
         """
         # On vérifie si la window validation existe
-        if self.arret_window_validation:
-            self.vbox.removeWidget(self.arret_window_validation)
-            self.arret_window_validation.deleteLater()
-        self.arret_window_validation = None
+        if self.arret_window_ajout_raison:
+            self.vbox.removeWidget(self.arret_window_ajout_raison)
+            self.arret_window_ajout_raison.deleteLater()
+        self.arret_window_ajout_raison = None
 
     def resize_window(self):
         """
