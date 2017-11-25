@@ -19,8 +19,7 @@ class Arret(QObject):
         self.end = arret_data[1]
         self.raisons = []
         self.type_cache = None
-        self.raison_cache_index = None
-        self.dropdown_cache_text = None
+        self.raison_cache_index = {}
         # self.create_on_database()
 
     def create_on_database(self):
@@ -29,28 +28,30 @@ class Arret(QObject):
     def update_arret(self):
         Database.update_arret(start_arret=self.start, end_arret=self.end)
 
+    def add_raison_on_database(self):
+        for index, raison in self.raison_cache_index.items():
+            random_id = random.randint(0, 1e15)
+            if raison:
+                raison_arret = raison
+            else:
+                list_raison = LIST_CHOIX_RAISON_PREVU if self.type_cache == "Prévu" else LIST_CHOIX_RAISON_IMPREVU
+                raison_arret = list_raison[index][1]
+            data_raison = [random_id, self.start, self.type_cache, raison_arret, None]
+            self.raisons.append(Raison(data_raison))
+
     def add_type_cache(self, type):
         self.type_cache = type
         self.ARRET_TYPE_CHANGED_SIGNAL.emit()
 
-    def add_raison_on_database(self):
-        random_id = random.randint(0, 1e15)
-        if self.dropdown_cache_text:
-            raison_arret = self.dropdown_cache_text
-        else:
-            list_raison = LIST_CHOIX_RAISON_PREVU if self.type_cache == "Prévu" else LIST_CHOIX_RAISON_IMPREVU
-            raison_arret = list_raison[self.raison_cache_index][1]
-        data_raison = [random_id, self.start, self.type_cache, raison_arret, None]
-        self.raisons.append(Raison(data_raison))
-
     def add_raison_cache(self, index_raison, text_dropdown):
-        self.raison_cache_index = index_raison
-        self.dropdown_cache_text = text_dropdown
+        self.raison_cache_index[index_raison] = text_dropdown
         self.ARRET_RAISON_CHANGED_SIGNAL.emit()
+
+    def remove_raison_cache(self, index_raison):
+        del self.raison_cache_index[index_raison]
 
     def remove_type(self):
         self.type_cache = None
 
     def remove_raison(self):
-        self.raison_cache_index = None
-        self.dropdown_cache_text = None
+        self.raison_cache_index = {}

@@ -30,6 +30,7 @@ class ArretWindow(QMainWindow):
         self.arret_window_select_raison = None
         self.arret_window_ajout_raison = None
         self.init_widget()
+        self.setFixedSize(self.minimumSizeHint())
 
     def init_widget(self):
         """
@@ -107,8 +108,14 @@ class ArretWindow(QMainWindow):
         Met a jour la fenetre
         """
         self.arret.add_raison_on_database()
-        # Met a jour la liste des raisons
+        # Met a jour le bloc liste des raisons
         self.arret_window_list_raison.update_widget()
+        # Remove les blocs selection raison et ajout raison
+        self.remove_arret_window_select_raison()
+        self.remove_arret_window_ajout_raison()
+        # Réinitialise les variable mémoire de l'object arret
+        self.arret.remove_raison()
+        self.arret.remove_type()
         # Utilisation d'un QTimer pour redimensionner la window
         # (on attend que les fonctions ci-dessus soit réellement exécuté)
         QTimer.singleShot(0, self.resize_window)

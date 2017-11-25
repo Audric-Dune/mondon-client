@@ -82,7 +82,6 @@ class Application(QApplication):
             arret_window = ArretWindow(self.on_close_arret_window, object_arret)
             self.dic_arret_window[start_arret] = arret_window
             arret_window.setWindowTitle("Gestion d'un arrêt")
-            arret_window.setFixedSize(0, 0)
             arret_window.show()
 
 

@@ -18,13 +18,14 @@ from ui.utils.drawing import draw_rectangle
 class Dropdown(QWidget):
     # Signal émit lorsque l'on sélectionne un item dans la liste déroulante
     # Retourne le string de l'item
-    VALUE_SELECTED_SIGNAL = pyqtSignal(str)
+    VALUE_SELECTED_SIGNAL = pyqtSignal(str, int)
 
     """
     Object générique dropdown
     """
-    def __init__(self, parent=None):
+    def __init__(self, index, parent=None):
         super(Dropdown, self).__init__(parent=parent)
+        self.index = index
         self.placeholder = None
         # _____INITIALISATION WIDGET_____
         self.bt_dropdown = QPushButton(self)
@@ -96,7 +97,7 @@ class Dropdown(QWidget):
         # On met a jour la valeur du bouton pour qu'elle affiche la valeur sélectionnée
         self.bt_dropdown.setText(value)
         # On émet un signal qui indique que l'utilisateur a sélectionné une valeur
-        self.VALUE_SELECTED_SIGNAL.emit(value)
+        self.VALUE_SELECTED_SIGNAL.emit(value, self.index)
 
     def set_activated(self, bool):
         """

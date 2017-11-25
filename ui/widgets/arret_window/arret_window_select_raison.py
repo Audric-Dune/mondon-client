@@ -34,8 +34,7 @@ class ArretWindowSelectRaison(MondonWidget):
         self.items = []
         self.buttons = []
         self.validation_condition = False
-        self.raison_index_selected = -1
-        self.last_raison_index = -1
+        self.raison_index_selected = []
         # _____INITIALISATION WIDGET_____
         self.vbox = QVBoxLayout()
         self.init_widget()
@@ -55,7 +54,7 @@ class ArretWindowSelectRaison(MondonWidget):
             if format == "label":
                 self.items.append((format, self.create_label(value)))
             elif format == "dropdown":
-                self.items.append((format, self.create_dropdown(value)))
+                self.items.append((format, self.create_dropdown(value, index)))
             # On crée la checkbox liée a l'item
             self.buttons.append(self.create_check_button(index))
             # On initialise un layout horisontal et on ajoute le boutton et l'item
@@ -76,18 +75,14 @@ class ArretWindowSelectRaison(MondonWidget):
         index = 0
         # On parcour l'ensemble des checkboxs
         while index < len(self.buttons):
-            # Si aucun boutton n'est sélectionné
-            if self.raison_index_selected < 0:
-                # On initialise la ligne boutton
-                self.initialise_line(button=self.buttons[index], item=self.items[index])
             # Si le boutton est sélectionné
-            elif self.raison_index_selected == index:
+            if self.is_selected(index):
                 # On active la ligne boutton
                 self.activate_line(button=self.buttons[index], item=self.items[index])
-            # Sinon un autre boutton est sélectionné
+            # Sinon on initialise la ligne
             else:
                 # On désactive la ligne boutton
-                self.disable_line(button=self.buttons[index], item=self.items[index])
+                self.initialise_line(button=self.buttons[index], item=self.items[index])
             index += 1
 
     @staticmethod
@@ -129,66 +124,58 @@ class ArretWindowSelectRaison(MondonWidget):
         if format == "dropdown":
             object.set_activated(True)
 
-    @staticmethod
-    def disable_line(button, item):
-        """
-        S'occupe de désactiver une ligne
-        :param button: le boutton de la ligne
-        :param item: l'item de la ligne
-        """
-        format = item[0]
-        object = item[1]
-        # On met le style check box sur unselected
-        button.setStyleSheet(check_box_unselected_stylesheet)
-        # On remove l'icon au cas ou
-        button.setIcon(QIcon())
-        # Si l'item est un label on le passe en gris
-        if format == "label":
-            object.setStyleSheet(disable_16_label_stylesheet)
-        # Si l'item est une dropdown on la désactive
-        if format == "dropdown":
-            object.set_activated(False)
-
     def onclick_button(self, index):
         """
         S'occupe de gérer le click sur une checkbox
         :param index: l'index du boutton clické
         """
-        # On met a jour la variable qui stocke l'index du boutton séléctionné
-        self.raison_index_selected = index
         # Si on click sur une checkbox déja sélectionnée
-        if self.last_raison_index == index:
-            # On réinitialise les variable qui stocke l'index et l'ancien index du boutton séléctionné
-            self.raison_index_selected = -1
-            self.last_raison_index = -1
-            # On indique que les conditions pour valider ne sont plus OK
-            self.validation_condition = False
-            self.VALIDATION_CONDITION_SIGNAL.emit(False)
+        if self.is_selected(index):
+            # On supprime l'index du bouton de la liste des indexs sélectionnés
+            self.raison_index_selected.remove(index)
+            # On met a jour la variable mémoire de séléction des raisons dans l'object Arret
+            self.arret.remove_raison_cache(index)
+            # On test si il reste des indexs dans la liste des indexs sélectionnés
+            if not self.raison_index_selected:
+                # Si il n'y en a plus, on indique que les conditions pour valider ne sont plus OK
+                self.validation_condition = False
+                self.VALIDATION_CONDITION_SIGNAL.emit(False)
+            self.update_widget()
         else:
-            # On met a jour l'ancien index sélectionné
-            self.last_raison_index = index
+            # On ajoute l'index du bouton de la liste des indexs sélectionnés
+            self.raison_index_selected.append(index)
+            # On met a jour la variable mémoire de séléction des raisons dans l'object Arret
+            self.arret.add_raison_cache(index, None)
             # Si c'est un label les conditions pour valider sont OK
             if self.items[index][0] == "label":
                 # On indique que les conditions pour valider sont OK
                 self.validation_condition = True
                 self.VALIDATION_CONDITION_SIGNAL.emit(True)
             else:
-                # On indique que les conditions pour valider ne sont plus OK
-                self.validation_condition = False
-                self.VALIDATION_CONDITION_SIGNAL.emit(False)
-        # On met a jour la variable mémoire de séléction d'une raison dans l'object Arret
-        self.arret.add_raison_cache(index, None)
+                # On test si il reste des indexs dans la liste des indexs sélectionnés
+                if not self.raison_index_selected:
+                    # Si il n'y en a plus, on indique que les conditions pour valider ne sont plus OK
+                    self.validation_condition = False
+                    self.VALIDATION_CONDITION_SIGNAL.emit(False)
 
-    def style_choice(self, text):
+    def style_choice(self, text, index):
         """
         S'occupe de gérer la sélection dans une dropdown
-        :param text: le texte sélectionné
+        :param text: Le texte sélectionné
+        :param index: L'index de la drop_down sélectionné
         """
         # On met a jour la variable mémoire de séléction d'une raison dans l'object Arret
-        self.arret.add_raison_cache(self.raison_index_selected, text)
+        self.arret.add_raison_cache(index, text)
         # On indique que les conditions pour valider sont OK
         self.validation_condition = True
         self.VALIDATION_CONDITION_SIGNAL.emit(True)
+
+    def is_selected(self, index_research):
+        if self.raison_index_selected:
+            for index in self.raison_index_selected:
+                if index == index_research:
+                    return True
+        return False
 
     def connect_button(self, button, index):
         """
@@ -241,14 +228,15 @@ class ArretWindowSelectRaison(MondonWidget):
         label.setStyleSheet(white_title_label_stylesheet)
         return label
 
-    def create_dropdown(self, data_dropdown):
+    def create_dropdown(self, data_dropdown, index):
         """
         S'occupe de créer une dropdown
         :param data_dropdown: Les données de la dropdown
+        :param index: L'index de la dropdown
         :return: La dropdown initialisée
         """
         # On crée l'object Dropdown
-        dropdown = Dropdown()
+        dropdown = Dropdown(index)
         # On crée set son placeholder
         dropdown.set_placeholder(data_dropdown["placeholder"])
         # On parcour les valeurs a insérer dans la dropdown

@@ -77,6 +77,7 @@ class ArretWindowListRaison(MondonWidget):
             self.list_layout_raison[index] = line_raison
             # On ajoute la ligne au layout
             self.vbox.addLayout(line_raison)
+            self.update_widget()
 
     @staticmethod
     def create_initial_line():
