@@ -276,7 +276,6 @@ class ArretWindowSelectRaison(MondonWidget):
             self.validation_condition = False
             self.VALIDATION_CONDITION_SIGNAL.emit(False)
 
-
     def draw_fond(self, p):
         """
         Dessine un rectangle de la taille du bloc

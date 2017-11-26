@@ -29,8 +29,7 @@ class PopupCloseAvertissement(QWidget):
     def __init__(self, onclose, parent=None):
         super(PopupCloseAvertissement, self).__init__(parent=parent)
         self.onclose = onclose
-        self.setWindowTitle("Modification en cours")
-        self.setWindowIcon(QIcon())
+        self.setWindowTitle("Attention")
         # _____INITIALISATION WIDGET_____
         self.vbox = QVBoxLayout(self)
         self.init_widget()

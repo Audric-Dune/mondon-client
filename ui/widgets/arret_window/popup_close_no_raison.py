@@ -29,8 +29,7 @@ class PopupCloseNoRaison(QWidget):
     def __init__(self, onclose, parent=None):
         super(PopupCloseNoRaison, self).__init__(parent=parent)
         self.onclose = onclose
-        self.setWindowTitle("Impossible de fermer la fenêtre")
-        self.setWindowIcon(QIcon())
+        self.setWindowTitle("Erreur")
         # _____INITIALISATION WIDGET_____
         self.vbox = QVBoxLayout(self)
         self.init_widget()
