@@ -1,13 +1,17 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtCore import QTimer
+from PyQt5.QtCore import QTimer, QPoint
 from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout
-from ui.widgets.arret_window.arret_window_title import ArretWindowTitle
+
+from ui.widgets.arret_window.arret_window_ajout_raison import ArretWindowAjoutRaison
+from ui.widgets.arret_window.arret_window_finish import ArretWindowFinish
+from ui.widgets.arret_window.arret_window_list_raison import ArretWindowListRaison
 from ui.widgets.arret_window.arret_window_select_raison import ArretWindowSelectRaison
 from ui.widgets.arret_window.arret_window_select_type import ArretWindowSelectType
-from ui.widgets.arret_window.arret_window_ajout_raison import ArretWindowAjoutRaison
-from ui.widgets.arret_window.arret_window_list_raison import ArretWindowListRaison
+from ui.widgets.arret_window.arret_window_title import ArretWindowTitle
+from ui.widgets.arret_window.popup_close_avertissement import PopupCloseAvertissement
+from ui.widgets.arret_window.popup_close_no_raison import PopupCloseNoRaison
 
 
 class ArretWindow(QMainWindow):
@@ -21,6 +25,7 @@ class ArretWindow(QMainWindow):
         self.arret = arret
         self.on_close = on_close
         self.last_type_selected = None
+        self.can_exit = False
         # _____INITIALISATION WIDGET_____
         self.central_widget = QWidget(self)
         self.vbox = QVBoxLayout(self.central_widget)
@@ -30,6 +35,9 @@ class ArretWindow(QMainWindow):
         self.arret_window_select_type = ArretWindowSelectType(self.arret, parent=self.central_widget)
         self.arret_window_select_raison = None
         self.arret_window_ajout_raison = None
+        self.arret_window_finish = None
+        self.popup_no_raison = None
+        self.popup_avertissement = None
         self.init_widget()
         self.setFixedSize(self.minimumSizeHint())
 
@@ -57,6 +65,8 @@ class ArretWindow(QMainWindow):
             self.create_arret_window_select_raison()
             # On stocke le type d'arret en mémoire
             self.last_type_selected = self.arret.type_cache
+            # On supprime le bloc terminer
+            self.remove_arret_window_finish()
         # Sinon on regarde si le type d'arret en mémoire correspond ou type d'arret selectionné
         elif self.arret.type_cache == self.last_type_selected:
             # Si oui, on supprime le bloc sélection raison
@@ -67,6 +77,9 @@ class ArretWindow(QMainWindow):
             self.arret.remove_type()
             # On supprime le type d'arret stocker en mémoire
             self.last_type_selected = None
+            # On ajout le bloc terminé si il y a au moins une raison de renseigné
+            if self.arret.raison_cache_index:
+                self.create_arret_window_finish()
         else:
             # Sinon, on supprime le bloc arret raison et on la recrée pour quelle s'initialise
             # avec le type d'arret sélectionné
@@ -109,6 +122,7 @@ class ArretWindow(QMainWindow):
         Met a jour la fenetre
         """
         self.arret.add_raison_on_database()
+        self.last_type_selected = None
         # Met a jour le bloc liste des raisons
         self.arret_window_list_raison.update_widget()
         # Remove les blocs selection type, selection raison et ajout raison
@@ -118,14 +132,23 @@ class ArretWindow(QMainWindow):
         # Réinitialise les variable mémoire de l'object arret
         self.arret.remove_raison_cache()
         self.arret.remove_type()
+        # On ajoute le bloc terminé
+        self.create_arret_window_finish()
         # Utilisation d'un QTimer pour redimensionner la window
         # (on attend que les fonctions ci-dessus soit réellement exécuté)
         QTimer.singleShot(0, self.resize_window)
 
+    def update_widget_from_finish(self):
+        self.can_exit = True
+        self.close()
+
     def update_widget_from_del_raison(self):
         """
         S'occupe de redimensionner la fenetre apres la suppression d'une raison
+        Si il n'y a plus de raison sélectionné on supprime le bloc terminé
         """
+        if not self.arret.raisons and self.arret_window_finish:
+            self.remove_arret_window_finish()
         # Utilisation d'un QTimer pour redimensionner la window
         # (on attend que les fonctions soit réellement exécuté)
         QTimer.singleShot(0, self.resize_window)
@@ -148,6 +171,27 @@ class ArretWindow(QMainWindow):
         self.arret_window_ajout_raison = ArretWindowAjoutRaison()
         self.arret_window_ajout_raison.ADD_RAISON_SIGNAL.connect(self.update_widget_from_add_raison)
         self.vbox.addWidget(self.arret_window_ajout_raison)
+
+    def create_arret_window_finish(self):
+        """
+        S'occupe de créé le bloc terminé
+        On ajoute le bloc terminé au layout
+        """
+        self.arret_window_finish = ArretWindowFinish()
+        self.arret_window_finish.FINISH_SIGNAL.connect(self.update_widget_from_finish)
+        self.vbox.addWidget(self.arret_window_finish)
+
+    def remove_arret_window_finish(self):
+        """
+        S'occupe de supprimer le bloc terminé
+        On retire le bloc terminé au layout
+        On supprime l'object bloc terminé
+        On initialise la variable qui stock le bloc terminé
+        """
+        if self.arret_window_finish:
+            self.vbox.removeWidget(self.arret_window_finish)
+            self.arret_window_finish.deleteLater()
+            self.arret_window_finish = None
 
     def remove_arret_window_select_raison(self):
         """
@@ -181,5 +225,44 @@ class ArretWindow(QMainWindow):
         """
         self.setFixedSize(self.minimumSizeHint())
 
+    def center_popup_on_window(self, popup):
+        # On récupère le point de départ de la popup
+        # Il correspond au point milieu gauche de la fenetre (position absolu)
+        pos_popup = self.mapToGlobal(QPoint((self.width()-popup.width())/2, (self.height()-popup.height())/2))
+        # On déplace la popup au point calulé
+        popup.move(pos_popup)
+
+    def onclose_popup_avertissement(self):
+        self.popup_no_raison = None
+        self.popup_avertissement = None
+
+    def onselect_popup_avertissement(self, bool):
+        if bool:
+            self.can_exit = True
+            self.close()
+        if self.popup_avertissement:
+            self.popup_avertissement.close()
+            self.popup_avertissement = None
+        if self.popup_no_raison:
+            self.popup_no_raison.close()
+            self.popup_no_raison = None
+
     def closeEvent(self, event):
-        self.on_close(self.arret.start)
+        if not self.last_type_selected and self.arret.raisons:
+            self.can_exit = True
+        if self.can_exit:
+            event.accept()
+            self.on_close(self.arret.start)
+        else:
+            if self.arret.raisons:
+                self.popup_avertissement = PopupCloseAvertissement(onclose=self.onclose_popup_avertissement)
+                self.popup_avertissement.POPUP_CLOSE_AVERTISSEMENT_SIGNAL.connect(self.onselect_popup_avertissement)
+                self.center_popup_on_window(self.popup_avertissement)
+            else:
+                if self.popup_no_raison:
+                    self.popup_no_raison.setFocus()
+                else:
+                    self.popup_no_raison = PopupCloseNoRaison(onclose=self.onclose_popup_avertissement)
+                    self.popup_no_raison.POPUP_CLOSE_NO_RAISON_SIGNAL.connect(self.onselect_popup_avertissement)
+                    self.center_popup_on_window(self.popup_no_raison)
+            event.ignore()
