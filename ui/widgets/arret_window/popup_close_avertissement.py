@@ -64,7 +64,7 @@ class PopupCloseAvertissement(QWidget):
         bt_non = QPushButton("Non")
         bt_non.setStyleSheet(button_little_stylesheet)
         # On connecte le bouton
-        bt_non.clicked.connect(lambda: self.onclick_button(True))
+        bt_non.clicked.connect(lambda: self.onclick_button(False))
         bt_non.setFixedSize(self.WIDTH_BUTTON_OK, self.HEIGHT_BUTTON_OK)
         # On ajoute l'item au layout vertical
         hbox.addWidget(bt_non)
