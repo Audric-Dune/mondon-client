@@ -26,6 +26,7 @@ class ArretWindow(QMainWindow):
         self.vbox = QVBoxLayout(self.central_widget)
         self.arret_window_title = ArretWindowTitle(self.arret, parent=self.central_widget)
         self.arret_window_list_raison = ArretWindowListRaison(self.arret, parent=self.central_widget)
+        self.arret_window_list_raison.DELETE_RAISON_SIGNAL.connect(self.update_widget_from_del_raison)
         self.arret_window_select_type = ArretWindowSelectType(self.arret, parent=self.central_widget)
         self.arret_window_select_raison = None
         self.arret_window_ajout_raison = None
@@ -110,7 +111,8 @@ class ArretWindow(QMainWindow):
         self.arret.add_raison_on_database()
         # Met a jour le bloc liste des raisons
         self.arret_window_list_raison.update_widget()
-        # Remove les blocs selection raison et ajout raison
+        # Remove les blocs selection type, selection raison et ajout raison
+        self.arret_window_select_type.remove_type()
         self.remove_arret_window_select_raison()
         self.remove_arret_window_ajout_raison()
         # Réinitialise les variable mémoire de l'object arret
@@ -118,6 +120,14 @@ class ArretWindow(QMainWindow):
         self.arret.remove_type()
         # Utilisation d'un QTimer pour redimensionner la window
         # (on attend que les fonctions ci-dessus soit réellement exécuté)
+        QTimer.singleShot(0, self.resize_window)
+
+    def update_widget_from_del_raison(self):
+        """
+        S'occupe de redimensionner la fenetre apres la suppression d'une raison
+        """
+        # Utilisation d'un QTimer pour redimensionner la window
+        # (on attend que les fonctions soit réellement exécuté)
         QTimer.singleShot(0, self.resize_window)
 
     def create_arret_window_select_raison(self):

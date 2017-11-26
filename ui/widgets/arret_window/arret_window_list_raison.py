@@ -4,7 +4,7 @@
 from PyQt5.QtGui import QPainter, QIcon
 from PyQt5.Qt import Qt
 from PyQt5.QtWidgets import QLabel, QHBoxLayout, QVBoxLayout, QPushButton
-from PyQt5.QtCore import QSize, QMargins
+from PyQt5.QtCore import QSize, QMargins, pyqtSignal
 
 from constants.colors import color_bleu_gris
 from constants.stylesheets import \
@@ -17,6 +17,7 @@ from ui.widgets.public.mondon_widget import MondonWidget
 
 
 class ArretWindowListRaison(MondonWidget):
+    DELETE_RAISON_SIGNAL = pyqtSignal()
     # _____DEFINITION CONSTANTE CLASS_____
     WIDTH_TYPE = 120
     HEIGHT_LINE = 24
@@ -46,6 +47,7 @@ class ArretWindowListRaison(MondonWidget):
         list_raison = self.arret.raisons
         # Si la liste de raison est vide
         if len(list_raison) == 0:
+            self.initial_line = self.create_initial_line()
             # On ajout la ligne pas de raison sélectionné
             self.vbox.addLayout(self.initial_line)
         else:
@@ -148,6 +150,7 @@ class ArretWindowListRaison(MondonWidget):
         self.list_layout_raison = {}
         self.clear_layout(self.vbox)
         self.init_widget()
+        self.DELETE_RAISON_SIGNAL.emit()
 
     def clear_layout(self, layout):
         """

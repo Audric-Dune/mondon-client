@@ -89,7 +89,7 @@ class Arret(QObject):
         Supprime l'index du tableau des indexs sélectionnés lorsqu'on le déselectionne
         :param index_raison: Index a supprimer
         """
-        if index_raison:
+        if index_raison and self.raison_cache_index:
             del self.raison_cache_index[index_raison]
         else:
             self.raison_cache_index = {}

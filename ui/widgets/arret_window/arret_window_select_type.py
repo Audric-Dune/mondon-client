@@ -86,6 +86,13 @@ class ArretWindowSelectType(MondonWidget):
         # On met a jour la variable mémoire de séléction d'un type dans l'object Arret
         self.arret.add_type_cache("Imprévu")
 
+    def remove_type(self):
+        """
+        Réintialise les boutons
+        """
+        self.bt_prevu.setStyleSheet(button_stylesheet)
+        self.bt_imprevu.setStyleSheet(button_stylesheet)
+
     def draw_fond(self, p):
         """
         Dessine un rectangle de la taille du bloc
