@@ -3,16 +3,14 @@
 
 from PyQt5.QtCore import QSize, pyqtSignal
 from PyQt5.QtGui import QPainter, QIcon
-from PyQt5.QtWidgets import QPushButton, QLabel, QHBoxLayout, QVBoxLayout
+from PyQt5.QtWidgets import QPushButton, QLabel, QHBoxLayout, QVBoxLayout, QTextEdit
 
 from constants.colors import color_bleu_gris
 from constants.param import LIST_CHOIX_RAISON_PREVU, LIST_CHOIX_RAISON_IMPREVU
 from constants.stylesheets import \
     check_box_off_stylesheet, \
     check_box_on_stylesheet, \
-    check_box_unselected_stylesheet, \
-    white_title_label_stylesheet, \
-    disable_16_label_stylesheet
+    white_title_label_stylesheet
 from ui.utils.drawing import draw_rectangle
 from ui.widgets.public.dropdown import Dropdown
 from ui.widgets.public.mondon_widget import MondonWidget
@@ -23,6 +21,7 @@ class ArretWindowSelectRaison(MondonWidget):
     VALIDATION_CONDITION_SIGNAL = pyqtSignal(bool)
     # _____DEFINITION CONSTANTE CLASS_____
     SIZE = QSize(24, 24)
+    HEIGHT_TEXT_EDIT = 24
     """
     Bloc sélection raison de la window arret
     Affiche le temps de l'arret, l'heure de début et le jour
@@ -62,6 +61,12 @@ class ArretWindowSelectRaison(MondonWidget):
                 self.items.append((format, self.create_label(value)))
             elif format == "dropdown":
                 self.items.append((format, self.create_dropdown(value, index)))
+                # On ajoute un label titre au layout
+                label_dropdown = QLabel(value["titre"])
+                label_dropdown.setStyleSheet(white_title_label_stylesheet)
+                hbox.addWidget(label_dropdown)
+            elif format == "text_edit":
+                self.items.append((format, self.create_text_edit(value, index)))
                 # On ajoute un label titre au layout
                 label_dropdown = QLabel(value["titre"])
                 label_dropdown.setStyleSheet(white_title_label_stylesheet)
@@ -123,11 +128,8 @@ class ArretWindowSelectRaison(MondonWidget):
         button.setStyleSheet(check_box_on_stylesheet)
         # On met l'icon check
         self.set_icon_check_on_checkbox(button)
-        # Si l'item est un label on le passe en blanc
-        if format == "label":
-            object.setStyleSheet(white_title_label_stylesheet)
         # Si l'item est une dropdown on l'affiche
-        if format == "dropdown":
+        if format == "dropdown" or format == "text_edit":
             object.show()
 
     def onclick_button(self, index):
@@ -142,27 +144,14 @@ class ArretWindowSelectRaison(MondonWidget):
             # On met a jour la variable mémoire de séléction des raisons dans l'object Arret
             self.arret.remove_raison_cache(index)
             # On test si il reste des indexs dans la liste des indexs sélectionnés
-            if not self.raison_index_selected:
-                # Si il n'y en a plus, on indique que les conditions pour valider ne sont plus OK
-                self.validation_condition = False
-                self.VALIDATION_CONDITION_SIGNAL.emit(False)
+            self.check_valid_condition()
             self.update_widget()
         else:
             # On ajoute l'index du bouton de la liste des indexs sélectionnés
             self.raison_index_selected.append(index)
             # On met a jour la variable mémoire de séléction des raisons dans l'object Arret
             self.arret.add_raison_cache(index, None)
-            # Si c'est un label les conditions pour valider sont OK
-            if self.items[index][0] == "label":
-                # On indique que les conditions pour valider sont OK
-                self.validation_condition = True
-                self.VALIDATION_CONDITION_SIGNAL.emit(True)
-            else:
-                # On test si il reste des indexs dans la liste des indexs sélectionnés
-                if not self.raison_index_selected:
-                    # Si il n'y en a plus, on indique que les conditions pour valider ne sont plus OK
-                    self.validation_condition = False
-                    self.VALIDATION_CONDITION_SIGNAL.emit(False)
+            self.check_valid_condition()
 
     def style_choice(self, text, index):
         """
@@ -172,9 +161,7 @@ class ArretWindowSelectRaison(MondonWidget):
         """
         # On met a jour la variable mémoire de séléction d'une raison dans l'object Arret
         self.arret.add_raison_cache(index, text)
-        # On indique que les conditions pour valider sont OK
-        self.validation_condition = True
-        self.VALIDATION_CONDITION_SIGNAL.emit(True)
+        self.check_valid_condition()
 
     def is_selected(self, index_research):
         if self.raison_index_selected:
@@ -241,7 +228,7 @@ class ArretWindowSelectRaison(MondonWidget):
         """
         # On crée l'object Dropdown
         dropdown = Dropdown(index)
-        # On crée set son placeholder
+        # On crée son placeholder
         dropdown.set_placeholder(data_dropdown["placeholder"])
         # On parcour les valeurs a insérer dans la dropdown
         for value in data_dropdown["values"]:
@@ -252,6 +239,43 @@ class ArretWindowSelectRaison(MondonWidget):
         # On cache la dropdown
         dropdown.hide()
         return dropdown
+
+    def create_text_edit(self, data_text_edit, index):
+        """
+        S'occupe de créer un champs éditable
+        :param data_text_edit: Donnée du champs
+        :param index: L'index du champs éditable
+        """
+        # On crée le champs éditable
+        text_edit = QTextEdit()
+        # On crée son placeholder
+        text_edit.setPlaceholderText(data_text_edit["placeholder"])
+        # On cache le champs éditable
+        text_edit.hide()
+        text_edit.setFixedHeight(self.HEIGHT_TEXT_EDIT)
+        return text_edit
+
+    def check_valid_condition(self):
+        check = True
+        if not self.raison_index_selected:
+            check = False
+        else:
+            for index in self.raison_index_selected:
+                if self.items[index][0] == "label":
+                    pass
+                elif self.items[index][0] == "dropdown":
+                    if self.items[index][1].selected:
+                        pass
+                    else:
+                        check = False
+                        break
+        if check:
+            self.validation_condition = True
+            self.VALIDATION_CONDITION_SIGNAL.emit(True)
+        else:
+            self.validation_condition = False
+            self.VALIDATION_CONDITION_SIGNAL.emit(False)
+
 
     def draw_fond(self, p):
         """

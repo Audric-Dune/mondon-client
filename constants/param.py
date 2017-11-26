@@ -13,13 +13,16 @@ FIN_PROD_MATIN_VENDREDI = 13
 FIN_PROD_SOIR_VENDREDI = 20
 
 # Liste choix de raison d'un arrêt prévu
+TEXT_EDIT_AUTRE = {"titre": "Autre", "placeholder": "Entrer une raison..."}
+
 LIST_CHOIX_RAISON_PREVU = [
     ("label", "Changement bobine papier"),
     ("label", "Changement bobine polypro"),
     ("label", "Réglage nouvelle production"),
     ("label", "Changement bobine papier et polypro"),
     ("label", "Démarrage production sans réglage"),
-    ("label", "Fin de journée")
+    ("label", "Fin de journée"),
+    ("text_edit", TEXT_EDIT_AUTRE)
     ]
 # Liste choix de raison d'un arrêt imprévu
 # Définition dropdown

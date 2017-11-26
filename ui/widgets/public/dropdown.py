@@ -27,6 +27,7 @@ class Dropdown(QWidget):
         super(Dropdown, self).__init__(parent=parent)
         self.index = index
         self.placeholder = None
+        self.selected = None
         # _____INITIALISATION WIDGET_____
         self.bt_dropdown = QPushButton(self)
         self.bt_dropdown.setStyleSheet(button_dropdown_stylesheet)
@@ -96,6 +97,8 @@ class Dropdown(QWidget):
         """
         # On met a jour la valeur du bouton pour qu'elle affiche la valeur sélectionnée
         self.bt_dropdown.setText(value)
+        # On stock l'information que la dropdown a une valeur sélectionnée
+        self.selected = True
         # On émet un signal qui indique que l'utilisateur a sélectionné une valeur
         self.VALUE_SELECTED_SIGNAL.emit(value, self.index)
 
