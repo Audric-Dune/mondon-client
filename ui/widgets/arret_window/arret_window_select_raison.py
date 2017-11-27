@@ -1,16 +1,18 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from PyQt5.Qt import Qt
 from PyQt5.QtCore import QSize, pyqtSignal
 from PyQt5.QtGui import QPainter, QIcon
-from PyQt5.QtWidgets import QPushButton, QLabel, QHBoxLayout, QVBoxLayout, QTextEdit
+from PyQt5.QtWidgets import QPushButton, QLabel, QHBoxLayout, QVBoxLayout, QLineEdit
 
 from constants.colors import color_bleu_gris
 from constants.param import LIST_CHOIX_RAISON_PREVU, LIST_CHOIX_RAISON_IMPREVU
 from constants.stylesheets import \
     check_box_off_stylesheet, \
     check_box_on_stylesheet, \
-    white_title_label_stylesheet
+    white_title_label_stylesheet, \
+    line_edit_stylesheet
 from ui.utils.drawing import draw_rectangle
 from ui.widgets.public.dropdown import Dropdown
 from ui.widgets.public.mondon_widget import MondonWidget
@@ -22,6 +24,7 @@ class ArretWindowSelectRaison(MondonWidget):
     # _____DEFINITION CONSTANTE CLASS_____
     SIZE = QSize(24, 24)
     HEIGHT_TEXT_EDIT = 24
+    WIDTH_TEXT_EDIT = 250
     """
     Bloc sélection raison de la window arret
     Affiche le temps de l'arret, l'heure de début et le jour
@@ -113,7 +116,7 @@ class ArretWindowSelectRaison(MondonWidget):
         if format == "label":
             object.setStyleSheet(white_title_label_stylesheet)
         # Si l'item est une dropdown on la cache
-        if format == "dropdown":
+        if format == "dropdown" or format == "text_edit":
             object.hide()
 
     def activate_line(self, button, item):
@@ -153,11 +156,11 @@ class ArretWindowSelectRaison(MondonWidget):
             self.arret.add_raison_cache(index, None)
             self.check_valid_condition()
 
-    def style_choice(self, text, index):
+    def editable_item_change(self, text, index):
         """
-        S'occupe de gérer la sélection dans une dropdown
+        S'occupe de gérer la modification d'un item editable
         :param text: Le texte sélectionné
-        :param index: L'index de la drop_down sélectionné
+        :param index: L'index de l'item sélectionné
         """
         # On met a jour la variable mémoire de séléction d'une raison dans l'object Arret
         self.arret.add_raison_cache(index, text)
@@ -235,7 +238,7 @@ class ArretWindowSelectRaison(MondonWidget):
             # On ajoute la valeur a la dropdown
             dropdown.add_item(value)
         # On connect la dropdown a la fonction style_choice
-        dropdown.VALUE_SELECTED_SIGNAL.connect(self.style_choice)
+        dropdown.VALUE_SELECTED_SIGNAL.connect(self.editable_item_change)
         # On cache la dropdown
         dropdown.hide()
         return dropdown
@@ -247,12 +250,15 @@ class ArretWindowSelectRaison(MondonWidget):
         :param index: L'index du champs éditable
         """
         # On crée le champs éditable
-        text_edit = QTextEdit()
+        text_edit = QLineEdit()
         # On crée son placeholder
         text_edit.setPlaceholderText(data_text_edit["placeholder"])
         # On cache le champs éditable
         text_edit.hide()
-        text_edit.setFixedHeight(self.HEIGHT_TEXT_EDIT)
+        text_edit.setFixedSize(self.WIDTH_TEXT_EDIT, self.HEIGHT_TEXT_EDIT)
+        text_edit.setStyleSheet(line_edit_stylesheet)
+        text_edit.setAttribute(Qt.WA_MacShowFocusRect, 0)
+        text_edit.textChanged.connect(lambda: self.editable_item_change(text_edit.text(), index))
         return text_edit
 
     def check_valid_condition(self):
@@ -265,6 +271,12 @@ class ArretWindowSelectRaison(MondonWidget):
                     pass
                 elif self.items[index][0] == "dropdown":
                     if self.items[index][1].selected:
+                        pass
+                    else:
+                        check = False
+                        break
+                elif self.items[index][0] == "text_edit":
+                    if self.items[index][1].text() != "":
                         pass
                     else:
                         check = False

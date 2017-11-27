@@ -27,12 +27,14 @@ class StatLegend(MondonWidget):
         vbox.addWidget(titre)
 
         info_max = QTextEdit("100%: Production théorique à 172.5m/min de moyenne", self)
+        info_max.document().setDocumentMargin(2)
         info_max.setReadOnly(True)
         info_max.setAlignment(Qt.AlignVCenter)
         info_max.setStyleSheet(white_text_edit_stylesheet)
         vbox.addWidget(info_max)
 
         info_82 = QTextEdit("82%: Production théorique avec changement de bobine mère", self)
+        info_82.document().setDocumentMargin(2)
         info_82.setReadOnly(True)
         info_82.setAlignment(Qt.AlignVCenter)
         info_82.setStyleSheet(white_text_edit_stylesheet)

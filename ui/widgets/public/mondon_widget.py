@@ -1,3 +1,6 @@
+# !/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from PyQt5.QtWidgets import QWidget
 
 from lib.logger import logger

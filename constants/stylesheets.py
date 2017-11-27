@@ -288,8 +288,28 @@ white_text_edit_stylesheet = """
         background-color: {color_bleu_gris};
         color: {color_blanc};
         font-size: 14px;
+        border: none;
     }}
 """.format(
     color_bleu_gris=color_bleu_gris.hex_string,
     color_blanc=color_blanc.hex_string,
+)
+
+# ____________LINE EDIT STYLESHEET____________
+
+line_edit_stylesheet = """
+    QLineEdit {{
+        qproperty-frame: false;
+        background-color: {color_blanc};
+        color: {color_gris_fonce};
+        font-size: 16px;
+        border: none;
+    }}
+    QLineEdit:focus {{
+        color: {color_vert_fonce};
+    }}
+""".format(
+    color_vert_fonce=color_vert_fonce.hex_string,
+    color_blanc=color_blanc.hex_string,
+    color_gris_fonce=color_gris_fonce.hex_string,
 )

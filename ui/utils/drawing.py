@@ -7,10 +7,10 @@ def draw_rectangle(p, x, y, width, height, color):
     p.fillRect(x, y, width, height, QColor(color[0], color[1], color[2]))
 
 
-def draw_rectangle_radius(p, x, y, width, height, color):
+def draw_rectangle_radius(p, x, y, width, height, color, radius=0):
     color = color.rgb_components
     path = QPainterPath()
-    path.addRoundedRect(QRectF(x, y, width, height), height/2, height/2)
+    path.addRoundedRect(QRectF(x, y, width, height), radius, radius)
     p.fillPath(path, QColor(color[0], color[1], color[2]))
 
 

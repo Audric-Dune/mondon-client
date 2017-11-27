@@ -14,6 +14,7 @@ FIN_PROD_SOIR_VENDREDI = 20
 
 # Liste choix de raison d'un arrêt prévu
 TEXT_EDIT_AUTRE = {"titre": "Autre", "placeholder": "Entrer une raison..."}
+TEXT_EDIT_MATTHIS = {"titre": "Matthis", "placeholder": "Entrer une insulte..."}
 
 LIST_CHOIX_RAISON_PREVU = [
     ("label", "Changement bobine papier"),
@@ -38,6 +39,7 @@ LIST_CHOIX_RAISON_IMPREVU = [
     ("label", "Problème buse colle à chaud"),
     ("label", "Entretien machine"),
     ("label", "Essai technique"),
-    ("label", "Maintenance")
+    ("label", "Maintenance"),
+    ("text_edit", TEXT_EDIT_MATTHIS)
     ]
 
