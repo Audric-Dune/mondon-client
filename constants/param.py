@@ -1,5 +1,5 @@
 # Database location
-DATABASE_LOCATION = '../mondon.db'
+DATABASE_LOCATION = 'I:\data_prod_bob/mondon.db'
 
 # Hypothèse
 VITESSE_LIMITE_ASSIMILATION_ARRET = 60
@@ -14,7 +14,6 @@ FIN_PROD_SOIR_VENDREDI = 20
 
 # Liste choix de raison d'un arrêt prévu
 TEXT_EDIT_AUTRE = {"titre": "Autre", "placeholder": "Entrer une raison..."}
-TEXT_EDIT_MATTHIS = {"titre": "Matthis", "placeholder": "Entrer une insulte..."}
 
 LIST_CHOIX_RAISON_PREVU = [
     ("label", "Changement bobine papier"),
@@ -40,6 +39,5 @@ LIST_CHOIX_RAISON_IMPREVU = [
     ("label", "Entretien machine"),
     ("label", "Essai technique"),
     ("label", "Maintenance"),
-    ("text_edit", TEXT_EDIT_MATTHIS)
     ]
 
