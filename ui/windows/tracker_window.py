@@ -11,6 +11,7 @@ from constants.dimensions import (
 )
 from constants.stylesheets import button_stylesheet
 from ui.application import app
+from ui.widgets.public.pixmap_button import PixmapButton
 from ui.widgets.chart.live_speed import LiveSpeed
 
 
@@ -18,9 +19,9 @@ class TrackerWindow(QMainWindow):
     def __init__(self, on_close):
         super(TrackerWindow, self).__init__(None)
         self.on_close = on_close
-        self.live_speed = LiveSpeed(self)
+        self.live_speed = LiveSpeed(parent=self)
         self.init_widget()
-        self.bt_retour = QPushButton("", self)
+        self.bt_retour = PixmapButton(parent=self)
         self.init_button()
 
     def init_widget(self):
@@ -34,12 +35,9 @@ class TrackerWindow(QMainWindow):
 
     def init_button(self):
         little_button_size = 30
-        size = QSize(little_button_size - padding_button, little_button_size - padding_button)
         self.bt_retour.clicked.connect(self.new_main_window)
         self.bt_retour.setStyleSheet(button_stylesheet)
-        img = QIcon("assets/images/fleche_precedent.png")
-        self.bt_retour.setIcon(img)
-        self.bt_retour.setIconSize(size)
+        self.bt_retour.set_image("assets/images/fleche_precedent.png")
         self.bt_retour.setGeometry(width_windown_live_speed - little_button_size - 15,
                                    15,
                                    little_button_size,

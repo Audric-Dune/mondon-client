@@ -14,6 +14,7 @@ from constants.stylesheets import \
     button_red_cross_stylesheet
 from ui.utils.drawing import draw_rectangle
 from ui.utils.layout import clear_layout
+from ui.widgets.public.pixmap_button import PixmapButton
 from ui.widgets.public.mondon_widget import MondonWidget
 
 
@@ -128,10 +129,9 @@ class ArretWindowListRaison(MondonWidget):
         # On ajoute le label au layout
         hbox.addWidget(raison_label)
         # On crée un bouton pour supprimer la ligne
-        bt_cross = QPushButton()
-        img = QIcon("assets/images/white_cross.png")
-        bt_cross.setIcon(img)
-        bt_cross.setFixedSize(self.SIZE)
+        bt_cross = PixmapButton(parent=self)
+        bt_cross.setFixedSize(self.HEIGHT_LINE, self.HEIGHT_LINE)
+        bt_cross.set_image("assets/images/white_cross.png")
         bt_cross_stylesheet = button_gray_cross_stylesheet if raison.type == "Prévu" else button_red_cross_stylesheet
         bt_cross.setStyleSheet(bt_cross_stylesheet)
         bt_cross.clicked.connect(lambda: self.delete_line_raison(raison.raison))

@@ -16,6 +16,7 @@ from constants.stylesheets import \
 from ui.utils.drawing import draw_rectangle
 from ui.widgets.public.dropdown import Dropdown
 from ui.widgets.public.mondon_widget import MondonWidget
+from ui.widgets.public.pixmap_button import PixmapButton
 
 
 class ArretWindowSelectRaison(MondonWidget):
@@ -188,7 +189,7 @@ class ArretWindowSelectRaison(MondonWidget):
         :return: Le boutton initialisé
         """
         # On crée un boutton vide
-        button = QPushButton("")
+        button = PixmapButton()
         # On set sa taille
         button.setFixedSize(self.SIZE)
         # On met le style a off
@@ -197,17 +198,13 @@ class ArretWindowSelectRaison(MondonWidget):
         self.connect_button(button, index)
         return button
 
-    def set_icon_check_on_checkbox(self,button):
+    def set_icon_check_on_checkbox(self, button):
         """
         S'occupe de check une checkbox
         :param button: Le boutton a checker
         """
-        # On importe l'image de check
-        img = QIcon("assets/images/white_cross.png")
-        # On set l'image de check au bouton
-        button.setIcon(img)
-        # On initialise la taille de l'image
-        button.setIconSize(self.SIZE)
+        button.set_image("assets/images/white_check.png")
+        button.setContentsMargins(5)
 
     @staticmethod
     def create_label(text):

@@ -21,6 +21,7 @@ from ui.utils.drawing import draw_rectangle, draw_text
 from ui.utils.timestamp import timestamp_at_day_ago, timestamp_to_date
 from ui.widgets.chart.live_speed import LiveSpeed
 from ui.widgets.public.mondon_widget import MondonWidget
+from ui.widgets.public.pixmap_button import PixmapButton
 
 
 class ChartMenu(MondonWidget):
@@ -28,7 +29,11 @@ class ChartMenu(MondonWidget):
         super(ChartMenu, self).__init__(parent=parent)
         self.day_ago = 0
         self.zoom = 0
-        self.init_button()
+        self.bt_jour_plus = PixmapButton(parent=self)
+        self.bt_jour_moins = PixmapButton(parent=self)
+        self.bt_zoom_plus = PixmapButton(parent=self)
+        self.bt_zoom_moins = PixmapButton(parent=self)
+        self.bt_live = QPushButton("En direct", self)
         self.init_widget()
         self.update_button()
 
@@ -83,7 +88,8 @@ class ChartMenu(MondonWidget):
     def live():
         settings_store.set_day_ago(0)
 
-    def create_window_live_speed(self, event):
+    @staticmethod
+    def create_window_live_speed(event):
         app.create_tracker_window()
 
     def update_button(self):
@@ -114,45 +120,32 @@ class ChartMenu(MondonWidget):
                                  button_size)
 
     def init_button(self):
-        size = QSize(button_size - padding_button, button_size - padding_button)
         # Bouton jour plus
-        self.bt_jour_plus = QPushButton("", self)
         self.bt_jour_plus.clicked.connect(self.jour_plus)
         self.bt_jour_plus.setStyleSheet(button_stylesheet)
-        img = QIcon("assets/images/fleche_suivant.png")
-        self.bt_jour_plus.setIconSize(size)
-        self.bt_jour_plus.setIcon(img)
+        self.bt_jour_plus.set_image("assets/images/fleche_suivant.png")
 
         # Bouton jour moins
-        self.bt_jour_moins = QPushButton("", self)
         self.bt_jour_moins.clicked.connect(self.jour_moins)
         self.bt_jour_moins.setStyleSheet(button_stylesheet)
-        img = QIcon("assets/images/fleche_precedent.png")
-        self.bt_jour_moins.setIcon(img)
-        self.bt_jour_moins.setIconSize(size)
+        self.bt_jour_moins.set_image("assets/images/fleche_precedent.png")
 
         # Bouton zoom plus
-        self.bt_zoom_plus = QPushButton("", self)
         self.bt_zoom_plus.clicked.connect(self.zoom_plus)
         self.bt_zoom_plus.setStyleSheet(button_stylesheet)
-        img = QIcon("assets/images/zoom_plus.png")
-        self.bt_zoom_plus.setIcon(img)
-        self.bt_zoom_plus.setIconSize(size)
+        self.bt_zoom_plus.set_image("assets/images/zoom_plus.png")
 
         # Bouton zoom moins
-        self.bt_zoom_moins = QPushButton("", self)
         self.bt_zoom_moins.clicked.connect(self.zoom_moins)
         self.bt_zoom_moins.setStyleSheet(button_stylesheet)
-        img = QIcon("assets/images/zoom_moins.png")
-        self.bt_zoom_moins.setIcon(img)
-        self.bt_zoom_moins.setIconSize(size)
+        self.bt_zoom_moins.set_image("assets/images/zoom_moins.png")
 
         # Bouton live
-        self.bt_live = QPushButton("En direct", self)
         self.bt_live.clicked.connect(self.live)
         self.bt_live.setStyleSheet(button_stylesheet)
 
     def init_widget(self):
+        self.init_button()
         live_speed = LiveSpeed(self)
         live_speed.mouseDoubleClickEvent = self.create_window_live_speed
         live_speed_width = 180
