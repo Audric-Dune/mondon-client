@@ -1,5 +1,5 @@
 # Database location
-DATABASE_LOCATION = 'I:\data_prod_bob/mondon.db'
+DATABASE_LOCATION = '../mondon.db'
 
 # Hypothèse
 VITESSE_LIMITE_ASSIMILATION_ARRET = 60

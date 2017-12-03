@@ -67,4 +67,3 @@ class TabArretMenu(MondonWidget):
 
     def draw(self, p):
         self.draw_fond(p)
-        pass

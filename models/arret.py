@@ -26,7 +26,7 @@ class Arret(QObject):
         self.raisons = []
         self.type_cache = None
         self.raison_cache_index = {}
-        # self.create_on_database()
+        self.create_on_database()
 
     def create_on_database(self):
         """

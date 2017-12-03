@@ -28,6 +28,8 @@ class Bar(MondonWidget):
 
     def get_percent(self, percent):
         self.percent = percent
+        if percent > 100:
+            self.percent = 100
         self.update()
 
     def draw(self, p):

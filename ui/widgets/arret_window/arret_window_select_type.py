@@ -4,10 +4,10 @@
 from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import QPushButton, QHBoxLayout
 
-from constants.colors import color_bleu_gris
+from constants.colors import color_bleu_gris, color_blanc
 from constants.dimensions import button_size
 from constants.stylesheets import button_stylesheet, button_stylesheet_unselected
-from ui.utils.drawing import draw_rectangle
+from ui.utils.drawing import draw_rectangle, draw_rectangle_radius
 from ui.widgets.public.mondon_widget import MondonWidget
 
 
@@ -23,15 +23,15 @@ class ArretWindowSelectType(MondonWidget):
         self.arret = arret
         self.type_selected = None
         # _____INITIALISATION WIDGET_____
-        self.bt_prevu = QPushButton("Arrêt prévu", self)
+        self.bt_prevu = QPushButton("Raison prévu", self)
         self.bt_prevu.clicked.connect(self.on_click_bt_prevu)
-        self.bt_imprevu = QPushButton("Arrêt imprévu", self)
+        self.bt_imprevu = QPushButton("Raison imprévu", self)
         self.bt_imprevu.clicked.connect(self.on_click_bt_imprevu)
         self.init_widget()
 
     def init_widget(self):
         """
-        Initialise le layout et insère les labels date du jour, durée d'arret et heure de début
+        Initialise le layout et insère les boutons
         """
         hbox = QHBoxLayout()
         self.bt_prevu.setFixedSize(self.BUTTON_WIDTH, button_size)

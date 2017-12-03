@@ -13,6 +13,7 @@ from constants.stylesheets import \
     button_gray_cross_stylesheet,\
     button_red_cross_stylesheet
 from ui.utils.drawing import draw_rectangle
+from ui.utils.layout import clear_layout
 from ui.widgets.public.mondon_widget import MondonWidget
 
 
@@ -72,7 +73,7 @@ class ArretWindowListRaison(MondonWidget):
             if len(self.list_layout_raison) == 0:
                 item_layout = self.vbox.itemAt(0)
                 self.vbox.removeItem(item_layout)
-                self.clear_layout(self.initial_line)
+                self.initial_line = clear_layout(self.initial_line)
             # La longeur de la liste des layouts correspond a l'index de la raison
             # dans list_raison que l'on veux insérer
             index = len(self.list_layout_raison)
@@ -148,24 +149,9 @@ class ArretWindowListRaison(MondonWidget):
         self.arret.remove_raison(raison)
         # Réinitialise la liste des layout raison
         self.list_layout_raison = {}
-        self.clear_layout(self.vbox)
+        self.vbox = clear_layout(self.vbox)
         self.init_widget()
         self.DELETE_RAISON_SIGNAL.emit()
-
-    def clear_layout(self, layout):
-        """
-        Supprime tous les enfant d'un layout
-        :param layout: Le layout a clear
-        :return:
-        """
-        if layout is not None:
-            while layout.count():
-                item = layout.takeAt(0)
-                widget = item.widget()
-                if widget is not None:
-                    widget.deleteLater()
-                else:
-                    self.clear_layout(item.layout())
 
     def draw_fond(self, p):
         """

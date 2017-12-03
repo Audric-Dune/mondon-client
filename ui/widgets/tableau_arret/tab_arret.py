@@ -4,10 +4,10 @@
 from datetime import timedelta
 
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPainter
-from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel, QGridLayout
+from PyQt5.QtGui import QPainter, QStandardItemModel, QStandardItem
+from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel, QScrollArea, QWidget, QPushButton
 
-from constants.colors import color_bleu_gris
+from constants.colors import color_bleu_gris, color_rouge
 from constants.dimensions import width_col_num, width_col_hour, width_col_time, width_col_type, width_col_raison
 from constants.param import \
     DEBUT_PROD_MATIN, \
@@ -24,7 +24,9 @@ from ui.utils.timestamp import (
     timestamp_at_time,
     timestamp_to_day,
     timestamp_to_hour_little,
+    timestamp_to_hour
 )
+from ui.utils.layout import clear_layout
 from ui.widgets.public.mondon_widget import MondonWidget
 
 
@@ -34,99 +36,67 @@ class TabArret(MondonWidget):
         self.moment = moment
         self.day_ago = 0
         self.list_arret = []
-        self.labels_hours = []
-        self.labels_time = []
-        self.labels_type = []
-        self.labels_raison = []
-        self.init_widgets()
         self.get_arret()
+        self.scroll_layout = None
+        self.scroll = QScrollArea(self)
+        self.scroll.setStyleSheet("background-color:green;");
+        self.scroll.setContentsMargins(0, 0, 0, 0)
+        self.scroll.setMaximumHeight(200)
+        self.init_widgets()
 
     def on_settings_changed(self, prev_live, prev_day_ago, prev_zoom):
         self.day_ago = settings_store.day_ago
         self.get_arret()
-        self.update_label()
-        self.update()
+        self.update_widget()
 
     def on_data_changed(self):
         self.get_arret()
-        self.update_label()
-
-    def create_grid(self):
-        grid = QGridLayout()
-        grid.setSpacing(0)
-        for line in range(15):
-            index = line
-            label_index = QLabel(str(index + 1))
-            label_index.setFixedWidth(width_col_num)
-            label_index.setAlignment(Qt.AlignCenter)
-            label_index.setStyleSheet(white_label_stylesheet)
-            grid.addWidget(label_index, line, 0)
-            self.labels_hours.append(QLabel())
-            self.labels_hours[index].setAlignment(Qt.AlignCenter)
-            self.labels_hours[index].setFixedWidth(width_col_hour)
-            self.labels_hours[index].setStyleSheet(white_label_stylesheet)
-            grid.addWidget(self.labels_hours[index], line, 1)
-            self.labels_time.append(QLabel())
-            self.labels_time[index].setAlignment(Qt.AlignCenter)
-            self.labels_time[index].setFixedWidth(width_col_time)
-            self.labels_time[index].setStyleSheet(white_label_stylesheet)
-            grid.addWidget(self.labels_time[index], line, 2)
-            self.labels_type.append(QLabel())
-            self.labels_type[index].setAlignment(Qt.AlignCenter)
-            self.labels_type[index].setFixedWidth(width_col_type)
-            self.labels_type[index].setStyleSheet(white_label_stylesheet)
-            grid.addWidget(self.labels_type[index], line, 3)
-            self.labels_raison.append(QLabel())
-            self.labels_raison[index].setAlignment(Qt.AlignLeft)
-            self.labels_raison[index].setFixedWidth(width_col_raison)
-            self.labels_raison[index].setStyleSheet(white_label_stylesheet)
-            grid.addWidget(self.labels_raison[index], line, 4)
-        return grid
-
-    @staticmethod
-    def create_grid_title():
-        grid = QGridLayout()
-        grid.setSpacing(0)
-        label_index = QLabel("Num")
-        label_index.setFixedWidth(width_col_num)
-        label_index.setAlignment(Qt.AlignCenter)
-        label_index.setStyleSheet(white_label_stylesheet)
-        grid.addWidget(label_index, 0, 0)
-        label_hours = QLabel("Heure")
-        label_hours.setAlignment(Qt.AlignCenter)
-        label_hours.setFixedWidth(width_col_hour)
-        label_hours.setStyleSheet(white_label_stylesheet)
-        grid.addWidget(label_hours, 0, 1)
-        label_time = QLabel("Temps")
-        label_time.setAlignment(Qt.AlignCenter)
-        label_time.setFixedWidth(width_col_time)
-        label_time.setStyleSheet(white_label_stylesheet)
-        grid.addWidget(label_time, 0, 2)
-        label_type = QLabel("Type")
-        label_type.setAlignment(Qt.AlignCenter)
-        label_type.setFixedWidth(width_col_type)
-        label_type.setStyleSheet(white_label_stylesheet)
-        grid.addWidget(label_type, 0, 3)
-        label_raison = QLabel("Raison")
-        label_raison.setAlignment(Qt.AlignCenter)
-        label_raison.setFixedWidth(width_col_raison)
-        label_raison.setStyleSheet(white_label_stylesheet)
-        grid.addWidget(label_raison, 0, 4)
-        return grid
+        self.scroll.setFixedWidth(self.width()-25)
+        self.update_widget()
 
     def init_widgets(self):
-        hbox = QHBoxLayout()
-        hbox.setContentsMargins(0, 0, 0, 0)
-        hbox.addStretch()
-        vbox = QVBoxLayout()
-        vbox.setContentsMargins(0, 0, 0, 0)
-        title = self.create_grid_title()
-        grid = self.create_grid()
-        vbox.addLayout(title)
-        vbox.addLayout(grid)
-        hbox.addLayout(vbox)
-        hbox.addStretch()
-        self.setLayout(hbox)
+        list_box = QVBoxLayout(self)
+        self.setLayout(list_box)
+
+        list_box.addWidget(self.scroll, alignment=Qt.AlignCenter)
+        self.scroll.setWidgetResizable(True)
+        scroll_content = QWidget(self.scroll)
+        scroll_content.setStyleSheet("background-color:red;")
+
+        self.scroll_layout = QVBoxLayout(scroll_content)
+        self.scroll_layout.setAlignment(Qt.AlignTop)
+        scroll_content.setLayout(self.scroll_layout)
+        self.scroll.setWidget(scroll_content)
+
+    def update_widget(self):
+        self.scroll_layout = clear_layout(self.scroll_layout)
+        number = 1
+        for arret in self.list_arret:
+            hbox = QHBoxLayout()
+            number_label = QLabel(str(number))
+            number_label.setStyleSheet("background-color:yellow;")
+            hour_label = QLabel(timestamp_to_hour_little(arret.start))
+            hour_label.setStyleSheet("background-color:orange;")
+            duration_label = QLabel(str(timedelta(seconds=round(arret.end - arret.start))))
+            duration_label.setStyleSheet("background-color:pink;")
+            hbox.addWidget(number_label)
+            hbox.addWidget(hour_label)
+            hbox.addWidget(duration_label)
+            if not arret.raisons:
+                no_raison_label = QLabel("Aucune raison sélectionnée")
+                no_raison_label.setStyleSheet("background-color:green;")
+                hbox.addWidget(no_raison_label)
+                self.scroll_layout.addLayout(hbox)
+            else:
+                for raison in arret.raisons:
+                    type_label = QLabel(raison.type)
+                    type_label.setStyleSheet("background-color:orange;")
+                    raison_label = QLabel(raison.raison)
+                    raison_label.setStyleSheet("background-color:yellow;")
+                    hbox.addWidget(type_label)
+                    hbox.addWidget(raison_label)
+                    self.scroll_layout.addLayout(hbox)
+            number += 1
 
     def get_arret(self):
         """
@@ -173,33 +143,6 @@ class TabArret(MondonWidget):
             else:
                 continue
         self.list_arret = list_arret
-
-    def update_label(self):
-        # Boucle sur les 15 valeur possibles
-        for i in range(15):
-            # Si on a des données à afficher, on affiche l'heure et le temps
-            if i < len(self.list_arret):
-                current_arret = self.list_arret[i]
-                hour = current_arret.start
-                temps = current_arret.end - current_arret.start
-                # Mis à jour des textes
-                self.labels_hours[i].setText(timestamp_to_hour_little(hour))
-                self.labels_time[i].setText(str(timedelta(seconds=round(temps))))
-                # Mis à jour des couleurs
-                if temps <= 15 * 60:  # Moins de 15 minutes
-                    self.labels_time[i].setStyleSheet(white_label_stylesheet)
-                elif temps <= 30 * 60:  # Entre 15 minutes et 30 minutes
-                    self.labels_time[i].setStyleSheet(orange_label_stylesheet)
-                else:  # Plus de 30 minutes
-                    self.labels_time[i].setStyleSheet(red_label_stylesheet)
-            else:
-                # Reset les labels avec un string vide
-                self.labels_hours[i].setText("")
-                self.labels_time[i].setText("")
-                self.labels_type[i].setText("")
-                self.labels_raison[i].setText("")
-                # Reset la couleur en blanc
-                self.labels_time[i].setStyleSheet(white_label_stylesheet)
 
     def paintEvent(self, event):
         p = QPainter()
