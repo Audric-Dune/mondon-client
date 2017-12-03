@@ -1,17 +1,15 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication
 
 from constants.dimensions import (window_height,
                                   window_width,
-                                  width_windown_live_speed,
-                                  window_arret_width,
-                                  window_arret_height_init,
+                                  width_windown_live_speed
                                   )
 from lib.logger import logger
 from stores.data_store_manager import data_store_manager
+from ui.utils.window import focus_window
 
 
 class Application(QApplication):
@@ -42,15 +40,9 @@ class Application(QApplication):
         if not self.main_window and not self.tracker_window and not self.dic_arret_window:
             data_store_manager.cancel_refresh()
 
-    @staticmethod
-    def focus_window(window):
-        window.setWindowState(window.windowState() & ~Qt.WindowMinimized | Qt.WindowActive)
-        window.raise_()
-        window.activateWindow()
-
     def create_main_window(self):
         if self.main_window:
-            self.focus_window(self.main_window)
+            focus_window(self.main_window)
         else:
             from ui.windows.main_window import MainWindow
             logger.log("INITIALISATION", "Création de la Window")
@@ -67,7 +59,7 @@ class Application(QApplication):
 
     def create_tracker_window(self):
         if self.tracker_window:
-            self.focus_window(self.tracker_window)
+            focus_window(self.tracker_window)
         else:
             from ui.windows.tracker_window import TrackerWindow
             self.tracker_window = TrackerWindow(self.on_close_tracker_window)
@@ -77,7 +69,7 @@ class Application(QApplication):
 
     def create_arret_window(self, start_arret, day_ago):
         if self.dic_arret_window.get(start_arret):
-            self.focus_window(self.dic_arret_window[start_arret])
+            focus_window(self.dic_arret_window[start_arret])
         else:
             object_arret = data_store_manager.get_store_at_day_ago(day_ago).dic_arret[start_arret]
             from ui.windows.arret_window import ArretWindow

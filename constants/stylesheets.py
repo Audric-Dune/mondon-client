@@ -314,9 +314,10 @@ line_edit_stylesheet = """
     color_gris_fonce=color_gris_fonce.hex_string,
 )
 
+# ____________SCROLLBAR STYLESHEET____________
+
 scroll_bar_stylesheet = """
 QScrollBar:vertical {{
-    border: none;
     background-color: {color_blanc};
     width: 14px;
     padding: 2px;
@@ -329,11 +330,11 @@ QScrollBar::handle:vertical {{
 }}
 
 QScrollBar::handle:vertical:hover {{
-    background-color: {color_vert_fonce};
+    background-color: {color_gris_fonce};
 }}
 
 QScrollBar::handle:vertical:pressed {{
-    background-color: {color_vert_moyen};
+    background-color: {color_gris_fonce};
 }}
 
 QScrollBar::add-line:vertical {{
@@ -348,13 +349,10 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {{
     background: {color_blanc};
 }}
 """.format(
-    color_blanc=color_blanc.hex_string,
     color_vert_fonce=color_vert_fonce.hex_string,
     color_vert_moyen=color_vert_moyen.hex_string,
-    color_vert=color_vert.hex_string,
     color_gris_moyen=color_gris_moyen.hex_string,
-    color_rouge=color_rouge.hex_string,
-    color_noir=color_noir.hex_string,
     color_gris_clair=color_gris_clair.hex_string,
-    color_orange=color_orange.hex_string,
+    color_gris_fonce=color_gris_fonce.hex_string,
+    color_blanc=color_blanc.hex_string
 )

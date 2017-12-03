@@ -2,13 +2,10 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel
 
-from constants.colors import color_blanc
 from constants.stylesheets import white_title_label_stylesheet
 from stores.settings_store import settings_store
-from ui.utils.drawing import draw_rectangle
 from ui.widgets.public.mondon_widget import MondonWidget
 from ui.widgets.tableau_arret.tab_arret import TabArret
 
@@ -29,41 +26,32 @@ class TabArretMenu(MondonWidget):
     def init_widgets(self):
         hbox = QHBoxLayout(self)
         hbox.setContentsMargins(0, 0, 0, 0)
+        hbox.setSpacing(10)
 
         vbox_matin = QVBoxLayout()
+        vbox_matin.setSpacing(0)
+        vbox_matin.setContentsMargins(0, 0, 0, 0)
         titre = QLabel("Liste des arrêts machine (Equipe du matin)")
         titre.setAlignment(Qt.AlignCenter)
-        titre.setFixedHeight(30)
+        titre.setFixedHeight(20)
         titre.setStyleSheet(white_title_label_stylesheet)
         vbox_matin.addWidget(titre)
         tab_arret_matin = TabArret(self, moment="matin")
-        tab_arret_matin.setMinimumHeight(100)
         vbox_matin.addWidget(tab_arret_matin)
 
         hbox.addLayout(vbox_matin)
 
         vbox_soir = QVBoxLayout()
+        vbox_soir.setSpacing(0)
+        vbox_soir.setContentsMargins(0, 0, 0, 0)
         titre = QLabel("Liste des arrêts machine (Equipe du soir)")
         titre.setAlignment(Qt.AlignCenter)
-        titre.setFixedHeight(30)
+        titre.setFixedHeight(20)
         titre.setStyleSheet(white_title_label_stylesheet)
         vbox_soir.addWidget(titre)
         tab_arret_soir = TabArret(self, moment="soir")
-        tab_arret_soir.setMinimumHeight(100)
         vbox_soir.addWidget(tab_arret_soir)
 
         hbox.addLayout(vbox_soir)
 
         self.setLayout(hbox)
-
-    def paintEvent(self, event):
-        p = QPainter()
-        p.begin(self)
-        self.draw(p)
-        p.end()
-
-    def draw_fond(self, p):
-        draw_rectangle(p, 0, 0, self.width(), self.height(), color_blanc)
-
-    def draw(self, p):
-        self.draw_fond(p)

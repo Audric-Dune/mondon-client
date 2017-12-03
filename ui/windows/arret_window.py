@@ -4,6 +4,8 @@
 from PyQt5.QtCore import QTimer, QPoint
 from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout
 
+from ui.utils.window import focus_window
+
 from ui.widgets.arret_window.arret_window_ajout_raison import ArretWindowAjoutRaison
 from ui.widgets.arret_window.arret_window_finish import ArretWindowFinish
 from ui.widgets.arret_window.arret_window_list_raison import ArretWindowListRaison
@@ -146,9 +148,12 @@ class ArretWindow(QMainWindow):
         """
         S'occupe de redimensionner la fenetre apres la suppression d'une raison
         Si il n'y a plus de raison sélectionné on supprime le bloc terminé
+        Si il n'ya pas de bloc terminé et qu'il y a des raisons sélectionné on en crée un
         """
         if not self.arret.raisons and self.arret_window_finish:
             self.remove_arret_window_finish()
+        elif self.arret.raisons and not self.arret_window_finish:
+            self.create_arret_window_finish()
         # Utilisation d'un QTimer pour redimensionner la window
         # (on attend que les fonctions soit réellement exécuté)
         QTimer.singleShot(0, self.resize_window)
@@ -225,7 +230,11 @@ class ArretWindow(QMainWindow):
         """
         self.setFixedSize(self.minimumSizeHint())
 
-    def center_popup_on_window(self, popup):
+    def move_popup_on_window(self, popup):
+        """
+        Positionne la popup au milieu de la fenetre arret
+        :param popup: La popup a positionner
+        """
         # On récupère le point de départ de la popup
         # Il correspond au point milieu gauche de la fenetre (position absolu)
         pos_popup = self.mapToGlobal(QPoint((self.width()-popup.width())/2, (self.height()-popup.height())/2))
@@ -254,15 +263,19 @@ class ArretWindow(QMainWindow):
             event.accept()
             self.on_close(self.arret.start)
         else:
-            if self.arret.raisons:
+            if self.arret.raisons and not self.popup_avertissement:
                 self.popup_avertissement = PopupCloseAvertissement(onclose=self.onclose_popup_avertissement)
                 self.popup_avertissement.POPUP_CLOSE_AVERTISSEMENT_SIGNAL.connect(self.onselect_popup_avertissement)
-                self.center_popup_on_window(self.popup_avertissement)
+                self.move_popup_on_window(self.popup_avertissement)
+            elif self.popup_avertissement:
+                focus_window(self.popup_avertissement)
+                self.move_popup_on_window(self.popup_avertissement)
             else:
                 if self.popup_no_raison:
-                    self.popup_no_raison.setFocus()
+                    focus_window(self.popup_no_raison)
+                    self.move_popup_on_window(self.popup_no_raison)
                 else:
                     self.popup_no_raison = PopupCloseNoRaison(onclose=self.onclose_popup_avertissement)
                     self.popup_no_raison.POPUP_CLOSE_NO_RAISON_SIGNAL.connect(self.onselect_popup_avertissement)
-                    self.center_popup_on_window(self.popup_no_raison)
+                    self.move_popup_on_window(self.popup_no_raison)
             event.ignore()

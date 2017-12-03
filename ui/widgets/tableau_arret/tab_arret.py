@@ -1,14 +1,11 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from datetime import timedelta
+from PyQt5.QtCore import Qt, QMargins
+from PyQt5.QtGui import QPainter
+from PyQt5.QtWidgets import QVBoxLayout, QScrollArea, QWidget
 
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPainter, QStandardItemModel, QStandardItem
-from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel, QScrollArea, QWidget, QPushButton
-
-from constants.colors import color_bleu_gris, color_rouge
-from constants.dimensions import width_col_num, width_col_hour, width_col_time, width_col_type, width_col_raison
+from constants.colors import color_bleu_gris
 from constants.param import \
     DEBUT_PROD_MATIN, \
     FIN_PROD_SOIR, \
@@ -22,27 +19,31 @@ from ui.utils.drawing import draw_rectangle
 from ui.utils.timestamp import (
     timestamp_at_day_ago,
     timestamp_at_time,
-    timestamp_to_day,
-    timestamp_to_hour_little,
-    timestamp_to_hour
+    timestamp_to_day
 )
 from ui.utils.layout import clear_layout
 from ui.widgets.public.mondon_widget import MondonWidget
+from ui.widgets.tableau_arret.line_arret import LineArret
 
 
 class TabArret(MondonWidget):
+    # _____DEFINITION CONSTANTE CLASS_____
+    TAB_HEIGHT = 200
+    NO_MARGIN = QMargins(0, 0, 0, 0)
+    """
+    Gère le tableau d'arret, récupère les données en fonction de son paramètre moment (matin ou soir)
+    """
     def __init__(self, parent, moment):
         super(TabArret, self).__init__(parent=parent)
         self.moment = moment
         self.day_ago = 0
         self.list_arret = []
+        self.memory_number_arret = 0
         self.get_arret()
         self.scroll_layout = None
-        self.scroll = QScrollArea(self)
+        self.scroll = QScrollArea()
         self.scroll.setStyleSheet(scroll_bar_stylesheet)
-        self.scroll.setContentsMargins(0, 0, 0, 0)
-        self.scroll.setMaximumHeight(200)
-        self.scroll.setMinimumHeight(100)
+        self.scroll.setFixedHeight(self.TAB_HEIGHT)
         self.init_widgets()
 
     def on_settings_changed(self, prev_live, prev_day_ago, prev_zoom):
@@ -56,47 +57,33 @@ class TabArret(MondonWidget):
         self.update_widget()
 
     def init_widgets(self):
-        list_box = QVBoxLayout(self)
+        """
+        Initialise les widgets et met en place la scrollbar
+        """
+        list_box = QVBoxLayout()
         self.setLayout(list_box)
 
         list_box.addWidget(self.scroll, alignment=Qt.AlignCenter)
         self.scroll.setWidgetResizable(True)
         scroll_content = QWidget(self.scroll)
-        scroll_content.setStyleSheet("background-color:red;")
-
+        scroll_content.setStyleSheet("background-color:{};".format(color_bleu_gris.hex_string))
         self.scroll_layout = QVBoxLayout(scroll_content)
         self.scroll_layout.setAlignment(Qt.AlignTop)
+        self.scroll_layout.setSpacing(0)
         scroll_content.setLayout(self.scroll_layout)
         self.scroll.setWidget(scroll_content)
 
     def update_widget(self):
+        """
+        S'occupe de vider le tableau existant et de le remplir avec les nouvelles données
+        :return:
+        """
         self.scroll_layout = clear_layout(self.scroll_layout)
         number = 1
+        # Parcour la liste des arrets et crée une line pour chaque arret
         for arret in self.list_arret:
-            hbox = QHBoxLayout()
-            number_label = QLabel(str(number))
-            number_label.setStyleSheet("background-color:yellow;")
-            hour_label = QLabel(timestamp_to_hour_little(arret.start))
-            hour_label.setStyleSheet("background-color:orange;")
-            duration_label = QLabel(str(timedelta(seconds=round(arret.end - arret.start))))
-            duration_label.setStyleSheet("background-color:pink;")
-            hbox.addWidget(number_label)
-            hbox.addWidget(hour_label)
-            hbox.addWidget(duration_label)
-            if not arret.raisons:
-                no_raison_label = QLabel("Aucune raison sélectionnée")
-                no_raison_label.setStyleSheet("background-color:green;")
-                hbox.addWidget(no_raison_label)
-                self.scroll_layout.addLayout(hbox)
-            else:
-                for raison in arret.raisons:
-                    type_label = QLabel(raison.type)
-                    type_label.setStyleSheet("background-color:orange;")
-                    raison_label = QLabel(raison.raison)
-                    raison_label.setStyleSheet("background-color:yellow;")
-                    hbox.addWidget(type_label)
-                    hbox.addWidget(raison_label)
-                    self.scroll_layout.addLayout(hbox)
+            line_arret = LineArret(parent=self, day_ago=self.day_ago, arret=arret, number=number)
+            self.scroll_layout.addWidget(line_arret)
             number += 1
 
     def get_arret(self):
