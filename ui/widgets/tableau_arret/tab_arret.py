@@ -42,6 +42,7 @@ class TabArret(MondonWidget):
         self.scroll.setStyleSheet(scroll_bar_stylesheet)
         self.scroll.setContentsMargins(0, 0, 0, 0)
         self.scroll.setMaximumHeight(200)
+        self.scroll.setMinimumHeight(100)
         self.init_widgets()
 
     def on_settings_changed(self, prev_live, prev_day_ago, prev_zoom):
