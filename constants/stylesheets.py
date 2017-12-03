@@ -313,3 +313,102 @@ line_edit_stylesheet = """
     color_blanc=color_blanc.hex_string,
     color_gris_fonce=color_gris_fonce.hex_string,
 )
+
+scroll_bar_stylesheet = """
+QScrollBar:vertical {{
+    border: none;
+    background-color: {color_rouge};
+    width: 15px;
+    margin: 21px 0 21px 0;
+}}
+
+# QScrollBar::handle:vertical {{
+# 
+#   background-color: color_rouge;
+#   min-height: 25px;
+# 
+# }}
+# 
+# QScrollBar::add-line:vertical {{
+#     border: 1px solid grey;
+#     background-color: color_rouge;
+#     height: 20px;
+#     subcontrol-position: bottom;
+#     subcontrol-origin: margin;
+# }}
+# 
+# QScrollBar::sub-line:vertical {{
+#     border: 1px solid grey;
+#     background-color: color_rouge;
+#     height: 20px;
+#     subcontrol-position: top;
+#     subcontrol-origin: margin;
+# }}
+# 
+# 
+#   QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {{
+#       background: none;
+#   }}
+# 
+# QScrollBar::up-arrow:vertical
+# {{
+#   image: url("assets/images/arrow_down_vert_fonce.png");
+# }}
+# 
+# QScrollBar::down-arrow:vertical
+# {{
+#   image: url("assets/images/arrow_down_vert_fonce.png");
+# }}
+# 
+# QScrollBar:horizontal {{
+#   border-color: rgb(227, 227, 227);
+#   border-width: 1px;
+#   border-style: solid;
+#   background-color: rgb(240, 240, 240);
+#     height: 15px;
+#     margin: 0px 21px 0 21px;
+#  }}
+# 
+#  QScrollBar::handle:horizontal {{
+#     background-color: rgb(200, 200, 200);
+#     min-width: 25px;
+#  }}
+# QScrollBar::add-line:horizontal {{
+#     border: 1px solid grey;
+#   background-color: rgb(241, 241, 241);
+#     height: 20px;
+#     subcontrol-position: right;
+#     subcontrol-origin: margin;
+#  }}
+# 
+#  QScrollBar::sub-line:horizontal {{
+#   border: 1px solid grey;
+#     background-color: color_rouge;
+#     height: 20px;
+#     subcontrol-position: left;
+#     subcontrol-origin: margin;
+#  }}
+# 
+#  QScrollBar:left-arrow:horizontal
+# {{
+#   image: url("assets/images/arrow_down_vert_fonce.png");
+# }}
+# 
+# QScrollBar::right-arrow:horizontal 
+# {{
+#   image: url("assets/images/arrow_down_vert_fonce.png");
+# }}
+# 
+# QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {{
+#      background: none;
+# }}
+""".format(
+    color_blanc=color_blanc.hex_string,
+    color_vert_fonce=color_vert_fonce.hex_string,
+    color_vert_moyen=color_vert_moyen.hex_string,
+    color_vert=color_vert.hex_string,
+    color_gris_moyen=color_gris_moyen.hex_string,
+    color_rouge=color_rouge.hex_string,
+    color_noir=color_noir.hex_string,
+    color_gris_clair=color_gris_clair.hex_string
+)

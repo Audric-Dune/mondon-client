@@ -15,7 +15,7 @@ from constants.param import \
     FIN_PROD_SOIR_VENDREDI, \
     DEBUT_PROD_SOIR, \
     FIN_PROD_MATIN_VENDREDI
-from constants.stylesheets import orange_label_stylesheet, red_label_stylesheet, white_label_stylesheet
+from constants.stylesheets import scroll_bar_stylesheet
 from stores.data_store_manager import data_store_manager
 from stores.settings_store import settings_store
 from ui.utils.drawing import draw_rectangle
@@ -39,7 +39,7 @@ class TabArret(MondonWidget):
         self.get_arret()
         self.scroll_layout = None
         self.scroll = QScrollArea(self)
-        self.scroll.setStyleSheet("background-color:green;");
+        self.scroll.setStyleSheet(scroll_bar_stylesheet)
         self.scroll.setContentsMargins(0, 0, 0, 0)
         self.scroll.setMaximumHeight(200)
         self.init_widgets()
