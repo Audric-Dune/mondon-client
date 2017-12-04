@@ -3,7 +3,7 @@
 
 from PyQt5.QtCore import Qt, QMargins
 from PyQt5.QtGui import QPainter
-from PyQt5.QtWidgets import QVBoxLayout, QScrollArea, QWidget
+from PyQt5.QtWidgets import QVBoxLayout, QScrollArea, QWidget, QLabel
 
 from constants.colors import color_bleu_gris
 from constants.param import \
@@ -12,7 +12,7 @@ from constants.param import \
     FIN_PROD_SOIR_VENDREDI, \
     DEBUT_PROD_SOIR, \
     FIN_PROD_MATIN_VENDREDI
-from constants.stylesheets import scroll_bar_stylesheet
+from constants.stylesheets import scroll_bar_stylesheet, green_title_label_stylesheet
 from stores.data_store_manager import data_store_manager
 from stores.settings_store import settings_store
 from ui.utils.drawing import draw_rectangle
@@ -28,8 +28,8 @@ from ui.widgets.tableau_arret.line_arret import LineArret
 
 class TabArret(MondonWidget):
     # _____DEFINITION CONSTANTE CLASS_____
-    TAB_HEIGHT = 200
     NO_MARGIN = QMargins(0, 0, 0, 0)
+    PRIMARY_LINE_HEIGHT = 30
     """
     Gère le tableau d'arret, récupère les données en fonction de son paramètre moment (matin ou soir)
     """
@@ -43,7 +43,6 @@ class TabArret(MondonWidget):
         self.scroll_layout = None
         self.scroll = QScrollArea()
         self.scroll.setStyleSheet(scroll_bar_stylesheet)
-        self.scroll.setFixedHeight(self.TAB_HEIGHT)
         self.init_widgets()
 
     def on_settings_changed(self, prev_live, prev_day_ago, prev_zoom):
@@ -63,7 +62,7 @@ class TabArret(MondonWidget):
         list_box = QVBoxLayout()
         self.setLayout(list_box)
 
-        list_box.addWidget(self.scroll, alignment=Qt.AlignCenter)
+        list_box.addWidget(self.scroll)
         self.scroll.setWidgetResizable(True)
         scroll_content = QWidget(self.scroll)
         scroll_content.setStyleSheet("background-color:{};".format(color_bleu_gris.hex_string))
@@ -72,6 +71,11 @@ class TabArret(MondonWidget):
         self.scroll_layout.setSpacing(0)
         scroll_content.setLayout(self.scroll_layout)
         self.scroll.setWidget(scroll_content)
+        no_arret_label = QLabel('Aucun arrêt enregistrée')
+        no_arret_label.setStyleSheet(green_title_label_stylesheet)
+        no_arret_label.setAlignment(Qt.AlignCenter)
+        no_arret_label.setFixedHeight(self.PRIMARY_LINE_HEIGHT)
+        self.scroll_layout.addWidget(no_arret_label)
 
     def update_widget(self):
         """
