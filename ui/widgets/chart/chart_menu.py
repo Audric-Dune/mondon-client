@@ -123,22 +123,22 @@ class ChartMenu(MondonWidget):
         # Bouton jour plus
         self.bt_jour_plus.clicked.connect(self.jour_plus)
         self.bt_jour_plus.setStyleSheet(button_stylesheet)
-        self.bt_jour_plus.set_image("assets/images/fleche_suivant.png")
+        self.bt_jour_plus.addImage("assets/images/fleche_suivant.png")
 
         # Bouton jour moins
         self.bt_jour_moins.clicked.connect(self.jour_moins)
         self.bt_jour_moins.setStyleSheet(button_stylesheet)
-        self.bt_jour_moins.set_image("assets/images/fleche_precedent.png")
+        self.bt_jour_moins.addImage("assets/images/fleche_precedent.png")
 
         # Bouton zoom plus
         self.bt_zoom_plus.clicked.connect(self.zoom_plus)
         self.bt_zoom_plus.setStyleSheet(button_stylesheet)
-        self.bt_zoom_plus.set_image("assets/images/zoom_plus.png")
+        self.bt_zoom_plus.addImage("assets/images/zoom_plus.png")
 
         # Bouton zoom moins
         self.bt_zoom_moins.clicked.connect(self.zoom_moins)
         self.bt_zoom_moins.setStyleSheet(button_stylesheet)
-        self.bt_zoom_moins.set_image("assets/images/zoom_moins.png")
+        self.bt_zoom_moins.addImage("assets/images/zoom_moins.png")
 
         # Bouton live
         self.bt_live.clicked.connect(self.live)

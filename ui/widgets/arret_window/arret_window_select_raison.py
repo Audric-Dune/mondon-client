@@ -203,7 +203,7 @@ class ArretWindowSelectRaison(MondonWidget):
         S'occupe de check une checkbox
         :param button: Le boutton a checker
         """
-        button.set_image("assets/images/white_check.png")
+        button.addImage("assets/images/white_check.png")
         button.setContentsMargins(5)
 
     @staticmethod

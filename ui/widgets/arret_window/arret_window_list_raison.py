@@ -11,7 +11,9 @@ from constants.stylesheets import \
     gray_title_label_stylesheet, \
     red_title_label_stylesheet, \
     button_gray_cross_stylesheet,\
-    button_red_cross_stylesheet
+    button_red_cross_stylesheet,\
+    button_gray_star_stylesheet,\
+    button_red_star_stylesheet
 from ui.utils.drawing import draw_rectangle
 from ui.utils.layout import clear_layout
 from ui.widgets.public.pixmap_button import PixmapButton
@@ -112,6 +114,15 @@ class ArretWindowListRaison(MondonWidget):
         """
         # Création widget horizontal
         hbox = QHBoxLayout()
+        # Création icone raison_principale
+        bt_principale = PixmapButton(parent=self)
+        bt_principale.setFixedSize(self.HEIGHT_LINE, self.HEIGHT_LINE)
+        bt_principale.addImage("assets/images/white_star.png")
+        bt_principale.addHoverImage("assets/images/yellow_star.png")
+        bt_principale_stylesheet = button_gray_star_stylesheet if raison.type == "Prévu" else button_red_star_stylesheet
+        bt_principale.setStyleSheet(bt_principale_stylesheet)
+        bt_principale.setContentsMargins(2)
+        hbox.addWidget(bt_principale)
         # Création du label type
         type_label = QLabel(raison.type)
         # On met le label en couleur en fonction du type et on définit la largeur
@@ -131,7 +142,7 @@ class ArretWindowListRaison(MondonWidget):
         # On crée un bouton pour supprimer la ligne
         bt_cross = PixmapButton(parent=self)
         bt_cross.setFixedSize(self.HEIGHT_LINE, self.HEIGHT_LINE)
-        bt_cross.set_image("assets/images/white_cross.png")
+        bt_cross.addImage("assets/images/white_cross.png")
         bt_cross_stylesheet = button_gray_cross_stylesheet if raison.type == "Prévu" else button_red_cross_stylesheet
         bt_cross.setStyleSheet(bt_cross_stylesheet)
         bt_cross.clicked.connect(lambda: self.delete_line_raison(raison.raison))
