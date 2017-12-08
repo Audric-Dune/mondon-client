@@ -9,10 +9,9 @@ from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel, QWidget
 
 from constants.stylesheets import red_title_label_stylesheet,\
     green_title_label_stylesheet,\
-    gray_title_label_stylesheet
-
+    gray_title_label_stylesheet,\
+    blue_title_label_stylesheet
 from ui.utils.timestamp import timestamp_to_hour_little
-from ui.utils.layout import clear_layout
 from ui.application import app
 
 
@@ -21,7 +20,7 @@ class LineArret(QWidget):
     PADDING_VBOX = 2
     PADDING_HBOX = 0
     PRIMARY_LINE_HEIGHT = 30
-    SECONDARY_LINE_HEIGHT = 25
+    SECONDARY_LINE_HEIGHT = 30
     WIDTH_LABEL_TYPE = 80
     CONTENT_MARGIN = QMargins(0, 5, 0, 5)
     LABEL_MARGIN = 5
@@ -78,7 +77,8 @@ class LineArret(QWidget):
             hbox.addWidget(no_raison_label)
             vbox.addLayout(hbox)
             return vbox
-        for raison in arret.raisons:
+        list_raison = self.raison_store(arret.raisons)
+        for raison in list_raison:
             hbox_temp = QHBoxLayout()
             hbox_temp.setSpacing(self.PADDING_HBOX)
             type_label = QLabel(raison.type)
@@ -86,16 +86,39 @@ class LineArret(QWidget):
             type_label.setFixedHeight(self.SECONDARY_LINE_HEIGHT)
             type_label.setFixedWidth(self.WIDTH_LABEL_TYPE)
             raison_label = QLabel(raison.raison)
+            # On met le label et la croix en couleur en fonction du type
             if raison.type == "Prévu":
-                raison_label.setStyleSheet(gray_title_label_stylesheet)
-                type_label.setStyleSheet(gray_title_label_stylesheet)
-            else:
+                raison_label.setStyleSheet(blue_title_label_stylesheet)
+                type_label.setStyleSheet(blue_title_label_stylesheet)
+            elif raison.type == "Imprévu":
                 raison_label.setStyleSheet(red_title_label_stylesheet)
                 type_label.setStyleSheet(red_title_label_stylesheet)
+            else:
+                raison_label.setStyleSheet(gray_title_label_stylesheet)
+                type_label.setStyleSheet(gray_title_label_stylesheet)
             hbox_temp.addWidget(type_label)
             hbox_temp.addWidget(raison_label)
             vbox.addLayout(hbox_temp)
         return vbox
+
+    @staticmethod
+    def raison_store(raisons):
+        list_raison = []
+        list_raison_not_imprevu = []
+        list_raison_not_prevu = []
+        for raison in raisons:
+            if raison.type == "Imprévu":
+                list_raison.append(raison)
+            else:
+                list_raison_not_imprevu.append(raison)
+        for raison in list_raison_not_imprevu:
+            if raison.type == "Prévu":
+                list_raison.append(raison)
+            else:
+                list_raison_not_prevu.append(raison)
+        for raison in list_raison_not_prevu:
+            list_raison.append(raison)
+        return list_raison
 
     def eventFilter(self, object, event):
         """

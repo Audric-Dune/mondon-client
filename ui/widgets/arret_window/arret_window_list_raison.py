@@ -1,19 +1,19 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtGui import QPainter, QIcon
+from PyQt5.QtGui import QPainter
 from PyQt5.Qt import Qt
-from PyQt5.QtWidgets import QLabel, QHBoxLayout, QVBoxLayout, QPushButton
+from PyQt5.QtWidgets import QLabel, QHBoxLayout, QVBoxLayout
 from PyQt5.QtCore import QSize, QMargins, pyqtSignal
 
 from constants.colors import color_bleu_gris
 from constants.stylesheets import \
     gray_title_label_stylesheet, \
     red_title_label_stylesheet, \
+    blue_title_label_stylesheet, \
     button_gray_cross_stylesheet,\
     button_red_cross_stylesheet,\
-    button_gray_star_stylesheet,\
-    button_red_star_stylesheet
+    button_blue_cross_stylesheet
 from ui.utils.drawing import draw_rectangle
 from ui.utils.layout import clear_layout
 from ui.widgets.public.pixmap_button import PixmapButton
@@ -41,54 +41,47 @@ class ArretWindowListRaison(MondonWidget):
         self.vbox.setContentsMargins(self.VBOX_MARGIN)
         self.vbox.setSpacing(self.VBOX_SPACING)
         self.initial_line = self.create_initial_line()
-        self.init_widget()
+        self.update_widget()
 
-    def init_widget(self):
-        """
-        Initialise les layouts et insère les raisons
-        """
+    def update_widget(self):
         # On récupère la liste des raisons sotcké dans l'object Arret
         list_raison = self.arret.raisons
+        list_raison_stored = self.raison_store(list_raison)
+        # On reinitialise le layout et la liste des layouts
+        clear_layout(self.vbox)
+        self.list_layout_raison = {}
         # Si la liste de raison est vide
         if len(list_raison) == 0:
             self.initial_line = self.create_initial_line()
             # On ajout la ligne pas de raison sélectionné
             self.vbox.addLayout(self.initial_line)
         else:
-            # On parcour la liste des raisons
-            index = 0
-            for raison in list_raison:
-                # On crée la nouvelle ligne
+            index = 1
+            for raison in list_raison_stored:
                 line_raison = self.create_line_raison(raison)
-                # On ajoute la ligne a la liste des layouts
                 self.list_layout_raison[index] = line_raison
-                # On ajoute la ligne au layout
                 self.vbox.addLayout(line_raison)
                 index += 1
         self.setLayout(self.vbox)
 
-    def update_widget(self):
-        # On récupère la liste des raisons sotcké dans l'object Arret
-        list_raison = self.arret.raisons
-        # On regarde si il y a plus de raison dans l'object Arret que dans le layout
-        if len(list_raison) > len(self.list_layout_raison):
-            # Si il n'y a pas de ligne, on supprime la ligne initiale
-            if len(self.list_layout_raison) == 0:
-                item_layout = self.vbox.itemAt(0)
-                self.vbox.removeItem(item_layout)
-                self.initial_line = clear_layout(self.initial_line)
-            # La longeur de la liste des layouts correspond a l'index de la raison
-            # dans list_raison que l'on veux insérer
-            index = len(self.list_layout_raison)
-            # On sélectionne la raison à ajouter
-            raison = list_raison[index]
-            # On crée la nouvelle ligne
-            line_raison = self.create_line_raison(raison)
-            # On ajoute la ligne a la liste des layouts
-            self.list_layout_raison[index] = line_raison
-            # On ajoute la ligne au layout
-            self.vbox.addLayout(line_raison)
-            self.update_widget()
+    @staticmethod
+    def raison_store(raisons):
+        list_raison = []
+        list_raison_not_imprevu = []
+        list_raison_not_prevu = []
+        for raison in raisons:
+            if raison.type == "Imprévu":
+                list_raison.append(raison)
+            else:
+                list_raison_not_imprevu.append(raison)
+        for raison in list_raison_not_imprevu:
+            if raison.type == "Prévu":
+                list_raison.append(raison)
+            else:
+                list_raison_not_prevu.append(raison)
+        for raison in list_raison_not_prevu:
+            list_raison.append(raison)
+        return list_raison
 
     def create_initial_line(self):
         """
@@ -116,8 +109,16 @@ class ArretWindowListRaison(MondonWidget):
         hbox = QHBoxLayout()
         # Création du label type
         type_label = QLabel(raison.type)
-        # On met le label en couleur en fonction du type et on définit la largeur
-        label_stylesheet = gray_title_label_stylesheet if raison.type == "Prévu" else red_title_label_stylesheet
+        # On met le label et la croix en couleur en fonction du type
+        if raison.type == "Prévu":
+            label_stylesheet = blue_title_label_stylesheet
+            bt_cross_stylesheet = button_blue_cross_stylesheet
+        elif raison.type == "Imprévu":
+            label_stylesheet = red_title_label_stylesheet
+            bt_cross_stylesheet = button_red_cross_stylesheet
+        else:
+            label_stylesheet = gray_title_label_stylesheet
+            bt_cross_stylesheet = button_gray_cross_stylesheet
         type_label.setStyleSheet(label_stylesheet)
         type_label.setAlignment(Qt.AlignCenter)
         type_label.setFixedWidth(self.WIDTH_TYPE)
@@ -134,7 +135,6 @@ class ArretWindowListRaison(MondonWidget):
         bt_cross = PixmapButton(parent=self)
         bt_cross.setFixedSize(self.HEIGHT_LINE, self.HEIGHT_LINE)
         bt_cross.addImage("assets/images/white_cross.png")
-        bt_cross_stylesheet = button_gray_cross_stylesheet if raison.type == "Prévu" else button_red_cross_stylesheet
         bt_cross.setStyleSheet(bt_cross_stylesheet)
         bt_cross.clicked.connect(lambda: self.delete_line_raison(raison.raison))
         # On ajoute le bouton au layout
@@ -150,9 +150,7 @@ class ArretWindowListRaison(MondonWidget):
         # Supprime l'object Raison dans l'object Arret
         self.arret.remove_raison(raison)
         # Réinitialise la liste des layout raison
-        self.list_layout_raison = {}
-        self.vbox = clear_layout(self.vbox)
-        self.init_widget()
+        self.update_widget()
         self.DELETE_RAISON_SIGNAL.emit()
 
     def draw_fond(self, p):

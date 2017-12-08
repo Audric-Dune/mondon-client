@@ -9,7 +9,8 @@ from constants.colors import (
     color_vert,
     color_vert_fonce,
     color_vert_moyen,
-    color_noir
+    color_noir,
+    color_bleu
 )
 
 # ____________LABEL STYLESHEET____________
@@ -33,6 +34,7 @@ orange_label_stylesheet = create_qlabel_stylesheet(color=color_orange)
 red_label_stylesheet = create_qlabel_stylesheet(color=color_rouge)
 white_title_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, background_color=color_bleu_gris, font_size="16px")
 red_title_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, background_color=color_rouge, font_size="16px")
+blue_title_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, background_color=color_bleu, font_size="16px")
 orange_title_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, background_color=color_orange, font_size="16px")
 green_title_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, background_color=color_vert_fonce, font_size="16px")
 gray_title_label_stylesheet = create_qlabel_stylesheet(color=color_noir, background_color=color_gris_moyen, font_size="16px")
@@ -176,9 +178,9 @@ button_gray_cross_stylesheet = """
     color_rouge=color_rouge.hex_string,
 )
 
-button_gray_star_stylesheet = """
+button_blue_cross_stylesheet = """
     QPushButton {{
-        background-color: {color_gris_moyen};
+        background-color: {color_bleu};
         border: none;
     }}
 """.format(
@@ -186,21 +188,7 @@ button_gray_star_stylesheet = """
     color_vert_fonce=color_vert_fonce.hex_string,
     color_vert_moyen=color_vert_moyen.hex_string,
     color_vert=color_vert.hex_string,
-    color_gris_moyen=color_gris_moyen.hex_string,
-    color_rouge=color_rouge.hex_string,
-)
-
-button_red_star_stylesheet = """
-    QPushButton {{
-        background-color: {color_rouge};
-        border: none;
-    }}
-""".format(
-    color_blanc=color_blanc.hex_string,
-    color_vert_fonce=color_vert_fonce.hex_string,
-    color_vert_moyen=color_vert_moyen.hex_string,
-    color_vert=color_vert.hex_string,
-    color_gris_moyen=color_gris_moyen.hex_string,
+    color_bleu=color_bleu.hex_string,
     color_rouge=color_rouge.hex_string,
 )
 
