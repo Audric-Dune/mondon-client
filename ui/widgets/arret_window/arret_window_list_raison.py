@@ -114,15 +114,6 @@ class ArretWindowListRaison(MondonWidget):
         """
         # Création widget horizontal
         hbox = QHBoxLayout()
-        # Création icone raison_principale
-        bt_principale = PixmapButton(parent=self)
-        bt_principale.setFixedSize(self.HEIGHT_LINE, self.HEIGHT_LINE)
-        bt_principale.addImage("assets/images/white_star.png")
-        bt_principale.addHoverImage("assets/images/yellow_star.png")
-        bt_principale_stylesheet = button_gray_star_stylesheet if raison.type == "Prévu" else button_red_star_stylesheet
-        bt_principale.setStyleSheet(bt_principale_stylesheet)
-        bt_principale.setContentsMargins(2)
-        hbox.addWidget(bt_principale)
         # Création du label type
         type_label = QLabel(raison.type)
         # On met le label en couleur en fonction du type et on définit la largeur

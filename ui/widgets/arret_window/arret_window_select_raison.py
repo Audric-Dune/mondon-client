@@ -7,7 +7,7 @@ from PyQt5.QtGui import QPainter, QIcon
 from PyQt5.QtWidgets import QPushButton, QLabel, QHBoxLayout, QVBoxLayout, QLineEdit
 
 from constants.colors import color_bleu_gris
-from constants.param import LIST_CHOIX_RAISON_PREVU, LIST_CHOIX_RAISON_IMPREVU
+from constants.param import LIST_CHOIX_RAISON_PREVU, LIST_CHOIX_RAISON_IMPREVU, LIST_CHOIX_ENTRETIEN
 from constants.stylesheets import \
     check_box_off_stylesheet, \
     check_box_on_stylesheet, \
@@ -34,7 +34,7 @@ class ArretWindowSelectRaison(MondonWidget):
         super(ArretWindowSelectRaison, self).__init__(parent=parent)
         arret.ARRET_RAISON_CHANGED_SIGNAL.connect(self.update_widget)
         self.arret = arret
-        self.list_choix = LIST_CHOIX_RAISON_PREVU if self.arret.type_cache == "Prévu" else LIST_CHOIX_RAISON_IMPREVU
+        self.list_choix = self.selection_list_choose()
         self.items = []
         self.buttons = []
         self.validation_condition = False
@@ -42,6 +42,14 @@ class ArretWindowSelectRaison(MondonWidget):
         # _____INITIALISATION WIDGET_____
         self.vbox = QVBoxLayout()
         self.init_widget()
+
+    def selection_list_choose(self):
+        if self.arret.type_cache == 'Prévu':
+            return LIST_CHOIX_RAISON_PREVU
+        elif self.arret.type_cache == 'Imprévu':
+            return LIST_CHOIX_RAISON_IMPREVU
+        else:
+            return LIST_CHOIX_ENTRETIEN
 
     def init_widget(self):
         """

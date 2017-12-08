@@ -27,6 +27,8 @@ class ArretWindowSelectType(MondonWidget):
         self.bt_prevu.clicked.connect(self.on_click_bt_prevu)
         self.bt_imprevu = QPushButton("Raison imprévu", self)
         self.bt_imprevu.clicked.connect(self.on_click_bt_imprevu)
+        self.bt_entretien = QPushButton("Entretien", self)
+        self.bt_entretien.clicked.connect(self.on_click_bt_entretien)
         self.init_widget()
 
     def init_widget(self):
@@ -40,6 +42,9 @@ class ArretWindowSelectType(MondonWidget):
         self.bt_imprevu.setFixedSize(self.BUTTON_WIDTH, button_size)
         self.bt_imprevu.setStyleSheet(button_stylesheet)
         hbox.addWidget(self.bt_imprevu)
+        self.bt_entretien.setFixedSize(self.BUTTON_WIDTH, button_size)
+        self.bt_entretien.setStyleSheet(button_stylesheet)
+        hbox.addWidget(self.bt_entretien)
 
         self.setLayout(hbox)
 
@@ -86,12 +91,31 @@ class ArretWindowSelectType(MondonWidget):
         # On met a jour la variable mémoire de séléction d'un type dans l'object Arret
         self.arret.add_type_cache("Imprévu")
 
+    def on_click_bt_entretien(self):
+        """
+        Fonction appelé après un click sur le bouton "Entretien"
+        Met à jour les styles des boutons
+        Met a jour la variable mémoire de séléction d'un type dans l'object Arret
+        """
+        # De base met le style select sur le bouton "Imprévu"
+        # De base met le style unselect sur le bouton "Prévu"
+        self.bt_entretien.setStyleSheet(button_stylesheet_unselected)
+        self.bt_entretien.setStyleSheet(button_stylesheet)
+        # Si la variable mémoire de séléction d'un type dans l'object Arret est "Prévu",
+        # on a déja sélectionner le bouton "Imprévu"
+        if self.arret.type_cache == "Entretien":
+            # Dans se cas on met le style select sur le bouton "Prévu"
+            self.bt_entretien.setStyleSheet(button_stylesheet)
+        # On met a jour la variable mémoire de séléction d'un type dans l'object Arret
+        self.arret.add_type_cache("Entretien")
+
     def remove_type(self):
         """
         Réintialise les boutons
         """
         self.bt_prevu.setStyleSheet(button_stylesheet)
         self.bt_imprevu.setStyleSheet(button_stylesheet)
+        self.bt_entretien.setStyleSheet(button_stylesheet)
 
     def draw_fond(self, p):
         """

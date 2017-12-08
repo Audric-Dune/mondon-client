@@ -44,6 +44,7 @@ class TabArret(MondonWidget):
         self.scroll = QScrollArea()
         self.scroll.setStyleSheet(scroll_bar_stylesheet)
         self.init_widgets()
+        self.update_widget()
 
     def on_settings_changed(self, prev_live, prev_day_ago, prev_zoom):
         self.day_ago = settings_store.day_ago
@@ -71,11 +72,6 @@ class TabArret(MondonWidget):
         self.scroll_layout.setSpacing(0)
         scroll_content.setLayout(self.scroll_layout)
         self.scroll.setWidget(scroll_content)
-        no_arret_label = QLabel('Aucun arrêt enregistrée')
-        no_arret_label.setStyleSheet(green_title_label_stylesheet)
-        no_arret_label.setAlignment(Qt.AlignCenter)
-        no_arret_label.setFixedHeight(self.PRIMARY_LINE_HEIGHT)
-        self.scroll_layout.addWidget(no_arret_label)
 
     def update_widget(self):
         """
@@ -89,6 +85,9 @@ class TabArret(MondonWidget):
             line_arret = LineArret(parent=self, day_ago=self.day_ago, arret=arret, number=number)
             self.scroll_layout.addWidget(line_arret)
             number += 1
+        if number == 1:
+            line_arret = LineArret(parent=self, day_ago=self.day_ago, arret=None, number=number)
+            self.scroll_layout.addWidget(line_arret)
 
     def get_arret(self):
         """

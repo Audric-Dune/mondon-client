@@ -32,16 +32,5 @@ class PixmapButton(QPushButton):
         self.img = img
         self.__set_image__(img)
 
-    def addHoverImage(self, img):
-        self.hover_img = img
-
     def setContentsMargins(self, margin=5):
         self.vbox.setContentsMargins(margin, margin, margin, margin)
-
-    def enterEvent(self, event):
-        if self.hover_img:
-            self.__set_image__(self.hover_img)
-
-    def leaveEvent(self, event):
-        if self.hover_img:
-            self.__set_image__(self.img)

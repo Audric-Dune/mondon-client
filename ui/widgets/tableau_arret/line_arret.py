@@ -34,15 +34,21 @@ class LineArret(QWidget):
         self.installEventFilter(self)
 
     def init_widgets(self, arret, number):
-        primary_layout = self.create_primary_line(arret, number)
-        secondary_layout = self.create_secondary_line(arret)
-
         vbox = QVBoxLayout()
+        self.setLayout(vbox)
         vbox.setSpacing(self.PADDING_VBOX)
         vbox.setContentsMargins(self.CONTENT_MARGIN)
-        vbox.addLayout(primary_layout)
-        vbox.addLayout(secondary_layout)
-        self.setLayout(vbox)
+        if arret:
+            primary_layout = self.create_primary_line(arret, number)
+            secondary_layout = self.create_secondary_line(arret)
+            vbox.addLayout(primary_layout)
+            vbox.addLayout(secondary_layout)
+        else:
+            no_arret_label = QLabel('Aucun arrêt enregistré')
+            no_arret_label.setStyleSheet(green_title_label_stylesheet)
+            no_arret_label.setAlignment(Qt.AlignCenter)
+            no_arret_label.setFixedHeight(self.PRIMARY_LINE_HEIGHT)
+            vbox.addWidget(no_arret_label)
 
     def create_primary_line(self, arret, number):
         hbox = QHBoxLayout()
