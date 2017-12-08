@@ -1,8 +1,7 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtCore import QSize
-from PyQt5.QtGui import QPainter, QIcon
+from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import QPushButton
 
 from constants.colors import (
@@ -11,7 +10,6 @@ from constants.colors import (
 )
 from constants.dimensions import (
     button_size,
-    padding_button,
     chart_menu_height,
 )
 from constants.stylesheets import button_stylesheet

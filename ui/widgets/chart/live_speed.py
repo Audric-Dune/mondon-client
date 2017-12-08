@@ -1,50 +1,36 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtGui import QPainter
+from PyQt5.QtWidgets import QVBoxLayout, QLabel
 
-from constants.colors import color_blanc, color_bleu_gris
+from constants.stylesheets import white_22_label_stylesheet
 from stores.data_store_manager import data_store_manager
-from ui.utils.drawing import draw_rectangle, draw_text
 from ui.widgets.public.mondon_widget import MondonWidget
 
 
 class LiveSpeed(MondonWidget):
+    HEIGHT = 30
+
     def __init__(self, parent=None):
         super(LiveSpeed, self).__init__(parent=parent)
-        self.last_speed = None
+        self.last_speed = 0
         self.update()
+        self.speed_label = QLabel("0 m/min")
+        self.init_widget()
+
+    def init_widget(self):
+        vbox = QVBoxLayout()
+        self.speed_label.setStyleSheet(white_22_label_stylesheet)
+        self.speed_label.setFixedHeight(self.HEIGHT)
+        vbox.addWidget(self.speed_label)
+        self.setLayout(vbox)
+
+    def update_widget(self):
+        if not self.last_speed:
+            self.last_speed = 0
+        speed_text = "{speed} m/min".format(speed=self.last_speed)
+        self.speed_label.setText(speed_text)
 
     def on_data_changed(self):
         self.last_speed = data_store_manager.get_most_recent_store().get_last_speed()
-        self.update()
-
-    def paintEvent(self, event):
-        p = QPainter()
-        p.begin(self)
-        self.draw(p)
-        p.end()
-
-    def draw_fond(self, p):
-        draw_rectangle(p, 0, 0, self.width(), self.height(), color_bleu_gris)
-
-    def draw_speed_actuelle(self, p):
-        text = "0 m/min"
-        if self.last_speed:
-            speed = self.last_speed[1]
-            text = "{speed} m/min".format(speed=speed)
-        text_width = self.width()
-        text_height = self.height()
-        draw_text(p,
-                  x=10,
-                  y=0,
-                  width=text_width,
-                  height=text_height,
-                  color=color_blanc,
-                  align="G",
-                  font_size=22,
-                  text=text)
-
-    def draw(self, p):
-        self.draw_fond(p)
-        self.draw_speed_actuelle(p)
+        self.update_widget()

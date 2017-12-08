@@ -33,6 +33,7 @@ test_label_stylesheet = create_qlabel_stylesheet(color=color_orange, background_
 orange_label_stylesheet = create_qlabel_stylesheet(color=color_orange)
 red_label_stylesheet = create_qlabel_stylesheet(color=color_rouge)
 white_title_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, background_color=color_bleu_gris, font_size="16px")
+white_22_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, background_color=color_bleu_gris, font_size="22px")
 red_title_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, background_color=color_rouge, font_size="16px")
 blue_title_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, background_color=color_bleu, font_size="16px")
 orange_title_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, background_color=color_orange, font_size="16px")
