@@ -2,18 +2,17 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import QTextEdit, QVBoxLayout
 
 from constants.colors import color_bleu_gris
 from constants.stylesheets import white_text_edit_stylesheet
-from ui.utils.drawing import draw_rectangle
 from ui.widgets.public.mondon_widget import MondonWidget
 
 
 class StatLegend(MondonWidget):
     def __init__(self, parent):
         super(StatLegend, self).__init__(parent=parent)
+        self.set_background_color(color_bleu_gris)
         self.init_widgets()
 
     def init_widgets(self):
@@ -41,14 +40,3 @@ class StatLegend(MondonWidget):
         vbox.addWidget(info_82)
 
         vbox.addStretch()
-
-    def paintEvent(self, event):
-        p = QPainter()
-        p.begin(self)
-        self.draw(p)
-        p.end()
-
-    def draw(self, p):
-        draw_rectangle(p, 0, 0, self.width(), self.height(), color_bleu_gris)
-
-

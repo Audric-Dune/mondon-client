@@ -4,14 +4,12 @@
 from datetime import timedelta
 
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import QLabel, QSizePolicy, QVBoxLayout
 
 from constants.colors import color_bleu_gris
 from constants.stylesheets import white_title_label_stylesheet
 from stores.data_store_manager import data_store_manager
 from stores.settings_store import settings_store
-from ui.utils.drawing import draw_rectangle
 from ui.utils.timestamp import (
     timestamp_at_day_ago,
     timestamp_at_time,
@@ -25,6 +23,7 @@ from ui.widgets.stat.bar import Bar
 class StatBar(MondonWidget):
     def __init__(self, parent, titre, moment):
         super(StatBar, self).__init__(parent=parent)
+        self.set_background_color(color_bleu_gris)
         self.moment = moment
         self.metre_value = 0
         self.percent = 0
@@ -63,12 +62,6 @@ class StatBar(MondonWidget):
 
     def on_data_changed(self):
         self.update_widgets()
-
-    def paintEvent(self, event):
-        p = QPainter()
-        p.begin(self)
-        self.draw(p)
-        p.end()
 
     def update_widgets(self):
         self.get_stat()
@@ -130,6 +123,3 @@ class StatBar(MondonWidget):
         self.metre_value = result
         self.percent = percent
         self.time_at_0_str = time_at_0_str
-
-    def draw(self, p):
-        draw_rectangle(p, 0, 0, self.width(), self.height(), color_bleu_gris)

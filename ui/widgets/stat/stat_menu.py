@@ -2,10 +2,8 @@
 # -*- coding: utf-8 -*-
 
 # Importation des module PyQt5
-from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import QHBoxLayout, QSizePolicy
 
-from stores.settings_store import settings_store
 from ui.widgets.public.mondon_widget import MondonWidget
 from ui.widgets.stat.stat_bar import StatBar
 from ui.widgets.stat.stat_legend import StatLegend
@@ -14,7 +12,6 @@ from ui.widgets.stat.stat_legend import StatLegend
 class StatMenu(MondonWidget):
     def __init__(self, parent):
         super(StatMenu, self).__init__(parent=parent)
-        self.day_ago = 0
         self.init_widgets()
 
     def init_widgets(self):
@@ -38,19 +35,3 @@ class StatMenu(MondonWidget):
         hbox.addWidget(stat_bar3)
 
         self.setLayout(hbox)
-
-    def on_settings_changed(self, prev_live, prev_day_ago, prev_zoom):
-        self.day_ago = settings_store.day_ago
-        self.update()
-
-    def on_data_changed(self):
-        self.update()
-
-    def paintEvent(self, event):
-        p = QPainter()
-        p.begin(self)
-        self.draw(p)
-        p.end()
-
-    def draw(self, p):
-        pass

@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5.QtCore import Qt, QMargins
-from PyQt5.QtGui import QPainter
-from PyQt5.QtWidgets import QVBoxLayout, QScrollArea, QWidget, QLabel
+from PyQt5.QtWidgets import QVBoxLayout, QScrollArea, QWidget
 
 from constants.colors import color_bleu_gris
 from constants.param import \
@@ -12,10 +11,9 @@ from constants.param import \
     FIN_PROD_SOIR_VENDREDI, \
     DEBUT_PROD_SOIR, \
     FIN_PROD_MATIN_VENDREDI
-from constants.stylesheets import scroll_bar_stylesheet, green_title_label_stylesheet
+from constants.stylesheets import scroll_bar_stylesheet
 from stores.data_store_manager import data_store_manager
 from stores.settings_store import settings_store
-from ui.utils.drawing import draw_rectangle
 from ui.utils.timestamp import (
     timestamp_at_day_ago,
     timestamp_at_time,
@@ -35,6 +33,7 @@ class TabArret(MondonWidget):
     """
     def __init__(self, parent, moment):
         super(TabArret, self).__init__(parent=parent)
+        self.set_background_color(color_bleu_gris)
         self.moment = moment
         self.day_ago = 0
         self.list_arret = []
@@ -134,15 +133,3 @@ class TabArret(MondonWidget):
             else:
                 continue
         self.list_arret = list_arret
-
-    def paintEvent(self, event):
-        p = QPainter()
-        p.begin(self)
-        self.draw(p)
-        p.end()
-
-    def draw_fond(self, p):
-        draw_rectangle(p, 0, 0, self.width(), self.height(), color_bleu_gris)
-
-    def draw(self, p):
-        self.draw_fond(p)

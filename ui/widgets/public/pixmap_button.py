@@ -13,16 +13,16 @@ class PixmapButton(QPushButton):
         self.content = QLabel()
         self.vbox = QVBoxLayout()
         self.setContentsMargins()
-        self.__init_widget__()
+        self._init_widget()
         self.setMouseTracking(True)
         self.img = None
         self.hover_img = None
 
-    def __init_widget__(self):
+    def _init_widget(self):
         self.vbox.addWidget(self.content, alignment=Qt.AlignVCenter | Qt.AlignCenter)
         self.setLayout(self.vbox)
 
-    def __set_image__(self, img):
+    def _set_image(self, img):
         self.img = img
         pixmap = QPixmap(img)
         self.content.setPixmap(pixmap)
@@ -30,7 +30,7 @@ class PixmapButton(QPushButton):
 
     def addImage(self, img):
         self.img = img
-        self.__set_image__(img)
+        self._set_image(img)
 
     def setContentsMargins(self, margin=5):
         self.vbox.setContentsMargins(margin, margin, margin, margin)
