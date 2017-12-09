@@ -16,6 +16,7 @@ from constants.stylesheets import \
 from ui.widgets.public.dropdown import Dropdown
 from ui.widgets.public.mondon_widget import MondonWidget
 from ui.widgets.public.pixmap_button import PixmapButton
+from ui.widgets.public.clickable_label import ClickableLabel
 
 
 class ArretWindowSelectRaison(MondonWidget):
@@ -70,7 +71,7 @@ class ArretWindowSelectRaison(MondonWidget):
             hbox.addWidget(self.buttons[index])
             # On crée un item qui correspond au format
             if format == "label":
-                self.items.append((format, self.create_label(value)))
+                self.items.append((format, self.create_label(value, index)))
             elif format == "dropdown":
                 self.items.append((format, self.create_dropdown(value, index)))
                 # On ajoute un label titre au layout
@@ -214,15 +215,16 @@ class ArretWindowSelectRaison(MondonWidget):
         button.addImage("assets/images/white_check.png")
         button.setContentsMargins(5)
 
-    @staticmethod
-    def create_label(text):
+    def create_label(self, text, index):
         """
         S'occupe de créer un label
         :param text: Texte du label
+        :param index: Index du label
         :return: Le texte initialisé
         """
         # On crée un label avec son texte
-        label = QLabel(text)
+        label = ClickableLabel(text)
+        label.connect(lambda: self.onclick_button(index))
         # On met la couleur du texte en blanc
         label.setStyleSheet(white_title_label_stylesheet)
         return label

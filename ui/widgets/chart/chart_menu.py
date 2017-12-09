@@ -18,6 +18,7 @@ class ChartMenu(MondonWidget):
     PIXMAPBUTTON_SIZE = QSize(40, 40)
     BUTTON_HEIGHT = 40
     BUTTON_WIDTH = 100
+    MINIMUN_WIDTH_LABEL = 350
 
     def __init__(self, parent):
         super(ChartMenu, self).__init__(parent=parent)
@@ -48,8 +49,10 @@ class ChartMenu(MondonWidget):
 
         center_hbox = QHBoxLayout()
         center_hbox.addWidget(self.bt_jour_moins)
+        center_hbox.addStretch(1)
         center_hbox.addWidget(self.label_date)
         self.label_date.setStyleSheet(white_22_label_stylesheet)
+        center_hbox.addStretch(1)
         center_hbox.addWidget(self.bt_jour_plus)
         master_hbox.addLayout(center_hbox)
 
@@ -105,6 +108,8 @@ class ChartMenu(MondonWidget):
     def update_label(self):
         ts = timestamp_at_day_ago(self.day_ago)
         date = timestamp_to_date(ts)
+        self.label_date.setMinimumWidth(self.MINIMUN_WIDTH_LABEL)
+        self.label_date.setAlignment(Qt.AlignCenter)
         self.label_date.setText(date)
 
     @staticmethod
