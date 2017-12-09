@@ -77,10 +77,10 @@ class Chart(MondonWidget):
         self.mouse_move_pos = None
         super(Chart, self).mouseReleaseEvent(event)
 
-    def wheelEvent(self, event):
-        delta = event.pixelDelta().y()
-        ratio = 1 -delta / 100
-        settings_store.set_zoom(settings_store.zoom * ratio)
+    # def wheelEvent(self, event):
+    #     delta = event.pixelDelta().y()
+    #     ratio = 1 -delta / 100
+    #     settings_store.set_zoom(settings_store.zoom * ratio)
 
     def adjust_drag_offset(self):
             min_offset = 0

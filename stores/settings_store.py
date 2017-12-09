@@ -25,7 +25,7 @@ class SettingsStore(QObject):
             self.day_ago = day_ago
         if zoom is not None:
             self.zoom = zoom
-        self.SETTINGS_CHANGED_SIGNAL.emit(prev_live, prev_day_ago, prev_zoom)
+        self.SETTINGS_CHANGED_SIGNAL.emit(prev_live, prev_day_ago, round(prev_zoom))
 
     def set_live(self, live):
         self.set(live=live)

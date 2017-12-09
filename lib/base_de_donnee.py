@@ -129,7 +129,6 @@ class Database:
         :param start_arret: Timestamp début de l'arrêt
         :param end_arret: Timestamp fin de l'arrêt
         """
-        print("DATABASE: create_arret", start_arret)
         try:
             cls._run_query("INSERT INTO mondon_arret VALUES (?, ?)", (start_arret, end_arret))
         except sqlite3.IntegrityError as e:

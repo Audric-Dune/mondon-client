@@ -45,7 +45,6 @@ class ArretWindowListRaison(MondonWidget):
     def update_widget(self):
         # On récupère la liste des raisons sotcké dans l'object Arret
         list_raison = self.arret.raisons
-        list_raison_stored = self.raison_store(list_raison)
         # On reinitialise le layout et la liste des layouts
         clear_layout(self.vbox)
         self.list_layout_raison = {}
@@ -56,31 +55,12 @@ class ArretWindowListRaison(MondonWidget):
             self.vbox.addLayout(self.initial_line)
         else:
             index = 1
-            for raison in list_raison_stored:
+            for raison in list_raison:
                 line_raison = self.create_line_raison(raison)
                 self.list_layout_raison[index] = line_raison
                 self.vbox.addLayout(line_raison)
                 index += 1
         self.setLayout(self.vbox)
-
-    @staticmethod
-    def raison_store(raisons):
-        list_raison = []
-        list_raison_not_imprevu = []
-        list_raison_not_prevu = []
-        for raison in raisons:
-            if raison.type == "Imprévu":
-                list_raison.append(raison)
-            else:
-                list_raison_not_imprevu.append(raison)
-        for raison in list_raison_not_imprevu:
-            if raison.type == "Prévu":
-                list_raison.append(raison)
-            else:
-                list_raison_not_prevu.append(raison)
-        for raison in list_raison_not_prevu:
-            list_raison.append(raison)
-        return list_raison
 
     def create_initial_line(self):
         """

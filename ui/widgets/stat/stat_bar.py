@@ -7,7 +7,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QLabel, QVBoxLayout
 
 from constants.colors import color_bleu_gris
-from constants.stylesheets import white_title_label_stylesheet
+from constants.stylesheets import white_title_label_stylesheet, red_title_label_stylesheet
 from stores.data_store_manager import data_store_manager
 from stores.settings_store import settings_store
 from ui.utils.timestamp import (
@@ -29,7 +29,8 @@ class StatBar(MondonWidget):
         self.moment = moment
         self.metre_value = 0
         self.percent = 0
-        self.time_at_0_str = ""
+        self.arret_time_str = ""
+        self.arret_imprevu_time_str = ""
         self.day_ago = 0
         # _____INIT_WIDGET____
         self.vbox = QVBoxLayout(self)
@@ -37,6 +38,7 @@ class StatBar(MondonWidget):
         self.bar = Bar(parent=self, percent=round(self.percent, 1))
         self.metre = QLabel(self)
         self.arret = QLabel(self)
+        self.arret_imprevu = QLabel(self)
         self.init_widget()
         self.update_widgets()
 
@@ -55,6 +57,9 @@ class StatBar(MondonWidget):
         self.arret.setStyleSheet(white_title_label_stylesheet)
         self.vbox.addWidget(self.arret, alignment=Qt.AlignLeft)
 
+        self.arret_imprevu.setStyleSheet(red_title_label_stylesheet)
+        self.vbox.addWidget(self.arret_imprevu, alignment=Qt.AlignLeft)
+
         self.setLayout(self.vbox)
 
     def on_settings_changed(self, prev_live, prev_day_ago, prev_zoom):
@@ -66,8 +71,9 @@ class StatBar(MondonWidget):
 
     def update_widgets(self):
         self.get_stat()
-        self.metre.setText("{metre}m".format(metre=self.affiche_entier(round(self.metre_value))))
-        self.arret.setText("{time} d'arrêt machine".format(time=self.time_at_0_str))
+        self.metre.setText("{metre}m".format(metre=self.affiche_entier(s=str(round(self.metre_value)))))
+        self.arret.setText("{time} d'arrêt machine".format(time=self.arret_time_str))
+        self.arret_imprevu.setText("{time} d'arrêt imprévu".format(time=self.arret_imprevu_time_str))
         self.bar.get_percent(self.percent)
         self.update()
 
@@ -81,7 +87,10 @@ class StatBar(MondonWidget):
     def get_stat(self):
         ts_actuel = timestamp_now()
         speeds = data_store_manager.get_current_store().data
+        arrets = data_store_manager.get_current_store().arrets
         ts = timestamp_at_day_ago(self.day_ago)
+        arret_time = 0
+        imprevu_arret_time = 0
 
         vendredi = timestamp_to_day(ts) == "vendredi"
         start = 6
@@ -96,22 +105,29 @@ class StatBar(MondonWidget):
         start_ts = timestamp_at_time(ts, hours=start)
         end_ts = timestamp_at_time(ts, hours=end)
 
+        for arret in arrets:
+            start_arret = arret[0]
+            end_arret = arret[1]
+            if start_ts <= start_arret <= end_ts:
+                arret_delay = end_arret - start_arret
+                arret_time = arret_time + arret_delay
+                first_raison = arret[2][0]
+                if first_raison.type == "Imprévu":
+                    imprevu_arret_time = imprevu_arret_time + arret_delay
+        self.arret_time_str = str(timedelta(seconds=round(arret_time)))
+        self.arret_imprevu_time_str = str(timedelta(seconds=round(imprevu_arret_time)))
+
         def value_is_in_period(value):
             return start_ts <= value[0] <= end_ts
 
-        def speed_is_low(value):
-            return 0 <= value <= 30
-
         speeds = [v[1] for v in list(filter(value_is_in_period, speeds))]
-        low_speeds = list(filter(speed_is_low, speeds))
 
         result = sum(speeds) / 60
-        time_at_0 = len(low_speeds)
 
         if ts_actuel < end_ts:
-            maxi = 172.5 * (ts_actuel - start_ts) / 6000
+            maxi = 180 * (ts_actuel - start_ts) / 6000
         else:
-            maxi = 172.5 * (end_ts - start_ts) / 6000
+            maxi = 180 * (end_ts - start_ts) / 6000
         if maxi > 0:
             percent = result / maxi
             if percent > 100:
@@ -120,7 +136,5 @@ class StatBar(MondonWidget):
             percent = 0
         if result <= 0:
             percent = 0
-        time_at_0_str = str(timedelta(seconds=round(time_at_0)))
         self.metre_value = result
         self.percent = percent
-        self.time_at_0_str = time_at_0_str

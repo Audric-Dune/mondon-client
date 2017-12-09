@@ -16,7 +16,7 @@ class Arret(QObject):
     ARRET_RAISON_CHANGED_SIGNAL = pyqtSignal()
 
     """
-    Object model qui stocke edes information sur un arret
+    Object model qui stocke des information sur un arret
     S'occupe de modifier la base de donnée si besoin
     """
     def __init__(self, arret_data):
@@ -64,6 +64,26 @@ class Arret(QObject):
             data_raison = [random_id, self.start, self.type_cache, raison_arret, None]
             # On crée notre object raison
             self.raisons.append(Raison(data_raison))
+        self.raisons = self.raison_store(self.raisons)
+
+    @staticmethod
+    def raison_store(raisons):
+        list_raison = []
+        list_raison_not_imprevu = []
+        list_raison_not_prevu = []
+        for raison in raisons:
+            if raison.type == "Imprévu":
+                list_raison.append(raison)
+            else:
+                list_raison_not_imprevu.append(raison)
+        for raison in list_raison_not_imprevu:
+            if raison.type == "Prévu":
+                list_raison.append(raison)
+            else:
+                list_raison_not_prevu.append(raison)
+        for raison in list_raison_not_prevu:
+            list_raison.append(raison)
+        return list_raison
 
     def add_type_cache(self, type):
         """

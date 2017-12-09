@@ -77,8 +77,7 @@ class LineArret(QWidget):
             hbox.addWidget(no_raison_label)
             vbox.addLayout(hbox)
             return vbox
-        list_raison = self.raison_store(arret.raisons)
-        for raison in list_raison:
+        for raison in arret.raisons:
             hbox_temp = QHBoxLayout()
             hbox_temp.setSpacing(self.PADDING_HBOX)
             type_label = QLabel(raison.type)
@@ -100,25 +99,6 @@ class LineArret(QWidget):
             hbox_temp.addWidget(raison_label)
             vbox.addLayout(hbox_temp)
         return vbox
-
-    @staticmethod
-    def raison_store(raisons):
-        list_raison = []
-        list_raison_not_imprevu = []
-        list_raison_not_prevu = []
-        for raison in raisons:
-            if raison.type == "Imprévu":
-                list_raison.append(raison)
-            else:
-                list_raison_not_imprevu.append(raison)
-        for raison in list_raison_not_imprevu:
-            if raison.type == "Prévu":
-                list_raison.append(raison)
-            else:
-                list_raison_not_prevu.append(raison)
-        for raison in list_raison_not_prevu:
-            list_raison.append(raison)
-        return list_raison
 
     def eventFilter(self, object, event):
         """
