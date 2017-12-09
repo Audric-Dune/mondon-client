@@ -22,16 +22,13 @@ class StatMenu(MondonWidget):
         stat_legend.setFixedWidth(250)
         hbox.addWidget(stat_legend)
 
-        stat_bar = StatBar(parent=self, titre="Equipe du matin", moment="matin")
-        stat_bar.setSizePolicy(QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding))
-        hbox.addWidget(stat_bar)
+        stat_bar_matin = StatBar(parent=self, titre="Equipe du matin", moment="matin")
+        hbox.addWidget(stat_bar_matin)
 
-        stat_bar2 = StatBar(parent=self, titre="Equipe du soir", moment="soir")
-        stat_bar2.setSizePolicy(QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding))
-        hbox.addWidget(stat_bar2)
+        stat_bar_soir = StatBar(parent=self, titre="Equipe du soir", moment="soir")
+        hbox.addWidget(stat_bar_soir)
 
-        stat_bar3 = StatBar(parent=self, titre="Journée complète", moment="total")
-        stat_bar3.setSizePolicy(QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding))
-        hbox.addWidget(stat_bar3)
+        stat_bar_total = StatBar(parent=self, titre="Journée complète", moment="total")
+        hbox.addWidget(stat_bar_total)
 
         self.setLayout(hbox)

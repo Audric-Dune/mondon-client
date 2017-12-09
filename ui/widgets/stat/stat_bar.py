@@ -4,7 +4,7 @@
 from datetime import timedelta
 
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QLabel, QSizePolicy, QVBoxLayout
+from PyQt5.QtWidgets import QLabel, QVBoxLayout
 
 from constants.colors import color_bleu_gris
 from constants.stylesheets import white_title_label_stylesheet
@@ -21,6 +21,8 @@ from ui.widgets.stat.bar import Bar
 
 
 class StatBar(MondonWidget):
+    HEIGHT_BAR = 50
+
     def __init__(self, parent, titre, moment):
         super(StatBar, self).__init__(parent=parent)
         self.set_background_color(color_bleu_gris)
@@ -29,32 +31,31 @@ class StatBar(MondonWidget):
         self.percent = 0
         self.time_at_0_str = ""
         self.day_ago = 0
-
+        # _____INIT_WIDGET____
         self.vbox = QVBoxLayout(self)
+        self.title = QLabel(titre, self)
+        self.bar = Bar(parent=self, percent=round(self.percent, 1))
+        self.metre = QLabel(self)
+        self.arret = QLabel(self)
+        self.init_widget()
+        self.update_widgets()
+
+    def init_widget(self):
         self.vbox.setContentsMargins(5, 5, 5, 5)
 
-        self.title = QLabel(titre, self)
-        self.title.setAlignment(Qt.AlignLeft)
         self.title.setStyleSheet(white_title_label_stylesheet)
+        self.vbox.addWidget(self.title, alignment=Qt.AlignLeft)
 
-        self.bar = Bar(parent=self, percent=round(self.percent, 1))
-        self.bar.setSizePolicy(QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding))
-
-        self.metre = QLabel(self)
-        self.metre.setAlignment(Qt.AlignLeft)
-        self.metre.setStyleSheet(white_title_label_stylesheet)
-
-        self.arret = QLabel(self)
-        self.arret.setAlignment(Qt.AlignLeft)
-        self.arret.setStyleSheet(white_title_label_stylesheet)
-
-        self.vbox.addWidget(self.title)
+        self.bar.setFixedHeight(self.HEIGHT_BAR)
         self.vbox.addWidget(self.bar)
-        self.vbox.addWidget(self.metre)
-        self.vbox.addWidget(self.arret)
+
+        self.metre.setStyleSheet(white_title_label_stylesheet)
+        self.vbox.addWidget(self.metre, alignment=Qt.AlignLeft)
+
+        self.arret.setStyleSheet(white_title_label_stylesheet)
+        self.vbox.addWidget(self.arret, alignment=Qt.AlignLeft)
 
         self.setLayout(self.vbox)
-        self.update_widgets()
 
     def on_settings_changed(self, prev_live, prev_day_ago, prev_zoom):
         self.day_ago = settings_store.day_ago
@@ -66,7 +67,7 @@ class StatBar(MondonWidget):
     def update_widgets(self):
         self.get_stat()
         self.metre.setText("{metre}m".format(metre=self.affiche_entier(round(self.metre_value))))
-        self.arret.setText("{time} d'arrêt machine".format(time = self.time_at_0_str))
+        self.arret.setText("{time} d'arrêt machine".format(time=self.time_at_0_str))
         self.bar.get_percent(self.percent)
         self.update()
 

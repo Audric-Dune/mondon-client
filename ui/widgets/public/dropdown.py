@@ -38,7 +38,7 @@ class Dropdown(QWidget):
         img = QIcon("assets/images/arrow_down_vert_fonce.png")
         self.bt_arrow_dropdown.setIcon(img)
         self.popup = DropdownPopup()
-        self.popup.hide()
+        # self.popup.hide()
         self.popup.POPUP_HIDE.connect(self.display_popup)
         self.popup.ITEM_CLICKED.connect(self.update_value_selected)
         self.init_widget()

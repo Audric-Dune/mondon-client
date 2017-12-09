@@ -43,17 +43,17 @@ class Bar(MondonWidget):
             else:
                 color = color_vert
             draw_rectangle(p, 0, 0, self.percent*scale, self.height()/2, color)
-            draw_rectangle(p, 82.12 * scale, 0, 2, self.height(), color_bleu)
-            width = 220
-            draw_text(p,
-                      x=82.12*scale-width-5,
-                      y=self.height()/2,
-                      width=width,
-                      height=self.height()/2,
-                      color=color_bleu,
-                      align="D",
-                      font_size=10,
-                      text="Max sans réglage de prod 82%")
+        draw_rectangle(p, 82.12 * scale, 0, 2, self.height(), color_bleu)
+        width = 220
+        draw_text(p,
+                  x=82.12*scale-width-5,
+                  y=self.height()/2,
+                  width=width,
+                  height=self.height()/2,
+                  color=color_bleu,
+                  align="D",
+                  font_size=10,
+                  text="Max sans réglage de prod 82%")
         width = 150
         margin_text = 5
         if self.percent > 22:
