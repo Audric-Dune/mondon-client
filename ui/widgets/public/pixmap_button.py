@@ -1,7 +1,7 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtCore import Qt, QEvent
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QPushButton, QLabel, QVBoxLayout
 
@@ -14,7 +14,6 @@ class PixmapButton(QPushButton):
         self.vbox = QVBoxLayout()
         self.setContentsMargins()
         self._init_widget()
-        self.setMouseTracking(True)
         self.img = None
         self.hover_img = None
 

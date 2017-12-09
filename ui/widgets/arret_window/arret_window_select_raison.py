@@ -3,8 +3,8 @@
 
 from PyQt5.Qt import Qt
 from PyQt5.QtCore import QSize, pyqtSignal
-from PyQt5.QtGui import QPainter, QIcon
-from PyQt5.QtWidgets import QPushButton, QLabel, QHBoxLayout, QVBoxLayout, QLineEdit
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QLabel, QHBoxLayout, QVBoxLayout, QLineEdit
 
 from constants.colors import color_bleu_gris
 from constants.param import LIST_CHOIX_RAISON_PREVU, LIST_CHOIX_RAISON_IMPREVU, LIST_CHOIX_ENTRETIEN
@@ -13,7 +13,6 @@ from constants.stylesheets import \
     check_box_on_stylesheet, \
     white_title_label_stylesheet, \
     line_edit_stylesheet
-from ui.utils.drawing import draw_rectangle
 from ui.widgets.public.dropdown import Dropdown
 from ui.widgets.public.mondon_widget import MondonWidget
 from ui.widgets.public.pixmap_button import PixmapButton
@@ -32,6 +31,7 @@ class ArretWindowSelectRaison(MondonWidget):
     """
     def __init__(self, arret, parent=None):
         super(ArretWindowSelectRaison, self).__init__(parent=parent)
+        self.set_background_color(color_bleu_gris)
         arret.ARRET_RAISON_CHANGED_SIGNAL.connect(self.update_widget)
         self.arret = arret
         self.list_choix = self.selection_list_choose()
@@ -292,19 +292,3 @@ class ArretWindowSelectRaison(MondonWidget):
         else:
             self.validation_condition = False
             self.VALIDATION_CONDITION_SIGNAL.emit(False)
-
-    def draw_fond(self, p):
-        """
-        Dessine un rectangle de la taille du bloc
-        :param p: parametre de dessin
-        """
-        draw_rectangle(p, 0, 0, self.width(), self.height(), color_bleu_gris)
-
-    def paintEvent(self, event):
-        p = QPainter()
-        p.begin(self)
-        self.draw(p)
-        p.end()
-
-    def draw(self, p):
-        self.draw_fond(p)

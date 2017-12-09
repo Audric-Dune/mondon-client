@@ -1,7 +1,6 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtGui import QPainter
 from PyQt5.Qt import Qt
 from PyQt5.QtWidgets import QLabel, QHBoxLayout, QVBoxLayout
 from PyQt5.QtCore import QSize, QMargins, pyqtSignal
@@ -14,7 +13,6 @@ from constants.stylesheets import \
     button_gray_cross_stylesheet,\
     button_red_cross_stylesheet,\
     button_blue_cross_stylesheet
-from ui.utils.drawing import draw_rectangle
 from ui.utils.layout import clear_layout
 from ui.widgets.public.pixmap_button import PixmapButton
 from ui.widgets.public.mondon_widget import MondonWidget
@@ -34,6 +32,7 @@ class ArretWindowListRaison(MondonWidget):
     """
     def __init__(self, arret, parent=None):
         super(ArretWindowListRaison, self).__init__(parent=parent)
+        self.set_background_color(color_bleu_gris)
         self.arret = arret
         self.list_layout_raison = {}
         # _____INITIALISATION WIDGET_____
@@ -152,19 +151,3 @@ class ArretWindowListRaison(MondonWidget):
         # Réinitialise la liste des layout raison
         self.update_widget()
         self.DELETE_RAISON_SIGNAL.emit()
-
-    def draw_fond(self, p):
-        """
-        Dessine un rectangle de la taille du bloc
-        :param p: parametre de dessin
-        """
-        draw_rectangle(p, 0, 0, self.width(), self.height(), color_bleu_gris)
-
-    def paintEvent(self, event):
-        p = QPainter()
-        p.begin(self)
-        self.draw(p)
-        p.end()
-
-    def draw(self, p):
-        self.draw_fond(p)

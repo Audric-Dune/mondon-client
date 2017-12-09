@@ -14,6 +14,7 @@ class MondonWidget(QWidget):
     def __init__(self, parent):
         super(QWidget, self).__init__(parent=parent)
         self.background_color = None
+        self.padding = 0
         data_store_manager.DATA_CHANGED_SIGNAL.connect(self._handle_data_changed)
         settings_store.SETTINGS_CHANGED_SIGNAL.connect(self._handle_settings_changed)
 
@@ -25,6 +26,9 @@ class MondonWidget(QWidget):
 
     def set_background_color(self, color):
         self.background_color = color
+
+    def set_padding(self, padding):
+        self.padding = padding
 
     def _handle_data_changed(self):
         try:
@@ -44,7 +48,12 @@ class MondonWidget(QWidget):
         :param p: parametre de dessin
         """
         if self.background_color:
-            draw_rectangle(p, 0, 0, self.width(), self.height(), self.background_color)
+            draw_rectangle(p,
+                           0 + self.padding,
+                           0 + self.padding,
+                           self.width() - self.padding * 2,
+                           self.height() - self.padding * 2,
+                           self.background_color)
         pass
 
     def paintEvent(self, event):
