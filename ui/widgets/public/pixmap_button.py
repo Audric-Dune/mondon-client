@@ -27,8 +27,12 @@ class PixmapButton(QPushButton):
         self.content.setPixmap(pixmap)
         self.content.setScaledContents(True)
 
+    def removeImage(self):
+        self.img = None
+        pixmap = QPixmap(self.img)
+        self.content.setPixmap(pixmap)
+
     def addImage(self, img):
-        self.img = img
         self._set_image(img)
 
     def setContentsMargins(self, margin=5):

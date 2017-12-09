@@ -34,7 +34,7 @@ class ArretWindowSelectRaison(MondonWidget):
         self.set_background_color(color_bleu_gris)
         arret.ARRET_RAISON_CHANGED_SIGNAL.connect(self.update_widget)
         self.arret = arret
-        self.list_choix = self.selection_list_choose()
+        self.list_choix = self.select_choice_list()
         self.items = []
         self.buttons = []
         self.validation_condition = False
@@ -43,7 +43,7 @@ class ArretWindowSelectRaison(MondonWidget):
         self.vbox = QVBoxLayout()
         self.init_widget()
 
-    def selection_list_choose(self):
+    def select_choice_list(self):
         if self.arret.type_cache == 'Prévu':
             return LIST_CHOIX_RAISON_PREVU
         elif self.arret.type_cache == 'Imprévu':
@@ -120,7 +120,7 @@ class ArretWindowSelectRaison(MondonWidget):
         # On met le style check box sur off
         button.setStyleSheet(check_box_off_stylesheet)
         # On remove l'icon au cas ou
-        button.setIcon(QIcon())
+        button.removeImage()
         # Si l'item est un label on le passe en blanc
         if format == "label":
             object.setStyleSheet(white_title_label_stylesheet)
