@@ -1,9 +1,11 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from PyQt5.Qt import Qt
 from PyQt5.QtWidgets import QVBoxLayout, QLabel
 
 from constants.stylesheets import white_22_label_stylesheet
+from constants.colors import color_bleu_gris
 from stores.data_store_manager import data_store_manager
 from ui.widgets.public.mondon_widget import MondonWidget
 
@@ -13,6 +15,7 @@ class LiveSpeed(MondonWidget):
 
     def __init__(self, parent=None):
         super(LiveSpeed, self).__init__(parent=parent)
+        self.set_background_color(color_bleu_gris)
         self.last_speed = 0
         self.update()
         self.speed_label = QLabel("0 m/min")
@@ -20,9 +23,10 @@ class LiveSpeed(MondonWidget):
 
     def init_widget(self):
         vbox = QVBoxLayout()
+        vbox.setContentsMargins(5, 0, 5, 0)
         self.speed_label.setStyleSheet(white_22_label_stylesheet)
         self.speed_label.setFixedHeight(self.HEIGHT)
-        vbox.addWidget(self.speed_label)
+        vbox.addWidget(self.speed_label, alignment=Qt.AlignVCenter)
         self.setLayout(vbox)
 
     def update_widget(self):

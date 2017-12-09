@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5.QtGui import QPainter
-from PyQt5.QtCore import QSize
+from PyQt5.QtCore import QSize, QMargins
 from PyQt5.QtWidgets import QMainWindow, QHBoxLayout, QWidget
 
 from constants.stylesheets import button_stylesheet
@@ -15,6 +15,7 @@ from ui.widgets.chart.live_speed import LiveSpeed
 
 class TrackerWindow(QMainWindow):
     BT_SIZE = QSize(30, 30)
+    MARGIN = QMargins(5, 5, 5, 5)
     PADDING = 10
 
     def __init__(self, on_close):
@@ -26,10 +27,9 @@ class TrackerWindow(QMainWindow):
 
     def init_widget(self):
         central_widget = QWidget(self)
-        central_widget.setContentsMargins(5, 0, 15, 0)
+        central_widget.setContentsMargins(self.MARGIN)
 
         hbox = QHBoxLayout()
-        hbox.setContentsMargins(5, 5, 5, 5)
         hbox.addWidget(self.live_speed)
         self.bt_retour.setFixedSize(self.BT_SIZE)
         self.bt_retour.setStyleSheet(button_stylesheet)
