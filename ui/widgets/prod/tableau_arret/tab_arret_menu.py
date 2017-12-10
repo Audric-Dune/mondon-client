@@ -6,8 +6,8 @@ from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel
 
 from constants.stylesheets import white_title_label_stylesheet
 from stores.settings_store import settings_store
+from ui.widgets.prod.tableau_arret.tab_arret import TabArret
 from ui.widgets.public.mondon_widget import MondonWidget
-from ui.widgets.tableau_arret.tab_arret import TabArret
 
 
 class TabArretMenu(MondonWidget):

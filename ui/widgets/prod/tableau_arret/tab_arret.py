@@ -14,14 +14,14 @@ from constants.param import \
 from constants.stylesheets import scroll_bar_stylesheet
 from stores.data_store_manager import data_store_manager
 from stores.settings_store import settings_store
+from ui.utils.layout import clear_layout
 from ui.utils.timestamp import (
     timestamp_at_day_ago,
     timestamp_at_time,
     timestamp_to_day
 )
-from ui.utils.layout import clear_layout
+from ui.widgets.prod.tableau_arret.line_arret import LineArret
 from ui.widgets.public.mondon_widget import MondonWidget
-from ui.widgets.tableau_arret.line_arret import LineArret
 
 
 class TabArret(MondonWidget):

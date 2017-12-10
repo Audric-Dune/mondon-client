@@ -44,7 +44,7 @@ gray_title_label_stylesheet = create_qlabel_stylesheet(color=color_noir, backgro
 white_20_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, font_size="20px")
 disable_16_label_stylesheet = create_qlabel_stylesheet(color=color_gris_moyen, font_size="16px")
 white_16_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, font_size="16px")
-black_16_label_stylesheet = create_qlabel_stylesheet(color=color_noir, font_size="16px")
+black_12_label_stylesheet = create_qlabel_stylesheet(color=color_noir, font_size="8px")
 white_24_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, font_size="24px")
 
 # ____________BUTTON STYLESHEET____________

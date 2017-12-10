@@ -9,7 +9,7 @@ from constants.stylesheets import button_stylesheet, white_22_label_stylesheet
 from stores.settings_store import settings_store
 from ui.application import app
 from ui.utils.timestamp import timestamp_at_day_ago, timestamp_to_date
-from ui.widgets.chart.live_speed import LiveSpeed
+from ui.widgets.prod.chart.live_speed import LiveSpeed
 from ui.widgets.public.mondon_widget import MondonWidget
 from ui.widgets.public.pixmap_button import PixmapButton
 

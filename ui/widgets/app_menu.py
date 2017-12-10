@@ -1,7 +1,7 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtCore import pyqtSignal, QSize
+from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import QHBoxLayout, QPushButton
 from constants.colors import color_bleu_gris
 from constants.stylesheets import button_menu_stylesheet, button_menu_stylesheet_unselected
@@ -31,8 +31,8 @@ class AppMenu(MondonWidget):
         self.hbox.addWidget(bt_acceuil)
 
         bt_stat = QPushButton("Statistique")
-        self.list_bt["stat"] = bt_stat
-        bt_stat.clicked.connect(lambda: self.on_click("stat"))
+        self.list_bt["chart_stat"] = bt_stat
+        bt_stat.clicked.connect(lambda: self.on_click("chart_stat"))
         self.hbox.addWidget(bt_stat)
 
         self.hbox.addStretch(1)

@@ -16,8 +16,9 @@ from ui.utils.timestamp import (
     timestamp_now,
     timestamp_to_day,
 )
+from ui.utils.data import affiche_entier
+from ui.widgets.prod.chart_stat.bar import Bar
 from ui.widgets.public.mondon_widget import MondonWidget
-from ui.widgets.stat.bar import Bar
 
 
 class StatBar(MondonWidget):
@@ -72,7 +73,7 @@ class StatBar(MondonWidget):
 
     def update_widgets(self):
         self.get_stat()
-        self.metre.setText("{metre}m".format(metre=self.affiche_entier(s=str(round(self.metre_value)))))
+        self.metre.setText("{metre}m".format(metre=affiche_entier(s=str(round(self.metre_value)))))
         self.arret.setText("{time} d'arrêt machine".format(time=self.arret_time_str))
         if self.imprevu_arret_time == 0:
             self.arret_imprevu.setStyleSheet(green_title_label_stylesheet)
@@ -81,13 +82,6 @@ class StatBar(MondonWidget):
         self.arret_imprevu.setText("{time} d'arrêt imprévu".format(time=self.arret_imprevu_time_str))
         self.bar.get_percent(self.percent)
         self.update()
-
-    def affiche_entier(self, s, sep=' '):
-        s = str(s)
-        if len(s) <= 3:
-            return s
-        else:
-            return self.affiche_entier(s[:-3]) + sep + s[-3:]
 
     def get_stat(self):
         ts_actuel = timestamp_now()

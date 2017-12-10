@@ -3,21 +3,21 @@
 
 from PyQt5.QtWidgets import QHBoxLayout, QLabel
 
-from constants.colors import color_vert_fonce
-from constants.stylesheets import white_title_label_stylesheet
+from constants.colors import color_bleu
+from constants.stylesheets import white_label_stylesheet
 from ui.widgets.public.mondon_widget import MondonWidget
 
 
-class StatMenu(MondonWidget):
+class DataTab(MondonWidget):
 
     def __init__(self, parent=None):
-        super(StatMenu, self).__init__(parent=parent)
-        self.background_color = color_vert_fonce
+        super(DataTab, self).__init__(parent=parent)
+        self.background_color = color_bleu
         self.hbox = QHBoxLayout(self)
         self.init_widget()
 
     def init_widget(self):
-        label = QLabel("STAT_MENU")
-        label.setStyleSheet(white_title_label_stylesheet)
+        label = QLabel("DATA_TAB")
+        label.setStyleSheet(white_label_stylesheet)
         self.hbox.addWidget(label)
         self.setLayout(self.hbox)

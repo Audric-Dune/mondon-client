@@ -1,16 +1,16 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtGui import QPainter
 from PyQt5.QtCore import QSize, QMargins
+from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import QMainWindow, QHBoxLayout, QWidget
 
-from constants.stylesheets import button_stylesheet
 from constants.colors import color_bleu_gris
+from constants.stylesheets import button_stylesheet
 from ui.application import app
 from ui.utils.drawing import draw_rectangle
+from ui.widgets.prod.chart.live_speed import LiveSpeed
 from ui.widgets.public.pixmap_button import PixmapButton
-from ui.widgets.chart.live_speed import LiveSpeed
 
 
 class TrackerWindow(QMainWindow):
