@@ -110,7 +110,7 @@ class LineArret(QWidget):
         """
         # S'occupe d'ouvrir une window de l'arret si on double click sur lui dans la liste d'arret
         if event.type() == QEvent.MouseButtonDblClick:
-            app.create_arret_window(start_arret=self.arret.start, day_ago=self.day_ago)
-            return True
-
+            if self.arret:
+                app.create_arret_window(start_arret=self.arret.start, day_ago=self.day_ago)
+                return True
         return False

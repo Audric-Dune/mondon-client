@@ -15,12 +15,14 @@ from constants.colors import (
 
 # ____________LABEL STYLESHEET____________
 
+
 def create_qlabel_stylesheet(background_color=None, color=color_blanc, font_size="14px"):
     return """
         QLabel {{
             background-color: {background_color};
             color: {color};
             font-size: {font_size};
+            padding: 0px 5px 0px 5px;
         }}
     """.format(
         background_color=background_color.hex_string if background_color else "transparent",
@@ -59,7 +61,7 @@ button_stylesheet = """
     }}
     QPushButton:pressed {{
         border-style: solid;
-        border-width: 2px;
+        border-width: 1px;
         border-color: {color_rouge}
     }}
     QPushButton:disabled {{
@@ -86,7 +88,7 @@ button_little_stylesheet = """
     }}
     QPushButton:pressed {{
         border-style: solid;
-        border-width: 2px;
+        border-width: 1px;
         border-color: {color_rouge}
     }}
     QPushButton:disabled {{
@@ -113,7 +115,54 @@ button_stylesheet_unselected = """
     }}
     QPushButton:pressed {{
         border-style: solid;
-        border-width: 2px;
+        border-width: 1px;
+        border-color: {color_rouge}
+    }}
+    QPushButton:disabled {{
+        background-color: {color_gris_moyen};
+    }}
+""".format(
+    color_blanc=color_blanc.hex_string,
+    color_vert_fonce=color_vert_fonce.hex_string,
+    color_vert_moyen=color_vert_moyen.hex_string,
+    color_vert=color_vert.hex_string,
+    color_gris_moyen=color_gris_moyen.hex_string,
+    color_gris_fonce=color_gris_fonce.hex_string,
+    color_rouge=color_rouge.hex_string,
+)
+
+button_menu_stylesheet = """
+    QPushButton {{
+        padding: 0px 10px 0px 10px;
+        background-color: {color_vert_fonce};
+        border: none;
+        color: {color_blanc};
+        font-size: 16px;
+    }}
+""".format(
+    color_blanc=color_blanc.hex_string,
+    color_vert_fonce=color_vert_fonce.hex_string,
+    color_vert_moyen=color_vert_moyen.hex_string,
+    color_vert=color_vert.hex_string,
+    color_gris_moyen=color_gris_moyen.hex_string,
+    color_gris_fonce=color_gris_fonce.hex_string,
+    color_rouge=color_rouge.hex_string,
+)
+
+button_menu_stylesheet_unselected = """
+    QPushButton {{
+        padding: 0px 10px 0px 10px;
+        background-color: {color_gris_moyen};
+        border: none;
+        color: {color_blanc};
+        font-size: 16px;
+    }}
+    QPushButton:hover {{
+        background-color: {color_vert_moyen};
+    }}
+    QPushButton:pressed {{
+        border-style: solid;
+        border-width: 1px;
         border-color: {color_rouge}
     }}
     QPushButton:disabled {{
@@ -136,7 +185,7 @@ button_arrow_stylesheet = """
     }}
     QPushButton:pressed {{
         border-style: solid;
-        border-width: 2px;
+        border-width: 1px;
         border-color: {color_rouge};
     }}
     QPushButton:disabled {{
@@ -239,7 +288,7 @@ check_box_off_stylesheet = """
     }}
     QPushButton:pressed {{
         border-style: solid;
-        border-width: 2px;
+        border-width: 1px;
         border-color: {color_rouge}
     }}
 """.format(
@@ -262,7 +311,7 @@ check_box_on_stylesheet = """
     }}
     QPushButton:pressed {{
         border-style: solid;
-        border-width: 2px;
+        border-width: 1px;
         border-color: {color_rouge}
     }}
 """.format(
@@ -285,7 +334,7 @@ check_box_unselected_stylesheet = """
     }}
     QPushButton:pressed {{
         border-style: solid;
-        border-width: 2px;
+        border-width: 1px;
         border-color: {color_rouge}
     }}
 """.format(

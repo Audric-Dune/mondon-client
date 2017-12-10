@@ -7,7 +7,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QLabel, QVBoxLayout
 
 from constants.colors import color_bleu_gris
-from constants.stylesheets import white_title_label_stylesheet, red_title_label_stylesheet
+from constants.stylesheets import white_title_label_stylesheet, red_title_label_stylesheet, green_title_label_stylesheet
 from stores.data_store_manager import data_store_manager
 from stores.settings_store import settings_store
 from ui.utils.timestamp import (
@@ -27,6 +27,7 @@ class StatBar(MondonWidget):
         super(StatBar, self).__init__(parent=parent)
         self.set_background_color(color_bleu_gris)
         self.moment = moment
+        self.imprevu_arret_time = 0
         self.metre_value = 0
         self.percent = 0
         self.arret_time_str = ""
@@ -73,6 +74,10 @@ class StatBar(MondonWidget):
         self.get_stat()
         self.metre.setText("{metre}m".format(metre=self.affiche_entier(s=str(round(self.metre_value)))))
         self.arret.setText("{time} d'arrêt machine".format(time=self.arret_time_str))
+        if self.imprevu_arret_time == 0:
+            self.arret_imprevu.setStyleSheet(green_title_label_stylesheet)
+        else:
+            self.arret_imprevu.setStyleSheet(red_title_label_stylesheet)
         self.arret_imprevu.setText("{time} d'arrêt imprévu".format(time=self.arret_imprevu_time_str))
         self.bar.get_percent(self.percent)
         self.update()
@@ -90,7 +95,7 @@ class StatBar(MondonWidget):
         arrets = data_store_manager.get_current_store().arrets
         ts = timestamp_at_day_ago(self.day_ago)
         arret_time = 0
-        imprevu_arret_time = 0
+        self.imprevu_arret_time = 0
 
         vendredi = timestamp_to_day(ts) == "vendredi"
         start = 6
@@ -113,9 +118,9 @@ class StatBar(MondonWidget):
                 arret_time = arret_time + arret_delay
                 first_raison = arret[2][0]
                 if first_raison.type == "Imprévu":
-                    imprevu_arret_time = imprevu_arret_time + arret_delay
+                    self.imprevu_arret_time = self.imprevu_arret_time + arret_delay
         self.arret_time_str = str(timedelta(seconds=round(arret_time)))
-        self.arret_imprevu_time_str = str(timedelta(seconds=round(imprevu_arret_time)))
+        self.arret_imprevu_time_str = str(timedelta(seconds=round(self.imprevu_arret_time)))
 
         def value_is_in_period(value):
             return start_ts <= value[0] <= end_ts
