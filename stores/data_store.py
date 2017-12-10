@@ -1,11 +1,11 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from itertools import groupby
 from time import time
 from constants.param import DEBUT_PROD_MATIN, FIN_PROD_SOIR, FIN_PROD_SOIR_VENDREDI, VITESSE_LIMITE_ASSIMILATION_ARRET
 
 from lib.base_de_donnee import Database
+from ui.utils.data import clean_data_per_second
 from ui.utils.timestamp import (
     timestamp_at_day_ago,
     timestamp_at_time,
@@ -29,8 +29,7 @@ class DataStore:
             new_data = Database.get_speeds(self.start * 1000, self.end * 1000)
             if not new_data:
                 return False, []
-            self.data = self.clean_data_per_second(new_data)
-            self.data = self.clean_data(self.data)
+            self.data = clean_data_per_second(data=new_data, start=self.start, end=self.end)
             list_arrets_database = Database.get_arret(self.start, self.end)
             self.dic_arret_from_database(list_arrets_database)
             list_arrets_data = self.list_new_arret_data()
@@ -210,53 +209,6 @@ class DataStore:
         if speed_is_0:
             arrets.append((start, end))
         return arrets
-
-    def clean_data_per_second(self, new_data):
-        clean_data = []  # Stock les valeurs nettoyées
-
-        # Groupe les valeurs par secondes entières
-        grouped = groupby(new_data, lambda v: int(v[0] / 1000))
-
-        # Génère un dictionnaire avec pour clé la seconde et pour valeur la liste des vitesses
-        # pour cette seconde
-        values_per_second = {}
-        for second, data_for_second in grouped:
-            values_per_second[second] = [value[1] for value in data_for_second]
-
-        # On boucle sur chaque seconde entre `start` et `end` (inclus) et calcule une vitesse pour
-        # ces secondes.
-        for i in range(int(self.start), int(self.end) + 1):  # On inclus `end`
-            # Récupère les vitesses pour la seconde `i`.
-            # Retourne un tableau vide si il n'y a pas de vitesses associées avec cette seconde
-            ts = i
-            values = values_per_second.get(ts, [])
-            # Si on a trouvé des vitesses pour cette seconde, on prend la moyenne, sinon -0.001
-            speed = sum(values) / len(values) if values else -0.001
-            # Stocke dans clean_data
-            clean_data.append((ts, speed))
-
-        return clean_data
-
-    @staticmethod
-    def clean_data(data_per_second):
-        clean_data = []  # Stock les valeurs nettoyées
-
-        # Groupe les valeurs par vitesse consécutive
-        grouped = groupby(data_per_second, lambda v: v[1])
-
-        previous_speed = -0.001
-        for speed, data_for_speed in grouped:
-            # Convertit l'itérateur en liste
-            data_for_speed = list(data_for_speed)
-            # Si la vitesse est une "abscence de vitesse" et si il y en a moins de 5 consécutive,
-            # On remplace la vitesse par la vitesse précédente
-            if speed == -0.001 and len(data_for_speed) < 10:
-                data_for_speed = [(data[0], previous_speed) for data in data_for_speed]
-            # Ajoute les valeurs au tableau de données clean
-            clean_data += data_for_speed
-            previous_speed = speed
-
-        return clean_data
 
     def bisect(self, start_ts):
         size = len(self.data)

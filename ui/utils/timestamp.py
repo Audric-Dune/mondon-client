@@ -52,6 +52,30 @@ def timestamp_at_day_ago(day_ago=0):
                     microsecond=0).timestamp()
 
 
+def timestamp_after_day_ago(day_ago=0, hour=0):
+    now = datetime.now() + timedelta(days=day_ago)
+    return datetime(year=now.year,
+                    month=now.month,
+                    day=now.day,
+                    hour=hour,
+                    minute=0,
+                    second=0,
+                    microsecond=0).timestamp()
+
+
+def timestamp_at_week_ago(week_ago=0):
+    day_ago_current_week = datetime.now().weekday()
+    day_ago = day_ago_current_week + 7 * week_ago
+    now = datetime.now() - timedelta(days=day_ago)
+    return datetime(year=now.year,
+                    month=now.month,
+                    day=now.day,
+                    hour=0,
+                    minute=0,
+                    second=0,
+                    microsecond=0).timestamp()
+
+
 def timestamp_at_time(ts, hours=0, min=0, sec=0, microsecond=0):
     d = datetime.fromtimestamp(ts)
     return datetime(year=d.year,

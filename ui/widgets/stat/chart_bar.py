@@ -4,7 +4,8 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel
 
-from constants.colors import color_blanc, color_orange, color_bleu_gris, color_bleu, color_vert
+from stores.stat_store import stat_store
+from constants import colors
 from constants.stylesheets import black_12_label_stylesheet, white_label_stylesheet
 from ui.widgets.public.mondon_widget import MondonWidget
 from ui.utils.data import affiche_entier
@@ -13,7 +14,7 @@ from ui.utils.data import affiche_entier
 class ChartBar(MondonWidget):
     def __init__(self, parent=None):
         super(ChartBar, self).__init__(parent=parent)
-        self.set_background_color(color_bleu_gris)
+        self.set_background_color(colors.color_bleu_gris)
         self.vbox = QVBoxLayout()
         self.content_chart = ContentChart(parent=self)
         self.chart_legend = ChartLegend(parent=self)
@@ -36,13 +37,13 @@ class ContentChart(MondonWidget):
 
     def __init__(self, parent=None):
         super(ContentChart, self).__init__(parent=parent)
-        self.background_color = color_blanc
+        self.background_color = colors.color_blanc
         self.data_1 = [67040, 110000, 98020, 78240, 12456]
-        self.color_data_1 = color_orange
+        self.color_data_1 = colors.color_vert_fonce
         self.data_2 = [30000, 55607, 45000, 35000, 7097]
-        self.color_data_2 = color_bleu
+        self.color_data_2 = colors.color_gris_moyen
         self.data_3 = [37040, 45000, 3200, 50000, 5000]
-        self.color_data_3 = color_vert
+        self.color_data_3 = colors.color_gris_fonce
         self.format = "semaine"
         self.bars = []
         self.hbox = QHBoxLayout(self)
@@ -60,10 +61,10 @@ class ContentChart(MondonWidget):
             hbox_multi_bar.setContentsMargins(0, 0, 0, 0)
             hbox_multi_bar.setSpacing(0)
             if self.data_2:
-                hbox_multi_bar.addLayout(self.create_bar(value=self.data_2[index], index=index, color=self.color_data_2))
+                hbox_multi_bar.addLayout(self.create_bar(value=self.data_2[index], color=self.color_data_2))
             if self.data_3:
-                hbox_multi_bar.addLayout(self.create_bar(value=self.data_3[index], index=index, color=self.color_data_3))
-            hbox_multi_bar.addLayout(self.create_bar(value=data, index=index, color=self.color_data_1))
+                hbox_multi_bar.addLayout(self.create_bar(value=self.data_3[index], color=self.color_data_3))
+            hbox_multi_bar.addLayout(self.create_bar(value=data, color=self.color_data_1))
             self.hbox.addLayout(hbox_multi_bar)
             index += 1
         self.setLayout(self.hbox)
@@ -74,7 +75,7 @@ class ContentChart(MondonWidget):
             height = (bar[1]*max_size)/max(self.data_1)
             bar[0].setFixedHeight(height)
 
-    def create_bar(self, value, index, color):
+    def create_bar(self, value, color):
         vbox = QVBoxLayout()
         vbox.setSpacing(self.BAR_CONTENT_SPACING)
         vbox.addStretch(1)
@@ -99,7 +100,7 @@ class ChartLegend(MondonWidget):
 
     def __init__(self, parent=None):
         super(ChartLegend, self).__init__(parent=parent)
-        self.background_color = color_bleu_gris
+        self.background_color = colors.color_bleu_gris
         self.format = "semaine"
         self.hbox = QHBoxLayout(self)
         self.init_widget()
