@@ -6,7 +6,11 @@ from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel
 
 from stores.stat_store import stat_store
 from constants import colors
-from constants.stylesheets import black_12_label_stylesheet, white_label_stylesheet
+from constants.stylesheets import black_12_label_stylesheet,\
+    white_label_stylesheet,\
+    gris_fonce_label_stylesheet,\
+    gris_moyen_label_stylesheet,\
+    vert_fonce_label_stylesheet
 from ui.widgets.public.mondon_widget import MondonWidget
 from ui.utils.data import affiche_entier
 from ui.widgets.public.checkbox_button import CheckboxButton
@@ -25,7 +29,7 @@ class ChartBar(MondonWidget):
         self.init_widget()
 
     def init_widget(self):
-        self.vbox.setContentsMargins(10, 10, 10, 0)
+        self.vbox.setContentsMargins(10, 0, 10, 0)
         self.vbox.setSpacing(0)
         self.vbox.addWidget(self.chart_settings)
         self.vbox.addWidget(self.content_chart)
@@ -122,6 +126,7 @@ class ChartLegend(MondonWidget):
 
     def __init__(self, parent=None):
         super(ChartLegend, self).__init__(parent=parent)
+        self.setFixedHeight(40)
         self.background_color = colors.color_bleu_gris
         self.format = "semaine"
         self.hbox = QHBoxLayout(self)
@@ -146,7 +151,8 @@ class ChartSettings(MondonWidget):
 
     def __init__(self, parent=None):
         super(ChartSettings, self).__init__(parent=parent)
-        self.background_color = colors.color_vert
+        self.setFixedHeight(40)
+        self.background_color = colors.color_bleu_gris
         self.format = "semaine"
         self.hbox = QHBoxLayout(self)
         self.init_widget()
@@ -155,24 +161,27 @@ class ChartSettings(MondonWidget):
         self.CHECKBOX_SELECTED_SIGNAL.emit(index)
 
     def init_widget(self):
+        self.hbox.setSpacing(30)
         self.hbox.addStretch(1)
-        check_box = CheckboxButton(parent=self)
-        check_box.setFixedSize(self.CHART_SETTINGS_SIZE)
-        check_box.ON_CLICK_SIGNAL.connect(lambda: self.on_select_checkbox(2))
-        self.hbox.addWidget(check_box)
-        label_matin = QLabel("Equipe matin")
-        self.hbox.addWidget(label_matin)
-        check_box = CheckboxButton(parent=self)
-        check_box.setFixedSize(self.CHART_SETTINGS_SIZE)
-        check_box.ON_CLICK_SIGNAL.connect(lambda: self.on_select_checkbox(3))
-        self.hbox.addWidget(check_box)
-        label_soir = QLabel("Equipe soir")
-        self.hbox.addWidget(label_soir)
-        check_box = CheckboxButton(parent=self, is_check=False)
-        check_box.setFixedSize(self.CHART_SETTINGS_SIZE)
-        check_box.ON_CLICK_SIGNAL.connect(lambda: self.on_select_checkbox(1))
-        self.hbox.addWidget(check_box)
-        label_total = QLabel("Total")
-        self.hbox.addWidget(label_total)
+
+        self.add_check_box_layout(index_data=2, stylecheet_label=gris_moyen_label_stylesheet, text_label="Equipe matin")
+        self.add_check_box_layout(index_data=3, stylecheet_label=gris_fonce_label_stylesheet, text_label="Equipe soir")
+        self.add_check_box_layout(index_data=1, stylecheet_label=vert_fonce_label_stylesheet, text_label="Equipe matin", preset=True)
+
         self.hbox.addStretch(1)
         self.setLayout(self.hbox)
+
+    def add_check_box_layout(self, index_data, stylecheet_label, text_label, preset=False):
+        check_box_hbox = QHBoxLayout()
+        check_box_hbox.setSpacing(5)
+        if preset:
+            check_box = CheckboxButton(parent=self, is_check=False)
+        else:
+            check_box = CheckboxButton(parent=self)
+        check_box.setFixedSize(self.CHART_SETTINGS_SIZE)
+        check_box.ON_CLICK_SIGNAL.connect(lambda: self.on_select_checkbox(index_data))
+        check_box_hbox.addWidget(check_box)
+        label = QLabel(text_label)
+        label.setStyleSheet(stylecheet_label)
+        check_box_hbox.addWidget(label)
+        self.hbox.addLayout(check_box_hbox)
