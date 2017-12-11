@@ -9,11 +9,11 @@ from constants.stylesheets import check_box_off_stylesheet, check_box_on_stylesh
 class CheckboxButton(PixmapButton):
     ON_CLICK_SIGNAL = pyqtSignal()
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, is_check=True):
         super(CheckboxButton, self).__init__(parent=parent)
         self.installEventFilter(self)
-        self.is_check = False
-        self.setStyleSheet(check_box_off_stylesheet)
+        self.is_check = is_check
+        self.update_widget()
 
     def update_widget(self):
         if self.is_check:

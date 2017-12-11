@@ -1,7 +1,7 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtCore import Qt, QSize, pyqtSignal
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel
 
 from stores.stat_store import stat_store
@@ -10,6 +10,7 @@ from constants.stylesheets import black_12_label_stylesheet, white_label_stylesh
 from ui.widgets.public.mondon_widget import MondonWidget
 from ui.utils.data import affiche_entier
 from ui.widgets.public.checkbox_button import CheckboxButton
+from ui.utils.layout import clear_layout
 
 
 class ChartBar(MondonWidget):
@@ -18,6 +19,7 @@ class ChartBar(MondonWidget):
         self.set_background_color(colors.color_bleu_gris)
         self.vbox = QVBoxLayout()
         self.chart_settings = ChartSettings(parent=self)
+        self.chart_settings.CHECKBOX_SELECTED_SIGNAL.connect(self.on_chart_settings_changed)
         self.content_chart = ContentChart(parent=self)
         self.chart_legend = ChartLegend(parent=self)
         self.init_widget()
@@ -33,6 +35,15 @@ class ChartBar(MondonWidget):
     def update_widget(self):
         self.content_chart.update_widget()
 
+    def on_chart_settings_changed(self, index):
+        if index == 1:
+            self.content_chart.display_data_1 = False if self.content_chart.display_data_1 else True
+        if index == 2:
+            self.content_chart.display_data_2 = False if self.content_chart.display_data_2 else True
+        if index == 3:
+            self.content_chart.display_data_3 = False if self.content_chart.display_data_3 else True
+        self.content_chart.init_widget()
+
 
 class ContentChart(MondonWidget):
     BAR_CONTENT_SPACING = 0
@@ -41,42 +52,50 @@ class ContentChart(MondonWidget):
     def __init__(self, parent=None):
         super(ContentChart, self).__init__(parent=parent)
         self.background_color = colors.color_blanc
+        self.display_data_1 = True
         self.data_1 = stat_store.data_1
         self.color_data_1 = colors.color_vert_fonce
+        self.display_data_2 = False
         self.data_2 = stat_store.data_2
         self.color_data_2 = colors.color_gris_moyen
+        self.display_data_3 = False
         self.data_3 = stat_store.data_3
         self.color_data_3 = colors.color_gris_fonce
         self.format = "semaine"
         self.bars = []
-        self.hbox = QHBoxLayout(self)
+        self.hbox = QHBoxLayout()
         self.init_widget()
 
     def on_data_changed(self):
         self.update_widget()
 
     def init_widget(self):
+        self.hbox = clear_layout(self.hbox)
+        self.bars = []
         self.hbox.setContentsMargins(20, 0, 20, 0)
         self.hbox.setSpacing(20)
         index = 0
-        for data in self.data_1:
+        while index < len(self.data_1):
             hbox_multi_bar = QHBoxLayout()
             hbox_multi_bar.setContentsMargins(0, 0, 0, 0)
             hbox_multi_bar.setSpacing(0)
-            if self.data_2:
+            if self.display_data_2:
                 hbox_multi_bar.addLayout(self.create_bar(value=self.data_2[index], color=self.color_data_2))
-            if self.data_3:
+            if self.display_data_3:
                 hbox_multi_bar.addLayout(self.create_bar(value=self.data_3[index], color=self.color_data_3))
-            hbox_multi_bar.addLayout(self.create_bar(value=data, color=self.color_data_1))
+            if self.display_data_1:
+                hbox_multi_bar.addLayout(self.create_bar(value=self.data_1[index], color=self.color_data_1))
             self.hbox.addLayout(hbox_multi_bar)
             index += 1
         self.setLayout(self.hbox)
+        self.update_widget()
 
     def update_widget(self):
-        for bar in self.bars:
-            max_size = self.height() - 2 * (self.VALUE_LABEL_HEIGHT + self.BAR_CONTENT_SPACING)
-            height = (bar[1]*max_size)/max(self.data_1)
-            bar[0].setFixedHeight(height)
+        if self.bars:
+            for bar in self.bars:
+                max_size = self.height() - 2 * (self.VALUE_LABEL_HEIGHT + self.BAR_CONTENT_SPACING)
+                height = (bar[1]*max_size)/max(self.data_1)
+                bar[0].setFixedHeight(round(height))
 
     def create_bar(self, value, color):
         vbox = QVBoxLayout()
@@ -123,6 +142,7 @@ class ChartLegend(MondonWidget):
 
 class ChartSettings(MondonWidget):
     CHART_SETTINGS_SIZE = QSize(20, 20)
+    CHECKBOX_SELECTED_SIGNAL = pyqtSignal(int)
 
     def __init__(self, parent=None):
         super(ChartSettings, self).__init__(parent=parent)
@@ -131,8 +151,28 @@ class ChartSettings(MondonWidget):
         self.hbox = QHBoxLayout(self)
         self.init_widget()
 
+    def on_select_checkbox(self, index):
+        self.CHECKBOX_SELECTED_SIGNAL.emit(index)
+
     def init_widget(self):
+        self.hbox.addStretch(1)
         check_box = CheckboxButton(parent=self)
         check_box.setFixedSize(self.CHART_SETTINGS_SIZE)
+        check_box.ON_CLICK_SIGNAL.connect(lambda: self.on_select_checkbox(2))
         self.hbox.addWidget(check_box)
+        label_matin = QLabel("Equipe matin")
+        self.hbox.addWidget(label_matin)
+        check_box = CheckboxButton(parent=self)
+        check_box.setFixedSize(self.CHART_SETTINGS_SIZE)
+        check_box.ON_CLICK_SIGNAL.connect(lambda: self.on_select_checkbox(3))
+        self.hbox.addWidget(check_box)
+        label_soir = QLabel("Equipe soir")
+        self.hbox.addWidget(label_soir)
+        check_box = CheckboxButton(parent=self, is_check=False)
+        check_box.setFixedSize(self.CHART_SETTINGS_SIZE)
+        check_box.ON_CLICK_SIGNAL.connect(lambda: self.on_select_checkbox(1))
+        self.hbox.addWidget(check_box)
+        label_total = QLabel("Total")
+        self.hbox.addWidget(label_total)
+        self.hbox.addStretch(1)
         self.setLayout(self.hbox)
