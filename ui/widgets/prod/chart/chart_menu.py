@@ -26,15 +26,10 @@ class ChartMenu(MondonWidget):
         self.day_ago = 0
         self.zoom = 0
         self.bt_jour_plus = PixmapButton(parent=self)
-        self.bt_jour_plus.setToolTip("Affiche le jour suivant")
         self.bt_jour_moins = PixmapButton(parent=self)
-        self.bt_jour_moins.setToolTip("Affiche le jour précédent")
         self.bt_zoom_plus = PixmapButton(parent=self)
-        self.bt_zoom_plus.setToolTip("Zoom +")
         self.bt_zoom_moins = PixmapButton(parent=self)
-        self.bt_zoom_moins.setToolTip("Zoom -")
         self.bt_live = QPushButton("En direct")
-        self.bt_live.setToolTip("Réinitialise l'affichage du graphique (jour actuel, zoom minimum)")
         self.label_date = QLabel()
         self.live_speed = LiveSpeed(self)
         self.init_widget()

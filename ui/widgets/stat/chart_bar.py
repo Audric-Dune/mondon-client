@@ -70,8 +70,11 @@ class ContentChart(MondonWidget):
         self.hbox = QHBoxLayout()
         self.init_widget()
 
-    def on_data_changed(self):
-        self.update_widget()
+    def on_data_stat_changed(self):
+        self.data_1 = stat_store.data_1
+        self.data_2 = stat_store.data_2
+        self.data_3 = stat_store.data_3
+        self.init_widget()
 
     def init_widget(self):
         self.hbox = clear_layout(self.hbox)
@@ -95,6 +98,7 @@ class ContentChart(MondonWidget):
         self.update_widget()
 
     def update_widget(self):
+        print("update_widget")
         if self.bars:
             for bar in self.bars:
                 max_size = self.height() - 2 * (self.VALUE_LABEL_HEIGHT + self.BAR_CONTENT_SPACING)
@@ -164,9 +168,16 @@ class ChartSettings(MondonWidget):
         self.hbox.setSpacing(30)
         self.hbox.addStretch(1)
 
-        self.add_check_box_layout(index_data=2, stylecheet_label=gris_moyen_label_stylesheet, text_label="Equipe matin")
-        self.add_check_box_layout(index_data=3, stylecheet_label=gris_fonce_label_stylesheet, text_label="Equipe soir")
-        self.add_check_box_layout(index_data=1, stylecheet_label=vert_fonce_label_stylesheet, text_label="Equipe matin", preset=True)
+        self.add_check_box_layout(index_data=2,
+                                  stylecheet_label=gris_moyen_label_stylesheet,
+                                  text_label="Equipe matin")
+        self.add_check_box_layout(index_data=3,
+                                  stylecheet_label=gris_fonce_label_stylesheet,
+                                  text_label="Equipe soir")
+        self.add_check_box_layout(index_data=1,
+                                  stylecheet_label=vert_fonce_label_stylesheet,
+                                  text_label="Equipes cumulees",
+                                  preset=True)
 
         self.hbox.addStretch(1)
         self.setLayout(self.hbox)
