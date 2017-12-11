@@ -4,7 +4,7 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel
 
-# from stores.stat_store import stat_store
+from stores.stat_store import stat_store
 from constants import colors
 from constants.stylesheets import black_12_label_stylesheet, white_label_stylesheet
 from ui.widgets.public.mondon_widget import MondonWidget
@@ -38,11 +38,11 @@ class ContentChart(MondonWidget):
     def __init__(self, parent=None):
         super(ContentChart, self).__init__(parent=parent)
         self.background_color = colors.color_blanc
-        self.data_1 = [67040, 110000, 98020, 78240, 12456]
+        self.data_1 = stat_store.data_1
         self.color_data_1 = colors.color_vert_fonce
-        self.data_2 = [30000, 55607, 45000, 35000, 7097]
+        self.data_2 = stat_store.data_2
         self.color_data_2 = colors.color_gris_moyen
-        self.data_3 = [37040, 45000, 3200, 50000, 5000]
+        self.data_3 = stat_store.data_3
         self.color_data_3 = colors.color_gris_fonce
         self.format = "semaine"
         self.bars = []
