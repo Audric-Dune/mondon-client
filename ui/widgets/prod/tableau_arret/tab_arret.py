@@ -27,7 +27,6 @@ from ui.widgets.public.mondon_widget import MondonWidget
 class TabArret(MondonWidget):
     # _____DEFINITION CONSTANTE CLASS_____
     NO_MARGIN = QMargins(0, 0, 0, 0)
-    PRIMARY_LINE_HEIGHT = 30
     """
     Gère le tableau d'arret, récupère les données en fonction de son paramètre moment (matin ou soir)
     """

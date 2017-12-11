@@ -48,7 +48,8 @@ class DataStoreManager(QObject):
             should_refresh = new_data or should_refresh
             if list_new_arret:
                 for start_arret in list_new_arret:
-                    self.NEW_ARRET_SIGNAL.emit(start_arret, store.day_ago)
+                    if settings_store.day_ago == 0:
+                        self.NEW_ARRET_SIGNAL.emit(start_arret, store.day_ago)
 
         # Envois un signal que les data ont changées si nécessaire
         if should_refresh:

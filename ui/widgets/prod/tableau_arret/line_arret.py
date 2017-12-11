@@ -7,10 +7,10 @@ from PyQt5.Qt import QMargins
 from PyQt5.QtCore import Qt, QEvent
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel, QWidget
 
-from constants.stylesheets import red_title_label_stylesheet,\
-    green_title_label_stylesheet,\
-    gray_title_label_stylesheet,\
-    blue_title_label_stylesheet
+from constants.stylesheets import red_12_label_stylesheet,\
+    green_12_label_stylesheet,\
+    gray_12_label_stylesheet,\
+    blue_12_label_stylesheet
 from ui.utils.timestamp import timestamp_to_hour_little
 from ui.application import app
 
@@ -19,8 +19,8 @@ class LineArret(QWidget):
     # _____DEFINITION CONSTANTE CLASS_____
     PADDING_VBOX = 2
     PADDING_HBOX = 0
-    PRIMARY_LINE_HEIGHT = 30
-    SECONDARY_LINE_HEIGHT = 30
+    PRIMARY_LINE_HEIGHT = 20
+    SECONDARY_LINE_HEIGHT = 20
     WIDTH_LABEL_TYPE = 80
     CONTENT_MARGIN = QMargins(0, 5, 0, 5)
     LABEL_MARGIN = 5
@@ -44,7 +44,7 @@ class LineArret(QWidget):
             vbox.addLayout(secondary_layout)
         else:
             no_arret_label = QLabel('Aucun arrêt enregistré')
-            no_arret_label.setStyleSheet(green_title_label_stylesheet)
+            no_arret_label.setStyleSheet(green_12_label_stylesheet)
             no_arret_label.setAlignment(Qt.AlignCenter)
             no_arret_label.setFixedHeight(self.PRIMARY_LINE_HEIGHT)
             vbox.addWidget(no_arret_label)
@@ -54,12 +54,12 @@ class LineArret(QWidget):
         hbox.setSpacing(self.PADDING_HBOX)
         number_label = QLabel("Arrêt n.{}".format(str(number)))
         number_label.setFixedHeight(self.PRIMARY_LINE_HEIGHT)
-        number_label.setStyleSheet(green_title_label_stylesheet)
+        number_label.setStyleSheet(green_12_label_stylesheet)
         number_label.setMargin(self.LABEL_MARGIN)
         hour_label = QLabel("Début à {}".format(timestamp_to_hour_little(arret.start)))
-        hour_label.setStyleSheet(green_title_label_stylesheet)
+        hour_label.setStyleSheet(green_12_label_stylesheet)
         duration_label = QLabel("Durée : {}".format(str(timedelta(seconds=round(arret.end - arret.start)))))
-        duration_label.setStyleSheet(green_title_label_stylesheet)
+        duration_label.setStyleSheet(green_12_label_stylesheet)
         hbox.addWidget(number_label)
         hbox.addWidget(hour_label)
         hbox.addWidget(duration_label)
@@ -71,7 +71,7 @@ class LineArret(QWidget):
         hbox.setSpacing(self.PADDING_HBOX)
         if not arret.raisons:
             no_raison_label = QLabel("Aucune raison sélectionnée")
-            no_raison_label.setStyleSheet(red_title_label_stylesheet)
+            no_raison_label.setStyleSheet(red_12_label_stylesheet)
             no_raison_label.setAlignment(Qt.AlignCenter)
             no_raison_label.setFixedHeight(self.SECONDARY_LINE_HEIGHT)
             hbox.addWidget(no_raison_label)
@@ -87,14 +87,14 @@ class LineArret(QWidget):
             raison_label = QLabel(raison.raison)
             # On met le label et la croix en couleur en fonction du type
             if raison.type == "Prévu":
-                raison_label.setStyleSheet(blue_title_label_stylesheet)
-                type_label.setStyleSheet(blue_title_label_stylesheet)
+                raison_label.setStyleSheet(blue_12_label_stylesheet)
+                type_label.setStyleSheet(blue_12_label_stylesheet)
             elif raison.type == "Imprévu":
-                raison_label.setStyleSheet(red_title_label_stylesheet)
-                type_label.setStyleSheet(red_title_label_stylesheet)
+                raison_label.setStyleSheet(red_12_label_stylesheet)
+                type_label.setStyleSheet(red_12_label_stylesheet)
             else:
-                raison_label.setStyleSheet(gray_title_label_stylesheet)
-                type_label.setStyleSheet(gray_title_label_stylesheet)
+                raison_label.setStyleSheet(gray_12_label_stylesheet)
+                type_label.setStyleSheet(gray_12_label_stylesheet)
             hbox_temp.addWidget(type_label)
             hbox_temp.addWidget(raison_label)
             vbox.addLayout(hbox_temp)
