@@ -4,7 +4,7 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel
 
-from stores.stat_store import stat_store
+# from stores.stat_store import stat_store
 from constants import colors
 from constants.stylesheets import black_12_label_stylesheet, white_label_stylesheet
 from ui.widgets.public.mondon_widget import MondonWidget

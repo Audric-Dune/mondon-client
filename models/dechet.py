@@ -9,7 +9,7 @@ class Dechet(QObject):
     def __init__(self, dechet_data):
         super(Dechet, self).__init__()
         self.id = dechet_data[0]
-        self.arret_start = dechet_data[1]
+        self.start_arret = dechet_data[1]
         self.type = dechet_data[2]
         self.masse = dechet_data[3]
         self.piste = dechet_data[4]
@@ -19,7 +19,7 @@ class Dechet(QObject):
 
     def save_on_base_de_donnee(self):
         Database.save_dechet(id=self.id,
-                             arret_start=self.arret_start,
+                             arret_start=self.start_arret,
                              type=self.type,
                              masse=self.masse,
                              piste=self.piste,

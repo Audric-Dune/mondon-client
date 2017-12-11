@@ -238,6 +238,6 @@ class DataStore:
         if self.data:
             for data in self.data:
                 if data[1] >= 0:
-                    last_data = data
+                    last_data = data[1]
             return last_data
         return None

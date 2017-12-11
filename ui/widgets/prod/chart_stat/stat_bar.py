@@ -110,9 +110,10 @@ class StatBar(MondonWidget):
             if start_ts <= start_arret <= end_ts:
                 arret_delay = end_arret - start_arret
                 arret_time = arret_time + arret_delay
-                first_raison = arret[2][0]
-                if first_raison.type == "Imprévu":
-                    self.imprevu_arret_time = self.imprevu_arret_time + arret_delay
+                if arret[2]:
+                    first_raison = arret[2][0]
+                    if first_raison.type == "Imprévu":
+                        self.imprevu_arret_time = self.imprevu_arret_time + arret_delay
         self.arret_time_str = str(timedelta(seconds=round(arret_time)))
         self.arret_imprevu_time_str = str(timedelta(seconds=round(self.imprevu_arret_time)))
 

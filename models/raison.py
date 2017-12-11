@@ -12,7 +12,7 @@ class Raison(QObject):
         self.start = raison_data[1]
         self.type = raison_data[2]
         self.raison = raison_data[3]
-        self.duree = raison_data[4] or "NULL"
+        self.primaire = raison_data[4] or "0"
         self.add_raison_on_database()
 
     def add_raison_on_database(self):
@@ -21,7 +21,7 @@ class Raison(QObject):
             start_arret=self.start,
             type_arret=self.type,
             raison_arret=self.raison,
-            duree=self.duree)
+            primaire=self.primaire)
 
     def del_raison_on_database(self):
         Database.delete_raison_arret(self.id)

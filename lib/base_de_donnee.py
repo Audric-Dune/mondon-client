@@ -168,7 +168,7 @@ class Database:
         :param end_time: Timestamp maximum de l'arrêt
         :return: Une liste de raisons d'arret
         """
-        query = "SELECT id, start_arret, type_arret, raison_arret, duree " \
+        query = "SELECT id, start_arret, type_arret, raison_arret, primaire " \
                 "FROM mondon_raison_arret " \
                 "WHERE start_arret > ? AND start_arret <= ?" \
                 "ORDER BY start_arret"\
@@ -177,15 +177,15 @@ class Database:
         return raisons
 
     @classmethod
-    def create_raison_arret(cls, id, start_arret, type_arret, raison_arret, duree=None):
+    def create_raison_arret(cls, id, start_arret, type_arret, raison_arret, primaire=0):
         query = "INSERT INTO mondon_raison_arret VALUES (?, ?, ?, ?, ?)"\
             .format(id=id,
                     start_arret=start_arret,
                     type_arret=type_arret,
                     raison_arret=raison_arret,
-                    duree=duree)
+                    prioritaire=primaire)
         try:
-            cls._run_query(query, (id, start_arret, type_arret, raison_arret, duree))
+            cls._run_query(query, (id, start_arret, type_arret, raison_arret, primaire))
         except sqlite3.IntegrityError as e:
             # IntegrityError veut dire que l'on essaye d'insérer une vitesse avec un timestamp
             # qui existe déjà dans la base de données.
@@ -216,10 +216,10 @@ class Database:
         :param end_time: Timestamp maximum du déhet
         :return: Une liste
         """
-        query = "SELECT id, arret_start, type, masse, piste, couleur, grammage_papier, grammage_polypro " \
+        query = "SELECT id, start_arret, type, masse, piste, couleur, grammage_papier, grammage_polypro " \
                 "FROM mondon_dechet " \
-                "WHERE arret_start > ? AND arret_start <= ?" \
-                "ORDER BY arret_start"\
+                "WHERE start_arret > ? AND arret_start <= ?" \
+                "ORDER BY start_arret"\
             .format(start_time=start_time, end_time=end_time)
         dechets = cls._run_query(query, (start_time, end_time))
         return dechets
