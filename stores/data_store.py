@@ -199,14 +199,15 @@ class DataStore:
                     speed_is_0 = True
                 # Si on vient de sortir d'un arrêt on ajoute l'arrêt à la liste d'arrêts
                 elif speed_is_0:
-                    arrets.append((start, end))
+                    if start != end:
+                        arrets.append((start, end))
                     start = 0
                     end = 0
                     speed_is_0 = False
                 else:
                     continue
         # Si on sort de la boucle avec un arrêt en cours on ajoute le dernier arrêt à la liste d'arrêts
-        if speed_is_0:
+        if speed_is_0 and start != end:
             arrets.append((start, end))
         return arrets
 

@@ -68,7 +68,6 @@ class Arret(QObject):
 
     @staticmethod
     def raison_store(raisons):
-        print("raison_store")
         list_raison = []
         list_raison_not_imprevu = []
         list_raison_not_prevu = []
