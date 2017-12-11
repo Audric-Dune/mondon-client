@@ -1,7 +1,7 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel
 
 from stores.stat_store import stat_store
@@ -9,6 +9,7 @@ from constants import colors
 from constants.stylesheets import black_12_label_stylesheet, white_label_stylesheet
 from ui.widgets.public.mondon_widget import MondonWidget
 from ui.utils.data import affiche_entier
+from ui.widgets.public.checkbox_button import CheckboxButton
 
 
 class ChartBar(MondonWidget):
@@ -16,6 +17,7 @@ class ChartBar(MondonWidget):
         super(ChartBar, self).__init__(parent=parent)
         self.set_background_color(colors.color_bleu_gris)
         self.vbox = QVBoxLayout()
+        self.chart_settings = ChartSettings(parent=self)
         self.content_chart = ContentChart(parent=self)
         self.chart_legend = ChartLegend(parent=self)
         self.init_widget()
@@ -23,6 +25,7 @@ class ChartBar(MondonWidget):
     def init_widget(self):
         self.vbox.setContentsMargins(10, 10, 10, 0)
         self.vbox.setSpacing(0)
+        self.vbox.addWidget(self.chart_settings)
         self.vbox.addWidget(self.content_chart)
         self.vbox.addWidget(self.chart_legend)
         self.setLayout(self.vbox)
@@ -32,8 +35,8 @@ class ChartBar(MondonWidget):
 
 
 class ContentChart(MondonWidget):
-    LEGEND_LABEL_HEIGHT = 30
     BAR_CONTENT_SPACING = 0
+    VALUE_LABEL_HEIGHT = 20
 
     def __init__(self, parent=None):
         super(ContentChart, self).__init__(parent=parent)
@@ -71,7 +74,7 @@ class ContentChart(MondonWidget):
 
     def update_widget(self):
         for bar in self.bars:
-            max_size = self.height()-self.LEGEND_LABEL_HEIGHT-self.BAR_CONTENT_SPACING
+            max_size = self.height() - 2 * (self.VALUE_LABEL_HEIGHT + self.BAR_CONTENT_SPACING)
             height = (bar[1]*max_size)/max(self.data_1)
             bar[0].setFixedHeight(height)
 
@@ -81,7 +84,7 @@ class ContentChart(MondonWidget):
         vbox.addStretch(1)
 
         label_value = QLabel(affiche_entier(s=str(value)))
-        label_value.setFixedHeight(self.LEGEND_LABEL_HEIGHT)
+        label_value.setFixedHeight(self.VALUE_LABEL_HEIGHT)
         label_value.setAlignment(Qt.AlignCenter)
         label_value.setStyleSheet(black_12_label_stylesheet)
         vbox.addWidget(label_value)
@@ -116,3 +119,20 @@ class ChartLegend(MondonWidget):
         label.setAlignment(Qt.AlignCenter | Qt.AlignBottom)
         label.setStyleSheet(white_label_stylesheet)
         return label
+
+
+class ChartSettings(MondonWidget):
+    CHART_SETTINGS_SIZE = QSize(20, 20)
+
+    def __init__(self, parent=None):
+        super(ChartSettings, self).__init__(parent=parent)
+        self.background_color = colors.color_vert
+        self.format = "semaine"
+        self.hbox = QHBoxLayout(self)
+        self.init_widget()
+
+    def init_widget(self):
+        check_box = CheckboxButton(parent=self)
+        check_box.setFixedSize(self.CHART_SETTINGS_SIZE)
+        self.hbox.addWidget(check_box)
+        self.setLayout(self.hbox)

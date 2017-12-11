@@ -291,11 +291,6 @@ check_box_off_stylesheet = """
     QPushButton:hover {{
         background-color: {color_vert_moyen};
     }}
-    QPushButton:pressed {{
-        border-style: solid;
-        border-width: 1px;
-        border-color: {color_rouge}
-    }}
 """.format(
     color_blanc=color_blanc.hex_string,
     color_vert_fonce=color_vert_fonce.hex_string,
@@ -313,11 +308,6 @@ check_box_on_stylesheet = """
     }}
     QPushButton:hover {{
         background-color: {color_vert_fonce};
-    }}
-    QPushButton:pressed {{
-        border-style: solid;
-        border-width: 1px;
-        border-color: {color_rouge}
     }}
 """.format(
     color_blanc=color_blanc.hex_string,

@@ -8,14 +8,10 @@ from PyQt5.QtWidgets import QLabel, QHBoxLayout, QVBoxLayout, QLineEdit
 
 from constants.colors import color_bleu_gris
 from constants.param import LIST_CHOIX_RAISON_PREVU, LIST_CHOIX_RAISON_IMPREVU, LIST_CHOIX_ENTRETIEN
-from constants.stylesheets import \
-    check_box_off_stylesheet, \
-    check_box_on_stylesheet, \
-    white_title_label_stylesheet, \
-    line_edit_stylesheet
+from constants.stylesheets import white_title_label_stylesheet, line_edit_stylesheet
 from ui.widgets.public.dropdown import Dropdown
 from ui.widgets.public.mondon_widget import MondonWidget
-from ui.widgets.public.pixmap_button import PixmapButton
+from ui.widgets.public.checkbox_button import CheckboxButton
 from ui.widgets.public.clickable_label import ClickableLabel
 
 
@@ -102,26 +98,21 @@ class ArretWindowSelectRaison(MondonWidget):
             # Si le boutton est sélectionné
             if self.is_selected(index):
                 # On active la ligne boutton
-                self.activate_line(button=self.buttons[index], item=self.items[index])
+                self.activate_line(item=self.items[index])
             # Sinon on initialise la ligne
             else:
                 # On désactive la ligne boutton
-                self.initialise_line(button=self.buttons[index], item=self.items[index])
+                self.initialise_line(item=self.items[index])
             index += 1
 
     @staticmethod
-    def initialise_line(button, item):
+    def initialise_line(item):
         """
         S'occupe d'initialiser une ligne
-        :param button: le boutton de la ligne
         :param item: l'item de la ligne
         """
         format = item[0]
         object = item[1]
-        # On met le style check box sur off
-        button.setStyleSheet(check_box_off_stylesheet)
-        # On remove l'icon au cas ou
-        button.removeImage()
         # Si l'item est un label on le passe en blanc
         if format == "label":
             object.setStyleSheet(white_title_label_stylesheet)
@@ -129,18 +120,14 @@ class ArretWindowSelectRaison(MondonWidget):
         if format == "dropdown" or format == "text_edit":
             object.hide()
 
-    def activate_line(self, button, item):
+    @staticmethod
+    def activate_line(item):
         """
         S'occupe d'activer une ligne
-        :param button: le boutton de la ligne
         :param item: l'item de la ligne
         """
         format = item[0]
         object = item[1]
-        # On met le style check box sur on
-        button.setStyleSheet(check_box_on_stylesheet)
-        # On met l'icon check
-        self.set_icon_check_on_checkbox(button)
         # Si l'item est une dropdown on l'affiche
         if format == "dropdown" or format == "text_edit":
             object.show()
@@ -189,7 +176,7 @@ class ArretWindowSelectRaison(MondonWidget):
         :param button: Le boutton a connecter
         :param index: L'index du boutton a connecter
         """
-        button.clicked.connect(lambda: self.onclick_button(index))
+        button.ON_CLICK_SIGNAL.connect(lambda: self.onclick_button(index))
 
     def create_check_button(self, index):
         """
@@ -198,22 +185,12 @@ class ArretWindowSelectRaison(MondonWidget):
         :return: Le boutton initialisé
         """
         # On crée un boutton vide
-        button = PixmapButton()
+        button = CheckboxButton()
         # On set sa taille
         button.setFixedSize(self.SIZE)
-        # On met le style a off
-        button.setStyleSheet(check_box_off_stylesheet)
         # On appel la fonction de connection
         self.connect_button(button, index)
         return button
-
-    def set_icon_check_on_checkbox(self, button):
-        """
-        S'occupe de check une checkbox
-        :param button: Le boutton a checker
-        """
-        button.addImage("assets/images/white_check.png")
-        button.setContentsMargins(5)
 
     def create_label(self, text, index):
         """
