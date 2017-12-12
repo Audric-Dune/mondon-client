@@ -1,12 +1,17 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
-
+import time
 from datetime import timedelta
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QLabel, QVBoxLayout
 
 from constants.colors import color_bleu_gris
+from constants.param import (DEBUT_PROD_MATIN,
+                             FIN_PROD_MATIN,
+                             FIN_PROD_MATIN_VENDREDI,
+                             FIN_PROD_SOIR,
+                             FIN_PROD_SOIR_VENDREDI)
 from constants.stylesheets import white_title_label_stylesheet, red_title_label_stylesheet, green_title_label_stylesheet
 from stores.data_store_manager import data_store_manager
 from stores.settings_store import settings_store
@@ -81,29 +86,26 @@ class StatBar(MondonWidget):
             self.arret_imprevu.setStyleSheet(red_title_label_stylesheet)
         self.arret_imprevu.setText("{time} d'arrêt imprévu".format(time=self.arret_imprevu_time_str))
         self.bar.get_percent(self.percent)
-        self.update()
 
-    def get_stat(self):
-        ts_actuel = timestamp_now()
-        speeds = data_store_manager.get_current_store().data
-        arrets = data_store_manager.get_current_store().arrets
-        ts = timestamp_at_day_ago(self.day_ago)
-        arret_time = 0
-        self.imprevu_arret_time = 0
-
+    def get_start_and_end(self, ts):
         vendredi = timestamp_to_day(ts) == "vendredi"
-        start = 6
-        mid = 13 if vendredi else 14
-        end = 20 if vendredi else 22
-
+        start = DEBUT_PROD_MATIN
+        mid = FIN_PROD_MATIN_VENDREDI if vendredi else FIN_PROD_MATIN
+        end = FIN_PROD_SOIR_VENDREDI if vendredi else FIN_PROD_SOIR
         if self.moment == "matin":
             end = mid
         if self.moment == "soir":
             start = mid
 
-        start_ts = timestamp_at_time(ts, hours=start)
-        end_ts = timestamp_at_time(ts, hours=end)
+        return start, end
 
+    def get_arret_stat(self, ts):
+        arret_time = 0
+        self.imprevu_arret_time = 0
+        time = self.get_start_and_end(ts)
+        start_ts = timestamp_at_time(ts, hours=time[0])
+        end_ts = timestamp_at_time(ts, hours=time[1])
+        arrets = data_store_manager.get_current_store().arrets
         for arret in arrets:
             start_arret = arret[0]
             end_arret = arret[1]
@@ -117,24 +119,54 @@ class StatBar(MondonWidget):
         self.arret_time_str = str(timedelta(seconds=round(arret_time)))
         self.arret_imprevu_time_str = str(timedelta(seconds=round(self.imprevu_arret_time)))
 
+    @staticmethod
+    def get_live_stat(start, end):
+        speeds = data_store_manager.get_current_store().data
+        start_ts = start
+        end_ts = end
+
         def value_is_in_period(value):
             return start_ts <= value[0] <= end_ts
 
         speeds = [v[1] for v in list(filter(value_is_in_period, speeds))]
-
         result = sum(speeds) / 60
+        return result
 
+    def get_stat(self):
+        ts = timestamp_at_day_ago(self.day_ago)
+        time = self.get_start_and_end(ts)
+        start_ts = timestamp_at_time(ts, hours=time[0])
+        end_ts = timestamp_at_time(ts, hours=time[1])
+
+        metrage_matin = data_store_manager.get_current_store().metrage_matin
+        metrage_soir = data_store_manager.get_current_store().metrage_soir
+        if self.day_ago == 0 or not metrage_matin or not metrage_soir or True:
+            result = self.get_live_stat(start=start_ts, end=end_ts)
+        else:
+            if self.moment == "matin":
+                result = metrage_matin
+            elif self.moment == "soir":
+                result = metrage_soir
+            else:
+                result = metrage_matin + metrage_soir
+
+        self.get_arret_stat(ts)
+
+        ts_actuel = timestamp_now()
         if ts_actuel < end_ts:
             maxi = 180 * (ts_actuel - start_ts) / 6000
         else:
             maxi = 180 * (end_ts - start_ts) / 6000
+
         if maxi > 0:
             percent = result / maxi
             if percent > 100:
                 percent = 100
         else:
             percent = 0
+
         if result <= 0:
             percent = 0
+
         self.metre_value = result
         self.percent = percent

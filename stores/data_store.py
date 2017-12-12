@@ -32,11 +32,13 @@ class DataStore:
                 return False, []
             new_data = Database.get_speeds(self.start*1000, self.end*1000)
             if self.day_ago > 0:
-                ts = timestamp_at_day_ago(self.day_ago)
-                print(ts)
-                metrage = Database.get_metrages(start_time=ts, end_time=ts)
-                self.metrage_matin = metrage[0][1]
-                self.metrage_soir = metrage[0][2]
+                try:
+                    ts = timestamp_at_day_ago(self.day_ago)
+                    metrage = Database.get_metrages(start_time=ts, end_time=ts)
+                    self.metrage_matin = metrage[0][1]
+                    self.metrage_soir = metrage[0][2]
+                except:
+                    pass
             if not new_data:
                 return False, []
             self.data = clean_data_per_second(data=new_data, start=self.start, end=self.end)
