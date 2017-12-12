@@ -1,18 +1,10 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-from time import time
-from constants.param import DEBUT_PROD_MATIN, FIN_PROD_SOIR, FIN_PROD_SOIR_VENDREDI, VITESSE_LIMITE_ASSIMILATION_ARRET
+from constants.param import DEBUT_PROD_MATIN, FIN_PROD_MATIN_VENDREDI, FIN_PROD_MATIN, FIN_PROD_SOIR, FIN_PROD_SOIR_VENDREDI, VITESSE_LIMITE_ASSIMILATION_ARRET
 
 from lib.base_de_donnee import Database
 from ui.utils.data import clean_data_per_second
-from ui.utils.timestamp import (
-    timestamp_at_day_ago,
-    timestamp_at_time,
-    timestamp_to_day
-)
-
-current_time = time()
+from ui.utils.timestamp import (timestamp_at_day_ago, timestamp_at_time, timestamp_to_day)
 
 
 class DataStore:
@@ -30,18 +22,20 @@ class DataStore:
         try:
             if self.data and self.day_ago > 0:
                 return False, []
-            new_data = Database.get_speeds(self.start*1000, self.end*1000)
-            if self.day_ago > 0:
-                try:
-                    ts = timestamp_at_day_ago(self.day_ago)
-                    metrage = Database.get_metrages(start_time=ts, end_time=ts)
-                    self.metrage_matin = metrage[0][1]
-                    self.metrage_soir = metrage[0][2]
-                except:
-                    pass
+            new_data = Database.get_speeds(self.start * 1000, self.end * 1000)
             if not new_data:
                 return False, []
             self.data = clean_data_per_second(data=new_data, start=self.start, end=self.end)
+            ts = timestamp_at_day_ago(self.day_ago)
+            if self.day_ago > 0:
+                metrage = Database.get_metrages(start_time=ts, end_time=ts)
+                if not metrage:
+                    metrage = self.get_live_stat(self.data, ts)
+            else:
+                metrage = self.get_live_stat(self.data, ts)
+            self.metrage_matin = metrage[0][1]
+            self.metrage_soir = metrage[0][2]
+
             list_arrets_database = Database.get_arret(self.start, self.end)
             self.dic_arret_from_database(list_arrets_database)
             list_arrets_data = self.list_new_arret_data()
@@ -52,6 +46,38 @@ class DataStore:
             return True, list_new_arret
         except:
             return False, []
+
+    @staticmethod
+    def get_live_stat(speeds, ts):
+
+        def get_start_and_end(ts, moment):
+            vendredi = timestamp_to_day(ts) == "vendredi"
+            start = DEBUT_PROD_MATIN
+            mid = FIN_PROD_MATIN_VENDREDI if vendredi else FIN_PROD_MATIN
+            end = FIN_PROD_SOIR_VENDREDI if vendredi else FIN_PROD_SOIR
+            if moment == "matin":
+                end = mid
+            if moment == "soir":
+                start = mid
+            return start, end
+
+        def get_metrage(ts, speeds, moment):
+            data_ts = get_start_and_end(ts, moment)
+            start_ts = timestamp_at_time(ts, hours=data_ts[0])
+            end_ts = timestamp_at_time(ts, hours=data_ts[1])
+
+            def value_is_in_period(value):
+                return start_ts <= value[0] <= end_ts
+
+            speeds_moment = [v[1] for v in list(filter(value_is_in_period, speeds))]
+            return speeds_moment
+
+        speeds_matin = get_metrage(ts, speeds, "matin")
+        metrage_matin = sum(speeds_matin) / 60
+        speeds_soir = get_metrage(ts, speeds, "soir")
+        metrage_soir = sum(speeds_soir) / 60
+        print(metrage_matin, metrage_soir)
+        return metrage_matin, metrage_soir
 
     @staticmethod
     def convert_dic_to_array(dic):
