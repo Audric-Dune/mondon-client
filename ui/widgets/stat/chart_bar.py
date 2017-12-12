@@ -81,18 +81,29 @@ class ContentChart(MondonWidget):
         self.bars = []
         self.hbox.setContentsMargins(20, 0, 20, 0)
         self.hbox.setSpacing(20)
+        if self.format == "semaine":
+            len_format = 5
         index = 0
-        while index < len(self.data_1):
+        while index < len_format:
             hbox_multi_bar = QHBoxLayout()
             hbox_multi_bar.setContentsMargins(0, 0, 0, 0)
             hbox_multi_bar.setSpacing(0)
-            if self.display_data_2:
-                hbox_multi_bar.addLayout(self.create_bar(value=self.data_2[index], color=self.color_data_2))
-            if self.display_data_3:
-                hbox_multi_bar.addLayout(self.create_bar(value=self.data_3[index], color=self.color_data_3))
-            if self.display_data_1:
-                hbox_multi_bar.addLayout(self.create_bar(value=self.data_1[index], color=self.color_data_1))
-            self.hbox.addLayout(hbox_multi_bar)
+            if index < len(self.data_1):
+                if self.display_data_2:
+                    hbox_multi_bar.addLayout(self.create_bar(value=self.data_2[index], color=self.color_data_2))
+                if self.display_data_3:
+                    hbox_multi_bar.addLayout(self.create_bar(value=self.data_3[index], color=self.color_data_3))
+                if self.display_data_1:
+                    hbox_multi_bar.addLayout(self.create_bar(value=self.data_1[index], color=self.color_data_1))
+                self.hbox.addLayout(hbox_multi_bar)
+            else:
+                if self.display_data_2:
+                    hbox_multi_bar.addLayout(self.create_bar(value=0, color=self.color_data_2))
+                if self.display_data_3:
+                    hbox_multi_bar.addLayout(self.create_bar(value=0, color=self.color_data_3))
+                if self.display_data_1:
+                    hbox_multi_bar.addLayout(self.create_bar(value=0, color=self.color_data_1))
+                self.hbox.addLayout(hbox_multi_bar)
             index += 1
         self.setLayout(self.hbox)
         self.update_widget()
@@ -100,11 +111,12 @@ class ContentChart(MondonWidget):
     def update_widget(self):
         if self.bars:
             for bar in self.bars:
+                print(bar)
                 max_size = self.height() - 2 * (self.VALUE_LABEL_HEIGHT + self.BAR_CONTENT_SPACING)
                 if self.data_1:
                     height = (bar[1]*max_size)/max(self.data_1)
                 else:
-                    height = 0
+                    height = 1
                 bar[0].setFixedHeight(round(height))
 
     def create_bar(self, value, color):

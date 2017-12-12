@@ -29,7 +29,6 @@ class StatStore(QObject):
         self.get_data()
 
     def get_data(self):
-        t1 = time.clock()
         if self.week_ago >= 0:
             start_ts = timestamp_at_week_ago(self.week_ago)
             if self.week_ago == 0:
@@ -37,18 +36,9 @@ class StatStore(QObject):
             else:
                 end_ts = timestamp_at_week_ago(self.week_ago - 1)
         if self.stat == "metrage":
-            t2 = time.clock()
-            print(t2-t1)
             data = Database.get_speeds(start_ts * 1000, end_ts * 1000)
-            t3 = time.clock()
-            print(t3 - t2)
             data_clean = clean_data_per_second(data=data, start=start_ts, end=end_ts)
-            t4 = time.clock()
-            print(t4 - t3)
             self.group_data_metrage(data=data_clean, start=start_ts, format="day")
-            t5 = time.clock()
-            print(t5 - t4)
-            print(t5 - t1)
 
     def set_week_ago(self, week_ago):
         self.week_ago = week_ago

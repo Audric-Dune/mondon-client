@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import QHBoxLayout, QLabel
 from PyQt5.QtCore import QSize
 
 from constants.colors import color_bleu_gris
-from constants.stylesheets import white_label_stylesheet, button_stylesheet
+from constants.stylesheets import button_stylesheet
 from stores.stat_store import stat_store
 from ui.widgets.public.mondon_widget import MondonWidget
 from ui.widgets.public.pixmap_button import PixmapButton
