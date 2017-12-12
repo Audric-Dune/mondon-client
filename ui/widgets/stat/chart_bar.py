@@ -98,11 +98,13 @@ class ContentChart(MondonWidget):
         self.update_widget()
 
     def update_widget(self):
-        print("update_widget")
         if self.bars:
             for bar in self.bars:
                 max_size = self.height() - 2 * (self.VALUE_LABEL_HEIGHT + self.BAR_CONTENT_SPACING)
-                height = (bar[1]*max_size)/max(self.data_1)
+                if self.data_1:
+                    height = (bar[1]*max_size)/max(self.data_1)
+                else:
+                    height = 0
                 bar[0].setFixedHeight(round(height))
 
     def create_bar(self, value, color):

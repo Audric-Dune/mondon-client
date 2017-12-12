@@ -93,7 +93,7 @@ class DataStoreManager(QObject):
             self.refresh_timer.cancel()
         self.refresh_once(force_refresh)
         # Ré-exécute la fonction dans 1 seconde
-        self.refresh_timer = threading.Timer(0.5, self.refresh_data)
+        self.refresh_timer = threading.Timer(1, self.refresh_data)
         self.refresh_timer.start()
 
 data_store_manager = DataStoreManager()
