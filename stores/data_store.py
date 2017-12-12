@@ -21,13 +21,23 @@ class DataStore:
         self.end = end
         self.day_ago = day_ago
         self.data = []
+        self.metrage_matin = None
+        self.metrage_soir = None
         self.dic_arret = {}
         self.arrets = []
 
     def add_data(self):
         try:
-            new_data = Database.get_speeds(self.start * 1000, self.end * 1000)
-            if not new_data or self.data and self.day_ago != 0:
+            if self.data and self.day_ago > 0:
+                return False, []
+            new_data = Database.get_speeds(self.start*1000, self.end*1000)
+            if self.day_ago > 0:
+                ts = timestamp_at_day_ago(self.day_ago)
+                print(ts)
+                metrage = Database.get_metrages(start_time=ts, end_time=ts)
+                self.metrage_matin = metrage[0][1]
+                self.metrage_soir = metrage[0][2]
+            if not new_data:
                 return False, []
             self.data = clean_data_per_second(data=new_data, start=self.start, end=self.end)
             list_arrets_database = Database.get_arret(self.start, self.end)

@@ -6,7 +6,7 @@ from constants.param import DEBUT_PROD_MATIN,\
     FIN_PROD_MATIN,\
     FIN_PROD_MATIN_VENDREDI,\
     FIN_PROD_SOIR
-from ui.utils.timestamp import timestamp_at_day_ago, timestamp_at_time, timestamp_to_day, timestamp_to_date
+from ui.utils.timestamp import timestamp_at_day_ago, timestamp_at_time, timestamp_to_day, timestamp_after_day_ago
 from ui.utils.data import clean_data_per_second
 
 
@@ -23,7 +23,7 @@ def update_data_metrage():
         Recupere les jours ou les metrages sont deja renseignees en base de donnee
         :return: Une liste des jours
         """
-        list_jour_metrage = Database.get_jour_metrages()
+        list_jour_metrage = Database.get_all_jour_metrages()
         clean_list = []
         for jour_metrage in list_jour_metrage:
             ts = jour_metrage[0]
@@ -79,4 +79,5 @@ def update_data_metrage():
             Database.insert_jour_metrages(ts_jour=start_day,
                                           metrage_matin=total_metrage[0],
                                           metrage_soir=total_metrage[1])
-        start_day += ts_to_one_day
+        start_day = timestamp_after_day_ago(start_day, day_ago=1)
+    return True

@@ -107,7 +107,7 @@ class Database:
         return speeds
 
     @classmethod
-    def get_jour_metrages(cls):
+    def get_all_jour_metrages(cls):
         """
         Récupère tout les jours ou le metrage est enregistree dans l'ordre chronologique
         :return: Une liste de tuples (timestamp, speed)
@@ -117,6 +117,22 @@ class Database:
                 "ORDER BY ts_jour"
         jour_metrage = cls._run_query(query, ())
         return jour_metrage
+
+    @classmethod
+    def get_metrages(cls, start_time, end_time):
+        """
+        Récupère les metrages des jours compris entre start et end
+        :param start_time: Timestamp minimum (inclus)
+        :param end_time: Timestamp maximum (inclus)
+        :return: Une liste
+        """
+        query = "SELECT ts_jour, metrage_matin, metrage_soir " \
+                "FROM mondon_metrage " \
+                "WHERE ts_jour >= ? AND ts_jour <= ? " \
+                "ORDER BY ts_jour"\
+            .format(start_time=start_time, end_time=end_time)
+        speeds = cls._run_query(query, (start_time, end_time))
+        return speeds
 
     @classmethod
     def insert_jour_metrages(cls, ts_jour, metrage_matin, metrage_soir):
