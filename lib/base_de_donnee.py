@@ -107,6 +107,36 @@ class Database:
         return speeds
 
     @classmethod
+    def get_jour_metrages(cls):
+        """
+        Récupère tout les jours ou le metrage est enregistree dans l'ordre chronologique
+        :return: Une liste de tuples (timestamp, speed)
+        """
+        query = "SELECT ts_jour " \
+                "FROM mondon_metrage " \
+                "ORDER BY ts_jour"
+        jour_metrage = cls._run_query(query, ())
+        return jour_metrage
+
+    @classmethod
+    def insert_jour_metrages(cls, ts_jour, metrage_matin, metrage_soir):
+        """
+        Ajoute les metrages matin et soir d'un jour en base de donnee
+        :param ts_jour: timestamp du debut du jour renseigne
+        :param metrage_matin: la somme du metrage pour l'equipe du matin
+        :param metrage_soir: la somme du metrage pour l'equipe du soir
+        """
+        try:
+            cls._run_query("INSERT INTO mondon_metrage VALUES (?, ?, ?)", (ts_jour, metrage_matin, metrage_soir))
+        except sqlite3.IntegrityError as e:
+            # IntegrityError veut dire que l'on essaye d'insérer une vitesse avec un timestamp
+            # qui existe déjà dans la base de données.
+            # Dans ce cas, on considère que cette valeur n'a pas besoin d'être insérée et on
+            # ignore l'exception.
+            logger.log("DATABASE", "(Ignorée) IntegrityError: {}".format(e))
+            pass
+
+    @classmethod
     def get_arret(cls, start_time, end_time):
         """
         Récupère les arrêts en base de donnée compris entre une plage de timestamp dans l'ordre chronologique

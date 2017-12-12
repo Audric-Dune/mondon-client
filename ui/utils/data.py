@@ -23,7 +23,7 @@ def clean_data_per_second(data, start, end):
         values_per_second[second] = [value[1] for value in data_for_second]
     # On boucle sur chaque seconde entre `start` et `end` (inclus) et calcule une vitesse pour
     # ces secondes.
-    for i in range(int(start), int(end) + 1):  # On inclus `end`
+    for i in range(int(start), int(end)):
         # Récupère les vitesses pour la seconde `i`.
         # Retourne un tableau vide si il n'y a pas de vitesses associées avec cette seconde
         ts = i
