@@ -33,12 +33,11 @@ class StatBar(MondonWidget):
         super(StatBar, self).__init__(parent=parent)
         self.set_background_color(color_bleu_gris)
         self.moment = moment
-        self.imprevu_arret_time = 0
-        self.metre_value = 0
-        self.percent = 0
-        self.arret_time_str = ""
-        self.arret_imprevu_time_str = ""
         self.day_ago = 0
+        self.metre_value = 0
+        self.arret_time = 0
+        self.imprevu_arret_time = 0
+        self.percent = 0
         # _____INIT_WIDGET____
         self.vbox = QVBoxLayout(self)
         self.title = QLabel(titre, self)
@@ -79,12 +78,14 @@ class StatBar(MondonWidget):
     def update_widgets(self):
         self.get_stat()
         self.metre.setText("{metre}m".format(metre=affiche_entier(s=str(round(self.metre_value)))))
-        self.arret.setText("{time} d'arrêt machine".format(time=self.arret_time_str))
+        arret_time_str = str(timedelta(seconds=round(self.arret_time)))
+        self.arret.setText("{time} d'arrêt machine".format(time=arret_time_str))
         if self.imprevu_arret_time == 0:
             self.arret_imprevu.setStyleSheet(green_title_label_stylesheet)
         else:
             self.arret_imprevu.setStyleSheet(red_title_label_stylesheet)
-        self.arret_imprevu.setText("{time} d'arrêt imprévu".format(time=self.arret_imprevu_time_str))
+        arret_imprevu_time_str = str(timedelta(seconds=round(self.imprevu_arret_time)))
+        self.arret_imprevu.setText("{time} d'arrêt imprévu".format(time=arret_imprevu_time_str))
         self.bar.get_percent(self.percent)
 
     def get_start_and_end(self, ts):
@@ -96,41 +97,7 @@ class StatBar(MondonWidget):
             end = mid
         if self.moment == "soir":
             start = mid
-
         return start, end
-
-    def get_arret_stat(self, ts):
-        arret_time = 0
-        self.imprevu_arret_time = 0
-        time = self.get_start_and_end(ts)
-        start_ts = timestamp_at_time(ts, hours=time[0])
-        end_ts = timestamp_at_time(ts, hours=time[1])
-        arrets = data_store_manager.get_current_store().arrets
-        for arret in arrets:
-            start_arret = arret[0]
-            end_arret = arret[1]
-            if start_ts <= start_arret <= end_ts:
-                arret_delay = end_arret - start_arret
-                arret_time = arret_time + arret_delay
-                if arret[2]:
-                    first_raison = arret[2][0]
-                    if first_raison.type == "Imprévu":
-                        self.imprevu_arret_time = self.imprevu_arret_time + arret_delay
-        self.arret_time_str = str(timedelta(seconds=round(arret_time)))
-        self.arret_imprevu_time_str = str(timedelta(seconds=round(self.imprevu_arret_time)))
-
-    @staticmethod
-    def get_live_stat(start, end):
-        speeds = data_store_manager.get_current_store().data
-        start_ts = start
-        end_ts = end
-
-        def value_is_in_period(value):
-            return start_ts <= value[0] <= end_ts
-
-        speeds = [v[1] for v in list(filter(value_is_in_period, speeds))]
-        result = sum(speeds) / 60
-        return result
 
     def get_stat(self):
         ts = timestamp_at_day_ago(self.day_ago)
@@ -138,35 +105,41 @@ class StatBar(MondonWidget):
         start_ts = timestamp_at_time(ts, hours=time[0])
         end_ts = timestamp_at_time(ts, hours=time[1])
 
-        metrage_matin = data_store_manager.get_current_store().metrage_matin
-        metrage_soir = data_store_manager.get_current_store().metrage_soir
-        if self.day_ago == 0 or not metrage_matin or not metrage_soir or True:
-            result = self.get_live_stat(start=start_ts, end=end_ts)
-        else:
-            if self.moment == "matin":
-                result = metrage_matin
-            elif self.moment == "soir":
-                result = metrage_soir
-            else:
-                result = metrage_matin + metrage_soir
+        current_store = data_store_manager.get_current_store()
+        metrage_matin = current_store.metrage_matin
+        metrage_soir = current_store.metrage_soir
+        arret_time_matin = current_store.arret_time_matin
+        imprevu_arret_time_matin = current_store.imprevu_arret_time_matin
+        arret_time_soir = current_store.arret_time_soir
+        imprevu_arret_time_soir = current_store.imprevu_arret_time_soir
 
-        self.get_arret_stat(ts)
+        if self.moment == "matin":
+            result = metrage_matin
+            arret_time = arret_time_matin
+            imprevu_arret_time = imprevu_arret_time_matin
+        elif self.moment == "soir":
+            result = metrage_soir
+            arret_time = arret_time_soir
+            imprevu_arret_time = imprevu_arret_time_soir
+        else:
+            result = metrage_matin + metrage_soir
+            arret_time = arret_time_matin + arret_time_soir
+            imprevu_arret_time = imprevu_arret_time_matin + imprevu_arret_time_soir
 
         ts_actuel = timestamp_now()
         if ts_actuel < end_ts:
-            maxi = 180 * (ts_actuel - start_ts) / 6000
+            maxi = 172.5 * (ts_actuel - start_ts) / 6000
         else:
-            maxi = 180 * (end_ts - start_ts) / 6000
+            maxi = 172.5 * (end_ts - start_ts) / 6000
 
-        if maxi > 0:
+        if maxi > 0 and result >= 0:
             percent = result / maxi
             if percent > 100:
                 percent = 100
         else:
             percent = 0
 
-        if result <= 0:
-            percent = 0
-
         self.metre_value = result
+        self.arret_time = arret_time
+        self.imprevu_arret_time = imprevu_arret_time
         self.percent = percent

@@ -13,8 +13,12 @@ class DataStore:
         self.end = end
         self.day_ago = day_ago
         self.data = []
-        self.metrage_matin = None
-        self.metrage_soir = None
+        self.metrage_matin = 0
+        self.metrage_soir = 0
+        self.arret_time_matin = 0
+        self.imprevu_arret_time_matin = 0
+        self.arret_time_soir = 0
+        self.imprevu_arret_time_soir = 0
         self.dic_arret = {}
         self.arrets = []
 
@@ -43,6 +47,8 @@ class DataStore:
             list_raisons = Database.get_raison(self.start, self.end)
             self.add_raisons_to_arret(list_raisons, self.dic_arret)
             self.arrets = self.convert_dic_to_array(self.dic_arret)
+            if self.arrets:
+                self.get_arret_stat(ts)
             return True, list_new_arret
         except:
             return False, []
@@ -76,8 +82,38 @@ class DataStore:
         metrage_matin = sum(speeds_matin) / 60
         speeds_soir = get_metrage(ts, speeds, "soir")
         metrage_soir = sum(speeds_soir) / 60
-        print(metrage_matin, metrage_soir)
         return metrage_matin, metrage_soir
+
+    def get_arret_stat(self, ts):
+        self.arret_time_matin = 0
+        self.imprevu_arret_time_matin = 0
+        self.arret_time_soir = 0
+        self.imprevu_arret_time_soir = 0
+        vendredi = timestamp_to_day(ts) == "vendredi"
+        time_change_of_team = FIN_PROD_MATIN_VENDREDI if vendredi else FIN_PROD_MATIN
+        ts_change_of_team = timestamp_at_time(ts, hours=time_change_of_team)
+        arrets = self.arrets
+        for arret in arrets:
+            start_arret = arret[0]
+            end_arret = arret[1]
+            arret_delay = end_arret - start_arret
+            if start_arret <= ts_change_of_team > end_arret:
+                self.arret_time_matin += arret_delay
+            elif start_arret <= ts_change_of_team < end_arret:
+                self.arret_time_matin += ts_change_of_team - start_arret
+                self.arret_time_soir += end_arret - ts_change_of_team
+            else:
+                self.arret_time_soir += arret_delay
+            if arret[2]:
+                first_raison = arret[2][0]
+                if first_raison.type == "Imprévu":
+                    if start_arret <= ts_change_of_team > end_arret:
+                        self.imprevu_arret_time_matin += arret_delay
+                    elif start_arret <= ts_change_of_team < end_arret:
+                        self.imprevu_arret_time_matin += ts_change_of_team - start_arret
+                        self.imprevu_arret_time_soir += end_arret - ts_change_of_team
+                    else:
+                        self.imprevu_arret_time_soir += arret_delay
 
     @staticmethod
     def convert_dic_to_array(dic):

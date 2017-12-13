@@ -78,8 +78,10 @@ class TabArret(MondonWidget):
         """
         self.scroll_layout = clear_layout(self.scroll_layout)
         number = 1
+        # Trie les arrets par ordre chronologique
+        list_arret = sorted(self.list_arret, key=lambda arret: arret.start)
         # Parcour la liste des arrets et crée une line pour chaque arret
-        for arret in self.list_arret:
+        for arret in list_arret:
             line_arret = LineArret(parent=self, day_ago=self.day_ago, arret=arret, number=number)
             self.scroll_layout.addWidget(line_arret)
             number += 1
