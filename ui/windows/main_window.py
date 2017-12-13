@@ -1,7 +1,7 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtCore import pyqtSignal, QTimer
+from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QSizePolicy, QHBoxLayout
 from ui.widgets.prod.chart.chart import Chart
 
