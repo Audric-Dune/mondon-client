@@ -4,8 +4,8 @@
 from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QLabel
 from PyQt5.QtCore import Qt
 
-from constants.colors import color_gris_moyen
-from constants.stylesheets import white_22_label_stylesheet, white_title_label_stylesheet
+from constants.colors import color_gris_moyen, color_gris_clair
+from constants.stylesheets import white_title_20_label_stylesheet, white_title_label_stylesheet, gris_fonce_label_stylesheet, green_title_label_stylesheet
 from ui.widgets.public.mondon_widget import MondonWidget
 from ui.utils.layout import clear_layout
 from ui.utils.data import affiche_entier
@@ -17,7 +17,7 @@ class DataTab(MondonWidget):
 
     def __init__(self, parent=None):
         super(DataTab, self).__init__(parent=parent)
-        self.background_color = color_gris_moyen
+        self.background_color = color_gris_clair
         self.title_label = QLabel()
         self.content_stat = QVBoxLayout()
         self.vbox_master = QVBoxLayout(self)
@@ -25,7 +25,7 @@ class DataTab(MondonWidget):
         self.update_widget()
 
     def init_widget(self):
-        self.title_label.setStyleSheet(white_22_label_stylesheet)
+        self.title_label.setStyleSheet(green_title_label_stylesheet)
         self.title_label.setFixedHeight(40)
         self.vbox_master.addWidget(self.title_label)
         self.create_stat_metrage()

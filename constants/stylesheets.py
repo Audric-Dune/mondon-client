@@ -35,7 +35,7 @@ test_label_stylesheet = create_qlabel_stylesheet(color=color_orange, background_
 orange_label_stylesheet = create_qlabel_stylesheet(color=color_orange)
 red_label_stylesheet = create_qlabel_stylesheet(color=color_rouge)
 white_title_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, background_color=color_bleu_gris, font_size="16px")
-white_22_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, background_color=color_bleu_gris, font_size="22px")
+white_22_label_stylesheet = create_qlabel_stylesheet(color=color_blanc,  font_size="22px")
 red_title_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, background_color=color_rouge, font_size="16px")
 red_12_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, background_color=color_rouge, font_size="12px")
 blue_title_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, background_color=color_bleu, font_size="16px")
@@ -49,11 +49,14 @@ gris_moyen_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, backgr
 gris_fonce_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, background_color=color_gris_fonce, font_size="16px")
 vert_fonce_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, background_color=color_vert_fonce, font_size="16px")
 white_20_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, font_size="20px")
+white_title_20_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, background_color=color_bleu_gris, font_size="20px")
 disable_16_label_stylesheet = create_qlabel_stylesheet(color=color_gris_moyen, font_size="16px")
 white_16_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, font_size="16px")
 black_12_label_stylesheet = create_qlabel_stylesheet(color=color_noir, font_size="12px")
 black_16_label_stylesheet = create_qlabel_stylesheet(color=color_noir, font_size="16px")
 white_24_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, font_size="24px")
+bleu_gris_20_label_stylesheet = create_qlabel_stylesheet(color=color_bleu_gris, background_color=color_blanc, font_size="20px")
+bleu_gris_16_label_stylesheet = create_qlabel_stylesheet(color=color_bleu_gris, background_color=color_blanc, font_size="16px")
 
 # ____________BUTTON STYLESHEET____________
 
