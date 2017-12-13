@@ -61,7 +61,7 @@ def update_data_metrage():
     # On recupere la liste des jours ou le metrage est renseigne en base de donnee
     list_jour_metrage_on_db = get_jour_metrage()
     # Debut des donnees fiable
-    start_data_record = 1508796000
+    start_data_record = 1508709600
     # Duree d'un jour en ms
     ts_to_one_day = 86400
     # Timestamp du debut du jour actuel
