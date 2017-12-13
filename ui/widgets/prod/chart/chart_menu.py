@@ -24,7 +24,6 @@ class ChartMenu(MondonWidget):
         super(ChartMenu, self).__init__(parent=parent)
         self.set_background_color(color_bleu_gris)
         self.day_ago = 0
-        self.zoom = 0
         self.bt_jour_plus = PixmapButton(parent=self)
         self.bt_jour_moins = PixmapButton(parent=self)
         self.bt_zoom_plus = PixmapButton(parent=self)
@@ -101,9 +100,9 @@ class ChartMenu(MondonWidget):
         self.update_label()
 
     def update_button(self):
-        self.bt_jour_plus.setEnabled(self.day_ago > 0)
-        self.bt_zoom_moins.setEnabled(self.zoom > 1)
-        self.bt_zoom_plus.setEnabled(32 > self.zoom)
+        self.bt_jour_plus.setEnabled(settings_store.day_ago > 0)
+        self.bt_zoom_moins.setEnabled(settings_store.zoom > 1)
+        self.bt_zoom_plus.setEnabled(32 > settings_store.zoom)
 
     def update_label(self):
         ts = timestamp_at_day_ago(self.day_ago)
@@ -114,7 +113,7 @@ class ChartMenu(MondonWidget):
 
     @staticmethod
     def zoom_moins():
-        new_zoom = max(1, settings_store.zoom / 2)
+        new_zoom = max(1, int(settings_store.zoom/2))
         settings_store.set_zoom(new_zoom)
 
     @staticmethod

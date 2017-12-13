@@ -33,7 +33,6 @@ class StatBar(MondonWidget):
         super(StatBar, self).__init__(parent=parent)
         self.set_background_color(color_bleu_gris)
         self.moment = moment
-        self.day_ago = 0
         self.metre_value = 0
         self.arret_time = 0
         self.imprevu_arret_time = 0
@@ -69,7 +68,6 @@ class StatBar(MondonWidget):
         self.setLayout(self.vbox)
 
     def on_settings_changed(self, prev_live, prev_day_ago, prev_zoom):
-        self.day_ago = settings_store.day_ago
         self.update_widgets()
 
     def on_data_changed(self):
@@ -100,7 +98,7 @@ class StatBar(MondonWidget):
         return start, end
 
     def get_stat(self):
-        ts = timestamp_at_day_ago(self.day_ago)
+        ts = timestamp_at_day_ago(settings_store.day_ago)
         time = self.get_start_and_end(ts)
         start_ts = timestamp_at_time(ts, hours=time[0])
         end_ts = timestamp_at_time(ts, hours=time[1])
