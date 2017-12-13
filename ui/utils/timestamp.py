@@ -30,6 +30,11 @@ def timestamp_to_day(timestamp):
     return datetime.fromtimestamp(timestamp).strftime('%A')
 
 
+def timestamp_to_week(timestamp):
+    locale.setlocale(locale.LC_TIME, '')
+    return datetime.fromtimestamp(timestamp).strftime('Semaine %U')
+
+
 def timestamp_now():
     now = datetime.now()
     return datetime(year=now.year,

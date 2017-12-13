@@ -4,9 +4,9 @@
 from PyQt5.QtWidgets import QHBoxLayout, QLabel
 from PyQt5.QtCore import QSize
 
-from ui.utils.timestamp import timestamp_at_week_ago
+from ui.utils.timestamp import timestamp_at_week_ago, timestamp_to_week
 from constants.colors import color_bleu_gris
-from constants.stylesheets import button_stylesheet
+from constants.stylesheets import button_stylesheet, white_22_label_stylesheet
 from stores.stat_store import stat_store
 from ui.widgets.public.mondon_widget import MondonWidget
 from ui.widgets.public.pixmap_button import PixmapButton
@@ -26,17 +26,24 @@ class ChartBarMenu(MondonWidget):
         self.init_widget()
 
     def init_widget(self):
+        self.hbox.setSpacing(20)
+        self.hbox.addStretch(1)
         self.hbox.addWidget(self.bt_moins)
+        self.label.setStyleSheet(white_22_label_stylesheet)
+        self.hbox.addWidget(self.label)
         self.hbox.addWidget(self.bt_plus)
+        self.hbox.addStretch(1)
         self.setLayout(self.hbox)
         self.update_button()
+        self.update_label()
 
     def on_settings_stat_changed(self):
         self.update_button()
         self.update_label()
 
     def update_label(self):
-        pass
+        text_label = timestamp_to_week(timestamp_at_week_ago(stat_store.week_ago))
+        self.label.setText(text_label)
 
     def update_button(self):
         self.bt_plus.setEnabled(stat_store.week_ago > 0)
