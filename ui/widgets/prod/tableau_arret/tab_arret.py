@@ -34,7 +34,7 @@ class TabArret(MondonWidget):
         super(TabArret, self).__init__(parent=parent)
         self.set_background_color(color_bleu_gris)
         self.moment = moment
-        self.day_ago = 0
+        self.day_ago = settings_store.day_ago
         self.list_arret = []
         self.memory_number_arret = 0
         self.get_arret()

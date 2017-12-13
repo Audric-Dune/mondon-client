@@ -77,6 +77,7 @@ class MainWindow(QMainWindow):
         vbox.addWidget(chart_menu)
 
         chart = Chart(parent=self.central_widget)
+        chart.setMinimumHeight(200)
         chart.setSizePolicy(QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding))
         vbox.addWidget(chart)
 

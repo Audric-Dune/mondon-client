@@ -15,7 +15,6 @@ class StatStore(QObject):
         super(StatStore, self).__init__()
         self.stat = "metrage"
         self.raison = None
-        self.day_ago = None
         self.week_ago = 0
         self.month_ago = None
         self.years_ago = None
