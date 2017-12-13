@@ -123,16 +123,30 @@ class Database:
         """
         Récupère les metrages des jours compris entre start et end
         :param start_time: Timestamp minimum (inclus)
-        :param end_time: Timestamp maximum (inclus)
+        :param end_time: Timestamp maximum (exclus)
         :return: Une liste
         """
         query = "SELECT ts_jour, metrage_matin, metrage_soir " \
                 "FROM mondon_metrage " \
-                "WHERE ts_jour >= ? AND ts_jour <= ? " \
+                "WHERE ts_jour >= ? AND ts_jour < ? " \
                 "ORDER BY ts_jour"\
             .format(start_time=start_time, end_time=end_time)
         speeds = cls._run_query(query, (start_time, end_time))
         return speeds
+
+    @classmethod
+    def get_metrages_for_one_day(cls, start_time):
+        """
+        Récupère les metrages des jours compris entre start et end
+        :param start_time: Timestamp minimum (inclus)
+        :return: Une liste
+        """
+        query = "SELECT metrage_matin, metrage_soir " \
+                "FROM mondon_metrage " \
+                "WHERE ts_jour = ? "\
+            .format(start_time=start_time)
+        metrages = cls._run_query(query, (start_time,))
+        return metrages
 
     @classmethod
     def insert_jour_metrages(cls, ts_jour, metrage_matin, metrage_soir):

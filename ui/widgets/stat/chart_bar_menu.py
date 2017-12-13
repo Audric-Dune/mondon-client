@@ -53,7 +53,6 @@ class ChartBarMenu(MondonWidget):
 
     @staticmethod
     def semaine_moins():
-        print("semaine_moins")
         stat_store.set_week_ago(stat_store.week_ago + 1)
 
     @staticmethod
