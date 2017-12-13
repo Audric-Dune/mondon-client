@@ -18,9 +18,8 @@ from ui.widgets.stat.chart_bar_menu import ChartBarMenu
 
 
 class MainWindow(QMainWindow):
-    RESIZED_SIGNAL = pyqtSignal()
 
-    def __init__(self, on_close):
+    def __init__(self, on_close, on_resize):
         super(MainWindow, self).__init__(None)
         self.central_widget = QWidget(parent=self)
         self.app_menu = AppMenu(parent=self)
@@ -28,6 +27,7 @@ class MainWindow(QMainWindow):
         self.master_vbox = QVBoxLayout(self.central_widget)
         self.content_vbox = QVBoxLayout()
         self.on_close = on_close
+        self.on_resize = on_resize
 
     def initialisation(self):
         self.app_menu.setFixedHeight(30)
@@ -60,7 +60,6 @@ class MainWindow(QMainWindow):
 
         self.chart_bar = ChartBar(parent=self)
         self.chart_bar.setSizePolicy(QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding))
-        self.RESIZED_SIGNAL.connect(self.chart_bar.update_widget)
         vbox.addWidget(self.chart_bar)
 
         data_tab = DataTab(parent=self)
@@ -91,7 +90,7 @@ class MainWindow(QMainWindow):
         return vbox
 
     def resizeEvent(self, event):
-        self.RESIZED_SIGNAL.emit()
+        self.on_resize()
         return super(MainWindow, self).resizeEvent(event)
 
     def closeEvent(self, QCloseEvent):

@@ -1,18 +1,17 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import QApplication
 
-from constants.dimensions import (window_height,
-                                  window_width,
-                                  width_windown_live_speed
-                                  )
+from constants.dimensions import window_height, window_width
 from lib.logger import logger
 from stores.data_store_manager import data_store_manager
 from ui.utils.window import focus_window
 
 
 class Application(QApplication):
+    RESIZED_SIGNAL = pyqtSignal()
 
     def __init__(self, argv=[]):
         super(Application, self).__init__(argv)
@@ -20,6 +19,9 @@ class Application(QApplication):
         self.tracker_window = None
         self.dic_arret_window = {}
         data_store_manager.NEW_ARRET_SIGNAL.connect(self.create_arret_window)
+
+    def on_resize_main_window(self):
+        self.RESIZED_SIGNAL.emit()
 
     def on_close_main_window(self):
         self.main_window = None
@@ -46,7 +48,7 @@ class Application(QApplication):
         else:
             from ui.windows.main_window import MainWindow
             logger.log("INITIALISATION", "Création de la Window")
-            self.main_window = MainWindow(self.on_close_main_window)
+            self.main_window = MainWindow(self.on_close_main_window, self.on_resize_main_window)
 
             logger.log("INITIALISATION", "Configuration de la Window")
             self.main_window.initialisation()

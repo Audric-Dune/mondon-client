@@ -51,7 +51,6 @@ class TabArret(MondonWidget):
 
     def on_data_changed(self):
         self.get_arret()
-        self.scroll.setFixedWidth(self.width()-25)
         self.update_widget()
 
     def init_widgets(self):
