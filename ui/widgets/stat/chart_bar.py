@@ -40,12 +40,11 @@ class ChartBar(MondonWidget):
         self.content_chart.update_widget()
 
     def on_chart_settings_changed(self, index):
-        if index == 1:
-            self.content_chart.display_data_1 = False if self.content_chart.display_data_1 else True
-        if index == 2:
-            self.content_chart.display_data_2 = False if self.content_chart.display_data_2 else True
-        if index == 3:
-            self.content_chart.display_data_3 = False if self.content_chart.display_data_3 else True
+        index_display = 0
+        while index_display < 3:
+            if index == index_display:
+                self.content_chart.displays[index] = False if self.content_chart.displays[index] else True
+            index_display += 1
         self.content_chart.init_widget()
 
 
@@ -56,24 +55,14 @@ class ContentChart(MondonWidget):
     def __init__(self, parent=None):
         super(ContentChart, self).__init__(parent=parent)
         self.background_color = colors.color_blanc
-        self.display_data_1 = True
-        self.data_1 = stat_store.data_1
-        self.color_data_1 = colors.color_vert_fonce
-        self.display_data_2 = False
-        self.data_2 = stat_store.data_2
-        self.color_data_2 = colors.color_gris_moyen
-        self.display_data_3 = False
-        self.data_3 = stat_store.data_3
-        self.color_data_3 = colors.color_gris_fonce
+        self.displays = [False, False, True]
+        self.color_data = [colors.color_gris_moyen, colors.color_gris_fonce, colors.color_vert_fonce]
         self.format = "semaine"
         self.bars = []
         self.hbox = QHBoxLayout()
         self.init_widget()
 
     def on_data_stat_changed(self):
-        self.data_1 = stat_store.data_1
-        self.data_2 = stat_store.data_2
-        self.data_3 = stat_store.data_3
         self.init_widget()
 
     def on_size_main_window_changed(self):
@@ -88,25 +77,17 @@ class ContentChart(MondonWidget):
             len_format = 5
         index = 0
         while index < len_format:
-            hbox_multi_bar = QHBoxLayout()
-            hbox_multi_bar.setContentsMargins(0, 0, 0, 0)
-            hbox_multi_bar.setSpacing(0)
-            if index < len(self.data_1):
-                if self.display_data_2:
-                    hbox_multi_bar.addLayout(self.create_bar(value=self.data_2[index], color=self.color_data_2))
-                if self.display_data_3:
-                    hbox_multi_bar.addLayout(self.create_bar(value=self.data_3[index], color=self.color_data_3))
-                if self.display_data_1:
-                    hbox_multi_bar.addLayout(self.create_bar(value=self.data_1[index], color=self.color_data_1))
+            index_data = 0
+            for data in stat_store.data:
+                hbox_multi_bar = QHBoxLayout()
+                hbox_multi_bar.setContentsMargins(0, 0, 0, 0)
+                hbox_multi_bar.setSpacing(0)
+                if self.displays[index_data]:
+                    value = data["values"][index] if len(data["values"]) > index else 0
+                    hbox_multi_bar.addLayout(self.create_bar(value=value,
+                                                             color=self.color_data[index_data]))
                 self.hbox.addLayout(hbox_multi_bar)
-            else:
-                if self.display_data_2:
-                    hbox_multi_bar.addLayout(self.create_bar(value=0, color=self.color_data_2))
-                if self.display_data_3:
-                    hbox_multi_bar.addLayout(self.create_bar(value=0, color=self.color_data_3))
-                if self.display_data_1:
-                    hbox_multi_bar.addLayout(self.create_bar(value=0, color=self.color_data_1))
-                self.hbox.addLayout(hbox_multi_bar)
+                index_data += 1
             index += 1
         self.setLayout(self.hbox)
         self.update_widget()
@@ -115,8 +96,8 @@ class ContentChart(MondonWidget):
         if self.bars:
             for bar in self.bars:
                 max_size = self.height() - 2 * (self.VALUE_LABEL_HEIGHT + self.BAR_CONTENT_SPACING)
-                if self.data_1:
-                    height = (bar[1]*max_size)/max(self.data_1)
+                if stat_store.data[-1]["values"]:
+                    height = (bar[1]*max_size)/max(stat_store.data[-1]["values"])
                 else:
                     height = 1
                 bar[0].setFixedHeight(round(height))
@@ -167,6 +148,7 @@ class ChartLegend(MondonWidget):
 
 class ChartSettings(MondonWidget):
     CHART_SETTINGS_SIZE = QSize(20, 20)
+    HEIGHT_LABEL = 20
     CHECKBOX_SELECTED_SIGNAL = pyqtSignal(int)
 
     def __init__(self, parent=None):
@@ -181,18 +163,18 @@ class ChartSettings(MondonWidget):
         self.CHECKBOX_SELECTED_SIGNAL.emit(index)
 
     def init_widget(self):
-        self.hbox.setSpacing(30)
+        self.hbox.setSpacing(20)
         self.hbox.addStretch(1)
 
-        self.add_check_box_layout(index_data=2,
+        self.add_check_box_layout(index_data=0,
                                   stylecheet_label=gris_moyen_label_stylesheet,
                                   text_label="Equipe matin")
-        self.add_check_box_layout(index_data=3,
+        self.add_check_box_layout(index_data=1,
                                   stylecheet_label=gris_fonce_label_stylesheet,
                                   text_label="Equipe soir")
-        self.add_check_box_layout(index_data=1,
+        self.add_check_box_layout(index_data=2,
                                   stylecheet_label=vert_fonce_label_stylesheet,
-                                  text_label="Equipes cumulees",
+                                  text_label="Equipes cumulées",
                                   preset=True)
 
         self.hbox.addStretch(1)
@@ -210,5 +192,6 @@ class ChartSettings(MondonWidget):
         check_box_hbox.addWidget(check_box)
         label = QLabel(text_label)
         label.setStyleSheet(stylecheet_label)
+        label.setFixedHeight(self.HEIGHT_LABEL)
         check_box_hbox.addWidget(label)
         self.hbox.addLayout(check_box_hbox)

@@ -42,8 +42,7 @@ class ChartBarMenu(MondonWidget):
         self.update_label()
 
     def update_label(self):
-        text_label = timestamp_to_week(timestamp_at_week_ago(stat_store.week_ago))
-        self.label.setText(text_label)
+        self.label.setText(stat_store.time_stat)
 
     def update_button(self):
         self.bt_plus.setEnabled(stat_store.week_ago > 0)

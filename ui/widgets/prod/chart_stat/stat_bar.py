@@ -11,7 +11,8 @@ from constants.param import (DEBUT_PROD_MATIN,
                              FIN_PROD_MATIN,
                              FIN_PROD_MATIN_VENDREDI,
                              FIN_PROD_SOIR,
-                             FIN_PROD_SOIR_VENDREDI)
+                             FIN_PROD_SOIR_VENDREDI,
+                             VITESSE_MOYENNE_MAXI)
 from constants.stylesheets import white_title_label_stylesheet, red_title_label_stylesheet, green_title_label_stylesheet
 from stores.data_store_manager import data_store_manager
 from stores.settings_store import settings_store
@@ -126,9 +127,9 @@ class StatBar(MondonWidget):
 
         ts_actuel = timestamp_now()
         if ts_actuel < end_ts:
-            maxi = 172.5 * (ts_actuel - start_ts) / 6000
+            maxi = VITESSE_MOYENNE_MAXI * (ts_actuel - start_ts) / 6000
         else:
-            maxi = 172.5 * (end_ts - start_ts) / 6000
+            maxi = VITESSE_MOYENNE_MAXI * (end_ts - start_ts) / 6000
 
         if maxi > 0 and result >= 0:
             percent = result / maxi

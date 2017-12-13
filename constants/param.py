@@ -3,6 +3,7 @@ DATABASE_LOCATION = '../mondon.db'
 
 # Hypothèse
 VITESSE_LIMITE_ASSIMILATION_ARRET = 60
+VITESSE_MOYENNE_MAXI = 172.5
 
 # Horaire de production
 DEBUT_PROD_MATIN = 6

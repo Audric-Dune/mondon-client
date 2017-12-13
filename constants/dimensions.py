@@ -23,7 +23,7 @@ window_margin_left = 10
 window_margin_right = 10
 window_margin_bottom = 10
 window_width = 1200
-window_height = 600
+window_height = 800
 # Taille de fenêtre vitesse actuelle
 width_windown_live_speed = 250
 # Tableau arret

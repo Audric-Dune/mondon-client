@@ -49,7 +49,7 @@ class MainWindow(QMainWindow):
         hbox = QHBoxLayout()
 
         stat_menu = StatMenu(parent=self)
-        stat_menu.setFixedWidth(200)
+        stat_menu.setFixedWidth(300)
         hbox.addWidget(stat_menu)
 
         vbox = QVBoxLayout()
@@ -78,7 +78,7 @@ class MainWindow(QMainWindow):
 
         chart = Chart(parent=self.central_widget)
         chart.setMinimumHeight(200)
-        chart.setSizePolicy(QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding))
+        # chart.setSizePolicy(QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding))
         vbox.addWidget(chart)
 
         stat_menu = StatTitre(parent=self.central_widget)
