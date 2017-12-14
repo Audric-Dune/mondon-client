@@ -15,6 +15,7 @@ from ui.widgets.stat.chart_bar import ChartBar
 from ui.widgets.stat.data_tab import DataTab
 from ui.widgets.stat.stat_menu import StatMenu
 from ui.widgets.stat.chart_bar_menu import ChartBarMenu
+from ui.widgets.rapport.menu_rapport import RapportMenu
 
 
 class MainWindow(QMainWindow):
@@ -42,6 +43,8 @@ class MainWindow(QMainWindow):
         if menu_selected == "chart_stat":
             self.content_vbox.addLayout(self.create_stat_layout())
             QTimer.singleShot(0, self.chart_bar.update_widget)
+        elif menu_selected == "rapport":
+            self.content_vbox.addLayout(self.create_rapport_layout())
         else:
             self.content_vbox.addLayout(self.create_prod_layout())
 
@@ -88,6 +91,14 @@ class MainWindow(QMainWindow):
         tab_arret_menu = TabArretMenu(parent=self.central_widget)
         tab_arret_menu.setMaximumHeight(300)
         vbox.addWidget(tab_arret_menu)
+
+        return vbox
+
+    def create_rapport_layout(self):
+        vbox = QVBoxLayout()
+
+        rapport_menu = RapportMenu(parent=self.central_widget)
+        vbox.addWidget(rapport_menu)
 
         return vbox
 

@@ -19,7 +19,7 @@ class LineArret(QWidget):
     # _____DEFINITION CONSTANTE CLASS_____
     PADDING_VBOX = 2
     PADDING_HBOX = 0
-    PRIMARY_LINE_HEIGHT = 30
+    PRIMARY_LINE_HEIGHT = 20
     SECONDARY_LINE_HEIGHT = 20
     WIDTH_LABEL_TYPE = 80
     CONTENT_MARGIN = QMargins(0, 5, 0, 5)
@@ -53,7 +53,6 @@ class LineArret(QWidget):
         hbox = QHBoxLayout()
         hbox.setSpacing(self.PADDING_HBOX)
         number_label = QLabel("Arrêt n.{}".format(str(number)))
-        number_label.setFixedHeight(self.PRIMARY_LINE_HEIGHT)
         number_label.setStyleSheet(green_title_label_stylesheet)
         number_label.setMargin(self.LABEL_MARGIN)
         hour_label = QLabel("Début à {}".format(timestamp_to_hour_little(arret.start)))
@@ -73,9 +72,9 @@ class LineArret(QWidget):
         hbox.setSpacing(self.PADDING_HBOX)
         if not arret.raisons:
             no_raison_label = QLabel("Aucune raison sélectionnée")
+            no_raison_label.setMargin(self.LABEL_MARGIN)
             no_raison_label.setStyleSheet(red_12_label_stylesheet)
             no_raison_label.setAlignment(Qt.AlignCenter)
-            no_raison_label.setFixedHeight(self.SECONDARY_LINE_HEIGHT)
             hbox.addWidget(no_raison_label)
             vbox.addLayout(hbox)
             return vbox
@@ -84,7 +83,6 @@ class LineArret(QWidget):
             hbox_temp.setSpacing(self.PADDING_HBOX)
             type_label = QLabel(raison.type)
             type_label.setMargin(self.LABEL_MARGIN)
-            type_label.setFixedHeight(self.SECONDARY_LINE_HEIGHT)
             type_label.setFixedWidth(self.WIDTH_LABEL_TYPE)
             raison_label = QLabel(raison.raison)
             # On met le label et la croix en couleur en fonction du type
