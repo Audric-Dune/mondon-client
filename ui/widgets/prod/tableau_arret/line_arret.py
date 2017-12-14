@@ -8,7 +8,7 @@ from PyQt5.QtCore import Qt, QEvent
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel, QWidget
 
 from constants.stylesheets import red_12_label_stylesheet,\
-    green_12_label_stylesheet,\
+    green_title_label_stylesheet,\
     gray_12_label_stylesheet,\
     blue_12_label_stylesheet
 from ui.utils.timestamp import timestamp_to_hour_little
@@ -44,7 +44,7 @@ class LineArret(QWidget):
             vbox.addLayout(secondary_layout)
         else:
             no_arret_label = QLabel('Aucun arrêt enregistré')
-            no_arret_label.setStyleSheet(green_12_label_stylesheet)
+            no_arret_label.setStyleSheet(green_title_label_stylesheet)
             no_arret_label.setAlignment(Qt.AlignCenter)
             no_arret_label.setFixedHeight(self.PRIMARY_LINE_HEIGHT)
             vbox.addWidget(no_arret_label)
@@ -54,14 +54,14 @@ class LineArret(QWidget):
         hbox.setSpacing(self.PADDING_HBOX)
         number_label = QLabel("Arrêt n.{}".format(str(number)))
         number_label.setFixedHeight(self.PRIMARY_LINE_HEIGHT)
-        number_label.setStyleSheet(green_12_label_stylesheet)
+        number_label.setStyleSheet(green_title_label_stylesheet)
         number_label.setMargin(self.LABEL_MARGIN)
         hour_label = QLabel("Début à {}".format(timestamp_to_hour_little(arret.start)))
         hour_label.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
-        hour_label.setStyleSheet(green_12_label_stylesheet)
+        hour_label.setStyleSheet(green_title_label_stylesheet)
         duration_label = QLabel("Durée : {}".format(str(timedelta(seconds=round(arret.end - arret.start)))))
         duration_label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
-        duration_label.setStyleSheet(green_12_label_stylesheet)
+        duration_label.setStyleSheet(green_title_label_stylesheet)
         hbox.addWidget(number_label)
         hbox.addWidget(hour_label)
         hbox.addWidget(duration_label)
