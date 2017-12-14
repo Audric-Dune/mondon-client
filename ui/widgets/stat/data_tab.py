@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QLabel
 from PyQt5.QtCore import Qt
 
 from constants.colors import color_gris_moyen
-from constants.stylesheets import white_title_label_stylesheet, green_20_label_stylesheet, white_label_stylesheet
+from constants.stylesheets import green_20_label_stylesheet, white_label_stylesheet, white_title_label_stylesheet
 from ui.widgets.public.mondon_widget import MondonWidget
 from ui.utils.layout import clear_layout
 from ui.utils.data import affiche_entier
@@ -56,8 +56,9 @@ class DataTab(MondonWidget):
         hbox = QHBoxLayout()
 
         team_label = QLabel(titre)
-        team_label.setStyleSheet(white_label_stylesheet)
+        team_label.setStyleSheet(white_title_label_stylesheet)
         team_label.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
+        team_label.setFixedWidth(150)
         hbox.addWidget(team_label)
 
         vbox_text = QVBoxLayout()

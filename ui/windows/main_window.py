@@ -77,15 +77,16 @@ class MainWindow(QMainWindow):
         vbox.addWidget(chart_menu)
 
         chart = Chart(parent=self.central_widget)
-        chart.setMinimumHeight(200)
+        chart.setMinimumHeight(300)
         # chart.setSizePolicy(QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding))
         vbox.addWidget(chart)
 
         stat_menu = StatTitre(parent=self.central_widget)
-        stat_menu.setFixedHeight(150)
+        stat_menu.setFixedHeight(160)
         vbox.addWidget(stat_menu)
 
         tab_arret_menu = TabArretMenu(parent=self.central_widget)
+        tab_arret_menu.setMaximumHeight(300)
         vbox.addWidget(tab_arret_menu)
 
         return vbox

@@ -66,7 +66,7 @@ class TabArret(MondonWidget):
         scroll_content.setStyleSheet("background-color:{};".format(color_bleu_gris.hex_string))
         self.scroll_layout = QVBoxLayout(scroll_content)
         self.scroll_layout.setAlignment(Qt.AlignTop)
-        self.scroll_layout.setSpacing(0)
+        self.scroll_layout.setSpacing(10)
         scroll_content.setLayout(self.scroll_layout)
         self.scroll.setWidget(scroll_content)
 
