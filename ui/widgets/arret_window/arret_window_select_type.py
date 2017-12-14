@@ -64,11 +64,14 @@ class ArretWindowSelectType(MondonWidget):
         # De base met le style unselect sur le bouton "Imprévu"
         self.bt_prevu.setStyleSheet(button_stylesheet)
         self.bt_imprevu.setStyleSheet(button_stylesheet_unselected)
+        self.bt_entretien.setStyleSheet(button_stylesheet_unselected)
+
         # Si la variable mémoire de séléction d'un type dans l'object Arret est "Prévu",
         # on a déja sélectionner le bouton "Prévu"
         if self.arret.type_cache == "Prévu":
             # Dans se cas on met le style select sur le bouton "Imprévu"
             self.bt_imprevu.setStyleSheet(button_stylesheet)
+            self.bt_entretien.setStyleSheet(button_stylesheet)
         # On met a jour la variable mémoire de séléction d'un type dans l'object Arret
         self.arret.add_type_cache("Prévu")
 
@@ -80,13 +83,16 @@ class ArretWindowSelectType(MondonWidget):
         """
         # De base met le style select sur le bouton "Imprévu"
         # De base met le style unselect sur le bouton "Prévu"
+        # De base met le style unselect sur le bouton "Entretien"
         self.bt_prevu.setStyleSheet(button_stylesheet_unselected)
         self.bt_imprevu.setStyleSheet(button_stylesheet)
-        # Si la variable mémoire de séléction d'un type dans l'object Arret est "Prévu",
+        self.bt_entretien.setStyleSheet(button_stylesheet_unselected)
+        # Si la variable mémoire de séléction d'un type dans l'object Arret est "Imprévu",
         # on a déja sélectionner le bouton "Imprévu"
         if self.arret.type_cache == "Imprévu":
             # Dans se cas on met le style select sur le bouton "Prévu"
             self.bt_prevu.setStyleSheet(button_stylesheet)
+            self.bt_entretien.setStyleSheet(button_stylesheet)
         # On met a jour la variable mémoire de séléction d'un type dans l'object Arret
         self.arret.add_type_cache("Imprévu")
 
@@ -98,13 +104,15 @@ class ArretWindowSelectType(MondonWidget):
         """
         # De base met le style select sur le bouton "Imprévu"
         # De base met le style unselect sur le bouton "Prévu"
-        self.bt_entretien.setStyleSheet(button_stylesheet_unselected)
+        self.bt_prevu.setStyleSheet(button_stylesheet_unselected)
         self.bt_entretien.setStyleSheet(button_stylesheet)
+        self.bt_imprevu.setStyleSheet(button_stylesheet_unselected)
         # Si la variable mémoire de séléction d'un type dans l'object Arret est "Prévu",
-        # on a déja sélectionner le bouton "Imprévu"
+        # on a déja sélectionner le bouton "Prévu"
         if self.arret.type_cache == "Entretien":
             # Dans se cas on met le style select sur le bouton "Prévu"
-            self.bt_entretien.setStyleSheet(button_stylesheet)
+            self.bt_prevu.setStyleSheet(button_stylesheet)
+            self.bt_imprevu.setStyleSheet(button_stylesheet)
         # On met a jour la variable mémoire de séléction d'un type dans l'object Arret
         self.arret.add_type_cache("Entretien")
 
