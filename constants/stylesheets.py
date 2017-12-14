@@ -54,6 +54,7 @@ white_16_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, font_siz
 black_12_label_stylesheet = create_qlabel_stylesheet(color=color_noir, font_size="12px")
 black_16_label_stylesheet = create_qlabel_stylesheet(color=color_noir, font_size="16px")
 white_24_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, font_size="24px")
+green_20_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, background_color=color_vert_fonce, font_size="20px")
 
 # ____________BUTTON STYLESHEET____________
 
