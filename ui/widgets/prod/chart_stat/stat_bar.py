@@ -45,6 +45,7 @@ class StatBar(MondonWidget):
         self.metre = QLabel(self)
         self.arret = QLabel(self)
         self.arret_imprevu = QLabel(self)
+        self.arret_prevu = QLabel(self)
         self.init_widget()
         self.update_widgets()
 
@@ -63,6 +64,9 @@ class StatBar(MondonWidget):
         self.arret.setStyleSheet(white_title_label_stylesheet)
         self.vbox.addWidget(self.arret, alignment=Qt.AlignLeft)
 
+        self.arret_prevu.setStyleSheet(white_title_label_stylesheet)
+        self.vbox.addWidget(self.arret_prevu, alignment=Qt.AlignLeft)
+
         self.arret_imprevu.setStyleSheet(red_title_label_stylesheet)
         self.vbox.addWidget(self.arret_imprevu, alignment=Qt.AlignLeft)
 
@@ -78,7 +82,12 @@ class StatBar(MondonWidget):
         self.get_stat()
         self.metre.setText("{metre}m".format(metre=affiche_entier(s=str(round(self.metre_value)))))
         arret_time_str = str(timedelta(seconds=round(self.arret_time)))
-        self.arret.setText("{time} d'arrêt machine".format(time=arret_time_str))
+        self.arret.setText("{time} d'arrêt cumulé".format(time=arret_time_str))
+
+        arret_prevu_time_str = str(timedelta(seconds=round(self.arret_time - self.imprevu_arret_time)))
+        self.arret_prevu.setText("{time} d'arrêt prévu".format(time=arret_prevu_time_str))
+        self.bar.get_percent(self.percent)
+
         if self.imprevu_arret_time == 0:
             self.arret_imprevu.setStyleSheet(green_title_label_stylesheet)
         else:

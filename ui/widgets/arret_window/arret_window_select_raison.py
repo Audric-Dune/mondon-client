@@ -132,6 +132,10 @@ class ArretWindowSelectRaison(MondonWidget):
         if format == "dropdown" or format == "text_edit":
             object.show()
 
+    def onclick_label(self, index):
+        self.buttons[index].update_widget()
+        self.onclick_button(index)
+
     def onclick_button(self, index):
         """
         S'occupe de gérer le click sur une checkbox
@@ -201,7 +205,7 @@ class ArretWindowSelectRaison(MondonWidget):
         """
         # On crée un label avec son texte
         label = ClickableLabel(text)
-        label.connect(lambda: self.onclick_button(index))
+        label.connect(lambda: self.onclick_label(index))
         # On met la couleur du texte en blanc
         label.setStyleSheet(white_title_label_stylesheet)
         return label

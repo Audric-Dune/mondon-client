@@ -30,9 +30,10 @@ class TabArret(MondonWidget):
     """
     Gère le tableau d'arret, récupère les données en fonction de son paramètre moment (matin ou soir)
     """
-    def __init__(self, parent, moment):
+    def __init__(self, parent, moment, scrollbar=True):
         super(TabArret, self).__init__(parent=parent)
         self.set_background_color(color_bleu_gris)
+        self.scrollbar = scrollbar
         self.moment = moment
         self.day_ago = settings_store.day_ago
         self.list_arret = []
@@ -60,15 +61,24 @@ class TabArret(MondonWidget):
         list_box = QVBoxLayout()
         self.setLayout(list_box)
 
-        list_box.addWidget(self.scroll)
-        self.scroll.setWidgetResizable(True)
-        scroll_content = QWidget(self.scroll)
-        scroll_content.setStyleSheet("background-color:{};".format(color_bleu_gris.hex_string))
-        self.scroll_layout = QVBoxLayout(scroll_content)
-        self.scroll_layout.setAlignment(Qt.AlignTop)
-        self.scroll_layout.setSpacing(0)
-        scroll_content.setLayout(self.scroll_layout)
-        self.scroll.setWidget(scroll_content)
+        if self.scrollbar:
+            list_box.addWidget(self.scroll)
+            self.scroll.setWidgetResizable(True)
+            scroll_content = QWidget(self.scroll)
+            scroll_content.setStyleSheet("background-color:{};".format(color_bleu_gris.hex_string))
+            self.scroll_layout = QVBoxLayout(scroll_content)
+            self.scroll_layout.setAlignment(Qt.AlignTop)
+            self.scroll_layout.setSpacing(10)
+            scroll_content.setLayout(self.scroll_layout)
+            self.scroll.setWidget(scroll_content)
+        else:
+            scroll_content = QWidget()
+            scroll_content.setStyleSheet("background-color:{};".format(color_bleu_gris.hex_string))
+            self.scroll_layout = QVBoxLayout(scroll_content)
+            self.scroll_layout.setAlignment(Qt.AlignTop)
+            self.scroll_layout.setSpacing(10)
+            scroll_content.setLayout(self.scroll_layout)
+            list_box.addWidget(scroll_content)
 
     def update_widget(self):
         """
@@ -90,7 +100,7 @@ class TabArret(MondonWidget):
 
     def get_arret(self):
         """
-        S'occupe de créer une liste d'models Arret pour le moment de la journée courante
+        S'occupe de créer une liste de models Arret pour le moment de la journée courante
         :return:
         """
         # Récupere le store courant

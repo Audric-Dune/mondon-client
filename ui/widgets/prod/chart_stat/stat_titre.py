@@ -9,19 +9,20 @@ from ui.widgets.public.mondon_widget import MondonWidget
 
 
 class StatTitre(MondonWidget):
-    def __init__(self, parent):
+    def __init__(self, parent=None, note=True):
         super(StatTitre, self).__init__(parent=parent)
         self.stat_legend = StatLegend(parent=self)
         self.stat_bar_matin = StatBar(parent=self, titre="Equipe du matin", moment="matin")
         self.stat_bar_soir = StatBar(parent=self, titre="Equipe du soir", moment="soir")
         self.stat_bar_total = StatBar(parent=self, titre="Journée complète", moment="total")
-        self.init_widgets()
+        self.init_widgets(note)
 
-    def init_widgets(self):
+    def init_widgets(self, note):
         hbox = QHBoxLayout(self)
         hbox.setContentsMargins(0, 0, 0, 0)
         self.stat_legend.setFixedWidth(250)
-        hbox.addWidget(self.stat_legend)
+        if note:
+            hbox.addWidget(self.stat_legend)
         hbox.addWidget(self.stat_bar_matin)
         hbox.addWidget(self.stat_bar_soir)
         hbox.addWidget(self.stat_bar_total)

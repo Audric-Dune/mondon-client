@@ -95,7 +95,6 @@ class ChartMenu(MondonWidget):
 
     def on_settings_changed(self, prev_live, prev_day_ago, prev_zoom):
         self.day_ago = settings_store.day_ago
-        self.zoom = settings_store.zoom
         self.update_button()
         self.update_label()
 

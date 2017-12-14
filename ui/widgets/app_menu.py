@@ -35,6 +35,11 @@ class AppMenu(MondonWidget):
         bt_stat.clicked.connect(lambda: self.on_click("chart_stat"))
         self.hbox.addWidget(bt_stat)
 
+        bt_rapport = QPushButton("Rapport")
+        self.list_bt["rapport"] = bt_rapport
+        bt_rapport.clicked.connect(lambda: self.on_click("rapport"))
+        self.hbox.addWidget(bt_rapport)
+
         self.hbox.addStretch(1)
         self.setLayout(self.hbox)
 

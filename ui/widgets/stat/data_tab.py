@@ -4,8 +4,8 @@
 from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QLabel
 from PyQt5.QtCore import Qt
 
-from constants.colors import color_gris_moyen, color_gris_clair
-from constants.stylesheets import white_title_20_label_stylesheet, white_title_label_stylesheet, gris_fonce_label_stylesheet, green_title_label_stylesheet
+from constants.colors import color_gris_moyen, color_gris_clair, color_gris_moyen
+from constants.stylesheets import green_20_label_stylesheet, white_label_stylesheet, white_title_label_stylesheet, green_title_label_stylesheet
 from ui.widgets.public.mondon_widget import MondonWidget
 from ui.utils.layout import clear_layout
 from ui.utils.data import affiche_entier
@@ -25,7 +25,7 @@ class DataTab(MondonWidget):
         self.update_widget()
 
     def init_widget(self):
-        self.title_label.setStyleSheet(green_title_label_stylesheet)
+        self.title_label.setStyleSheet(green_20_label_stylesheet)
         self.title_label.setFixedHeight(40)
         self.vbox_master.addWidget(self.title_label)
         self.create_stat_metrage()
@@ -52,23 +52,23 @@ class DataTab(MondonWidget):
         vbox.addLayout(self.create_line("Equipe soir", index_data=1))
         self.content_stat.addLayout(vbox)
 
-    @staticmethod
-    def create_line(titre, index_data):
+    def create_line(self, titre, index_data):
         hbox = QHBoxLayout()
 
         team_label = QLabel(titre)
         team_label.setStyleSheet(white_title_label_stylesheet)
         team_label.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
+        team_label.setFixedWidth(150)
         hbox.addWidget(team_label)
 
         vbox_text = QVBoxLayout()
         vbox_text.setSpacing(0)
         total_label = QLabel("Total metrage")
-        total_label.setStyleSheet(white_title_label_stylesheet)
+        total_label.setStyleSheet(white_label_stylesheet)
         total_label.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
         vbox_text.addWidget(total_label)
         moyenne_label = QLabel("Moyenne par jours")
-        moyenne_label.setStyleSheet(white_title_label_stylesheet)
+        moyenne_label.setStyleSheet(white_label_stylesheet)
         moyenne_label.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
         vbox_text.addWidget(moyenne_label)
         hbox.addLayout(vbox_text)
@@ -77,13 +77,13 @@ class DataTab(MondonWidget):
         vbox_value.setSpacing(0)
         sum_value = sum(stat_store.data[index_data]["values"])
         total_value = QLabel(affiche_entier(sum_value))
-        total_value.setStyleSheet(white_title_label_stylesheet)
+        total_value.setStyleSheet(white_label_stylesheet)
         total_value.setFixedHeight(20)
         total_value.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
         vbox_value.addWidget(total_value)
         team_moyenne = stat_store.data[index_data]["moyenne"]
         label_moyenne = QLabel(affiche_entier(team_moyenne))
-        label_moyenne.setStyleSheet(white_title_label_stylesheet)
+        label_moyenne.setStyleSheet(white_label_stylesheet)
         label_moyenne.setFixedHeight(20)
         label_moyenne.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
         vbox_value.addWidget(label_moyenne)

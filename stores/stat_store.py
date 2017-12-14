@@ -53,9 +53,8 @@ class StatStore(QObject):
                 index = 0
                 for dic in self.data:
                     current_maxi = maxi if index == 2 else maxi/2
-                    print(maxi)
                     dic["moyenne"] = round(sum(self.data[index]["values"])/5)
-                    dic["percent"] = round(sum(self.data[index]["values"])*100/current_maxi)
+                    dic["percent"] = round(sum(self.data[index]["values"])*100/current_maxi, 2)
                     index += 1
 
     def update_param(self):

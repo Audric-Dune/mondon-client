@@ -24,8 +24,6 @@ class DataStore:
 
     def add_data(self):
         try:
-            if self.data and self.day_ago > 0:
-                return False, []
             new_data = Database.get_speeds(self.start * 1000, self.end * 1000)
             if not new_data:
                 return False, []

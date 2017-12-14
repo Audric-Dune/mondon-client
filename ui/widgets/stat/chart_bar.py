@@ -78,16 +78,16 @@ class ContentChart(MondonWidget):
         index = 0
         while index < len_format:
             index_data = 0
+            hbox_multi_bar = QHBoxLayout()
+            hbox_multi_bar.setContentsMargins(0, 0, 0, 0)
+            hbox_multi_bar.setSpacing(0)
             for data in stat_store.data:
-                hbox_multi_bar = QHBoxLayout()
-                hbox_multi_bar.setContentsMargins(0, 0, 0, 0)
-                hbox_multi_bar.setSpacing(0)
                 if self.displays[index_data]:
                     value = data["values"][index] if len(data["values"]) > index else 0
                     hbox_multi_bar.addLayout(self.create_bar(value=value,
                                                              color=self.color_data[index_data]))
-                self.hbox.addLayout(hbox_multi_bar)
                 index_data += 1
+            self.hbox.addLayout(hbox_multi_bar)
             index += 1
         self.setLayout(self.hbox)
         self.update_widget()

@@ -11,8 +11,9 @@ from ui.widgets.public.mondon_widget import MondonWidget
 
 
 class TabArretMenu(MondonWidget):
-    def __init__(self, parent):
+    def __init__(self, parent=None, scrollbar=True):
         super(TabArretMenu, self).__init__(parent=parent)
+        self.scrollbar = scrollbar
         self.day_ago = 0
         self.init_widgets()
 
@@ -36,7 +37,7 @@ class TabArretMenu(MondonWidget):
         titre.setFixedHeight(20)
         titre.setStyleSheet(white_title_label_stylesheet)
         vbox_matin.addWidget(titre)
-        tab_arret_matin = TabArret(self, moment="matin")
+        tab_arret_matin = TabArret(parent=self, moment="matin", scrollbar=self.scrollbar)
         vbox_matin.addWidget(tab_arret_matin)
 
         hbox.addLayout(vbox_matin)
@@ -49,7 +50,7 @@ class TabArretMenu(MondonWidget):
         titre.setFixedHeight(20)
         titre.setStyleSheet(white_title_label_stylesheet)
         vbox_soir.addWidget(titre)
-        tab_arret_soir = TabArret(self, moment="soir")
+        tab_arret_soir = TabArret(parent=self, moment="soir", scrollbar=self.scrollbar)
         vbox_soir.addWidget(tab_arret_soir)
 
         hbox.addLayout(vbox_soir)
