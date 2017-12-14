@@ -16,7 +16,7 @@ class Arret(QObject):
     ARRET_RAISON_CHANGED_SIGNAL = pyqtSignal()
 
     """
-    Object model qui stocke des information sur un arret
+    Object model qui stocke des informations sur un arret
     S'occupe de modifier la base de donnée si besoin
     """
     def __init__(self, arret_data):
