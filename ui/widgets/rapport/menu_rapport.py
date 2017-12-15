@@ -1,11 +1,10 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
-
 from datetime import timedelta
 from PyQt5.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QScrollArea, QWidget
 from PyQt5.QtGui import QPainter, QFont, QBrush, QTextDocument, QPdfWriter
 from PyQt5.QtPrintSupport import QPrinter, QPrintDialog
-from PyQt5.QtCore import QSize, Qt, QPoint
+from PyQt5.QtCore import QSize, Qt, QPoint, QRectF
 from constants.colors import (
     color_blanc,
     color_bleu_gris,
@@ -100,19 +99,41 @@ class RapportMenu(MondonWidget):
         self.bt_impression.setFixedSize(self.PIXMAPBUTTON_SIZE)
         self.bt_impression.addImage("assets/images/impression.png")
 
+    # def impression(self):
+    #     printer = QPrinter()
+    #     printer.setOutputFileName("print.pdf")
+    #     painter = QPainter()
+    #     painter.begin(printer)
+    #     self.drawing(painter)
+    #     painter.end()
+    #     # self.pdf()
+
     def impression(self):
         printer = QPrinter()
-        printer.setOutputFileName("print.pdf")
         painter = QPainter()
+
+        printer.setOutputFileName("prueba.pdf")
+        printer.setOutputFormat(QPrinter.PdfFormat)
+
+        printer.setPageMargins(0.0, 0.0, 0.0, 0.0, QPrinter.Point)
+        printer.setFullPage(True)
+        margin = printer.getPageMargins(QPrinter.Point)
+        print(margin)
+        size = printer.paperSize(QPrinter.DevicePixel)
+        width = size.width()
+        print(width)
+
         painter.begin(printer)
         self.drawing(painter)
+        # painter.drawText(QRectF(0.0, 0.0, width, 50.0), Qt.AlignCenter | Qt.AlignTop, "abcdefghijklmn")
         painter.end()
-        self.pdf()
 
     @staticmethod
     def pdf():
-        pdf = QPdfWriter()
-        pdf = open('print.pdf', encoding='utf-8').read()  # ascii PDF here
+        # pdf = QPdfWriter()
+        # pdf = open('print.pdf', encoding='utf-8').read()  # ascii PDF here
+        # d = QtPoppler.Poppler.Document.load('print.pdf')
+        # d.setRenderHint(QtPoppler.Poppler.Document.Antialiasing and QtPoppler.Poppler.Document.TextAntialiasing)
         # print("open")
         # doc = QTextDocument(pdf)
         printer = QPrinter()
@@ -316,7 +337,8 @@ class RapportMenu(MondonWidget):
 
             draw_text(p, DEC_X + 10, self.DEC_Y_STAT, (self.TITRE_W - 40) / 3, 20, color_noir, "G", 14, text)
             draw_rectangle(p, DEC_X, self.DEC_Y_STAT + 22, (self.TITRE_W - 40) / 3, 1, color_bleu_dune)
-
+            if not percent:
+                percent = 0
             if percent < 25:
                 color = color_rouge
             elif percent < 50:
@@ -324,7 +346,10 @@ class RapportMenu(MondonWidget):
             else:
                 color = color_vert
             draw_rectangle(p, DEC_X + 10, self.DEC_Y_STAT + 35, percent / 100 * ((self.TITRE_W - 40) / 3 - 20), 30, color)
-
+            if percent > 25:
+                draw_text(p, DEC_X + 10, self.DEC_Y_STAT + 35, percent / 100 * ((self.TITRE_W - 40) / 3 - 20) - 10, 30, color_blanc, "D", 14, "{}%".format(percent))
+            else:
+                draw_text(p, DEC_X + 20 + percent / 100 * ((self.TITRE_W - 40) / 3 - 20), self.DEC_Y_STAT + 35, 100, 30, color_noir, "G", 14, "{}%".format(percent))
             draw_rectangle(p, DEC_X + 10, self.DEC_Y_STAT + 35, (self.TITRE_W - 40) / 3 - 20 + 1, 1, color_noir)
             draw_rectangle(p, DEC_X + 10, self.DEC_Y_STAT + 35, 1, 30, color_noir)
             draw_rectangle(p, DEC_X + 10 + (self.TITRE_W - 40) / 3 - 20, self.DEC_Y_STAT + 35 + 1, 1, 30, color_noir)
