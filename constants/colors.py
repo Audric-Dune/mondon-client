@@ -21,6 +21,9 @@ color_blanc = Color('#FFFFFF')
 
 color_bleu_gris = Color('#2C3E50')
 color_bleu = Color('#2980BD')
+color_bleu_dune = Color('#0053a5')
+
+color_jaune_dune = Color('#ffc30b')
 
 color_vert = Color('#27AE60')
 color_vert_moyen = Color('#1ABC9C')

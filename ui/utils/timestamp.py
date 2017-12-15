@@ -22,7 +22,7 @@ def timestamp_to_date(timestamp):
 
 def timestamp_to_date_little(timestamp):
     locale.setlocale(locale.LC_TIME, '')
-    return datetime.fromtimestamp(timestamp).strftime('%d/%m/%y')
+    return datetime.fromtimestamp(timestamp).strftime('%d/%m/%Y')
 
 
 def timestamp_to_day(timestamp):

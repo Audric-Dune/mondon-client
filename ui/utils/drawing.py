@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5.QtCore import Qt, QRectF
-from PyQt5.QtGui import QBrush, QColor, QPen, QPainterPath
+from PyQt5.QtGui import QBrush, QColor, QPen, QPainterPath, QFont
 
 
 def draw_rectangle(p, x, y, width, height, color):
@@ -17,7 +17,7 @@ def draw_rectangle_radius(p, x, y, width, height, color, radius=0):
     p.fillPath(path, QColor(color[0], color[1], color[2]))
 
 
-def draw_text(p, x, y, width, height, color, align, font_size, text):
+def draw_text(p, x, y, width, height, color, align, font_size, text, bold=False):
     pen = QPen(
         QBrush(Qt.SolidPattern),
         1.0,
@@ -28,8 +28,9 @@ def draw_text(p, x, y, width, height, color, align, font_size, text):
     color = color.rgb_components
     pen.setColor(QColor(color[0], color[1], color[2]))
     p.setPen(pen)
-    font = p.font()
+    font = QFont("Arial Narrow")
     font.setPointSize(font_size)
+    font.setBold(bold)
     p.setFont(font)
     if align == "D":
         qt_align = Qt.AlignRight
