@@ -3,7 +3,7 @@
 
 from datetime import timedelta
 from PyQt5.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QScrollArea, QWidget
-from PyQt5.QtGui import QPainter, QFont, QBrush
+from PyQt5.QtGui import QPainter, QFont, QBrush, QTextDocument, QPdfWriter
 from PyQt5.QtPrintSupport import QPrinter, QPrintDialog
 from PyQt5.QtCore import QSize, Qt, QPoint
 from constants.colors import (
@@ -107,7 +107,19 @@ class RapportMenu(MondonWidget):
         painter.begin(printer)
         self.drawing(painter)
         painter.end()
+        self.pdf()
 
+    @staticmethod
+    def pdf():
+        pdf = QPdfWriter()
+        pdf = open('print.pdf', encoding='utf-8').read()  # ascii PDF here
+        # print("open")
+        # doc = QTextDocument(pdf)
+        printer = QPrinter()
+        dialog = QPrintDialog(printer)
+        if dialog.exec_() == True:
+            # doc.print_(printer)
+            print("print")
     # def impression(self):
     #     printer = QPrinter(QPrinter.HighResolution)
     #     painter = QPainter()
