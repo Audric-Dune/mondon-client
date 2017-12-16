@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 from datetime import timedelta
 from PyQt5.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QScrollArea, QWidget
-from PyQt5.QtGui import QPainter, QFont, QBrush, QTextDocument, QPdfWriter
+from PyQt5.QtGui import QPainter, QFont, QBrush, QTextDocument, QPdfWriter, QPixmap, QImage, QColor, QTransform
 from PyQt5.QtPrintSupport import QPrinter, QPrintDialog
-from PyQt5.QtCore import QSize, Qt, QPoint, QRectF
+from PyQt5.QtCore import QSize, Qt, QPoint, QRectF, QRect
 from constants.colors import (
     color_blanc,
     color_bleu_gris,
@@ -27,7 +27,7 @@ from constants.dimensions import (
     chart_max_hour,
     width_grille,
 )
-from constants.param import VITESSE_LIMITE_ASSIMILATION_ARRET, VITESSE_MOYENNE_MAXI, DEBUT_PROD_MATIN, FIN_PROD_SOIR_VENDREDI, FIN_PROD_SOIR
+from constants.param import VITESSE_LIMITE_ASSIMILATION_ARRET, VITESSE_MOYENNE_MAXI, DEBUT_PROD_MATIN, FIN_PROD_SOIR_VENDREDI, FIN_PROD_SOIR, FIN_PROD_MATIN, FIN_PROD_MATIN_VENDREDI
 from stores.data_store_manager import data_store_manager
 from stores.settings_store import settings_store
 from ui.utils.data import affiche_entier
@@ -64,6 +64,12 @@ class RapportMenu(MondonWidget):
     DEC_Y_CHART = 180
     DEC_Y_PERF = 420
     DEC_Y_STAT = 480
+    DEC_Y_ARRET = 650
+    DEC_Y_LIST = 720
+    CASTOR_H = 38
+    CASTOR_W = 115
+    DEC_Y_CASTOR = PAGE_H - CASTOR_H
+    DEC_X_CASTOR = PAGE_W / 2 - CASTOR_W / 2
     CHART_H = 200
     CHART_W = 640
     TITRE_W = 700
@@ -214,6 +220,7 @@ class RapportMenu(MondonWidget):
         speeds = get_speed()
         i = 0
         for speed in speeds:
+            speed = speed if speed < 190 else 190
             color = color_vert if speed > VITESSE_LIMITE_ASSIMILATION_ARRET else color_rouge
             draw_rectangle(p, self.DEC_X_CHART + i, self.CHART_H - speed + self.DEC_Y_CHART, 1, speed + 1, color)
             i += 1
@@ -269,10 +276,11 @@ class RapportMenu(MondonWidget):
             i += 1
 
     def draw_global_border(self, p):
+        draw_rectangle(p, 0, 0, 1, self.PAGE_H - self.CASTOR_H / 2, color_bleu_dune)
         draw_rectangle(p, 420, 10, 350, 1, color_bleu_dune)
-        draw_rectangle(p, 0, 0, 1, self.PAGE_H, color_bleu_dune)
-        draw_rectangle(p, 0, self.PAGE_H, self.PAGE_W, 1, color_bleu_dune)
-        draw_rectangle(p, self.PAGE_W, 10, 1, 1091, color_bleu_dune)
+        draw_rectangle(p, self.PAGE_W, 10, 1, 1091 - self.CASTOR_H / 2, color_bleu_dune)
+        draw_rectangle(p, 0, self.PAGE_H - self.CASTOR_H / 2, self.PAGE_W / 2 - self.CASTOR_W / 2 - 20, 1, color_bleu_dune)
+        draw_rectangle(p, self.PAGE_W / 2 + self.CASTOR_W / 2 + 20, self.PAGE_H - self.CASTOR_H / 2, self.PAGE_W / 2 - self.CASTOR_W / 2 - 20, 1, color_bleu_dune)
 
     def draw_titre_1(self, p):
         draw_rectangle(p, 0, 0, 400, 40, color_jaune_dune)
@@ -287,7 +295,8 @@ class RapportMenu(MondonWidget):
         time_imprevu = current_store.imprevu_arret_time_matin + current_store.imprevu_arret_time_soir
         imprevu_time_str = str(timedelta(seconds=round(time_imprevu)))
         text = ("{time} d'arrêt imprévu".format(time=imprevu_time_str))
-        draw_text(p, self.PAGE_W - 200 - 10, self.DEC_Y_STAT_1, 200, 40, color_rouge, "D", 16, text, bold=True)
+        color = color_rouge if time_imprevu > 0 else color_vert
+        draw_text(p, self.PAGE_W - 300 - 10, self.DEC_Y_STAT_1, 300, 40, color, "D", 16, text, bold=True)
         vendredi = timestamp_to_day(timestamp_at_day_ago(current_store.day_ago)) == "vendredi"
         total_s = 3600 * (FIN_PROD_SOIR_VENDREDI - DEBUT_PROD_MATIN) if vendredi else 3600 * (FIN_PROD_SOIR - DEBUT_PROD_MATIN)
         maxi_metrage = VITESSE_MOYENNE_MAXI * total_s / 60
@@ -304,7 +313,7 @@ class RapportMenu(MondonWidget):
 
     def draw_tite_historique(self, p):
         draw_rectangle(p, (self.PAGE_W - self.TITRE_W) / 2, self.DEC_Y_HIST, self.TITRE_W, 40, color_bleu_dune)
-        draw_text(p, (self.PAGE_W - self.TITRE_W) / 2 + 10, self.DEC_Y_HIST, 400, 40, color_jaune_dune, "G", 16, "Historique des vitesse")
+        draw_text(p, (self.PAGE_W - self.TITRE_W) / 2 + 10, self.DEC_Y_HIST, 400, 40, color_jaune_dune, "G", 16, "Historique des vitesses")
 
     def draw_titre_performance(self, p):
         draw_rectangle(p, (self.PAGE_W - self.TITRE_W) / 2, self.DEC_Y_PERF, self.TITRE_W, 40, color_bleu_dune)
@@ -322,21 +331,43 @@ class RapportMenu(MondonWidget):
         percent_total = round(metrage_total / maxi_metrage_total * 100, 2)
         percent_matin = round(metrage_matin / maxi_metrage_equipe * 100, 2)
         percent_soir = round(metrage_soir / maxi_metrage_equipe * 100, 2)
+        time_total_matin = current_store.arret_time_matin
+        time_total_soir = current_store.arret_time_soir
+        time_total_day = time_total_matin + time_total_soir
+        time_imprevu_matin = current_store.imprevu_arret_time_matin
+        time_imprevu_soir = current_store.imprevu_arret_time_soir
+        time_imprevu_total = time_imprevu_matin + time_imprevu_soir
+        time_prevu_matin = time_total_matin - time_imprevu_matin
+        time_prevu_soir = time_total_soir - time_imprevu_soir
+        time_prevu_total = time_prevu_matin + time_prevu_soir
         DEC_X = (self.PAGE_W - self.TITRE_W) / 2
         i = 0
         while i < 3:
             if i == 0:
                 text = "Equipe du matin"
                 percent = percent_matin
+                metre = metrage_matin
+                time_total = time_total_matin
+                time_imprevu = time_imprevu_matin
+                time_prevu = time_prevu_matin
             elif i == 1:
                 text = "Equipe du soir"
                 percent = percent_soir
+                metre = metrage_soir
+                time_total = time_total_soir
+                time_imprevu = time_imprevu_soir
+                time_prevu = time_prevu_soir
             else:
                 text = "Equipes cumulées"
                 percent = percent_total
-
+                metre = metrage_total
+                time_total = time_total_day
+                time_imprevu = time_imprevu_total
+                time_prevu = time_prevu_total
+            # ____DRAW_TITRE___
             draw_text(p, DEC_X + 10, self.DEC_Y_STAT, (self.TITRE_W - 40) / 3, 20, color_noir, "G", 14, text)
             draw_rectangle(p, DEC_X, self.DEC_Y_STAT + 22, (self.TITRE_W - 40) / 3, 1, color_bleu_dune)
+            # ____DRAW_BAR___
             if not percent:
                 percent = 0
             if percent < 25:
@@ -346,16 +377,60 @@ class RapportMenu(MondonWidget):
             else:
                 color = color_vert
             draw_rectangle(p, DEC_X + 10, self.DEC_Y_STAT + 35, percent / 100 * ((self.TITRE_W - 40) / 3 - 20), 30, color)
-            if percent > 25:
-                draw_text(p, DEC_X + 10, self.DEC_Y_STAT + 35, percent / 100 * ((self.TITRE_W - 40) / 3 - 20) - 10, 30, color_blanc, "D", 14, "{}%".format(percent))
+            if percent > 50:
+                draw_text(p, DEC_X + 10, self.DEC_Y_STAT + 35, percent / 100 * ((self.TITRE_W - 40) / 3 - 20) - 10, 30, color_blanc, "D", 12, "{}%".format(percent))
             else:
-                draw_text(p, DEC_X + 20 + percent / 100 * ((self.TITRE_W - 40) / 3 - 20), self.DEC_Y_STAT + 35, 100, 30, color_noir, "G", 14, "{}%".format(percent))
+                draw_text(p, DEC_X + 20 + percent / 100 * ((self.TITRE_W - 40) / 3 - 20), self.DEC_Y_STAT + 35, 100, 30, color_noir, "G", 12, "{}%".format(percent))
             draw_rectangle(p, DEC_X + 10, self.DEC_Y_STAT + 35, (self.TITRE_W - 40) / 3 - 20 + 1, 1, color_noir)
             draw_rectangle(p, DEC_X + 10, self.DEC_Y_STAT + 35, 1, 30, color_noir)
             draw_rectangle(p, DEC_X + 10 + (self.TITRE_W - 40) / 3 - 20, self.DEC_Y_STAT + 35 + 1, 1, 30, color_noir)
             draw_rectangle(p, DEC_X + 10, self.DEC_Y_STAT + 35 + 30, (self.TITRE_W - 40) / 3 - 20, 1, color_noir)
+            # ____DRAW_LABEL___
+            draw_rectangle(p, DEC_X, self.DEC_Y_STAT + 35 + 35, 1, 80, color_gris_moyen)
+            draw_text(p, DEC_X + 10, self.DEC_Y_STAT + 35 + 35, 250, 20, color_noir, "G", 12, "{}m".format(affiche_entier(metre)))
+            draw_text(p, DEC_X + 10, self.DEC_Y_STAT + 35 + 55, 250, 20, color_noir, "G", 12, "{} d'arrêt cumulé".format(str(timedelta(seconds=round(time_total)))))
+            draw_text(p, DEC_X + 10, self.DEC_Y_STAT + 35 + 75, 250, 20, color_noir, "G", 12, "{} d'arrêt prévu".format(str(timedelta(seconds=round(time_prevu)))))
+            color = color_rouge if time_imprevu > 0 else color_vert
+            draw_text(p, DEC_X + 10, self.DEC_Y_STAT + 35 + 95, 250, 20, color, "G", 12, "{} d'arrêt imprévu".format(str(timedelta(seconds=round(time_imprevu)))))
             DEC_X += (self.TITRE_W - 40) / 3 + 20
             i += 1
+
+    def draw_titre_arret(self, p):
+        draw_rectangle(p, (self.PAGE_W - self.TITRE_W) / 2, self.DEC_Y_ARRET, self.TITRE_W, 40, color_bleu_dune)
+        draw_text(p, (self.PAGE_W - self.TITRE_W) / 2 + 10, self.DEC_Y_ARRET, 400, 40, color_jaune_dune, "G", 16,
+                  "Détail des arrêts remarquables machines")
+        draw_text(p, (self.PAGE_W - self.TITRE_W) / 2 + 10, self.DEC_Y_ARRET + 45, 600, 20, color_gris_fonce, "G", 12,
+                  "Par remarquable on assimile les arrêts imprévus ou supérieurs à 1 heure", italic=True)
+
+    def draw_list_arret(self, p, moment):
+        current_store = data_store_manager.get_current_store()
+        arrets = current_store.arrets
+        vendredi = timestamp_to_day(timestamp_at_day_ago(current_store.day_ago)) == "vendredi"
+        if moment == "matin":
+            DEC_X = (self.PAGE_W - self.TITRE_W) / 2
+            end_hour = FIN_PROD_MATIN_VENDREDI if vendredi else FIN_PROD_MATIN
+        else:
+            DEC_X = (self.PAGE_W - self.TITRE_W) / 2 + 350
+            end_hour = FIN_PROD_SOIR_VENDREDI if vendredi else FIN_PROD_SOIR
+        end_ts = timestamp_at_time(timestamp_at_day_ago(current_store.day_ago), hours=end_hour)
+        DEC_Y = 0
+        i = 0
+        for arret in arrets:
+            print(arret)
+            if arret.start < end_ts and arret.end - arret.start > 6000:
+                type = arret.raisons[0].type if arret.raisons else "non renseigné"
+                start = ""
+                duree = ""
+                text_arret = "Arrêt {type}, début à {start}, durée {duree}".format(type=type, start=start, duree=duree)
+                draw_text(p, DEC_X + 10, self.DEC_Y_LIST + DEC_Y, 330, 20, color_rouge, "G", 12, text_arret, bold=True)
+                draw_text(p, DEC_X + 10, self.DEC_Y_LIST + DEC_Y + 20, 330, 20, color_noir, "G", 12, "Changement production avec pose clichés")
+                i += 1
+                DEC_Y += 50
+
+    def draw_castor(self, p):
+        pixmap = QPixmap("assets/images/logo_dune.png")
+        p.setRenderHint(QPainter.SmoothPixmapTransform)
+        p.drawPixmap(QRect(self.DEC_X_CASTOR, self.DEC_Y_CASTOR + 1, 115, 38), pixmap)
 
     def drawing(self, p):
         self.draw_global_border(p)
@@ -369,4 +444,8 @@ class RapportMenu(MondonWidget):
         self.draw_border(p)  # La bordure
         self.draw_titre_performance(p)
         self.draw_stat(p)
+        self.draw_titre_arret(p)
+        self.draw_list_arret(p, "matin")
+        self.draw_list_arret(p, "soir")
+        self.draw_castor(p)
 

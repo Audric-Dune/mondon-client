@@ -17,7 +17,7 @@ def draw_rectangle_radius(p, x, y, width, height, color, radius=0):
     p.fillPath(path, QColor(color[0], color[1], color[2]))
 
 
-def draw_text(p, x, y, width, height, color, align, font_size, text, bold=False):
+def draw_text(p, x, y, width, height, color, align, font_size, text, bold=False, italic=False):
     pen = QPen(
         QBrush(Qt.SolidPattern),
         1.0,
@@ -31,6 +31,7 @@ def draw_text(p, x, y, width, height, color, align, font_size, text, bold=False)
     font = QFont("Arial Narrow")
     font.setPointSize(font_size)
     font.setBold(bold)
+    font.setItalic(italic)
     p.setFont(font)
     if align == "D":
         qt_align = Qt.AlignRight
