@@ -41,3 +41,4 @@ tmtagsHistory
 *.sublime-project
 *.sublime-workspace
 .bundle
+.pdf

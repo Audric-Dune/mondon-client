@@ -115,8 +115,8 @@ class RapportMenu(MondonWidget):
         printer.setOutputFileName("prueba.pdf")
         printer.setOutputFormat(QPrinter.PdfFormat)
 
-        printer.setPageMargins(0.0, 0.0, 0.0, 0.0, QPrinter.Point)
-        printer.setFullPage(True)
+        printer.setPageMargins(10, 10, 10, 10, QPrinter.Point)
+        # printer.setFullPage(True)
         margin = printer.getPageMargins(QPrinter.Point)
         print(margin)
         size = printer.paperSize(QPrinter.DevicePixel)
