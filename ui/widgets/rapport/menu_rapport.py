@@ -1,7 +1,7 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 from datetime import timedelta
-from PyQt5.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QScrollArea, QWidget
+from PyQt5.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QScrollArea, QWidget, QFileDialog
 from PyQt5.QtGui import QPainter, QFont, QBrush, QTextDocument, QPdfWriter, QPixmap, QImage, QColor, QTransform
 from PyQt5.QtPrintSupport import QPrinter, QPrintDialog
 from PyQt5.QtCore import QSize, Qt, QPoint, QRectF, QRect
@@ -38,7 +38,8 @@ from ui.utils.timestamp import (
     timestamp_at_time,
     timestamp_au_debut_de_hour,
     timestamp_to_date_little,
-    timestamp_to_day
+    timestamp_to_day,
+    timestamp_to_hour_little
 )
 from ui.widgets.public.mondon_widget import MondonWidget
 
@@ -56,23 +57,6 @@ from ui.widgets.public.pixmap_button import PixmapButton
 
 class RapportMenu(MondonWidget):
     PIXMAPBUTTON_SIZE = QSize(40, 40)
-    PAGE_W = 770
-    PAGE_H = 1100
-    DEC_X_CHART = 65
-    DEC_Y_STAT_1 = 60
-    DEC_Y_HIST = 120
-    DEC_Y_CHART = 180
-    DEC_Y_PERF = 420
-    DEC_Y_STAT = 480
-    DEC_Y_ARRET = 650
-    DEC_Y_LIST = 720
-    CASTOR_H = 38
-    CASTOR_W = 115
-    DEC_Y_CASTOR = PAGE_H - CASTOR_H
-    DEC_X_CASTOR = PAGE_W / 2 - CASTOR_W / 2
-    CHART_H = 200
-    CHART_W = 640
-    TITRE_W = 700
 
     def __init__(self, parent=None):
         super(RapportMenu, self).__init__(parent=parent)
@@ -80,8 +64,8 @@ class RapportMenu(MondonWidget):
         self.bt_impression = PixmapButton(parent=self)
         self.vbox = QVBoxLayout()
         self.hbox = QHBoxLayout()
+        self.rapport = Rapport(parent=self)
         self.scrool_bar = QScrollArea()
-        self.rapport = self.create_rapport()
         self.init_button()
         self.init_widget()
 
@@ -92,7 +76,7 @@ class RapportMenu(MondonWidget):
         self.hbox.addWidget(self.bt_impression)
         self.vbox.addLayout(self.hbox)
 
-        self.scrool_bar.setWidget(self.rapport)
+        # self.scrool_bar.setWidget(self.rapport)
         self.scrool_bar.setStyleSheet(scroll_bar_stylesheet)
         self.vbox.addWidget(self.scrool_bar)
 
@@ -117,36 +101,49 @@ class RapportMenu(MondonWidget):
     def impression(self):
         printer = QPrinter()
         painter = QPainter()
-
-        printer.setOutputFileName("prueba.pdf")
+        # name = QFileDialog.getSaveFileName(self, 'Save File')
+        # print(name)
+        file = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
+        print(file)
+        printer.setOutputFileName("{}/2017_02_12_rapport_production_bobine.pdf".format(file))
         printer.setOutputFormat(QPrinter.PdfFormat)
 
         printer.setPageMargins(10, 10, 10, 10, QPrinter.Point)
         # printer.setFullPage(True)
         margin = printer.getPageMargins(QPrinter.Point)
-        print(margin)
         size = printer.paperSize(QPrinter.DevicePixel)
         width = size.width()
-        print(width)
 
         painter.begin(printer)
-        self.drawing(painter)
+        self.rapport.drawing(painter)
         # painter.drawText(QRectF(0.0, 0.0, width, 50.0), Qt.AlignCenter | Qt.AlignTop, "abcdefghijklmn")
         painter.end()
+        self.affiche_pdf()
 
-    @staticmethod
-    def pdf():
+    def affiche_pdf(self):
+        import os
+        """affiche le pdf créé, dans le visualiseur pdf par défaut de l'OS"""
+        if os.path.exists("prueba.pdf"):
+            try:
+                # solution pour Windows
+                os.startfile("prueba.pdf")
+            except:
+                pass
+
+    # @staticmethod
+    # def pdf():
         # pdf = QPdfWriter()
         # pdf = open('print.pdf', encoding='utf-8').read()  # ascii PDF here
         # d = QtPoppler.Poppler.Document.load('print.pdf')
         # d.setRenderHint(QtPoppler.Poppler.Document.Antialiasing and QtPoppler.Poppler.Document.TextAntialiasing)
         # print("open")
         # doc = QTextDocument(pdf)
-        printer = QPrinter()
-        dialog = QPrintDialog(printer)
-        if dialog.exec_() == True:
-            # doc.print_(printer)
-            print("print")
+        # printer = QPrinter()
+        # dialog = QPrintDialog(printer)
+        # if dialog.exec_() == True:
+        #     # doc.print_(printer)
+        #     print("print")
+
     # def impression(self):
     #     printer = QPrinter(QPrinter.HighResolution)
     #     painter = QPainter()
@@ -175,24 +172,50 @@ class RapportMenu(MondonWidget):
     #     if dialog.exec_() == True:
     #         self.rapport.print_(printer)
 
-    def create_rapport(self):
-        vbox = QVBoxLayout()
+    # def create_rapport(self):
+    #     vbox = QVBoxLayout()
+    #
+    #     self.chart = Chart(parent=self)
+    #     self.chart.setFixedHeight(300)
+    #     self.chart.setFixedWidth(750)
+    #     vbox.addWidget(self.chart)
+    #
+    #     stat_menu = StatTitre(parent=self, note=False)
+    #     vbox.addWidget(stat_menu)
+    #
+    #     tab_arret_menu = TabArretMenu(parent=self, scrollbar=False)
+    #     vbox.addWidget(tab_arret_menu)
+    #
+    #     rapport = QWidget()
+    #     rapport.setLayout(vbox)
+    #
+    #     return rapport
 
-        self.chart = Chart(parent=self)
-        self.chart.setFixedHeight(300)
-        self.chart.setFixedWidth(750)
-        vbox.addWidget(self.chart)
 
-        stat_menu = StatTitre(parent=self, note=False)
-        vbox.addWidget(stat_menu)
+class Rapport(MondonWidget):
+    PAGE_W = 770
+    PAGE_H = 1100
+    DEC_X_CHART = 65
+    DEC_Y_STAT_1 = 60
+    DEC_Y_HIST = 120
+    DEC_Y_CHART = 180
+    DEC_Y_PERF = 420
+    DEC_Y_STAT = 480
+    DEC_Y_ARRET = 650
+    DEC_Y_LIST = 720
+    CASTOR_H = 38
+    CASTOR_W = 115
+    DEC_Y_CASTOR = PAGE_H - CASTOR_H
+    DEC_X_CASTOR = PAGE_W / 2 - CASTOR_W / 2
+    CHART_H = 200
+    CHART_W = 640
+    TITRE_W = 700
 
-        tab_arret_menu = TabArretMenu(parent=self, scrollbar=False)
-        vbox.addWidget(tab_arret_menu)
-
-        rapport = QWidget()
-        rapport.setLayout(vbox)
-
-        return rapport
+    def __init__(self, parent=None, painter=None):
+        super(Rapport, self).__init__(parent=parent)
+        p = painter
+        if p:
+            self.drawing(p)
 
     def draw_background(self, p):
         draw_rectangle(p, self.DEC_X_CHART, self.DEC_Y_CHART, self.CHART_W, self.CHART_H, color_gris_clair)
@@ -214,7 +237,6 @@ class RapportMenu(MondonWidget):
                     current_sum = 0
                 i += 1
             new_data.append(round(current_sum / 90))
-            print(len(new_data))
             return new_data
 
         speeds = get_speed()
@@ -224,6 +246,11 @@ class RapportMenu(MondonWidget):
             color = color_vert if speed > VITESSE_LIMITE_ASSIMILATION_ARRET else color_rouge
             draw_rectangle(p, self.DEC_X_CHART + i, self.CHART_H - speed + self.DEC_Y_CHART, 1, speed + 1, color)
             i += 1
+        current_store = data_store_manager.get_current_store()
+        vendredi = timestamp_to_day(timestamp_at_day_ago(current_store.day_ago)) == "vendredi"
+        if vendredi:
+            draw_rectangle(p, self.DEC_X_CHART + (40*14), self.DEC_Y_CHART, 40*2, self.CHART_H, color_gris_moyen)
+            draw_text(p, self.DEC_X_CHART + (40*14), self.DEC_Y_CHART, 40*2, self.CHART_H, color_gris_fonce, align="C", font_size=10, text="Vendredi")
 
     def draw_border(self, p):
         draw_rectangle(p, self.DEC_X_CHART, self.DEC_Y_CHART, 1, self.CHART_H, color_bleu_gris)
@@ -408,22 +435,34 @@ class RapportMenu(MondonWidget):
         vendredi = timestamp_to_day(timestamp_at_day_ago(current_store.day_ago)) == "vendredi"
         if moment == "matin":
             DEC_X = (self.PAGE_W - self.TITRE_W) / 2
+            start_hour = DEBUT_PROD_MATIN
             end_hour = FIN_PROD_MATIN_VENDREDI if vendredi else FIN_PROD_MATIN
         else:
             DEC_X = (self.PAGE_W - self.TITRE_W) / 2 + 350
+            start_hour = FIN_PROD_MATIN_VENDREDI if vendredi else FIN_PROD_MATIN
             end_hour = FIN_PROD_SOIR_VENDREDI if vendredi else FIN_PROD_SOIR
+        start_ts = timestamp_at_time(timestamp_at_day_ago(current_store.day_ago), hours=start_hour)
         end_ts = timestamp_at_time(timestamp_at_day_ago(current_store.day_ago), hours=end_hour)
         DEC_Y = 0
         i = 0
+
         for arret in arrets:
-            print(arret)
-            if arret.start < end_ts and arret.end - arret.start > 6000:
-                type = arret.raisons[0].type if arret.raisons else "non renseigné"
-                start = ""
-                duree = ""
-                text_arret = "Arrêt {type}, début à {start}, durée {duree}".format(type=type, start=start, duree=duree)
-                draw_text(p, DEC_X + 10, self.DEC_Y_LIST + DEC_Y, 330, 20, color_rouge, "G", 12, text_arret, bold=True)
-                draw_text(p, DEC_X + 10, self.DEC_Y_LIST + DEC_Y + 20, 330, 20, color_noir, "G", 12, "Changement production avec pose clichés")
+            start_arret = arret[0]
+            end_arret = arret[1]
+            type = arret[2][0].type if arret[2] else "non renseigné"
+            if (start_ts < arret[0] < end_ts and arret[1] - arret[0] > 3600) or (start_ts < arret[0] < end_ts and type == "Imprévu"):
+                start = str(timestamp_to_hour_little(start_arret))
+                duree = str(timedelta(seconds=round(end_arret - start_arret)))
+                text_arret = "Arrêt {type} à {start}, durée {duree}".format(type=type, start=start, duree=duree)
+                if type == "Imprévu" or type == "non renseigné":
+                    color = color_rouge
+                elif type == "Prévu":
+                    color = color_bleu_dune
+                else:
+                    color = color_gris_fonce
+                draw_text(p, DEC_X + 10, self.DEC_Y_LIST + DEC_Y, 330, 20, color, "G", 10, text_arret, bold=True)
+                if type != "non renseigné":
+                    draw_text(p, DEC_X + 10, self.DEC_Y_LIST + DEC_Y + 20, 330, 20, color_noir, "G", 10, arret[2][0].raison)
                 i += 1
                 DEC_Y += 50
 
@@ -448,4 +487,3 @@ class RapportMenu(MondonWidget):
         self.draw_list_arret(p, "matin")
         self.draw_list_arret(p, "soir")
         self.draw_castor(p)
-
