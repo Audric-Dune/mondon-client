@@ -1,7 +1,7 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 from datetime import timedelta
-from PyQt5.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QScrollArea, QWidget, QFileDialog
+from PyQt5.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QScrollArea, QWidget, QFileDialog, QDialog
 from PyQt5.QtGui import QPainter, QFont, QBrush, QTextDocument, QPdfWriter, QPixmap, QImage, QColor, QTransform
 from PyQt5.QtPrintSupport import QPrinter, QPrintDialog
 from PyQt5.QtCore import QSize, Qt, QPoint, QRectF, QRect
@@ -62,6 +62,7 @@ class RapportMenu(MondonWidget):
         super(RapportMenu, self).__init__(parent=parent)
         self.background_color = color_bleu_gris
         self.bt_impression = PixmapButton(parent=self)
+        self.bt_save = PixmapButton(parent=self)
         self.vbox = QVBoxLayout()
         self.hbox = QHBoxLayout()
         self.rapport = Rapport(parent=self)
@@ -73,6 +74,7 @@ class RapportMenu(MondonWidget):
         label = QLabel("RAPPORT_MENU")
         label.setStyleSheet(white_title_label_stylesheet)
         self.hbox.addWidget(label)
+        self.hbox.addWidget(self.bt_save)
         self.hbox.addWidget(self.bt_impression)
         self.vbox.addLayout(self.hbox)
 
@@ -83,113 +85,52 @@ class RapportMenu(MondonWidget):
         self.setLayout(self.vbox)
 
     def init_button(self):
+        # Bouton sauvegarder
+        self.bt_save.clicked.connect(self.save_pdf)
+        self.bt_save.setStyleSheet(button_stylesheet)
+        self.bt_save.setFixedSize(self.PIXMAPBUTTON_SIZE)
+        self.bt_save.setContentsMargins(8)
+        self.bt_save.addImage("assets/images/save_as.png")
         # Bouton impression
         self.bt_impression.clicked.connect(self.impression)
         self.bt_impression.setStyleSheet(button_stylesheet)
         self.bt_impression.setFixedSize(self.PIXMAPBUTTON_SIZE)
         self.bt_impression.addImage("assets/images/impression.png")
 
-    # def impression(self):
-    #     printer = QPrinter()
-    #     printer.setOutputFileName("print.pdf")
-    #     painter = QPainter()
-    #     painter.begin(printer)
-    #     self.drawing(painter)
-    #     painter.end()
-    #     # self.pdf()
+    def save_pdf(self):
+        printer = QPrinter()
+        painter = QPainter()
+        file = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
+        name_file = "{}/2017_02_12_rapport_production_bobine.pdf".format(file)
+        printer.setOutputFileName(name_file)
+        printer.setOutputFormat(QPrinter.PdfFormat)
+        printer.setPageMargins(10, 10, 10, 10, QPrinter.Point)
+        painter.begin(printer)
+        self.rapport.drawing(painter)
+        painter.end()
+        self.affiche_pdf(name_file)
 
     def impression(self):
         printer = QPrinter()
+        dialog = QPrintDialog(printer, self)
+        if dialog.exec_() != QDialog.Accepted:
+            return
         painter = QPainter()
-        # name = QFileDialog.getSaveFileName(self, 'Save File')
-        # print(name)
-        file = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
-        print(file)
-        printer.setOutputFileName("{}/2017_02_12_rapport_production_bobine.pdf".format(file))
-        printer.setOutputFormat(QPrinter.PdfFormat)
-
         printer.setPageMargins(10, 10, 10, 10, QPrinter.Point)
-        # printer.setFullPage(True)
-        margin = printer.getPageMargins(QPrinter.Point)
-        size = printer.paperSize(QPrinter.DevicePixel)
-        width = size.width()
-
         painter.begin(printer)
         self.rapport.drawing(painter)
-        # painter.drawText(QRectF(0.0, 0.0, width, 50.0), Qt.AlignCenter | Qt.AlignTop, "abcdefghijklmn")
         painter.end()
-        self.affiche_pdf()
 
-    def affiche_pdf(self):
+    @staticmethod
+    def affiche_pdf(name_file):
         import os
         """affiche le pdf créé, dans le visualiseur pdf par défaut de l'OS"""
-        if os.path.exists("prueba.pdf"):
+        if os.path.exists(name_file):
             try:
                 # solution pour Windows
-                os.startfile("prueba.pdf")
+                os.startfile(name_file)
             except:
                 pass
-
-    # @staticmethod
-    # def pdf():
-        # pdf = QPdfWriter()
-        # pdf = open('print.pdf', encoding='utf-8').read()  # ascii PDF here
-        # d = QtPoppler.Poppler.Document.load('print.pdf')
-        # d.setRenderHint(QtPoppler.Poppler.Document.Antialiasing and QtPoppler.Poppler.Document.TextAntialiasing)
-        # print("open")
-        # doc = QTextDocument(pdf)
-        # printer = QPrinter()
-        # dialog = QPrintDialog(printer)
-        # if dialog.exec_() == True:
-        #     # doc.print_(printer)
-        #     print("print")
-
-    # def impression(self):
-    #     printer = QPrinter(QPrinter.HighResolution)
-    #     painter = QPainter()
-    #     painter.begin(printer)
-    #     # rectangle = painter.viewport()
-    #     # size = self.rapport.size()
-    #     # size.scale(rectangle.size(), Qt.KeepAspectRatio)
-    #     # painter.setViewport(rectangle.x(), rectangle.y(), size.width(), size.height())
-    #     self.rapport.render(painter)
-    #     painter.end()
-
-    # def impression(self):
-    #     widget = self.rapport
-    #     painter = QPainter(QPrinter())
-    #     rectangle = painter.viewport()
-    #     size = widget.size()
-    #     size.scale(rectangle.size(), Qt.KeepAspectRatio)
-    #     painter.setViewport(rectangle.x(), rectangle.y(), size.width(), size.height())
-    #     widget.render(painter)
-
-    # def impression(self):
-    #     printer = QPrinter()
-    #     dialog = QPrintDialog(printer)
-    #     dialog.setModal(True)
-    #     dialog.setWindowTitle("Print Document")
-    #     if dialog.exec_() == True:
-    #         self.rapport.print_(printer)
-
-    # def create_rapport(self):
-    #     vbox = QVBoxLayout()
-    #
-    #     self.chart = Chart(parent=self)
-    #     self.chart.setFixedHeight(300)
-    #     self.chart.setFixedWidth(750)
-    #     vbox.addWidget(self.chart)
-    #
-    #     stat_menu = StatTitre(parent=self, note=False)
-    #     vbox.addWidget(stat_menu)
-    #
-    #     tab_arret_menu = TabArretMenu(parent=self, scrollbar=False)
-    #     vbox.addWidget(tab_arret_menu)
-    #
-    #     rapport = QWidget()
-    #     rapport.setLayout(vbox)
-    #
-    #     return rapport
 
 
 class Rapport(MondonWidget):
@@ -460,9 +401,9 @@ class Rapport(MondonWidget):
                     color = color_bleu_dune
                 else:
                     color = color_gris_fonce
-                draw_text(p, DEC_X + 10, self.DEC_Y_LIST + DEC_Y, 330, 20, color, "G", 10, text_arret, bold=True)
+                draw_text(p, DEC_X + 10, self.DEC_Y_LIST + DEC_Y, 330, 20, color, "G", 12, text_arret, bold=True)
                 if type != "non renseigné":
-                    draw_text(p, DEC_X + 10, self.DEC_Y_LIST + DEC_Y + 20, 330, 20, color_noir, "G", 10, arret[2][0].raison)
+                    draw_text(p, DEC_X + 10, self.DEC_Y_LIST + DEC_Y + 20, 330, 20, color_noir, "G", 12, arret[2][0].raison)
                 i += 1
                 DEC_Y += 50
 
