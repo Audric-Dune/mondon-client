@@ -57,9 +57,9 @@ class Rapport(MondonWidget):
 
     def on_settings_changed(self, prev_live, prev_day_ago, prev_zoom):
         self.update()
-
-    def on_data_changed(self):
-        self.update()
+    #
+    # def on_data_changed(self):
+    #     self.update()
 
     def draw_background(self, p):
         draw_rectangle(p, self.DEC_X_CHART, self.DEC_Y_CHART, self.CHART_W, self.CHART_H, color_gris_clair)
@@ -400,13 +400,14 @@ class Rapport(MondonWidget):
         end_ts = timestamp_at_time(timestamp_at_day_ago(current_store.day_ago), hours=end_hour)
         DEC_Y = 0
         i = 0
-
+        # Trie les arrets par ordre chronologique
+        arrets = sorted(arrets, key=lambda arret: arret[0])
         for arret in arrets:
             start_arret = arret[0]
             end_arret = arret[1]
             type = arret[2][0].type if arret[2] else "non renseigné"
-            if (start_ts < arret[0] < end_ts and arret[1] - arret[0] > 3600)\
-                    or (start_ts < arret[0] < end_ts and type == "Imprévu"):
+            if (start_ts <= start_arret <= end_ts and end_arret - start_arret >= 3600)\
+                    or (start_ts < start_arret < end_ts and type == "Imprévu"):
                 start = str(timestamp_to_hour_little(start_arret))
                 duree = str(timedelta(seconds=round(end_arret - start_arret)))
                 text_arret = "Arrêt {type} à {start}, durée {duree}".format(type=type, start=start, duree=duree)
