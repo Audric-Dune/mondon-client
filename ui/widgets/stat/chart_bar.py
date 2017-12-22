@@ -97,7 +97,7 @@ class ContentChart(MondonWidget):
             for bar in self.bars:
                 max_size = self.height() - 2 * (self.VALUE_LABEL_HEIGHT + self.BAR_CONTENT_SPACING)
                 if stat_store.data[-1]["values"]:
-                    height = (bar[1]*max_size)/max(stat_store.data[-1]["values"])
+                    height = (bar[1]*max_size)/max(stat_store.data[-1]["values"]) if max(stat_store.data[-1]["values"]) > 0 else 0
                 else:
                     height = 1
                 bar[0].setFixedHeight(round(height))

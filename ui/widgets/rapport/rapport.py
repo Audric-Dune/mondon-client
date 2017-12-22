@@ -407,7 +407,7 @@ class Rapport(MondonWidget):
             end_arret = arret[1]
             type = arret[2][0].type if arret[2] else "non renseigné"
             if (start_ts <= start_arret <= end_ts and end_arret - start_arret >= 3600)\
-                    or (start_ts < start_arret < end_ts and type == "Imprévu"):
+                    or (start_ts <= start_arret <= end_ts and type == "Imprévu"):
                 start = str(timestamp_to_hour_little(start_arret))
                 duree = str(timedelta(seconds=round(end_arret - start_arret)))
                 text_arret = "Arrêt {type} à {start}, durée {duree}".format(type=type, start=start, duree=duree)
