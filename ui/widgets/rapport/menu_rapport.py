@@ -1,6 +1,6 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
-from PyQt5.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QScrollArea, QFileDialog, QDialog, QWidget, QSizePolicy
+from PyQt5.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QScrollArea, QFileDialog, QDialog, QWidget
 from PyQt5.QtGui import QPainter
 from PyQt5.QtPrintSupport import QPrinter, QPrintDialog
 from PyQt5.QtCore import QSize, Qt
@@ -32,10 +32,6 @@ class RapportMenu(MondonWidget):
         self.scrool_bar = QScrollArea()
         self.init_button()
         self.init_widget()
-        self.scrool_bar.setFixedSize(self.width() - 20, self.height() - 65)
-
-    def on_size_main_window_changed(self):
-        self.scrool_bar.setFixedSize(self.width()-20, self.height()-65)
 
     def init_widget(self):
         label = QLabel("RAPPORT_MENU")
@@ -48,14 +44,14 @@ class RapportMenu(MondonWidget):
         self.vbox.addLayout(self.hbox)
         self.rapport.setFixedSize(771, 1100)
         content_scroll = QHBoxLayout()
-        content_scroll.addWidget(self.rapport, alignment=Qt.AlignCenter)
+        content_scroll.addWidget(self.rapport)
         widget = QWidget(parent=self)
         widget.setLayout(content_scroll)
+        widget.setStyleSheet("background-color:white;")
         self.scrool_bar.setWidget(widget)
-        self.scrool_bar.setWidgetResizable(False)
         self.scrool_bar.setStyleSheet(scroll_bar_stylesheet)
-        self.scrool_bar.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.vbox.addWidget(self.scrool_bar, alignment=Qt.AlignCenter)
+        self.scrool_bar.setAlignment(Qt.AlignCenter)
+        self.vbox.addWidget(self.scrool_bar)
         self.setLayout(self.vbox)
 
     def init_button(self):
