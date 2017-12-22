@@ -31,12 +31,13 @@ class DataStore:
             ts = timestamp_at_day_ago(self.day_ago)
             if self.day_ago > 0:
                 metrage = Database.get_metrages_for_one_day(start_time=ts)
+                metrage = metrage[0]
                 if not metrage:
                     metrage = self.get_live_stat(self.data, ts)
             else:
                 metrage = self.get_live_stat(self.data, ts)
-            self.metrage_matin = metrage[0][0]
-            self.metrage_soir = metrage[0][1]
+            self.metrage_matin = metrage[0]
+            self.metrage_soir = metrage[1]
 
             list_arrets_database = Database.get_arret(self.start, self.end)
             self.dic_arret_from_database(list_arrets_database)

@@ -32,7 +32,7 @@ class LiveSpeed(MondonWidget):
     def update_widget(self):
         if not self.last_speed:
             self.last_speed = 0
-        speed_text = "{speed} m/min".format(speed=self.last_speed)
+        speed_text = "{speed} m/min".format(speed=round(self.last_speed))
         self.speed_label.setText(speed_text)
 
     def on_data_changed(self):
