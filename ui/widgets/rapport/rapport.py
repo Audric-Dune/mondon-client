@@ -382,7 +382,7 @@ class Rapport(MondonWidget):
         draw_text(p, (self.PAGE_W - self.TITRE_W) / 2 + 10, self.DEC_Y_ARRET, 400, 40, color_jaune_dune, "G", 16,
                   "Détail des arrêts remarquables machines")
         draw_text(p, (self.PAGE_W - self.TITRE_W) / 2 + 10, self.DEC_Y_ARRET + 45, 600, 20, color_gris_fonce, "G", 12,
-                  "Par remarquable on assimile les arrêts imprévus ou supérieurs à 1 heure", italic=True)
+                  "Par remarquable on assimile les arrêts imprévus ou supérieurs à 30 minutes", italic=True)
 
     def draw_list_arret(self, p, moment):
         current_store = data_store_manager.get_current_store()
@@ -406,8 +406,8 @@ class Rapport(MondonWidget):
             start_arret = arret[0]
             end_arret = arret[1]
             type = arret[2][0].type if arret[2] else "non renseigné"
-            if (start_ts <= start_arret <= end_ts and end_arret - start_arret >= 3600)\
-                    or (start_ts < start_arret < end_ts and type == "Imprévu"):
+            if (start_ts <= start_arret <= end_ts and end_arret - start_arret >= 1800)\
+                    or (start_ts <= start_arret <= end_ts and type == "Imprévu"):
                 start = str(timestamp_to_hour_little(start_arret))
                 duree = str(timedelta(seconds=round(end_arret - start_arret)))
                 text_arret = "Arrêt {type} à {start}, durée {duree}".format(type=type, start=start, duree=duree)
