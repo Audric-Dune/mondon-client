@@ -16,6 +16,7 @@ from ui.widgets.stat.data_tab import DataTab
 from ui.widgets.stat.stat_menu import StatMenu
 from ui.widgets.stat.chart_bar_menu import ChartBarMenu
 from ui.widgets.rapport.menu_rapport import RapportMenu
+from ui.widgets.rapport.preview_rapport import PreviewRapport
 
 
 class MainWindow(QMainWindow):
@@ -81,7 +82,6 @@ class MainWindow(QMainWindow):
 
         chart = Chart(parent=self.central_widget)
         chart.setMinimumHeight(300)
-        # chart.setSizePolicy(QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding))
         vbox.addWidget(chart)
 
         stat_menu = StatTitre(parent=self.central_widget)
@@ -98,7 +98,11 @@ class MainWindow(QMainWindow):
         vbox = QVBoxLayout()
 
         rapport_menu = RapportMenu(parent=self.central_widget)
+        rapport_menu.setFixedHeight(chart_menu_height)
         vbox.addWidget(rapport_menu)
+
+        preview_rapport = PreviewRapport(parent=self)
+        vbox.addWidget(preview_rapport)
 
         return vbox
 

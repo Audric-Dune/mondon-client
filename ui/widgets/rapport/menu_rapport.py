@@ -1,13 +1,15 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
-from PyQt5.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QScrollArea, QFileDialog, QDialog, QWidget
+
+from PyQt5.QtWidgets import QHBoxLayout, QLabel, QFileDialog, QDialog, QPushButton
 from PyQt5.QtGui import QPainter
 from PyQt5.QtPrintSupport import QPrinter, QPrintDialog
 from PyQt5.QtCore import QSize, Qt
 
 from constants.colors import color_bleu_gris
-from constants.stylesheets import white_title_label_stylesheet, button_stylesheet, scroll_bar_stylesheet
+from constants.stylesheets import button_stylesheet, white_22_label_stylesheet, button_little_stylesheet
 from stores.settings_store import settings_store
+from ui.utils.timestamp import timestamp_at_day_ago, timestamp_to_date, timestamp_to_inverse_date
 from ui.widgets.public.mondon_widget import MondonWidget
 from ui.widgets.public.pixmap_button import PixmapButton
 from ui.widgets.rapport.rapport import Rapport
@@ -15,8 +17,11 @@ from ui.widgets.rapport.rapport import Rapport
 
 class RapportMenu(MondonWidget):
     PIXMAPBUTTON_SIZE = QSize(40, 40)
+    BUTTON_HEIGHT = 40
+    BUTTON_WIDTH = 100
     PAGE_W = 770
     PAGE_H = 1100
+    MINIMUN_WIDTH_LABEL = 350
 
     def __init__(self, parent=None):
         super(RapportMenu, self).__init__(parent=parent)
@@ -25,34 +30,43 @@ class RapportMenu(MondonWidget):
         self.bt_save = PixmapButton(parent=self)
         self.bt_jour_plus = PixmapButton(parent=self)
         self.bt_jour_moins = PixmapButton(parent=self)
+        self.bt_live = QPushButton("Aujourd'hui")
         self.label_date = QLabel()
-        self.vbox = QVBoxLayout()
-        self.hbox = QHBoxLayout()
         self.rapport = Rapport(parent=self)
-        self.scrool_bar = QScrollArea()
+        self.rapport.hide()
         self.init_button()
         self.init_widget()
+        self.update_button()
+        self.update_label()
+
+    def on_settings_changed(self, prev_live, prev_day_ago, prev_zoom):
+        self.update_button()
+        self.update_label()
 
     def init_widget(self):
-        label = QLabel("RAPPORT_MENU")
-        label.setStyleSheet(white_title_label_stylesheet)
-        self.hbox.addWidget(label)
-        self.hbox.addWidget(self.bt_jour_moins)
-        self.hbox.addWidget(self.bt_jour_plus)
-        self.hbox.addWidget(self.bt_save)
-        self.hbox.addWidget(self.bt_impression)
-        self.vbox.addLayout(self.hbox)
-        self.rapport.setFixedSize(771, 1100)
-        content_scroll = QHBoxLayout()
-        content_scroll.addWidget(self.rapport)
-        widget = QWidget(parent=self)
-        widget.setLayout(content_scroll)
-        widget.setStyleSheet("background-color:white;")
-        self.scrool_bar.setWidget(widget)
-        self.scrool_bar.setStyleSheet(scroll_bar_stylesheet)
-        self.scrool_bar.setAlignment(Qt.AlignCenter)
-        self.vbox.addWidget(self.scrool_bar)
-        self.setLayout(self.vbox)
+        menu_hbox = QHBoxLayout()
+
+        left_hbox = QHBoxLayout()
+        left_hbox.addWidget(self.bt_live)
+        left_hbox.addStretch(1)
+        menu_hbox.addLayout(left_hbox)
+
+        date_hbox = QHBoxLayout()
+        date_hbox.addStretch(1)
+        date_hbox.addWidget(self.bt_jour_moins)
+        self.label_date.setStyleSheet(white_22_label_stylesheet)
+        date_hbox.addWidget(self.label_date)
+        date_hbox.addWidget(self.bt_jour_plus)
+        date_hbox.addStretch(1)
+        menu_hbox.addLayout(date_hbox)
+
+        right_hbox = QHBoxLayout()
+        right_hbox.addStretch(1)
+        right_hbox.addWidget(self.bt_save)
+        right_hbox.addWidget(self.bt_impression)
+        menu_hbox.addLayout(right_hbox)
+
+        self.setLayout(menu_hbox)
 
     def init_button(self):
         # Bouton sauvegarder
@@ -79,18 +93,42 @@ class RapportMenu(MondonWidget):
         self.bt_jour_moins.setFixedSize(self.PIXMAPBUTTON_SIZE)
         self.bt_jour_moins.addImage("assets/images/fleche_precedent.png")
 
+        # Bouton live
+        self.bt_live.clicked.connect(self.live)
+        self.bt_live.setFixedSize(self.BUTTON_WIDTH, self.BUTTON_HEIGHT)
+        self.bt_live.setStyleSheet(button_little_stylesheet)
+
+    def update_button(self):
+        self.bt_jour_plus.setEnabled(settings_store.day_ago > 0)
+
+    def update_label(self):
+        ts = timestamp_at_day_ago(settings_store.day_ago)
+        date = timestamp_to_date(ts)
+        self.label_date.setMinimumWidth(self.MINIMUN_WIDTH_LABEL)
+        self.label_date.setAlignment(Qt.AlignCenter)
+        self.label_date.setText(date)
+
+    @staticmethod
+    def live():
+        settings_store.set_day_ago(0)
+
     def save_pdf(self):
         printer = QPrinter()
         painter = QPainter()
-        file = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
-        name_file = "{}/2017_02_12_rapport_production_bobine.pdf".format(file)
-        printer.setOutputFileName(name_file)
+        defaut_path = 'I:\Programme mondon\Rapport production bobines'
+        ts = timestamp_at_day_ago(settings_store.day_ago)
+        defaut_name = "{} Rapport production bobines".format(timestamp_to_inverse_date(ts))
+        file_names = QFileDialog.getSaveFileName(self,
+                                                 caption='Enregistrer sous',
+                                                 directory='{}\{}.pdf'.format(defaut_path, defaut_name),
+                                                 filter="Fichiers pdf (*.pdf)")
+        printer.setOutputFileName(file_names[0])
         printer.setOutputFormat(QPrinter.PdfFormat)
         printer.setPageMargins(10, 10, 10, 10, QPrinter.Point)
         painter.begin(printer)
         self.rapport.drawing(painter)
         painter.end()
-        self.affiche_pdf(name_file)
+        self.affiche_pdf(file_names[0])
 
     def impression(self):
         printer = QPrinter()

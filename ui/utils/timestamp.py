@@ -5,6 +5,11 @@ from datetime import datetime, timedelta
 import locale
 
 
+def timestamp_to_inverse_date(timestamp):
+    locale.setlocale(locale.LC_TIME, '')
+    return datetime.fromtimestamp(timestamp).strftime('%Y_%m_%d')
+
+
 def timestamp_to_hour(timestamp):
     locale.setlocale(locale.LC_TIME, '')
     return datetime.fromtimestamp(timestamp).strftime('%H:%M:%S')

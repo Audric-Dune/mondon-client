@@ -5,7 +5,7 @@ from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtWidgets import QPushButton, QHBoxLayout, QLabel
 
 from constants.colors import color_bleu_gris
-from constants.stylesheets import button_stylesheet, white_22_label_stylesheet
+from constants.stylesheets import button_stylesheet, white_22_label_stylesheet, button_little_stylesheet
 from stores.settings_store import settings_store
 from ui.application import app
 from ui.utils.timestamp import timestamp_at_day_ago, timestamp_to_date
@@ -23,7 +23,6 @@ class ChartMenu(MondonWidget):
     def __init__(self, parent):
         super(ChartMenu, self).__init__(parent=parent)
         self.set_background_color(color_bleu_gris)
-        self.day_ago = 0
         self.bt_jour_plus = PixmapButton(parent=self)
         self.bt_jour_moins = PixmapButton(parent=self)
         self.bt_zoom_plus = PixmapButton(parent=self)
@@ -32,6 +31,7 @@ class ChartMenu(MondonWidget):
         self.label_date = QLabel()
         self.live_speed = LiveSpeed(self)
         self.init_widget()
+        self.update_label()
         self.update_button()
 
     def init_widget(self):
@@ -91,10 +91,9 @@ class ChartMenu(MondonWidget):
         # Bouton live
         self.bt_live.clicked.connect(self.live)
         self.bt_live.setFixedSize(self.BUTTON_WIDTH, self.BUTTON_HEIGHT)
-        self.bt_live.setStyleSheet(button_stylesheet)
+        self.bt_live.setStyleSheet(button_little_stylesheet)
 
     def on_settings_changed(self, prev_live, prev_day_ago, prev_zoom):
-        self.day_ago = settings_store.day_ago
         self.update_button()
         self.update_label()
 
@@ -104,7 +103,7 @@ class ChartMenu(MondonWidget):
         self.bt_zoom_plus.setEnabled(32 > settings_store.zoom)
 
     def update_label(self):
-        ts = timestamp_at_day_ago(self.day_ago)
+        ts = timestamp_at_day_ago(settings_store.day_ago)
         date = timestamp_to_date(ts)
         self.label_date.setMinimumWidth(self.MINIMUN_WIDTH_LABEL)
         self.label_date.setAlignment(Qt.AlignCenter)
