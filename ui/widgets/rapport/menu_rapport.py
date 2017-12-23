@@ -100,6 +100,7 @@ class RapportMenu(MondonWidget):
 
     def update_button(self):
         self.bt_jour_plus.setEnabled(settings_store.day_ago > 0)
+        self.bt_live.setEnabled(settings_store.day_ago > 0)
 
     def update_label(self):
         ts = timestamp_at_day_ago(settings_store.day_ago)
