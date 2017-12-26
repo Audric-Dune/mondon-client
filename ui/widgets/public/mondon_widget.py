@@ -13,7 +13,7 @@ from ui.application import app
 
 
 class MondonWidget(QWidget):
-    def __init__(self, parent):
+    def __init__(self, parent=None):
         super(QWidget, self).__init__(parent=parent)
         self.background_color = None
         self.padding = 0

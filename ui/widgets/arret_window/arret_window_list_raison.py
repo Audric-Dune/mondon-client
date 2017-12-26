@@ -88,16 +88,18 @@ class ArretWindowListRaison(MondonWidget):
         S'occupe de créer une ligne associé a une raison
         :return: Le layout de la ligne
         """
-        # Création widget horizontal
-        background = MondonWidget(parent=self)
-        background.background_color(color_orange)
-        hbox = QHBoxLayout(background)
+        hbox = QHBoxLayout()
         # On regarde si le type est égale au first type pour ajouter le radiobutton si besoin
         if raison.type == first_type:
+            background = MondonWidget(parent=self)
+            background.set_background_color(color_orange)
+            container = QHBoxLayout(background)
+            container.setContentsMargins(5,5,5,5)
             radio_bt = QRadioButton()
             radio_bt.setStyleSheet(radio_button_stylesheet)
-            radio_bt.setFixedSize(radio_bt.sizeHint())
-            hbox.addWidget(radio_bt)
+            container.addWidget(radio_bt)
+            background.setFixedSize(background.sizeHint())
+            hbox.addWidget(background)
         # Création du label type
         type_label = QLabel(raison.type)
         # On met le label et la croix en couleur en fonction du type
