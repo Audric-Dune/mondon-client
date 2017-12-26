@@ -17,7 +17,8 @@ from constants.stylesheets import \
 from ui.utils.layout import clear_layout
 from ui.widgets.public.pixmap_button import PixmapButton
 from ui.widgets.public.mondon_widget import MondonWidget
-
+from ui.widgets.public.checkbox_button import CheckboxButton
+from ui.widgets.public.radio_button import RadioButtonManager, RadioButton
 
 class ArretWindowListRaison(MondonWidget):
     DELETE_RAISON_SIGNAL = pyqtSignal()
@@ -36,6 +37,7 @@ class ArretWindowListRaison(MondonWidget):
         self.set_background_color(color_bleu_gris)
         self.arret = arret
         self.list_layout_raison = {}
+        self.radio_button_manager = None
         # _____INITIALISATION WIDGET_____
         self.vbox = QVBoxLayout(self)
         self.vbox.setContentsMargins(self.VBOX_MARGIN)
@@ -57,6 +59,7 @@ class ArretWindowListRaison(MondonWidget):
         else:
             index = 0
             first_type = None
+            self.radio_button_manager = RadioButtonManager()
             for raison in list_raison:
                 if not first_type:
                     first_type = raison.type
@@ -89,19 +92,6 @@ class ArretWindowListRaison(MondonWidget):
         :return: Le layout de la ligne
         """
         hbox = QHBoxLayout()
-        # On regarde si le type est égale au first type pour ajouter le radiobutton si besoin
-        if raison.type == first_type:
-            background = MondonWidget(parent=self)
-            background.set_background_color(color_orange)
-            container = QHBoxLayout(background)
-            container.setContentsMargins(5,5,5,5)
-            radio_bt = QRadioButton()
-            radio_bt.setStyleSheet(radio_button_stylesheet)
-            container.addWidget(radio_bt)
-            background.setFixedSize(background.sizeHint())
-            hbox.addWidget(background)
-        # Création du label type
-        type_label = QLabel(raison.type)
         # On met le label et la croix en couleur en fonction du type
         if raison.type == "Prévu":
             label_stylesheet = blue_title_label_stylesheet
@@ -112,6 +102,15 @@ class ArretWindowListRaison(MondonWidget):
         else:
             label_stylesheet = gray_title_label_stylesheet
             bt_cross_stylesheet = button_gray_cross_stylesheet
+        # On regarde si le type est égale au first type pour ajouter le radiobutton si besoin
+        if raison.type == first_type:
+            radio_bt = RadioButton(parent=self)
+            radio_bt.setStyleSheet(bt_cross_stylesheet)
+            self.radio_button_manager.add(radio_bt)
+            radio_bt.setFixedSize(self.HEIGHT_LINE, self.HEIGHT_LINE)
+            hbox.addWidget(radio_bt, alignment=Qt.AlignVCenter)
+        # Création du label type
+        type_label = QLabel(raison.type)
         type_label.setStyleSheet(label_stylesheet)
         type_label.setAlignment(Qt.AlignCenter)
         type_label.setFixedWidth(self.WIDTH_TYPE)
@@ -122,6 +121,7 @@ class ArretWindowListRaison(MondonWidget):
         raison_label = QLabel(raison.raison)
         # On met le label en couleur en fonction du type et on définit la largeur
         raison_label.setStyleSheet(label_stylesheet)
+        raison_label.setFixedHeight(self.HEIGHT_LINE)
         # On ajoute le label au layout
         hbox.addWidget(raison_label)
         # On crée un bouton pour supprimer la ligne
