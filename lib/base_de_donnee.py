@@ -230,7 +230,7 @@ class Database:
         """
         query = "SELECT id, start_arret, type_arret, raison_arret, primaire " \
                 "FROM mondon_raison_arret " \
-                "WHERE start_arret > ? AND start_arret <= ?" \
+                "WHERE start_arret >= ? AND start_arret <= ?" \
                 "ORDER BY start_arret"\
             .format(start_time=start_time, end_time=end_time)
         raisons = cls._run_query(query, (start_time, end_time))
