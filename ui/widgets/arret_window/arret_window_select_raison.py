@@ -71,7 +71,6 @@ class ArretWindowSelectRaison(MondonWidget):
             elif format == "dropdown":
                 self.items.append((format, self.create_dropdown(value, index)))
                 # On ajoute un label titre au layout
-                print(value, index)
                 label_dropdown = self.create_label(value["titre"], index)
                 hbox.addWidget(label_dropdown)
             elif format == "text_edit":

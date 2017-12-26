@@ -424,3 +424,19 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {{
     color_gris_fonce=color_gris_fonce.hex_string,
     color_blanc=color_blanc.hex_string
 )
+
+# ____________RADIOBUTTON STYLESHEET____________
+
+radio_button_stylesheet = """
+    QRadioButton {{
+        background: {color_vert_fonce}
+    }}
+""".format(
+    color_blanc=color_blanc.hex_string,
+    color_vert_fonce=color_vert_fonce.hex_string,
+    color_vert_moyen=color_vert_moyen.hex_string,
+    color_vert=color_vert.hex_string,
+    color_gris_moyen=color_gris_moyen.hex_string,
+    color_gris_fonce=color_gris_fonce.hex_string,
+    color_rouge=color_rouge.hex_string,
+)

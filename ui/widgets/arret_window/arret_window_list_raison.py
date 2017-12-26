@@ -2,17 +2,18 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5.Qt import Qt
-from PyQt5.QtWidgets import QLabel, QHBoxLayout, QVBoxLayout
+from PyQt5.QtWidgets import QLabel, QHBoxLayout, QVBoxLayout, QRadioButton
 from PyQt5.QtCore import QSize, QMargins, pyqtSignal
 
-from constants.colors import color_bleu_gris
+from constants.colors import color_bleu_gris, color_orange
 from constants.stylesheets import \
     gray_title_label_stylesheet, \
     red_title_label_stylesheet, \
     blue_title_label_stylesheet, \
     button_gray_cross_stylesheet,\
     button_red_cross_stylesheet,\
-    button_blue_cross_stylesheet
+    button_blue_cross_stylesheet,\
+    radio_button_stylesheet
 from ui.utils.layout import clear_layout
 from ui.widgets.public.pixmap_button import PixmapButton
 from ui.widgets.public.mondon_widget import MondonWidget
@@ -54,9 +55,12 @@ class ArretWindowListRaison(MondonWidget):
             # On ajout la ligne pas de raison sélectionné
             self.vbox.addLayout(self.initial_line)
         else:
-            index = 1
+            index = 0
+            first_type = None
             for raison in list_raison:
-                line_raison = self.create_line_raison(raison)
+                if not first_type:
+                    first_type = raison.type
+                line_raison = self.create_line_raison(raison, first_type, index)
                 self.list_layout_raison[index] = line_raison
                 self.vbox.addLayout(line_raison)
                 index += 1
@@ -79,13 +83,21 @@ class ArretWindowListRaison(MondonWidget):
         hbox.addWidget(initial_label)
         return hbox
 
-    def create_line_raison(self, raison):
+    def create_line_raison(self, raison, first_type, index):
         """
         S'occupe de créer une ligne associé a une raison
         :return: Le layout de la ligne
         """
         # Création widget horizontal
-        hbox = QHBoxLayout()
+        background = MondonWidget(parent=self)
+        background.background_color(color_orange)
+        hbox = QHBoxLayout(background)
+        # On regarde si le type est égale au first type pour ajouter le radiobutton si besoin
+        if raison.type == first_type:
+            radio_bt = QRadioButton()
+            radio_bt.setStyleSheet(radio_button_stylesheet)
+            radio_bt.setFixedSize(radio_bt.sizeHint())
+            hbox.addWidget(radio_bt)
         # Création du label type
         type_label = QLabel(raison.type)
         # On met le label et la croix en couleur en fonction du type
