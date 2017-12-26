@@ -157,7 +157,7 @@ class DataStore:
                     from models.raison import Raison
                     raison_object = Raison(raison)
                     arret_object.raisons.append(raison_object)
-                arret_object.raisons = arret_object.raison_store(arret_object.raisons)
+                arret_object.raison_store()
 
     @staticmethod
     def check_start_raison(dic_arret, start):

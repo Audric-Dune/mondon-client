@@ -25,9 +25,11 @@ class Raison(QObject):
 
     def update_to_raison_primaire(self):
         Database.update_to_raison_primaire(id=self.id, primaire=1)
+        self.primaire = 1
 
     def remove_to_raison_primaire(self):
         Database.update_to_raison_primaire(id=self.id, primaire=0)
+        self.primaire = 0
 
     def del_raison_on_database(self):
         Database.delete_raison_arret(self.id)

@@ -1,11 +1,12 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtCore import QObject
+from PyQt5.QtCore import QObject, pyqtSignal
 from ui.widgets.public.pixmap_button import PixmapButton
 
 
 class RadioButtonManager(QObject):
+    ON_RADIO_BUTTON_CHANGED_SIGNAL = pyqtSignal(int)
     def __init__(self):
         super(RadioButtonManager, self).__init__()
         self.radio_buttons = []
@@ -18,8 +19,14 @@ class RadioButtonManager(QObject):
         self.radio_buttons.remove(radio_button)
 
     def on_click(self, radio_button):
+        index = 0
         for current_button in self.radio_buttons:
-            current_button.is_selected = current_button is radio_button
+            if current_button is radio_button:
+                current_button.is_selected = True
+                self.ON_RADIO_BUTTON_CHANGED_SIGNAL.emit(index)
+            else:
+                current_button.is_selected = False
+            index += 1
 
 
 class RadioButton(PixmapButton):

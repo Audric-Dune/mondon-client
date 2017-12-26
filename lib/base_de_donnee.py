@@ -245,9 +245,9 @@ class Database:
         query = "UPDATE mondon_raison_arret " \
                 "SET primaire = ? " \
                 "WHERE id = ?" \
-            .format(id, primaire)
+            .format(primaire, id)
         try:
-            cls._run_query(query, (id, primaire))
+            cls._run_query(query, (primaire, id))
         except sqlite3.IntegrityError as e:
             # IntegrityError veut dire que l'on essaye d'insérer une vitesse avec un timestamp
             # qui existe déjà dans la base de données.

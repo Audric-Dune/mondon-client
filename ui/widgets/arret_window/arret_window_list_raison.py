@@ -2,22 +2,20 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5.Qt import Qt
-from PyQt5.QtWidgets import QLabel, QHBoxLayout, QVBoxLayout, QRadioButton
-from PyQt5.QtCore import QSize, QMargins, pyqtSignal
+from PyQt5.QtWidgets import QLabel, QHBoxLayout, QVBoxLayout
+from PyQt5.QtCore import QSize, QMargins, pyqtSignal, QTimer
 
-from constants.colors import color_bleu_gris, color_orange
+from constants.colors import color_bleu_gris
 from constants.stylesheets import \
     gray_title_label_stylesheet, \
     red_title_label_stylesheet, \
     blue_title_label_stylesheet, \
     button_gray_cross_stylesheet,\
     button_red_cross_stylesheet,\
-    button_blue_cross_stylesheet,\
-    radio_button_stylesheet
+    button_blue_cross_stylesheet
 from ui.utils.layout import clear_layout
 from ui.widgets.public.pixmap_button import PixmapButton
 from ui.widgets.public.mondon_widget import MondonWidget
-from ui.widgets.public.checkbox_button import CheckboxButton
 from ui.widgets.public.radio_button import RadioButtonManager, RadioButton
 
 class ArretWindowListRaison(MondonWidget):
@@ -46,13 +44,11 @@ class ArretWindowListRaison(MondonWidget):
         self.update_widget()
 
     def update_widget(self):
-        # On récupère la liste des raisons sotcké dans l'object Arret
-        list_raison = self.arret.raisons
         # On reinitialise le layout et la liste des layouts
         clear_layout(self.vbox)
         self.list_layout_raison = {}
         # Si la liste de raison est vide
-        if len(list_raison) == 0:
+        if len(self.arret.raisons) == 0:
             self.initial_line = self.create_initial_line()
             # On ajout la ligne pas de raison sélectionné
             self.vbox.addLayout(self.initial_line)
@@ -60,14 +56,28 @@ class ArretWindowListRaison(MondonWidget):
             index = 0
             first_type = None
             self.radio_button_manager = RadioButtonManager()
-            for raison in list_raison:
+            self.radio_button_manager.ON_RADIO_BUTTON_CHANGED_SIGNAL.connect(self.on_radio_button_changed)
+            for raison in self.arret.raisons:
                 if not first_type:
                     first_type = raison.type
-                line_raison = self.create_line_raison(raison, first_type, index)
+                line_raison = self.create_line_raison(raison, first_type)
                 self.list_layout_raison[index] = line_raison
                 self.vbox.addLayout(line_raison)
                 index += 1
         self.setLayout(self.vbox)
+
+    def on_radio_button_changed(self, index_selected):
+        list_raison = self.arret.raisons
+        index = 0
+        for raison in list_raison:
+            if index_selected == index:
+                raison.update_to_raison_primaire()
+            else:
+                raison.remove_to_raison_primaire()
+            index += 1
+        # Demande a l'object arret de trier la liste des raisons
+        self.arret.raison_store()
+        self.update_widget()
 
     def create_initial_line(self):
         """
@@ -86,7 +96,7 @@ class ArretWindowListRaison(MondonWidget):
         hbox.addWidget(initial_label)
         return hbox
 
-    def create_line_raison(self, raison, first_type, index):
+    def create_line_raison(self, raison, first_type):
         """
         S'occupe de créer une ligne associé a une raison
         :return: Le layout de la ligne
@@ -105,6 +115,7 @@ class ArretWindowListRaison(MondonWidget):
         # On regarde si le type est égale au first type pour ajouter le radiobutton si besoin
         if raison.type == first_type:
             radio_bt = RadioButton(parent=self)
+            radio_bt.is_selected = raison.primaire == 1
             radio_bt.setStyleSheet(bt_cross_stylesheet)
             self.radio_button_manager.add(radio_bt)
             radio_bt.setFixedSize(self.HEIGHT_LINE, self.HEIGHT_LINE)
