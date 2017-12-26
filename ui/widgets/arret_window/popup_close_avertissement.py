@@ -83,16 +83,13 @@ class PopupCloseAvertissement(QWidget):
     @staticmethod
     def create_message():
         vbox = QVBoxLayout()
-        label1 = QLabel("Des modifications sont en cours. Si vous fermez la fenêtre")
+        label1 = QLabel("Des modifications sont en cours. Si vous fermez la fenêtre elles ne seront pas enregistrées.")
+        label1.setWordWrap(True)
         label1.setStyleSheet(white_label_stylesheet)
         vbox.addWidget(label1)
-        label2 = QLabel("elles ne seront pas enregistrées.")
+        label2 = QLabel("Etes-vous sûr de vouloir quitter la fenêtre ?")
         label2.setStyleSheet(white_label_stylesheet)
-        label2.setContentsMargins(0, 0, 0, 5)
         vbox.addWidget(label2)
-        label3 = QLabel("Etes-vous sûr de vouloir quitter la fenêtre ?")
-        label3.setStyleSheet(white_label_stylesheet)
-        vbox.addWidget(label3)
         vbox.setSpacing(0)
         vbox.setContentsMargins(0, 0, 0, 0)
         return vbox

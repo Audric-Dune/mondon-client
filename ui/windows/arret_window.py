@@ -265,6 +265,7 @@ class ArretWindow(QMainWindow):
         else:
             if self.arret.raisons and not self.popup_avertissement:
                 self.popup_avertissement = PopupCloseAvertissement(onclose=self.onclose_popup_avertissement)
+                self.popup_avertissement.setMinimumWidth(400)
                 self.popup_avertissement.POPUP_CLOSE_AVERTISSEMENT_SIGNAL.connect(self.onselect_popup_avertissement)
                 self.move_popup_on_window(self.popup_avertissement)
             elif self.popup_avertissement:
