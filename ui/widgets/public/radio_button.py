@@ -41,6 +41,6 @@ class RadioButton(PixmapButton):
 
     def update_widget(self):
         if self._is_selected:
-            self.addImage("assets/images/white_check.png")
+            self.addImage("assets/images/radio_button_check.png")
         else:
-            self.addImage("assets/images/impression.png")
+            self.addImage("assets/images/radio_button_not_check.png")
