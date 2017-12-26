@@ -71,15 +71,14 @@ class ArretWindowSelectRaison(MondonWidget):
             elif format == "dropdown":
                 self.items.append((format, self.create_dropdown(value, index)))
                 # On ajoute un label titre au layout
-                label_dropdown = QLabel(value["titre"])
-                label_dropdown.setStyleSheet(white_title_label_stylesheet)
+                print(value, index)
+                label_dropdown = self.create_label(value["titre"], index)
                 hbox.addWidget(label_dropdown)
             elif format == "text_edit":
                 self.items.append((format, self.create_text_edit(value, index)))
                 # On ajoute un label titre au layout
-                label_dropdown = QLabel(value["titre"])
-                label_dropdown.setStyleSheet(white_title_label_stylesheet)
-                hbox.addWidget(label_dropdown)
+                label_textedit = self.create_label(value["titre"], index)
+                hbox.addWidget(label_textedit)
             hbox.addWidget(self.items[index][1])
             hbox.addStretch(1)
             # On ajout le layout horisontal au layout principal vertical
