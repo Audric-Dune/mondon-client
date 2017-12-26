@@ -171,7 +171,7 @@ class DataStore:
             start_arret = value[0]
             if start_arret == start:
                 return value[1]
-        return False
+        return None
 
     @staticmethod
     def check_id_raison(arret_object, id):
