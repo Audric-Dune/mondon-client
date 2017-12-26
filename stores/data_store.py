@@ -36,15 +36,14 @@ class DataStore:
                     metrage = self.get_live_stat(self.data, ts)
             else:
                 metrage = self.get_live_stat(self.data, ts)
-            self.metrage_matin = metrage[0]
-            self.metrage_soir = metrage[1]
+            self.metrage_matin = round(metrage[0])
+            self.metrage_soir = round(metrage[1])
 
             list_arrets_database = Database.get_arret(self.start, self.end)
             self.dic_arret_from_database(list_arrets_database)
             list_arrets_data = self.list_new_arret_data()
             list_new_arret = self.update_dic_arret(list_arrets_data)
             list_raisons = Database.get_raison(self.start, self.end)
-            print(list_raisons)
             self.add_raisons_to_arret(list_raisons, self.dic_arret)
             self.arrets = self.convert_dic_to_array(self.dic_arret)
             if self.arrets:

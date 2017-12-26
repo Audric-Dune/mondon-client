@@ -157,14 +157,22 @@ class ArretWindowSelectRaison(MondonWidget):
             self.arret.add_raison_cache(index, None)
             self.check_valid_condition()
 
-    def editable_item_change(self, text, index):
+    def editable_item_change(self, value_item, index):
         """
         S'occupe de gérer la modification d'un item editable
-        :param text: Le texte sélectionné
+        :param value_item: Le texte sélectionné
         :param index: L'index de l'item sélectionné
         """
         # On met a jour la variable mémoire de séléction d'une raison dans l'object Arret
-        self.arret.add_raison_cache(index, text)
+        list_choice = self.select_choice_list()
+        current_index = 0
+        for choice in list_choice:
+            if current_index == index and choice[0] == "dropdown":
+                titre = choice[1]["titre"]
+                value_item = str.capitalize("{titre} {value_item}".format(titre=titre, value_item=value_item))
+                break
+            current_index += 1
+        self.arret.add_raison_cache(index, value_item)
         self.check_valid_condition()
 
     def is_selected(self, index_research):

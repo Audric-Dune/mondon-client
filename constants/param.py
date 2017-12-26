@@ -31,7 +31,7 @@ LIST_CHOIX_RAISON_PREVU = [
     ]
 # Liste choix de raison d'un arrêt imprévu
 
-values = ["Casse calandre", "Casse enrouleur", "Casse dérouleur papier", "Casse dérouleur polypro"]
+values = ["Calandre", "Enrouleur", "Dérouleur papier", "Dérouleur polypro"]
 DROPDOWN_CASSE = {"titre": "Casse", "placeholder": "Sélectionner une casse...", "values": values}
 
 LIST_CHOIX_RAISON_IMPREVU = [
