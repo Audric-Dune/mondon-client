@@ -123,6 +123,8 @@ class RapportMenu(MondonWidget):
                                                  caption='Enregistrer sous',
                                                  directory='{}\{}.pdf'.format(defaut_path, defaut_name),
                                                  filter="Fichiers pdf (*.pdf)")
+        if not file_names[0]:
+            return
         printer.setOutputFileName(file_names[0])
         printer.setOutputFormat(QPrinter.PdfFormat)
         printer.setPageMargins(10, 10, 10, 10, QPrinter.Point)

@@ -57,9 +57,9 @@ class Rapport(MondonWidget):
 
     def on_settings_changed(self, prev_live, prev_day_ago, prev_zoom):
         self.update()
-    #
-    # def on_data_changed(self):
-    #     self.update()
+
+    def on_data_changed(self):
+        self.update()
 
     def draw_background(self, p):
         draw_rectangle(p, self.DEC_X_CHART, self.DEC_Y_CHART, self.CHART_W, self.CHART_H, color_gris_clair)
