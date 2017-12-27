@@ -131,7 +131,7 @@ class ArretWindowSelectRaison(MondonWidget):
             object.show()
 
     def onclick_label(self, index):
-        self.buttons[index].update_widget()
+        self.buttons[index].flip_button()
         self.onclick_button(index)
 
     def onclick_button(self, index):
