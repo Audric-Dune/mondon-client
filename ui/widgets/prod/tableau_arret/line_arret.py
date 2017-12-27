@@ -10,7 +10,10 @@ from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel, QWidget
 from constants.stylesheets import red_12_label_stylesheet,\
     green_title_label_stylesheet,\
     gray_12_label_stylesheet,\
-    blue_12_label_stylesheet
+    blue_12_label_stylesheet,\
+    blue_16_label_stylesheet, \
+    gray_16_label_stylesheet, \
+    red_16_label_stylesheet
 from ui.utils.timestamp import timestamp_to_hour_little
 from ui.application import app
 
@@ -78,6 +81,7 @@ class LineArret(QWidget):
             hbox.addWidget(no_raison_label)
             vbox.addLayout(hbox)
             return vbox
+        first_raison = True
         for raison in arret.raisons:
             hbox_temp = QHBoxLayout()
             hbox_temp.setSpacing(self.PADDING_HBOX)
@@ -87,17 +91,18 @@ class LineArret(QWidget):
             raison_label = QLabel(raison.raison)
             # On met le label et la croix en couleur en fonction du type
             if raison.type == "Prévu":
-                raison_label.setStyleSheet(blue_12_label_stylesheet)
-                type_label.setStyleSheet(blue_12_label_stylesheet)
+                raison_label.setStyleSheet(blue_16_label_stylesheet if first_raison else blue_12_label_stylesheet)
+                type_label.setStyleSheet(blue_16_label_stylesheet if first_raison else blue_12_label_stylesheet)
             elif raison.type == "Imprévu":
-                raison_label.setStyleSheet(red_12_label_stylesheet)
-                type_label.setStyleSheet(red_12_label_stylesheet)
+                raison_label.setStyleSheet(red_16_label_stylesheet if first_raison else red_12_label_stylesheet)
+                type_label.setStyleSheet(red_16_label_stylesheet if first_raison else red_12_label_stylesheet)
             else:
-                raison_label.setStyleSheet(gray_12_label_stylesheet)
-                type_label.setStyleSheet(gray_12_label_stylesheet)
+                raison_label.setStyleSheet(gray_16_label_stylesheet if first_raison else gray_12_label_stylesheet)
+                type_label.setStyleSheet(gray_16_label_stylesheet if first_raison else gray_12_label_stylesheet)
             hbox_temp.addWidget(type_label)
             hbox_temp.addWidget(raison_label)
             vbox.addLayout(hbox_temp)
+            first_raison = False
         return vbox
 
     def eventFilter(self, object, event):
