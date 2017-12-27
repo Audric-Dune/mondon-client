@@ -53,7 +53,7 @@ class Bar(MondonWidget):
                   color=color_bleu,
                   align="D",
                   font_size=10,
-                  text="Max sans réglage de prod 82%")
+                  text="Max 82%")
         width = 150
         margin_text = 5
         if self.percent > 22:
