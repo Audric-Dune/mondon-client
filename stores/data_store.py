@@ -165,7 +165,7 @@ class DataStore:
         Permet d'identifer un arret dans un dictionnaire d'arret avec la valeur start
         :param dic_arret: Dictionnaire d'arret
         :param start: Valeur du start arret recherché
-        :return: l'models arret trouvé ou False
+        :return: l'models arret trouvé ou None
         """
         for value in dic_arret.items():
             start_arret = value[0]
