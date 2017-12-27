@@ -5,7 +5,7 @@ import random
 
 from PyQt5.QtCore import QObject, pyqtSignal
 from lib.base_de_donnee import Database
-from constants.param import LIST_CHOIX_RAISON_PREVU, LIST_CHOIX_RAISON_IMPREVU
+from constants.param import LIST_CHOIX_RAISON_PREVU, LIST_CHOIX_RAISON_IMPREVU, LIST_CHOIX_ENTRETIEN
 from models.raison import Raison
 
 
@@ -57,7 +57,7 @@ class Arret(QObject):
                 raison_arret = value_item
             # Sinon on sélectionne la liste des arrets en fonction du type d'aret
             else:
-                list_raison = LIST_CHOIX_RAISON_PREVU if self.type_cache == "Prévu" else LIST_CHOIX_RAISON_IMPREVU
+                list_raison = self.select_list_raison()
                 # On récupère la valeur de l'index dans la liste
                 raison_arret = list_raison[index][1]
             # On range les données définient ci-dessus
@@ -65,6 +65,14 @@ class Arret(QObject):
             # On crée notre object raison
             self.raisons.append(Raison(data_raison))
         self.raison_store()
+
+    def select_list_raison(self):
+        if self.type_cache == "Prévu":
+            return LIST_CHOIX_RAISON_PREVU
+        elif self.type_cache == "Imprévu":
+            return LIST_CHOIX_RAISON_IMPREVU
+        else:
+            return LIST_CHOIX_ENTRETIEN
 
     def raison_store(self):
         # On détermine la raison primaire
