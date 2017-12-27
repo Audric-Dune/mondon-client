@@ -58,6 +58,8 @@ class ArretWindowListRaison(MondonWidget):
             self.radio_button_manager = RadioButtonManager()
             self.radio_button_manager.ON_RADIO_BUTTON_CHANGED_SIGNAL.connect(self.on_radio_button_changed)
             for raison in self.arret.raisons:
+                if index == 0:
+                    raison.update_to_raison_primaire()
                 if not first_type:
                     first_type = raison.type
                 line_raison = self.create_line_raison(raison, first_type)
