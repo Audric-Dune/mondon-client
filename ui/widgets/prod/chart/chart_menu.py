@@ -104,7 +104,7 @@ class ChartMenu(MondonWidget):
 
     def update_label(self):
         ts = timestamp_at_day_ago(settings_store.day_ago)
-        date = timestamp_to_date(ts)
+        date = timestamp_to_date(ts).capitalize()
         self.label_date.setMinimumWidth(self.MINIMUN_WIDTH_LABEL)
         self.label_date.setAlignment(Qt.AlignCenter)
         self.label_date.setText(date)

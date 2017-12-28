@@ -50,7 +50,8 @@ class DataStoreManager(QObject):
                 for start_arret in list_new_arret:
                     if settings_store.day_ago == 0:
                         self.NEW_ARRET_SIGNAL.emit(start_arret, store.day_ago)
-
+        from stores.stat_store import stat_store
+        stat_store.get_data()
         # Envois un signal que les data ont changées si nécessaire
         if should_refresh:
             self.DATA_CHANGED_SIGNAL.emit()

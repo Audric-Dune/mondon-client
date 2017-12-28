@@ -30,6 +30,15 @@ def timestamp_to_date_little(timestamp):
     return datetime.fromtimestamp(timestamp).strftime('%d/%m/%Y')
 
 
+def timestamp_to_day_month_little(timestamp):
+    locale.setlocale(locale.LC_TIME, '')
+    return datetime.fromtimestamp(timestamp).strftime('%d/%m')
+
+def timestamp_to_name_number_day_month(timestamp):
+    locale.setlocale(locale.LC_TIME, '')
+    return datetime.fromtimestamp(timestamp).strftime('%A %d/%m')
+
+
 def timestamp_to_day(timestamp):
     locale.setlocale(locale.LC_TIME, '')
     return datetime.fromtimestamp(timestamp).strftime('%A')
@@ -38,6 +47,10 @@ def timestamp_to_day(timestamp):
 def timestamp_to_week(timestamp):
     locale.setlocale(locale.LC_TIME, '')
     return datetime.fromtimestamp(timestamp).strftime('Semaine %U')
+
+def timestamp_to_month(timestamp):
+    locale.setlocale(locale.LC_TIME, '')
+    return datetime.fromtimestamp(timestamp).strftime('%B - %Y')
 
 
 def timestamp_now():
@@ -80,6 +93,26 @@ def timestamp_at_week_ago(week_ago=0):
     return datetime(year=now.year,
                     month=now.month,
                     day=now.day,
+                    hour=0,
+                    minute=0,
+                    second=0,
+                    microsecond=0).timestamp()
+
+
+def timestamp_at_month_ago(month_ago=0):
+    year = datetime.now().year
+    month = datetime.now().month
+    i = 0
+    while i < month_ago:
+        if month == 1:
+            month = 12
+            year = year - 1
+        else:
+            month -= 1
+        i+=1
+    return datetime(year=year,
+                    month=month,
+                    day=1,
                     hour=0,
                     minute=0,
                     second=0,
