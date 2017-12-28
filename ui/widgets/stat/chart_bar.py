@@ -13,6 +13,7 @@ from constants.stylesheets import black_12_label_stylesheet,\
     vert_fonce_label_stylesheet
 from ui.widgets.public.mondon_widget import MondonWidget
 from ui.utils.data import affiche_entier
+from lib.logger import logger
 from ui.widgets.public.checkbox_button import CheckboxButton
 from ui.utils.layout import clear_layout
 from ui.utils.timestamp import timestamp_to_name_number_day_month, timestamp_to_day_month_little
@@ -46,7 +47,10 @@ class ChartBar(MondonWidget):
             if index == index_display:
                 self.content_chart.displays[index] = False if self.content_chart.displays[index] else True
             index_display += 1
-        self.content_chart.init_widget()
+        try:
+            self.content_chart.init_widget()
+        except:
+            logger.log("CHART_STAT", "Erreur de mise à lors du changement de settings chart")
 
 
 class ContentChart(MondonWidget):
@@ -64,7 +68,10 @@ class ContentChart(MondonWidget):
         self.init_widget()
 
     def on_data_stat_changed(self):
-        self.init_widget()
+        try:
+            self.init_widget()
+        except:
+            pass
 
     def on_size_main_window_changed(self):
         self.update_widget()

@@ -75,6 +75,7 @@ class StatStore(QObject):
     def stat_calculator(self, start, end):
         if self.stat == "métrage":
             maxi = self.get_max_prod(start, end)
+            maxi = 1 if maxi == 0 else maxi
             index = 0
             for dic in self.data:
                 current_maxi = maxi if index == 2 else maxi/2
@@ -96,6 +97,7 @@ class StatStore(QObject):
                 hour_worked += FIN_PROD_SOIR_VENDREDI-DEBUT_PROD_MATIN if vendredi else FIN_PROD_SOIR-DEBUT_PROD_MATIN
             current_ts_day = timestamp_after_day_ago(start=current_ts_day, day_ago=1)
         time_worked += hour_worked * 3600
+        time_worked = 1 if time_worked == 0 else time_worked
         max_prod = round(VITESSE_MOYENNE_MAXI / 60 * time_worked)
         return max_prod
 
