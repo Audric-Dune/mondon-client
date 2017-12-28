@@ -67,7 +67,6 @@ class MainWindow(QMainWindow):
         vbox.addWidget(self.chart_bar)
 
         data_tab = DataTab(parent=self)
-        data_tab.setFixedHeight(200)
         vbox.addWidget(data_tab)
 
         hbox.addLayout(vbox)
