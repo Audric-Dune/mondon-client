@@ -92,6 +92,37 @@ button_stylesheet = """
     color_rouge=color_rouge.hex_string,
 )
 
+button_white_stylesheet = """
+    QPushButton {{
+        background-color: {color_blanc};
+        text-align: left;
+        padding-left: 5px;
+        border-radius: 0;
+        color: {color_bleu_gris};
+        font-size: 16px;
+    }}
+    QPushButton:hover {{
+        background-color: {color_vert_fonce};
+        color: {color_blanc};
+    }}
+    QPushButton:pressed {{
+        border-style: solid;
+        border-width: 1px;
+        border-color: {color_rouge}
+    }}
+    QPushButton:disabled {{
+        background-color: {color_gris_moyen};
+    }}
+""".format(
+    color_blanc=color_blanc.hex_string,
+    color_bleu_gris=color_bleu_gris.hex_string,
+    color_vert_fonce=color_vert_fonce.hex_string,
+    color_vert_moyen=color_vert_moyen.hex_string,
+    color_vert=color_vert.hex_string,
+    color_gris_moyen=color_gris_moyen.hex_string,
+    color_rouge=color_rouge.hex_string,
+)
+
 button_little_stylesheet = """
     QPushButton {{
         background-color: {color_vert_fonce};

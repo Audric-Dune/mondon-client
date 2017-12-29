@@ -4,13 +4,13 @@
 from PyQt5.QtWidgets import QVBoxLayout, QPushButton
 
 from constants.colors import color_bleu_gris
-from constants.stylesheets import button_little_stylesheet
+from constants.stylesheets import button_white_stylesheet
 from ui.widgets.public.mondon_widget import MondonWidget
 from stores.stat_store import stat_store
 
 
 class StatMenu(MondonWidget):
-    BUTTON_HEIGHT = 40
+    BUTTON_HEIGHT = 30
 
     def __init__(self, parent=None):
         super(StatMenu, self).__init__(parent=parent)
@@ -23,9 +23,10 @@ class StatMenu(MondonWidget):
         self.init_widget()
 
     def init_widget(self):
-        self.bt_metrage_semaine.setStyleSheet(button_little_stylesheet)
+        self.vbox.setSpacing(0)
+        self.bt_metrage_semaine.setStyleSheet(button_white_stylesheet)
         self.bt_metrage_semaine.setFixedHeight(self.BUTTON_HEIGHT)
-        self.bt_metrage_mois.setStyleSheet(button_little_stylesheet)
+        self.bt_metrage_mois.setStyleSheet(button_white_stylesheet)
         self.bt_metrage_mois.setFixedHeight(self.BUTTON_HEIGHT)
         self.vbox.addWidget(self.bt_metrage_semaine)
         self.vbox.addWidget(self.bt_metrage_mois)

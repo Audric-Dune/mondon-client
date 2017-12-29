@@ -109,11 +109,11 @@ class ContentChart(MondonWidget):
         vbox.setSpacing(self.BAR_CONTENT_SPACING)
         vbox.addStretch(1)
 
-        # label_value = QLabel(affiche_entier(s=str(value)))
-        # label_value.setFixedHeight(self.VALUE_LABEL_HEIGHT)
-        # label_value.setAlignment(Qt.AlignCenter)
-        # label_value.setStyleSheet(black_12_label_stylesheet)
-        # vbox.addWidget(label_value)
+        label_value = QLabel(affiche_entier(s=str(value)))
+        label_value.setFixedHeight(self.VALUE_LABEL_HEIGHT)
+        label_value.setAlignment(Qt.AlignCenter)
+        label_value.setStyleSheet(black_12_label_stylesheet)
+        vbox.addWidget(label_value)
 
         bar = MondonWidget(parent=self)
         bar.setMinimumSize(1, 1)
