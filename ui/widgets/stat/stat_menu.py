@@ -16,9 +16,9 @@ class StatMenu(MondonWidget):
         super(StatMenu, self).__init__(parent=parent)
         self.background_color = color_bleu_gris
         self.vbox = QVBoxLayout()
-        self.bt_metrage_semaine=QPushButton("Metrage par semaine")
+        self.bt_metrage_semaine=QPushButton("Métrage par semaine")
         self.bt_metrage_semaine.clicked.connect(self.on_click_metrage_semaine)
-        self.bt_metrage_mois=QPushButton("Metrage par mois")
+        self.bt_metrage_mois=QPushButton("Métrage par mois")
         self.bt_metrage_mois.clicked.connect(self.on_click_metrage_mois)
         self.init_widget()
 

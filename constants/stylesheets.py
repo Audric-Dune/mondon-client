@@ -361,6 +361,21 @@ check_box_on_stylesheet = """
     color_rouge=color_rouge.hex_string,
 )
 
+check_box_disabled_stylesheet = """
+    QPushButton {{
+        background-color: {color_gris_moyen};
+        border-radius: 2px;
+    }}
+""".format(
+    color_blanc=color_blanc.hex_string,
+    color_vert_fonce=color_vert_fonce.hex_string,
+    color_vert_moyen=color_vert_moyen.hex_string,
+    color_vert=color_vert.hex_string,
+    color_gris_moyen=color_gris_moyen.hex_string,
+    color_gris_fonce=color_gris_fonce.hex_string,
+    color_rouge=color_rouge.hex_string,
+)
+
 check_box_unselected_stylesheet = """
     QPushButton {{
         background-color: {color_gris_moyen};

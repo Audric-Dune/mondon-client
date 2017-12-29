@@ -1,7 +1,7 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtCore import Qt, QSize, pyqtSignal
+from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel
 
 from stores.stat_store import stat_store
@@ -17,6 +17,7 @@ from lib.logger import logger
 from ui.widgets.public.checkbox_button import CheckboxButton
 from ui.utils.layout import clear_layout
 from ui.utils.timestamp import timestamp_to_name_number_day_month, timestamp_to_day_month_little
+from ui.widgets.stat.stat_chart_bar import StatChartBar
 
 
 class ChartBar(MondonWidget):
@@ -109,16 +110,15 @@ class ContentChart(MondonWidget):
         vbox.setSpacing(self.BAR_CONTENT_SPACING)
         vbox.addStretch(1)
 
-        label_value = QLabel(affiche_entier(s=str(value)))
-        label_value.setFixedHeight(self.VALUE_LABEL_HEIGHT)
-        label_value.setAlignment(Qt.AlignCenter)
-        label_value.setStyleSheet(black_12_label_stylesheet)
-        vbox.addWidget(label_value)
+        # label_value = QLabel(affiche_entier(s=str(value)))
+        # label_value.setFixedHeight(self.VALUE_LABEL_HEIGHT)
+        # label_value.setAlignment(Qt.AlignCenter)
+        # label_value.setStyleSheet(black_12_label_stylesheet)
+        # vbox.addWidget(label_value)
 
-        bar = MondonWidget(parent=self)
+        bar = StatChartBar(color=color, value=value, parent=self)
         bar.setMinimumSize(1, 1)
         self.bars.append((bar, value))
-        bar.set_background_color(color)
         vbox.addWidget(bar)
 
         return vbox
@@ -131,7 +131,6 @@ class ChartLegend(MondonWidget):
         super(ChartLegend, self).__init__(parent=parent)
         self.setFixedHeight(40)
         self.background_color = colors.color_bleu_gris
-        self.format = stat_store.format
         self.hbox = QHBoxLayout(self)
         self.hbox.setSpacing(0)
         self.init_widget()
@@ -142,9 +141,9 @@ class ChartLegend(MondonWidget):
     def init_widget(self):
         str_date = "NA"
         for ts in stat_store.data[0]["ts"]:
-            if self.format == "week":
-                str_date = timestamp_to_name_number_day_month(ts)
-            if self.format == "month":
+            if stat_store.format == "week":
+                str_date = timestamp_to_name_number_day_month(ts).capitalize()
+            if stat_store.format == "month":
                 str_date = timestamp_to_day_month_little(ts)
             self.hbox.addWidget(self.create_label(str_date))
 
