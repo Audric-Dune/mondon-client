@@ -53,8 +53,12 @@ class ChartBarMenu(MondonWidget):
 
     def update_button(self):
         self.bt_plus.setEnabled(stat_store.week_ago > 0 or stat_store.month_ago > 0)
-        self.bt_moins.setDisabled(timestamp_at_week_ago(stat_store.week_ago) == 1508709600)
-        self.bt_moins.setDisabled(timestamp_at_month_ago(stat_store.month_ago) == 1509490800)
+        disabled_bt_moins = False
+        if timestamp_at_week_ago(stat_store.week_ago) == 1508709600:
+            disabled_bt_moins = True
+        if timestamp_at_month_ago(stat_store.month_ago) == 1509490800:
+            disabled_bt_moins = True
+        self.bt_moins.setDisabled(disabled_bt_moins)
 
     def init_button(self):
         # Bouton time plus

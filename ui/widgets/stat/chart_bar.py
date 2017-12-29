@@ -25,7 +25,6 @@ class ChartBar(MondonWidget):
         self.set_background_color(colors.color_bleu_gris)
         self.vbox = QVBoxLayout()
         self.chart_settings = ChartSettings(parent=self)
-        self.chart_settings.CHECKBOX_SELECTED_SIGNAL.connect(self.on_chart_settings_changed)
         self.content_chart = ContentChart(parent=self)
         self.chart_legend = ChartLegend(parent=self)
         self.init_widget()
@@ -41,17 +40,6 @@ class ChartBar(MondonWidget):
     def update_widget(self):
         self.content_chart.update_widget()
 
-    def on_chart_settings_changed(self, index):
-        index_display = 0
-        while index_display < 3:
-            if index == index_display:
-                self.content_chart.displays[index] = False if self.content_chart.displays[index] else True
-            index_display += 1
-        try:
-            self.content_chart.init_widget()
-        except:
-            logger.log("CHART_STAT", "Erreur de mise à lors du changement de settings chart")
-
 
 class ContentChart(MondonWidget):
     BAR_CONTENT_SPACING = 0
@@ -60,18 +48,21 @@ class ContentChart(MondonWidget):
     def __init__(self, parent=None):
         super(ContentChart, self).__init__(parent=parent)
         self.background_color = colors.color_blanc
-        self.displays = [False, False, True]
+        self.on_settings_stat_changed()
         self.color_data = [colors.color_gris_moyen, colors.color_gris_fonce, colors.color_vert_fonce]
         self.format = stat_store.format
         self.bars = []
         self.hbox = QHBoxLayout()
-        self.init_widget()
+        try:
+            self.init_widget()
+        except:
+            logger.log("CHART_STAT", "Erreur de mise à jour lors de l'initialisation du chart")
 
     def on_data_stat_changed(self):
         try:
             self.init_widget()
         except:
-            pass
+            logger.log("CHART_STAT", "Erreur de mise à jour lors du changement de data chart")
 
     def on_size_main_window_changed(self):
         self.update_widget()
@@ -93,7 +84,7 @@ class ContentChart(MondonWidget):
             hbox_multi_bar.setContentsMargins(0, 0, 0, 0)
             hbox_multi_bar.setSpacing(0)
             for data in stat_store.data:
-                if self.displays[index_data]:
+                if stat_store.displays[index_data]:
                     value = data["values"][index] if len(data["values"]) > index else "NA"
                     hbox_multi_bar.addLayout(self.create_bar(value=value,
                                                              color=self.color_data[index_data]))
@@ -172,7 +163,6 @@ class ChartLegend(MondonWidget):
 class ChartSettings(MondonWidget):
     CHART_SETTINGS_SIZE = QSize(20, 20)
     HEIGHT_LABEL = 20
-    CHECKBOX_SELECTED_SIGNAL = pyqtSignal(int)
 
     def __init__(self, parent=None):
         super(ChartSettings, self).__init__(parent=parent)
@@ -181,8 +171,12 @@ class ChartSettings(MondonWidget):
         self.hbox = QHBoxLayout(self)
         self.init_widget()
 
-    def on_select_checkbox(self, index):
-        self.CHECKBOX_SELECTED_SIGNAL.emit(index)
+    def on_settings_stat_changed(self):
+        clear_layout(self.hbox)
+        try:
+            self.init_widget()
+        except:
+            logger.log("CHART_STAT", "Erreur de mise à jour lors du chargement des settings du chart")
 
     def init_widget(self):
         self.hbox.setSpacing(20)
@@ -190,14 +184,16 @@ class ChartSettings(MondonWidget):
 
         self.add_check_box_layout(index_data=0,
                                   stylecheet_label=gris_moyen_label_stylesheet,
-                                  text_label="Equipe matin")
+                                  text_label="Equipe matin",
+                                  preset=stat_store.displays[0])
         self.add_check_box_layout(index_data=1,
                                   stylecheet_label=gris_fonce_label_stylesheet,
-                                  text_label="Equipe soir")
+                                  text_label="Equipe soir",
+                                  preset=stat_store.displays[1])
         self.add_check_box_layout(index_data=2,
                                   stylecheet_label=vert_fonce_label_stylesheet,
                                   text_label="Equipes cumulées",
-                                  preset=True)
+                                  preset=stat_store.displays[2])
 
         self.hbox.addStretch(1)
         self.setLayout(self.hbox)
@@ -210,7 +206,7 @@ class ChartSettings(MondonWidget):
         else:
             check_box = CheckboxButton(parent=self)
         check_box.setFixedSize(self.CHART_SETTINGS_SIZE)
-        check_box.ON_CLICK_SIGNAL.connect(lambda: self.on_select_checkbox(index_data))
+        check_box.ON_CLICK_SIGNAL.connect(lambda: stat_store.on_select_checkbox_display(index_data))
         check_box_hbox.addWidget(check_box)
         label = QLabel(text_label)
         label.setStyleSheet(stylecheet_label)

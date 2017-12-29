@@ -25,6 +25,7 @@ class StatStore(QObject):
         self.stat = None
         self.time_stat = None
         self.format = None
+        self.displays = [False, False, True]
         self.raison = -1
         self.week_ago = -1
         self.month_ago = -1
@@ -79,7 +80,8 @@ class StatStore(QObject):
             index = 0
             for dic in self.data:
                 current_maxi = maxi if index == 2 else maxi/2
-                dic["moyenne"] = round(mean(self.data[index]["values"]))
+                if self.data[index]["values"]:
+                    dic["moyenne"] = round(mean(self.data[index]["values"]))
                 dic["percent"] = round(sum(self.data[index]["values"])*100/current_maxi, 2)
                 index += 1
 
@@ -147,5 +149,19 @@ class StatStore(QObject):
         self.get_data()
         self.DATA_STAT_CHANGED_SIGNAL.emit()
         self.SETTINGS_STAT_CHANGED_SIGNAL.emit()
+
+    def set_new_settings(self, week_ago=-1, month_ago=-1, years_ago=-1):
+        self.week_ago = week_ago
+        self.month_ago = month_ago
+        self.years_ago = years_ago
+        if self.week_ago >= 0:
+            self.displays = [True, True, True]
+        else:
+            self.displays = [False, False, True]
+        self.get_data()
+        self.SETTINGS_STAT_CHANGED_SIGNAL.emit()
+
+    def on_select_checkbox_display(self, index):
+        self.displays[index] = False if self.displays[index] else True
 
 stat_store = StatStore()
