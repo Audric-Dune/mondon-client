@@ -62,9 +62,9 @@ class MainWindow(QMainWindow):
         chart_bar_menu.setFixedHeight(50)
         vbox.addWidget(chart_bar_menu)
 
-        # self.chart_bar = ChartBar(parent=self)
-        # self.chart_bar.setSizePolicy(QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding))
-        # vbox.addWidget(self.chart_bar)
+        self.chart_bar = ChartBar(parent=self)
+        self.chart_bar.setSizePolicy(QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding))
+        vbox.addWidget(self.chart_bar)
 
         data_tab = DataTab(parent=self)
         vbox.addWidget(data_tab)
