@@ -23,7 +23,7 @@ class StatChartBar(MondonWidget):
         self.color_label = color_blanc
         self.color_bar = color
         if value < 0:
-            self.text_value = "NA"
+            self.text_value = "Aucune donnée"
         self.height_bar = 0
         self.set_background_color(color_blanc)
 
@@ -37,16 +37,20 @@ class StatChartBar(MondonWidget):
             draw_text(p, 0, self.height()-self.height_bar-20-self.PADDING_LABEL_H, self.width(), 20,
                       color=color_bleu_gris, align="C", font_size=12, text=self.text_value)
         else:
+            if self.width() > 30:
+                font_size = 12
+            else:
+                font_size = 10
             # Sinon on trace la valeur verticalement
             p.rotate(90)
             # Si la hauteur est suffisante on trace la valeur à l'intérieur de la bar
-            if self.height_bar > 50:
+            if self.height_bar > 70:
                 draw_text(p, self.height()-self.height_bar+self.PADDING_LABEL_V, -self.width() / 2 - 10.5, 200, 20,
-                          color=color_blanc, align="G", font_size=12, text=self.text_value)
+                          color=color_blanc, align="G", font_size=font_size, text=self.text_value)
             # Sinon la valeur à l'extérieur de la bar
             else:
                 draw_text(p, self.height()-self.height_bar-200-self.PADDING_LABEL_V, -self.width() / 2 - 10.5, 200, 20,
-                          color=color_noir, align="D", font_size=12, text=self.text_value)
+                          color=color_noir, align="D", font_size=font_size, text=self.text_value)
 
     def draw_bar(self, p):
         """

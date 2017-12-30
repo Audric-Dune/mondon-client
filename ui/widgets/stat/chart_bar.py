@@ -26,17 +26,17 @@ class ChartBar(MondonWidget):
         super(ChartBar, self).__init__(parent=parent)
         self.set_background_color(colors.color_bleu_gris)
         self.vbox = QVBoxLayout()
-        # self.chart_settings = ChartSettings(parent=self)
+        self.chart_settings = ChartSettings(parent=self)
         self.content_chart = ContentChart(parent=self)
-        # self.chart_legend = ChartLegend(parent=self)
+        self.chart_legend = ChartLegend(parent=self)
         self.init_widget()
 
     def init_widget(self):
         self.vbox.setContentsMargins(10, 0, 10, 0)
         self.vbox.setSpacing(0)
-        # self.vbox.addWidget(self.chart_settings)
+        self.vbox.addWidget(self.chart_settings)
         self.vbox.addWidget(self.content_chart)
-        # self.vbox.addWidget(self.chart_legend)
+        self.vbox.addWidget(self.chart_legend)
         self.setLayout(self.vbox)
 
 
@@ -61,6 +61,12 @@ class ContentChart(MondonWidget):
         except:
             logger.log("CHART_STAT", "Erreur de mise à jour lors du changement de data chart")
 
+    def on_settings_chart_changed(self):
+        try:
+            self.init_widget()
+        except:
+            logger.log("CHART_STAT", "Erreur de mise à jour lors du changement de settings du chart")
+
     def init_widget(self):
         self.hbox = clear_layout(self.hbox)
         self.bars = []
@@ -68,9 +74,10 @@ class ContentChart(MondonWidget):
         self.hbox.setSpacing(5)
         len_format = 0
         if settings_stat_store.format == "week":
-            len_format = 7
+            len_format = 5
         if settings_stat_store.format == "month":
             len_format = len(stat_store.data["total"])
+        print(len_format)
         index = 0
         while index < len_format:
             hbox_multi_bar = QHBoxLayout()
@@ -78,12 +85,13 @@ class ContentChart(MondonWidget):
             hbox_multi_bar.setSpacing(0)
             index_data = 0
             while index_data < len(stat_store.data):
-                moment = "matin" if index_data == 0 else ""
-                moment = "soir" if index_data == 1 else moment
-                moment = "total" if index_data == 2 else moment
-                value = stat_store.data[moment][index][1] if len(stat_store.data[moment]) > index else -1
-                hbox_multi_bar.addLayout(self.create_bar(value=value,
-                                                         color=self.color_data[index_data]))
+                if settings_stat_store.display_setting[index_data]:
+                    moment = "matin" if index_data == 0 else ""
+                    moment = "soir" if index_data == 1 else moment
+                    moment = "total" if index_data == 2 else moment
+                    value = stat_store.data[moment][index][1] if len(stat_store.data[moment]) > index else -1
+                    hbox_multi_bar.addLayout(self.create_bar(value=value,
+                                                             color=self.color_data[index_data]))
                 index_data += 1
             self.hbox.addLayout(hbox_multi_bar)
             index += 1
@@ -109,15 +117,16 @@ class ChartLegend(MondonWidget):
         self.hbox.setSpacing(0)
         self.init_widget()
 
-    def on_settings_stat_changed(self):
+    def on_data_stat_changed(self):
         self.update_widget()
 
     def init_widget(self):
         str_date = "NA"
-        for ts in stat_store.data[0]["ts"]:
-            if stat_store.format == "week":
+        for values in stat_store.data["total"]:
+            ts = values[0]
+            if settings_stat_store.format == "week":
                 str_date = timestamp_to_name_number_day_month(ts).capitalize()
-            if stat_store.format == "month":
+            if settings_stat_store.format == "month":
                 str_date = timestamp_to_day_month_little(ts)
             self.hbox.addWidget(self.create_label(str_date))
 
@@ -158,15 +167,15 @@ class ChartSettings(MondonWidget):
         self.add_check_box_layout(index_data=0,
                                   stylecheet_label=gris_moyen_label_stylesheet,
                                   text_label="Equipe matin",
-                                  preset=stat_store.displays[0])
+                                  preset=settings_stat_store.display_setting[0])
         self.add_check_box_layout(index_data=1,
                                   stylecheet_label=gris_fonce_label_stylesheet,
                                   text_label="Equipe soir",
-                                  preset=stat_store.displays[1])
+                                  preset=settings_stat_store.display_setting[1])
         self.add_check_box_layout(index_data=2,
                                   stylecheet_label=vert_fonce_label_stylesheet,
                                   text_label="Equipes cumulées",
-                                  preset=stat_store.displays[2])
+                                  preset=settings_stat_store.display_setting[2])
 
         self.hbox.addStretch(1)
         self.setLayout(self.hbox)
@@ -179,7 +188,7 @@ class ChartSettings(MondonWidget):
         else:
             check_box = CheckboxButton(parent=self)
         check_box.setFixedSize(self.CHART_SETTINGS_SIZE)
-        check_box.ON_CLICK_SIGNAL.connect(lambda: stat_store.on_select_checkbox_display(index_data))
+        check_box.ON_CLICK_SIGNAL.connect(lambda: settings_stat_store.on_select_checkbox_display(index_data))
         check_box_hbox.addWidget(check_box)
         label = QLabel(text_label)
         label.setStyleSheet(stylecheet_label)

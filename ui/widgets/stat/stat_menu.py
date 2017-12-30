@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import QVBoxLayout, QPushButton
 from constants.colors import color_bleu_gris
 from constants.stylesheets import button_white_stylesheet
 from ui.widgets.public.mondon_widget import MondonWidget
-from stores.stat_store import stat_store
+from stores.settings_stat_store import settings_stat_store
 
 
 class StatMenu(MondonWidget):
@@ -34,7 +34,7 @@ class StatMenu(MondonWidget):
         self.setLayout(self.vbox)
 
     def on_click_metrage_semaine(self):
-        stat_store.set_new_settings(week_ago=0)
+        settings_stat_store.set_new_settings(type="métrage", week_ago=0)
 
     def on_click_metrage_mois(self):
-        stat_store.set_new_settings(month_ago=0)
+        settings_stat_store.set_new_settings(type="métrage", month_ago=0)

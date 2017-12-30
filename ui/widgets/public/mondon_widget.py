@@ -21,6 +21,7 @@ class MondonWidget(QWidget):
         data_store_manager.DATA_CHANGED_SIGNAL.connect(self._handle_data_changed)
         settings_store.SETTINGS_CHANGED_SIGNAL.connect(self._handle_settings_changed)
         settings_stat_store.SETTINGS_STAT_CHANGED_SIGNAL.connect(self._handle_settings_stat_changed)
+        settings_stat_store.SETTINGS_CHART_CHANGED_SIGNAL.connect(self._handle_settings_chart_changed)
         stat_store.ON_DATA_STAT_CHANGED_SIGNAL.connect(self._handle_data_stat_changed)
         app.RESIZED_SIGNAL.connect(self._handle_size_main_window_changed)
 
@@ -37,6 +38,9 @@ class MondonWidget(QWidget):
         pass
 
     def on_size_main_window_changed(self):
+        pass
+
+    def on_settings_chart_changed(self):
         pass
 
     def set_background_color(self, color):
@@ -72,6 +76,12 @@ class MondonWidget(QWidget):
     def _handle_size_main_window_changed(self):
         try:
             self.on_size_main_window_changed()
+        except Exception as e:
+            logger.log(type(self), "Erreur pendant l'exécution de `on_data_stat_changed`: {}".format(e))
+
+    def _handle_settings_chart_changed(self):
+        try:
+            self.on_settings_chart_changed()
         except Exception as e:
             logger.log(type(self), "Erreur pendant l'exécution de `on_data_stat_changed`: {}".format(e))
 

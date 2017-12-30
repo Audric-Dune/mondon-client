@@ -43,7 +43,6 @@ class MainWindow(QMainWindow):
         clear_layout(self.content_vbox)
         if menu_selected == "chart_stat":
             self.content_vbox.addLayout(self.create_stat_layout())
-            # QTimer.singleShot(0, self.chart_bar.update_widget)
         elif menu_selected == "rapport":
             self.content_vbox.addLayout(self.create_rapport_layout())
         else:
@@ -52,9 +51,9 @@ class MainWindow(QMainWindow):
     def create_stat_layout(self):
         hbox = QHBoxLayout()
 
-        # stat_menu = StatMenu(parent=self)
-        # stat_menu.setFixedWidth(300)
-        # hbox.addWidget(stat_menu)
+        stat_menu = StatMenu(parent=self)
+        stat_menu.setFixedWidth(200)
+        hbox.addWidget(stat_menu)
 
         vbox = QVBoxLayout()
 
