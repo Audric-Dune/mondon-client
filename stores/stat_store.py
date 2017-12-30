@@ -18,10 +18,6 @@ from stores.settings_stat_store import settings_stat_store
 
 class StatStore(QObject):
     ON_DATA_STAT_CHANGED_SIGNAL = pyqtSignal()
-    data_type = settings_stat_store.data_type
-    week_ago = settings_stat_store.week_ago
-    month_ago = settings_stat_store.month_ago
-    year_ago = settings_stat_store.year_ago
 
     def __init__(self):
         super(StatStore, self).__init__()
@@ -33,15 +29,13 @@ class StatStore(QObject):
         """
         Initialise les variables data et stat en fonction du type de data sélectionner dans settings stat store
         """
-        if self.data_type == "metrage":
+        if settings_stat_store.data_type == "métrage":
             self.data = {"matin": [], "soir": [], "total": []}
             self.stat = {"matin": {}, "soir": {}, "total": {}}
 
     def update_data(self):
         if self.get_data():
             self.ON_DATA_STAT_CHANGED_SIGNAL.emit()
-            print(self.data)
-            print(self.stat)
 
     def get_data(self):
         """
@@ -59,7 +53,7 @@ class StatStore(QObject):
         self.init_var()
         if self.data_on_database:
             # GESTION DES DATA METRAGE PAR JOUR
-            if self.data_type == "metrage" and self.year_ago < 0:
+            if settings_stat_store.data_type == "métrage" and settings_stat_store.year_ago < 0:
                 # On parcour tout les jours entre start et end
                 current_day = start
                 while current_day < end:
@@ -93,33 +87,35 @@ class StatStore(QObject):
         end = data_time[1]
         if self.data:
             total_time_prod = self.get_total_time_prod(start, end)
-            if self.data_type == "metrage":
+            if settings_stat_store.data_type == "métrage":
                 self.stat["matin"] = self.stat_calculator(moment="matin", total_time_prod=total_time_prod)
                 self.stat["soir"] = self.stat_calculator(moment="soir", total_time_prod=total_time_prod)
                 self.stat["total"] = self.stat_calculator(moment="total", total_time_prod=total_time_prod)
 
-    def get_start_end(self):
+    @staticmethod
+    def get_start_end():
         """
         Récupère les valeurs de début et fin des data en fonction des settings
         :return: Un tuple (début, fin)
         """
         start_ts = 0
         end_ts = 0
-        if self.week_ago >= 0:
-            start_ts = timestamp_at_week_ago(self.week_ago)
-            if self.week_ago == 0:
+        if settings_stat_store.week_ago >= 0:
+            start_ts = timestamp_at_week_ago(settings_stat_store.week_ago)
+            if settings_stat_store.week_ago == 0:
                 end_ts = timestamp_now()
             else:
-                end_ts = timestamp_at_week_ago(self.week_ago - 1)
-        if self.month_ago >= 0:
-            start_ts = timestamp_at_month_ago(self.month_ago)
-            if self.month_ago == 0:
+                end_ts = timestamp_at_week_ago(settings_stat_store.week_ago - 1)
+        if settings_stat_store.month_ago >= 0:
+            start_ts = timestamp_at_month_ago(settings_stat_store.month_ago)
+            if settings_stat_store.month_ago == 0:
                 end_ts = timestamp_now()
             else:
-                end_ts = timestamp_at_month_ago(self.month_ago - 1)
+                end_ts = timestamp_at_month_ago(settings_stat_store.month_ago - 1)
         return start_ts, end_ts
 
-    def get_data_on_database(self, start, end):
+    @staticmethod
+    def get_data_on_database(start, end):
         """
         Récupère les données en base de donnée
         :param start: Début des données a récupérer
@@ -127,7 +123,7 @@ class StatStore(QObject):
         :return: Les données
         """
         data = []
-        if self.data_type == "metrage":
+        if settings_stat_store.data_type == "métrage":
             data = Database.get_metrages(start_time=start, end_time=end)
             data.sort()
         return data
@@ -177,7 +173,7 @@ class StatStore(QObject):
         :return: Le temps de production en s
         """
         total_time_prod = 0
-        if self.data_type == "metrage":
+        if settings_stat_store.data_type == "métrage":
             # On parcour tout les jours entre start et end
             current_day = start
             while current_day < end:
@@ -230,7 +226,7 @@ class StatStore(QObject):
         max_data = max(values)
         mean_data = mean(values)
         total_time_prod = total_time_prod if moment == "total" else total_time_prod / 2
-        max_prod = total_time_prod * VITESSE_MOYENNE_MAXI
+        max_prod = total_time_prod * VITESSE_MOYENNE_MAXI / 60
         percent_prod = 0
         if max_prod:
             percent_prod = sum_data * 100 / max_prod

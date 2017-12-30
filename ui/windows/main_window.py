@@ -58,9 +58,9 @@ class MainWindow(QMainWindow):
 
         vbox = QVBoxLayout()
 
-        # chart_bar_menu = ChartBarMenu(parent=self)
-        # chart_bar_menu.setFixedHeight(50)
-        # vbox.addWidget(chart_bar_menu)
+        chart_bar_menu = ChartBarMenu(parent=self)
+        chart_bar_menu.setFixedHeight(50)
+        vbox.addWidget(chart_bar_menu)
 
         # self.chart_bar = ChartBar(parent=self)
         # self.chart_bar.setSizePolicy(QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding))

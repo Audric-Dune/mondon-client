@@ -9,6 +9,7 @@ from lib.logger import logger
 from stores.settings_store import settings_store
 from stores.data_store_manager import data_store_manager
 from stores.stat_store import stat_store
+from stores.settings_stat_store import settings_stat_store
 from ui.application import app
 
 
@@ -19,7 +20,7 @@ class MondonWidget(QWidget):
         self.padding = 0
         data_store_manager.DATA_CHANGED_SIGNAL.connect(self._handle_data_changed)
         settings_store.SETTINGS_CHANGED_SIGNAL.connect(self._handle_settings_changed)
-        # stat_store.SETTINGS_STAT_CHANGED_SIGNAL.connect(self._handle_settings_stat_changed)
+        settings_stat_store.SETTINGS_STAT_CHANGED_SIGNAL.connect(self._handle_settings_stat_changed)
         stat_store.ON_DATA_STAT_CHANGED_SIGNAL.connect(self._handle_data_stat_changed)
         app.RESIZED_SIGNAL.connect(self._handle_size_main_window_changed)
 
