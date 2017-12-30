@@ -47,7 +47,7 @@ class DataTab(MondonWidget):
         self.title_label.setStyleSheet(green_20_label_stylesheet)
         self.title_label.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
         self.title_label.setFixedHeight(40)
-        self.vbox_master.addWidget(self.title_label, alignment=Qt.AlignCenter)
+        self.vbox_master.addWidget(self.title_label)
         self.vbox_master.setContentsMargins(0, 0, 0, 0)
         self.vbox_master.addLayout(self.create_stat_metrage())
         self.setLayout(self.vbox_master)
@@ -58,9 +58,9 @@ class DataTab(MondonWidget):
         :return: Le layout
         """
         hbox = QHBoxLayout()
-        hbox.addWidget(BlocStatMetrage(parent=self, titre="Equipe matin", moment="matin"), alignment=Qt.AlignCenter)
-        hbox.addWidget(BlocStatMetrage(parent=self, titre="Equipe soir", moment="soir"), alignment=Qt.AlignCenter)
-        hbox.addWidget(BlocStatMetrage(parent=self, titre="Equipes cumulées", moment="total"), alignment=Qt.AlignCenter)
+        hbox.addWidget(BlocStatMetrage(parent=self, titre="Equipe matin", moment="matin"))
+        hbox.addWidget(BlocStatMetrage(parent=self, titre="Equipe soir", moment="soir"))
+        hbox.addWidget(BlocStatMetrage(parent=self, titre="Equipes cumulées", moment="total"))
         return hbox
 
 
@@ -120,7 +120,7 @@ class BlocStatMetrage(MondonWidget):
         label.setStyleSheet(white_title_label_stylesheet)
         label.setFixedHeight(30)
         label.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
-        hbox.addWidget(label, alignment=Qt.AlignCenter)
+        hbox.addWidget(label)
         return hbox
 
     @staticmethod
@@ -132,7 +132,7 @@ class BlocStatMetrage(MondonWidget):
         """
         hbox = QHBoxLayout()
         bar.setFixedHeight(50)
-        hbox.addWidget(bar, alignment=Qt.AlignCenter)
+        hbox.addWidget(bar)
         return hbox
 
     @staticmethod
@@ -148,5 +148,5 @@ class BlocStatMetrage(MondonWidget):
         titre_label.setStyleSheet(white_label_stylesheet)
         hbox.addWidget(titre_label, alignment=Qt.AlignLeft)
         label.setStyleSheet(white_label_stylesheet)
-        hbox.addWidget(label, alignment=Qt.AlignCenter)
+        hbox.addWidget(label)
         return hbox
