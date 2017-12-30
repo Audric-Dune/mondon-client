@@ -19,8 +19,8 @@ class MondonWidget(QWidget):
         self.padding = 0
         data_store_manager.DATA_CHANGED_SIGNAL.connect(self._handle_data_changed)
         settings_store.SETTINGS_CHANGED_SIGNAL.connect(self._handle_settings_changed)
-        stat_store.SETTINGS_STAT_CHANGED_SIGNAL.connect(self._handle_settings_stat_changed)
-        stat_store.DATA_STAT_CHANGED_SIGNAL.connect(self._handle_data_stat_changed)
+        # stat_store.SETTINGS_STAT_CHANGED_SIGNAL.connect(self._handle_settings_stat_changed)
+        stat_store.ON_DATA_STAT_CHANGED_SIGNAL.connect(self._handle_data_stat_changed)
         app.RESIZED_SIGNAL.connect(self._handle_size_main_window_changed)
 
     def on_data_changed(self):

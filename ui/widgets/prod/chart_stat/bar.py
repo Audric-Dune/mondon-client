@@ -16,7 +16,7 @@ from ui.widgets.public.mondon_widget import MondonWidget
 
 
 class Bar(MondonWidget):
-    def __init__(self, parent, percent):
+    def __init__(self, parent, percent=0):
         super(Bar, self).__init__(parent=parent)
         self.percent = percent
 
@@ -26,7 +26,7 @@ class Bar(MondonWidget):
         self.draw(p)
         p.end()
 
-    def get_percent(self, percent):
+    def set_percent(self, percent):
         self.percent = percent
         if percent > 100:
             self.percent = 100
