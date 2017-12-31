@@ -71,7 +71,7 @@ class DataTab(MondonWidget):
         hbox.setContentsMargins(0, 0, 5, 0)
         hbox.setSpacing(0)
         bold = team == "total"
-        name = "cumulé" if team == "total" else team
+        name = "cumulée" if team == "total" else team
         hbox.addWidget(self.create_label(text=name, align=Qt.AlignLeft | Qt.AlignVCenter, bold=bold))
         hbox.addWidget(self.create_label(text=affiche_entier(stat_store.stat[team]["total"]),
                                          align=Qt.AlignCenter | Qt.AlignVCenter,
