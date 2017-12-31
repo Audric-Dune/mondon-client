@@ -59,6 +59,7 @@ white_20_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, font_siz
 white_title_20_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, background_color=color_bleu_gris, font_size="20px")
 disable_16_label_stylesheet = create_qlabel_stylesheet(color=color_gris_moyen, font_size="16px")
 white_16_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, font_size="16px")
+white_16_bold_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, font_size="16px", bold="bold")
 black_12_label_stylesheet = create_qlabel_stylesheet(color=color_noir, font_size="12px")
 black_16_label_stylesheet = create_qlabel_stylesheet(color=color_noir, font_size="16px")
 white_24_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, font_size="24px")
