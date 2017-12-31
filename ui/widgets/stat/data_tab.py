@@ -74,7 +74,7 @@ class BlocStatMetrage(MondonWidget):
         self.titre = titre
         self.moment = moment
         self.vbox = QVBoxLayout()
-        self.bar = Bar(parent=self)
+        self.bar = Bar(parent=self, little=True)
         self.titre_label = QLabel(titre)
         self.total_label = QLabel()
         self.mean_label = QLabel()
@@ -131,7 +131,7 @@ class BlocStatMetrage(MondonWidget):
         :return: Le layout
         """
         hbox = QHBoxLayout()
-        bar.setFixedHeight(50)
+        bar.setFixedHeight(30)
         hbox.addWidget(bar)
         return hbox
 
