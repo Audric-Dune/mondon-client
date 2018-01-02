@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from itertools import groupby
+from constants.param import VITESSE_MOYENNE_MAXI, DEBUT_PROD_MATIN, FIN_PROD_SOIR, FIN_PROD_SOIR_VENDREDI, FIN_PROD_MATIN, FIN_PROD_MATIN_VENDREDI
+from ui.utils.timestamp import timestamp_now, timestamp_to_day, timestamp_at_day_ago, timestamp_at_time
 
 
 def affiche_entier(s, sep=' '):
@@ -52,3 +54,44 @@ def _clean_data(data_per_second):
         data += data_for_speed
         previous_speed = speed
     return data
+
+
+def get_ratio_prod(moment):
+    from stores.data_store_manager import data_store_manager
+    current_store = data_store_manager.get_current_store()
+    # Récupere le ts actuel
+    ts_actuel = timestamp_now()
+
+    # Calcul de la production maximum
+    vendredi = timestamp_to_day(timestamp_at_day_ago(current_store.day_ago)) == "vendredi"
+    if moment == "soir":
+        debut_prod = FIN_PROD_MATIN_VENDREDI if vendredi else FIN_PROD_MATIN
+    else:
+        debut_prod = DEBUT_PROD_MATIN
+    if moment == "matin":
+        fin_prod = FIN_PROD_MATIN_VENDREDI if vendredi else FIN_PROD_MATIN
+    else:
+        fin_prod = FIN_PROD_SOIR_VENDREDI if vendredi else FIN_PROD_SOIR
+    if ts_actuel < timestamp_at_time(current_store.start, hours=fin_prod):
+        total_s = (ts_actuel - timestamp_at_time(current_store.start, hours=debut_prod))
+    else:
+        total_s = 3600 * (fin_prod - debut_prod)
+    max_prod = VITESSE_MOYENNE_MAXI * total_s / 60
+
+    # Calcul le métrage total de la période
+    metrage_total = 0
+    if moment == "total":
+        metrage_total = current_store.metrage_matin + current_store.metrage_soir
+    if moment == "matin":
+        metrage_total = current_store.metrage_matin
+    if moment == "soir":
+        metrage_total = current_store.metrage_soir
+
+    # Calcul ratio
+    if max_prod > 0 and metrage_total >= 0:
+        ratio = metrage_total / max_prod * 100
+        if ratio > 100:
+            ratio = 100
+    else:
+        ratio = 0
+    return round(ratio, 1)

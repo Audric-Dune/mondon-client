@@ -23,7 +23,7 @@ from constants.param import VITESSE_LIMITE_ASSIMILATION_ARRET,\
     FIN_PROD_MATIN,\
     FIN_PROD_MATIN_VENDREDI
 from stores.data_store_manager import data_store_manager
-from ui.utils.data import affiche_entier
+from ui.utils.data import affiche_entier, get_ratio_prod
 from ui.utils.timestamp import timestamp_at_time, timestamp_to_date_little, timestamp_to_day, timestamp_to_hour_little
 from ui.utils.drawing import draw_rectangle, draw_text
 from ui.utils.timestamp import timestamp_at_day_ago
@@ -186,14 +186,8 @@ class Rapport(MondonWidget):
         text = ("{time} d'arrêt imprévu".format(time=imprevu_time_str))
         color = color_rouge if time_imprevu > 0 else color_vert
         draw_text(p, self.PAGE_W - 300 - 10, self.DEC_Y_STAT_1, 300, 40, color, "D", 16, text, bold=True)
-        vendredi = timestamp_to_day(timestamp_at_day_ago(current_store.day_ago)) == "vendredi"
-        if vendredi:
-            total_s = 3600 * (FIN_PROD_SOIR_VENDREDI - DEBUT_PROD_MATIN)
-        else:
-            total_s = 3600 * (FIN_PROD_SOIR - DEBUT_PROD_MATIN)
-        maxi_metrage = VITESSE_MOYENNE_MAXI * total_s / 60
         metrage_total = current_store.metrage_matin + current_store.metrage_soir
-        percent = round(metrage_total / maxi_metrage * 100, 2)
+        percent = get_ratio_prod("total")
         if percent < 25:
             color = color_rouge
         elif percent < 50:
@@ -247,19 +241,12 @@ class Rapport(MondonWidget):
 
     def draw_stat(self, p):
         current_store = data_store_manager.get_current_store()
-        vendredi = timestamp_to_day(timestamp_at_day_ago(current_store.day_ago)) == "vendredi"
-        if vendredi:
-            total_s = 3600 * (FIN_PROD_SOIR_VENDREDI - DEBUT_PROD_MATIN)
-        else:
-            total_s = 3600 * (FIN_PROD_SOIR - DEBUT_PROD_MATIN)
-        maxi_metrage_total = VITESSE_MOYENNE_MAXI * total_s / 60
-        maxi_metrage_equipe = VITESSE_MOYENNE_MAXI * total_s / 120
         metrage_total = current_store.metrage_matin + current_store.metrage_soir
         metrage_matin = current_store.metrage_matin
         metrage_soir = current_store.metrage_soir
-        percent_total = round(metrage_total / maxi_metrage_total * 100, 2)
-        percent_matin = round(metrage_matin / maxi_metrage_equipe * 100, 2)
-        percent_soir = round(metrage_soir / maxi_metrage_equipe * 100, 2)
+        percent_total = get_ratio_prod("total")
+        percent_matin = get_ratio_prod("matin")
+        percent_soir = get_ratio_prod("soir")
         time_total_matin = current_store.arret_time_matin
         time_total_soir = current_store.arret_time_soir
         time_total_day = time_total_matin + time_total_soir
@@ -406,7 +393,7 @@ class Rapport(MondonWidget):
             start_arret = arret[0]
             end_arret = arret[1]
             type = arret[2][0].type if arret[2] else "non renseigné"
-            if (start_ts <= start_arret <= end_ts and end_arret - start_arret >= 3600)\
+            if (start_ts <= start_arret <= end_ts and end_arret - start_arret >= 1800)\
                     or (start_ts <= start_arret <= end_ts and type == "Imprévu"):
                 start = str(timestamp_to_hour_little(start_arret))
                 duree = str(timedelta(seconds=round(end_arret - start_arret)))

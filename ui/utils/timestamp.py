@@ -34,6 +34,7 @@ def timestamp_to_day_month_little(timestamp):
     locale.setlocale(locale.LC_TIME, '')
     return datetime.fromtimestamp(timestamp).strftime('%d/%m')
 
+
 def timestamp_to_name_number_day_month(timestamp):
     locale.setlocale(locale.LC_TIME, '')
     return datetime.fromtimestamp(timestamp).strftime('%A %d/%m')
@@ -47,6 +48,7 @@ def timestamp_to_day(timestamp):
 def timestamp_to_week(timestamp):
     locale.setlocale(locale.LC_TIME, '')
     return datetime.fromtimestamp(timestamp).strftime('Semaine %U')
+
 
 def timestamp_to_month(timestamp):
     locale.setlocale(locale.LC_TIME, '')
@@ -109,7 +111,7 @@ def timestamp_at_month_ago(month_ago=0):
             year = year - 1
         else:
             month -= 1
-        i+=1
+        i += 1
     return datetime(year=year,
                     month=month,
                     day=1,
@@ -143,3 +145,7 @@ def timestamp_au_debut_de_hour(ts, min=0):
 
 def hour_in_timestamp(ts):
     return datetime.fromtimestamp(ts).strftime("%H:%M")
+
+
+def get_hour_in_timestamp(ts):
+    return datetime.fromtimestamp(ts).hour

@@ -1,6 +1,5 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
-import time
 from datetime import timedelta
 
 from PyQt5.QtCore import Qt
@@ -11,18 +10,15 @@ from constants.param import (DEBUT_PROD_MATIN,
                              FIN_PROD_MATIN,
                              FIN_PROD_MATIN_VENDREDI,
                              FIN_PROD_SOIR,
-                             FIN_PROD_SOIR_VENDREDI,
-                             VITESSE_MOYENNE_MAXI)
+                             FIN_PROD_SOIR_VENDREDI)
 from constants.stylesheets import white_title_label_stylesheet, red_title_label_stylesheet, green_title_label_stylesheet
 from stores.data_store_manager import data_store_manager
 from stores.settings_store import settings_store
 from ui.utils.timestamp import (
     timestamp_at_day_ago,
     timestamp_at_time,
-    timestamp_now,
-    timestamp_to_day,
-)
-from ui.utils.data import affiche_entier
+    timestamp_to_day)
+from ui.utils.data import affiche_entier, get_ratio_prod
 from ui.widgets.prod.chart_stat.bar import Bar
 from ui.widgets.public.mondon_widget import MondonWidget
 
@@ -134,20 +130,7 @@ class StatBar(MondonWidget):
             arret_time = arret_time_matin + arret_time_soir
             imprevu_arret_time = imprevu_arret_time_matin + imprevu_arret_time_soir
 
-        ts_actuel = timestamp_now()
-        if ts_actuel < end_ts:
-            maxi = VITESSE_MOYENNE_MAXI * (ts_actuel - start_ts) / 6000
-        else:
-            maxi = VITESSE_MOYENNE_MAXI * (end_ts - start_ts) / 6000
-
-        if maxi > 0 and result >= 0:
-            percent = result / maxi
-            if percent > 100:
-                percent = 100
-        else:
-            percent = 0
-
         self.metre_value = result
         self.arret_time = arret_time
         self.imprevu_arret_time = imprevu_arret_time
-        self.percent = percent
+        self.percent = get_ratio_prod(self.moment)
