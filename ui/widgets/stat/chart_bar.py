@@ -77,7 +77,6 @@ class ContentChart(MondonWidget):
             len_format = 5
         if settings_stat_store.format == "month":
             len_format = len(stat_store.data["total"])
-        print(len_format)
         index = 0
         while index < len_format:
             hbox_multi_bar = QHBoxLayout()

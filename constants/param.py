@@ -1,5 +1,5 @@
 # Database location
-DATABASE_LOCATION = '../mondon.db'
+DATABASE_LOCATION = 'I:\data_prod_bob/mondon.db'
 
 # Hypothèse
 VITESSE_LIMITE_ASSIMILATION_ARRET = 60
@@ -27,6 +27,7 @@ LIST_CHOIX_RAISON_PREVU = [
     ("label", "Réglage nouvelle production"),
     ("label", "Changement bobine papier et polypro"),
     ("label", "Démarrage production sans réglage"),
+    ("label", "Démarrage production avec réglage"),
     ("label", "Fin de journée"),
     ("text_edit", TEXT_EDIT_AUTRE)
     ]
@@ -38,6 +39,7 @@ DROPDOWN_CASSE = {"titre": "Casse", "placeholder": "Sélectionner une casse...",
 LIST_CHOIX_RAISON_IMPREVU = [
     ("dropdown", DROPDOWN_CASSE),
     ("label", "Mauvais encollage axes cartons"),
+    ("label", "Mauvais enroulement bobine fille au démarage"),
     ("label", "Problème buse colle à chaud"),
     ("label", "Entretien machine"),
     ("label", "Essai technique"),
