@@ -1,5 +1,6 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
+import time
 from constants.param import DEBUT_PROD_MATIN, FIN_PROD_MATIN_VENDREDI, FIN_PROD_MATIN, FIN_PROD_SOIR, FIN_PROD_SOIR_VENDREDI, VITESSE_LIMITE_ASSIMILATION_ARRET
 
 from lib.base_de_donnee import Database
@@ -24,27 +25,27 @@ class DataStore:
 
     def add_data(self):
         try:
-            new_data = Database.get_speeds(self.start * 1000, self.end * 1000)
-            if not new_data:
-                return False, []
-            self.data = clean_data_per_second(data=new_data, start=self.start, end=self.end)
             ts = timestamp_at_day_ago(self.day_ago)
-            if self.day_ago > 0:
-                metrage = Database.get_metrages_for_one_day(start_time=ts)
-                metrage = metrage[0]
-                if not metrage:
-                    metrage = self.get_live_stat(self.data, ts)
+            if self.data and self.day_ago > 0:
+                pass
             else:
-                metrage = self.get_live_stat(self.data, ts)
-            self.metrage_matin = round(metrage[0])
-            self.metrage_soir = round(metrage[1])
-
+                new_data = Database.get_speeds(self.start * 1000, self.end * 1000)
+                if not new_data:
+                    return False, []
+                self.data = clean_data_per_second(data=new_data, start=self.start, end=self.end)
+                if self.day_ago > 0:
+                    metrage = Database.get_metrages_for_one_day(start_time=ts)
+                    metrage = metrage[0]
+                    if not metrage:
+                        metrage = self.get_live_stat(self.data, ts)
+                else:
+                    metrage = self.get_live_stat(self.data, ts)
+                self.metrage_matin = round(metrage[0])
+                self.metrage_soir = round(metrage[1])
             list_arrets_database = Database.get_arret(self.start, self.end)
             self.dic_arret_from_database(list_arrets_database)
             list_arrets_data = self.list_new_arret_data()
             list_new_arret = self.update_dic_arret(list_arrets_data)
-            # list_raisons = Database.get_raison(self.start, self.end)
-            # self.add_raisons_to_arret(list_raisons, self.dic_arret)
             self.arrets = self.convert_dic_to_array(self.dic_arret)
             if self.arrets:
                 self.get_arret_stat(ts)
@@ -134,30 +135,6 @@ class DataStore:
             # Ajoute tab au tableau à retourner
             array.append(tab)
         return array
-
-    # def add_raisons_to_arret(self, list_raisons, dic_arret):
-    #     """
-    #     Ajoute les raisons enregistrées dans la base de donnée a son arret associé
-    #     :param list_raisons: Liste des raisons que l'on récupère de la base de donnée
-    #     :param dic_arret: Dictionnaire des arrêts mis a jours précedemment
-    #     """
-    #     # On parcour les raisons de la base de donnée
-    #     for raison in list_raisons:
-    #         start_raison = raison[1]
-    #         id_raison = raison[0]
-    #         # Test si le start de la raison correspond au start d'un arret
-    #         arret_object = self.check_start_raison(dic_arret, start_raison)
-    #         if arret_object:
-    #             # Test si la raison est déja renseigné dans l'models Arret
-    #             if self.check_id_raison(arret_object, id_raison):
-    #                 # Si oui on ne fait rien
-    #                 continue
-    #             else:
-    #                 # Sinon on crée un models raison est on l'insert dans le tableau de raison de l'arret
-    #                 from models.raison import Raison
-    #                 raison_object = Raison(raison)
-    #                 arret_object.raisons.append(raison_object)
-    #             arret_object.raison_store()
 
     @staticmethod
     def check_start_raison(dic_arret, start):

@@ -176,7 +176,7 @@ class Database:
         """
         query = "SELECT start, end " \
                 "FROM mondon_arret " \
-                "WHERE start >= ? AND start <= ?" \
+                "WHERE start >= ? AND start <= ? " \
                 "ORDER BY start"\
             .format(start_time=start_time, end_time=end_time)
         arrets = cls._run_query(query, (start_time, end_time))
@@ -207,7 +207,7 @@ class Database:
         :param end_arret: Fin de l'arret
         """
         query = "UPDATE mondon_arret " \
-                "SET end = ?" \
+                "SET end = ? " \
                 "WHERE start = ?" \
             .format(end_arret, start_arret)
         try:
@@ -230,7 +230,7 @@ class Database:
         """
         query = "SELECT id, start_arret, type_arret, raison_arret, primaire " \
                 "FROM mondon_raison_arret " \
-                "WHERE start_arret >= ? AND start_arret <= ?" \
+                "WHERE start_arret >= ? AND start_arret <= ? " \
                 "ORDER BY start_arret"\
             .format(start_time=start_time, end_time=end_time)
         raisons = cls._run_query(query, (start_time, end_time))
@@ -298,7 +298,7 @@ class Database:
         """
         query = "SELECT id, start_arret, type, masse, piste, couleur, grammage_papier, grammage_polypro " \
                 "FROM mondon_dechet " \
-                "WHERE start_arret > ? AND arret_start <= ?" \
+                "WHERE start_arret > ? AND arret_start <= ? " \
                 "ORDER BY start_arret"\
             .format(start_time=start_time, end_time=end_time)
         dechets = cls._run_query(query, (start_time, end_time))

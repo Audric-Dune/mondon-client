@@ -13,7 +13,9 @@ from ui.utils.window import focus_window
 class Application(QApplication):
     RESIZED_SIGNAL = pyqtSignal()
 
-    def __init__(self, argv=[]):
+    def __init__(self, argv=None):
+        if argv is None:
+            argv = []
         super(Application, self).__init__(argv)
         self.main_window = None
         self.tracker_window = None

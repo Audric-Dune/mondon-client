@@ -1,5 +1,7 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
+import time
+t1 = time.time()
 
 from lib.logger import logger
 logger.log_app_start()
