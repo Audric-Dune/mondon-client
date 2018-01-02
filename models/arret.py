@@ -31,8 +31,10 @@ class Arret(QObject):
     def create_on_database(self):
         """
         S'occupe de créer l'arret en base de donnée
+        Vérifie si l'arrêt est déja présent en base de donnée
         """
-        Database.create_arret(start_arret=self.start, end_arret=self.end)
+        if not Database.get_arret(start_time=self.start, end_time=self.start):
+            Database.create_arret(start_arret=self.start, end_arret=self.end)
 
     def update_arret(self):
         """

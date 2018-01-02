@@ -176,7 +176,7 @@ class Database:
         """
         query = "SELECT start, end " \
                 "FROM mondon_arret " \
-                "WHERE start > ? AND start <= ?" \
+                "WHERE start >= ? AND start <= ?" \
                 "ORDER BY start"\
             .format(start_time=start_time, end_time=end_time)
         arrets = cls._run_query(query, (start_time, end_time))
