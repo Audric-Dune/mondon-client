@@ -71,6 +71,7 @@ class SettingsStatStore(QObject):
         self.month_ago = month_ago
         self.year_ago = year_ago
         self.get_format()
+        self.update_param()
         self.update_display_setting()
         self.SETTINGS_STAT_CHANGED_SIGNAL.emit()
 

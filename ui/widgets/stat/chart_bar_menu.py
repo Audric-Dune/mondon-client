@@ -60,6 +60,7 @@ class ChartBarMenu(MondonWidget):
         self.update_label()
 
     def update_label(self):
+        print("update_label")
         self.label_date.setText(settings_stat_store.time_stat)
         self.label_type_stat.setText(settings_stat_store.data_type.upper())
 
