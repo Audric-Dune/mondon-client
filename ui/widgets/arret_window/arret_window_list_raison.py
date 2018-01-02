@@ -18,6 +18,7 @@ from ui.widgets.public.pixmap_button import PixmapButton
 from ui.widgets.public.mondon_widget import MondonWidget
 from ui.widgets.public.radio_button import RadioButtonManager, RadioButton
 
+
 class ArretWindowListRaison(MondonWidget):
     DELETE_RAISON_SIGNAL = pyqtSignal()
     # _____DEFINITION CONSTANTE CLASS_____

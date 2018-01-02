@@ -55,7 +55,7 @@ class DataStoreManager(QObject):
             self.DATA_CHANGED_SIGNAL.emit()
 
     def update_current_store(self, *args):
-        jour = timestamp_at_day_ago(settings_store.day_ago)
+        jour = round(timestamp_at_day_ago(settings_store.day_ago))
         jour_str = str(jour)
         if self.dic_data_store.get(jour_str):
             self.current_store = self.dic_data_store[jour_str]
@@ -66,7 +66,7 @@ class DataStoreManager(QObject):
             self.dic_data_store[jour_str] = self.current_store
 
     def add_new_store(self, ts):
-        jour = ts
+        jour = round(ts)
         jour_str = str(jour)
         start = timestamp_at_time(jour, hours=DEBUT_PROD_MATIN)
         end = timestamp_at_time(jour, hours=FIN_PROD_SOIR)
@@ -92,7 +92,7 @@ class DataStoreManager(QObject):
         return self.current_store
 
     def get_store_at_day_ago(self, day_ago):
-        jour = timestamp_at_day_ago(day_ago)
+        jour = round(timestamp_at_day_ago(day_ago))
         jour_str = str(jour)
         return self.dic_data_store.get(jour_str, False)
 

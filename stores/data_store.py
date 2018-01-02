@@ -43,8 +43,8 @@ class DataStore:
             self.dic_arret_from_database(list_arrets_database)
             list_arrets_data = self.list_new_arret_data()
             list_new_arret = self.update_dic_arret(list_arrets_data)
-            list_raisons = Database.get_raison(self.start, self.end)
-            self.add_raisons_to_arret(list_raisons, self.dic_arret)
+            # list_raisons = Database.get_raison(self.start, self.end)
+            # self.add_raisons_to_arret(list_raisons, self.dic_arret)
             self.arrets = self.convert_dic_to_array(self.dic_arret)
             if self.arrets:
                 self.get_arret_stat(ts)
@@ -135,29 +135,29 @@ class DataStore:
             array.append(tab)
         return array
 
-    def add_raisons_to_arret(self, list_raisons, dic_arret):
-        """
-        Ajoute les raisons enregistrées dans la base de donnée a son arret associé
-        :param list_raisons: Liste des raisons que l'on récupère de la base de donnée
-        :param dic_arret: Dictionnaire des arrêts mis a jours précedemment
-        """
-        # On parcour les raisons de la base de donnée
-        for raison in list_raisons:
-            start_raison = raison[1]
-            id_raison = raison[0]
-            # Test si le start de la raison correspond au start d'un arret
-            arret_object = self.check_start_raison(dic_arret, start_raison)
-            if arret_object:
-                # Test si la raison est déja renseigné dans l'models Arret
-                if self.check_id_raison(arret_object, id_raison):
-                    # Si oui on ne fait rien
-                    continue
-                else:
-                    # Sinon on crée un models raison est on l'insert dans le tableau de raison de l'arret
-                    from models.raison import Raison
-                    raison_object = Raison(raison)
-                    arret_object.raisons.append(raison_object)
-                arret_object.raison_store()
+    # def add_raisons_to_arret(self, list_raisons, dic_arret):
+    #     """
+    #     Ajoute les raisons enregistrées dans la base de donnée a son arret associé
+    #     :param list_raisons: Liste des raisons que l'on récupère de la base de donnée
+    #     :param dic_arret: Dictionnaire des arrêts mis a jours précedemment
+    #     """
+    #     # On parcour les raisons de la base de donnée
+    #     for raison in list_raisons:
+    #         start_raison = raison[1]
+    #         id_raison = raison[0]
+    #         # Test si le start de la raison correspond au start d'un arret
+    #         arret_object = self.check_start_raison(dic_arret, start_raison)
+    #         if arret_object:
+    #             # Test si la raison est déja renseigné dans l'models Arret
+    #             if self.check_id_raison(arret_object, id_raison):
+    #                 # Si oui on ne fait rien
+    #                 continue
+    #             else:
+    #                 # Sinon on crée un models raison est on l'insert dans le tableau de raison de l'arret
+    #                 from models.raison import Raison
+    #                 raison_object = Raison(raison)
+    #                 arret_object.raisons.append(raison_object)
+    #             arret_object.raison_store()
 
     @staticmethod
     def check_start_raison(dic_arret, start):

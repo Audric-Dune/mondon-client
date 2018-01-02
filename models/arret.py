@@ -27,6 +27,7 @@ class Arret(QObject):
         self.type_cache = None
         self.raison_cache_index = {}
         self.create_on_database()
+        self.get_raisons()
 
     def create_on_database(self):
         """
@@ -41,6 +42,37 @@ class Arret(QObject):
         S'occupe de mettre a jours l'arret en base de donnée
         """
         Database.update_arret(start_arret=self.start, end_arret=self.end)
+
+    def get_raisons(self):
+        list_raisons = Database.get_raison(self.start, self.end)
+        # On parcour les raisons de la base de donnée
+        for raison in list_raisons:
+            start_raison = raison[1]
+            id_raison = raison[0]
+            # Test si le start de la raison correspond au start de l'arret
+            if start_raison == self.start:
+                # Test si la raison est déja renseigné dans la liste des raisons
+                if self.check_id_raison(id_raison):
+                    # Si oui on ne fait rien
+                    continue
+                else:
+                    # Sinon on crée un models raison est on l'insert dans le tableau de raison de l'arret
+                    raison_object = Raison(raison)
+                    self.raisons.append(raison_object)
+                self.raison_store()
+
+    def check_id_raison(self, id):
+        """
+        Permet de checker si une raison est déja présente dans le tableau de raison d'un arret
+        :param arret_object: Object arret ou l'on test
+        :param id: Id que l'on recherche dans l'arret
+        :return: True si la raison est présente, False si on ne l'a trouve pas
+        """
+        for raison in self.raisons:
+            raison_id = raison.id
+            if raison_id == id:
+                return True
+        return False
 
     def add_raison_on_database(self):
         """
@@ -120,7 +152,7 @@ class Arret(QObject):
                 list_raison_not_prevu.append(raison)
         for raison in list_raison_not_prevu:
             list_raison.append(raison)
-        self.raisons =  list_raison
+        self.raisons = list_raison
 
     def add_type_cache(self, type):
         """
