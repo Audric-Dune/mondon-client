@@ -152,7 +152,7 @@ class ArretWindow(QMainWindow):
         """
         if not self.arret.raisons and self.arret_window_finish:
             self.remove_arret_window_finish()
-        elif self.arret.raisons and not self.arret_window_finish:
+        elif self.arret.raisons and not self.arret_window_finish and not self.arret_window_select_raison:
             self.create_arret_window_finish()
         # Utilisation d'un QTimer pour redimensionner la window
         # (on attend que les fonctions soit réellement exécuté)
