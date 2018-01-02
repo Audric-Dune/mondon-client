@@ -35,13 +35,6 @@ class SettingsStatStore(QObject):
         if self.month_ago >= 0:
             self.display_setting = [False, False, True]
 
-    def update_param(self):
-        if self.week_ago >= 0:
-            self.time_stat = timestamp_to_week(timestamp_at_week_ago(self.week_ago)).capitalize()
-        if self.month_ago >= 0:
-            self.time_stat = timestamp_to_month(timestamp_at_month_ago(self.month_ago)).capitalize()
-        self.get_format()
-
     def get_format(self):
         if self.week_ago >= 0:
             self.format = "week"
@@ -60,6 +53,13 @@ class SettingsStatStore(QObject):
         self.update_param()
         self.update_data()
         self.SETTINGS_STAT_CHANGED_SIGNAL.emit()
+
+    def update_param(self):
+        if self.week_ago >= 0:
+            self.time_stat = timestamp_to_week(timestamp_at_week_ago(self.week_ago)).capitalize()
+        if self.month_ago >= 0:
+            self.time_stat = timestamp_to_month(timestamp_at_month_ago(self.month_ago)).capitalize()
+        self.get_format()
 
     def on_select_checkbox_display(self, index_checkbox):
         self.display_setting[index_checkbox] = False if self.display_setting[index_checkbox] else True

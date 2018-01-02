@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QSizePolicy, QHBo
 from ui.widgets.prod.chart.chart import Chart
 
 from constants.dimensions import chart_menu_height
+from stores.settings_store import settings_store
 from ui.utils.layout import clear_layout
 from ui.widgets.app_menu import AppMenu
 from ui.widgets.prod.chart.chart_menu import ChartMenu
@@ -42,6 +43,7 @@ class MainWindow(QMainWindow):
     def update_widget(self, menu_selected):
         clear_layout(self.content_vbox)
         if menu_selected == "chart_stat":
+            settings_store.set(day_ago=0)
             self.content_vbox.addLayout(self.create_stat_layout())
         elif menu_selected == "rapport":
             self.content_vbox.addLayout(self.create_rapport_layout())

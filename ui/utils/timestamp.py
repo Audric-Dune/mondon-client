@@ -47,7 +47,7 @@ def timestamp_to_day(timestamp):
 
 def timestamp_to_week(timestamp):
     locale.setlocale(locale.LC_TIME, '')
-    return datetime.fromtimestamp(timestamp).strftime('Semaine %U')
+    return 'Semaine {}'.format(datetime.fromtimestamp(timestamp).isocalendar()[1])
 
 
 def timestamp_to_month(timestamp):

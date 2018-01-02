@@ -82,6 +82,7 @@ class DataStore:
         metrage_matin = sum(speeds_matin) / 60
         speeds_soir = get_metrage(ts, speeds, "soir")
         metrage_soir = sum(speeds_soir) / 60
+
         return metrage_matin, metrage_soir
 
     def get_arret_stat(self, ts):

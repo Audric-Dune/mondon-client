@@ -50,11 +50,7 @@ class StatStore(QObject):
         data_time = self.get_start_end()
         start = data_time[0]
         end = data_time[1]
-        new_data_on_database = self.get_data_on_database(start, end)
-        if self.data_on_database == new_data_on_database:
-            return False
-        else:
-            self.data_on_database = new_data_on_database
+        self.data_on_database = self.get_data_on_database(start, end)
         self.init_var()
         if self.data_on_database:
             # GESTION DES DATA METRAGE PAR JOUR

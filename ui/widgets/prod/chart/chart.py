@@ -50,6 +50,8 @@ class Chart(MondonWidget):
             self.drag_offset = ratio * self.drag_offset + ratio * self.get_chart_width() / 2 - self.get_chart_width() / 2
             self.adjust_drag_offset()
             self.update()
+        else:
+            self.update()
 
     def get_chart_width(self):
         return self.width() - chart_margin_left - chart_margin_right

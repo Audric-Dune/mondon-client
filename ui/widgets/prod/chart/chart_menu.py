@@ -98,6 +98,8 @@ class ChartMenu(MondonWidget):
         self.update_label()
 
     def update_button(self):
+        self.bt_live.hide() if settings_store.day_ago == 0 else self.bt_live.show()
+        self.live_speed.show() if settings_store.day_ago == 0 else self.live_speed.hide()
         self.bt_jour_plus.setEnabled(settings_store.day_ago > 0)
         self.bt_zoom_moins.setEnabled(settings_store.zoom > 1)
         self.bt_zoom_plus.setEnabled(32 > settings_store.zoom)
