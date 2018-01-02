@@ -5,7 +5,7 @@ import random
 
 from PyQt5.QtCore import QObject, pyqtSignal
 from lib.base_de_donnee import Database
-from constants.param import LIST_CHOIX_RAISON_PREVU, LIST_CHOIX_RAISON_IMPREVU
+from constants.param import LIST_CHOIX_RAISON_PREVU, LIST_CHOIX_RAISON_IMPREVU, LIST_CHOIX_ENTRETIEN
 from models.raison import Raison
 
 
@@ -57,21 +57,56 @@ class Arret(QObject):
                 raison_arret = value_item
             # Sinon on sélectionne la liste des arrets en fonction du type d'aret
             else:
-                list_raison = LIST_CHOIX_RAISON_PREVU if self.type_cache == "Prévu" else LIST_CHOIX_RAISON_IMPREVU
+                list_raison = self.select_list_raison()
                 # On récupère la valeur de l'index dans la liste
                 raison_arret = list_raison[index][1]
             # On range les données définient ci-dessus
             data_raison = [random_id, self.start, self.type_cache, raison_arret, None]
             # On crée notre object raison
             self.raisons.append(Raison(data_raison))
-        self.raisons = self.raison_store(self.raisons)
+        self.raison_store()
 
-    @staticmethod
-    def raison_store(raisons):
+    def select_list_raison(self):
+        if self.type_cache == "Prévu":
+            return LIST_CHOIX_RAISON_PREVU
+        elif self.type_cache == "Imprévu":
+            return LIST_CHOIX_RAISON_IMPREVU
+        else:
+            return LIST_CHOIX_ENTRETIEN
+
+    def raison_store(self):
+        # On détermine la raison primaire
+        raison_primaire = None
+        for raison in self.raisons:
+            if raison.primaire == 1:
+                raison_primaire = raison
+        # On détermine le type principal
+        type_primaire = None
+        for raison in self.raisons:
+            if raison.type == "Imprévu":
+                type_primaire = "Imprévu"
+                break
+            elif raison.type == "Prévu" and type_primaire != "Imprévu":
+                type_primaire = "Prévu"
+            elif raison.type == "Entretien" and not type_primaire:
+                type_primaire = "Entretien"
+        # On remove la raison primaire si le type de la raison primaire et le type primaire ne corresponde pas
+        if raison_primaire:
+            if raison_primaire.type != type_primaire:
+                raison_primaire.remove_to_raison_primaire()
+        # On commence le trie des raisons
         list_raison = []
+        list_raison_not_primaire = []
         list_raison_not_imprevu = []
         list_raison_not_prevu = []
-        for raison in raisons:
+        # On parcour l'ensemble des raisons pour trouver la raison principale si il y en a une
+        for raison in self.raisons:
+            if raison.primaire == 1:
+                list_raison.append(raison)
+            else:
+                list_raison_not_primaire.append(raison)
+        # Ensuite on parcour les raisons restante est on les tries dans l'ordre imprevu puis prevu puis entretien
+        for raison in list_raison_not_primaire:
             if raison.type == "Imprévu":
                 list_raison.append(raison)
             else:
@@ -83,7 +118,7 @@ class Arret(QObject):
                 list_raison_not_prevu.append(raison)
         for raison in list_raison_not_prevu:
             list_raison.append(raison)
-        return list_raison
+        self.raisons =  list_raison
 
     def add_type_cache(self, type):
         """

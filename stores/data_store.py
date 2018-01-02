@@ -36,8 +36,8 @@ class DataStore:
                     metrage = self.get_live_stat(self.data, ts)
             else:
                 metrage = self.get_live_stat(self.data, ts)
-            self.metrage_matin = metrage[0]
-            self.metrage_soir = metrage[1]
+            self.metrage_matin = round(metrage[0])
+            self.metrage_soir = round(metrage[1])
 
             list_arrets_database = Database.get_arret(self.start, self.end)
             self.dic_arret_from_database(list_arrets_database)
@@ -157,7 +157,7 @@ class DataStore:
                     from models.raison import Raison
                     raison_object = Raison(raison)
                     arret_object.raisons.append(raison_object)
-                arret_object.raisons = arret_object.raison_store(arret_object.raisons)
+                arret_object.raison_store()
 
     @staticmethod
     def check_start_raison(dic_arret, start):
@@ -165,13 +165,13 @@ class DataStore:
         Permet d'identifer un arret dans un dictionnaire d'arret avec la valeur start
         :param dic_arret: Dictionnaire d'arret
         :param start: Valeur du start arret recherché
-        :return: l'models arret trouvé ou False
+        :return: l'models arret trouvé ou None
         """
         for value in dic_arret.items():
             start_arret = value[0]
             if start_arret == start:
                 return value[1]
-        return False
+        return None
 
     @staticmethod
     def check_id_raison(arret_object, id):

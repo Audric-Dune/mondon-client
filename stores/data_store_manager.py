@@ -13,9 +13,7 @@ from stores.settings_store import settings_store
 
 class DataStoreManager(QObject):
     DATA_CHANGED_SIGNAL = pyqtSignal()
-    NEW_ARRET_SIGNAL = pyqtSignal('unsigned long long', #start_arret
-                                  'unsigned long long'  #day_ago
-                                  )
+    NEW_ARRET_SIGNAL = pyqtSignal(int, int)
 
     def __init__(self):
         super(DataStoreManager, self).__init__()
@@ -50,7 +48,8 @@ class DataStoreManager(QObject):
                 for start_arret in list_new_arret:
                     if settings_store.day_ago == 0:
                         self.NEW_ARRET_SIGNAL.emit(start_arret, store.day_ago)
-
+        from stores.stat_store import stat_store
+        stat_store.update_data()
         # Envois un signal que les data ont changées si nécessaire
         if should_refresh:
             self.DATA_CHANGED_SIGNAL.emit()
@@ -65,6 +64,15 @@ class DataStoreManager(QObject):
             end = timestamp_at_time(jour, hours=FIN_PROD_SOIR)
             self.current_store = DataStore(start, end, settings_store.day_ago)
             self.dic_data_store[jour_str] = self.current_store
+
+    def add_new_store(self, ts):
+        jour = ts
+        jour_str = str(jour)
+        start = timestamp_at_time(jour, hours=DEBUT_PROD_MATIN)
+        end = timestamp_at_time(jour, hours=FIN_PROD_SOIR)
+        new_store = DataStore(start, end, settings_store.day_ago)
+        self.dic_data_store[jour_str] = new_store
+        return new_store
 
     def cancel_refresh(self):
         if self.refresh_timer:
@@ -86,7 +94,11 @@ class DataStoreManager(QObject):
     def get_store_at_day_ago(self, day_ago):
         jour = timestamp_at_day_ago(day_ago)
         jour_str = str(jour)
-        return self.dic_data_store[jour_str]
+        return self.dic_data_store.get(jour_str, False)
+
+    def get_store_at_time(self, ts):
+        jour_str = str(round(ts))
+        return self.dic_data_store.get(jour_str, False)
 
     def refresh_data(self, force_refresh=False):
         if self.refresh_timer:

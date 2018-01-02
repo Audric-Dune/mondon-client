@@ -57,9 +57,9 @@ class Rapport(MondonWidget):
 
     def on_settings_changed(self, prev_live, prev_day_ago, prev_zoom):
         self.update()
-    #
-    # def on_data_changed(self):
-    #     self.update()
+
+    def on_data_changed(self):
+        self.update()
 
     def draw_background(self, p):
         draw_rectangle(p, self.DEC_X_CHART, self.DEC_Y_CHART, self.CHART_W, self.CHART_H, color_gris_clair)
@@ -406,7 +406,7 @@ class Rapport(MondonWidget):
             start_arret = arret[0]
             end_arret = arret[1]
             type = arret[2][0].type if arret[2] else "non renseigné"
-            if (start_ts <= start_arret <= end_ts and end_arret - start_arret >= 1800)\
+            if (start_ts <= start_arret <= end_ts and end_arret - start_arret >= 3600)\
                     or (start_ts <= start_arret <= end_ts and type == "Imprévu"):
                 start = str(timestamp_to_hour_little(start_arret))
                 duree = str(timedelta(seconds=round(end_arret - start_arret)))

@@ -230,11 +230,31 @@ class Database:
         """
         query = "SELECT id, start_arret, type_arret, raison_arret, primaire " \
                 "FROM mondon_raison_arret " \
-                "WHERE start_arret > ? AND start_arret <= ?" \
+                "WHERE start_arret >= ? AND start_arret <= ?" \
                 "ORDER BY start_arret"\
             .format(start_time=start_time, end_time=end_time)
         raisons = cls._run_query(query, (start_time, end_time))
         return raisons
+
+    @classmethod
+    def update_to_raison_primaire(cls, id, primaire):
+        """
+        Update une raison pour la rendre primaire
+        :param id: L'id de la raison
+        """
+        query = "UPDATE mondon_raison_arret " \
+                "SET primaire = ? " \
+                "WHERE id = ?" \
+            .format(primaire, id)
+        try:
+            cls._run_query(query, (primaire, id))
+        except sqlite3.IntegrityError as e:
+            # IntegrityError veut dire que l'on essaye d'insérer une vitesse avec un timestamp
+            # qui existe déjà dans la base de données.
+            # Dans ce cas, on considère que cette valeur n'a pas besoin d'être insérée et on
+            # ignore l'exception.
+            logger.log("DATABASE", "(Ignorée) IntegrityError: {}".format(e))
+            pass
 
     @classmethod
     def create_raison_arret(cls, id, start_arret, type_arret, raison_arret, primaire=0):

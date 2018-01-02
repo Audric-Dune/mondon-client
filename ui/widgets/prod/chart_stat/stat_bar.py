@@ -86,7 +86,7 @@ class StatBar(MondonWidget):
 
         arret_prevu_time_str = str(timedelta(seconds=round(self.arret_time - self.imprevu_arret_time)))
         self.arret_prevu.setText("{time} d'arrêt prévu".format(time=arret_prevu_time_str))
-        self.bar.get_percent(self.percent)
+        self.bar.set_percent(self.percent)
 
         if self.imprevu_arret_time == 0:
             self.arret_imprevu.setStyleSheet(green_title_label_stylesheet)
@@ -94,7 +94,7 @@ class StatBar(MondonWidget):
             self.arret_imprevu.setStyleSheet(red_title_label_stylesheet)
         arret_imprevu_time_str = str(timedelta(seconds=round(self.imprevu_arret_time)))
         self.arret_imprevu.setText("{time} d'arrêt imprévu".format(time=arret_imprevu_time_str))
-        self.bar.get_percent(self.percent)
+        self.bar.set_percent(self.percent)
 
     def get_start_and_end(self, ts):
         vendredi = timestamp_to_day(ts) == "vendredi"

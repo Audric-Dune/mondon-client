@@ -100,10 +100,11 @@ class RapportMenu(MondonWidget):
 
     def update_button(self):
         self.bt_jour_plus.setEnabled(settings_store.day_ago > 0)
+        self.bt_live.setEnabled(settings_store.day_ago > 0)
 
     def update_label(self):
         ts = timestamp_at_day_ago(settings_store.day_ago)
-        date = timestamp_to_date(ts)
+        date = timestamp_to_date(ts).capitalize()
         self.label_date.setMinimumWidth(self.MINIMUN_WIDTH_LABEL)
         self.label_date.setAlignment(Qt.AlignCenter)
         self.label_date.setText(date)
@@ -122,6 +123,8 @@ class RapportMenu(MondonWidget):
                                                  caption='Enregistrer sous',
                                                  directory='{}\{}.pdf'.format(defaut_path, defaut_name),
                                                  filter="Fichiers pdf (*.pdf)")
+        if not file_names[0]:
+            return
         printer.setOutputFileName(file_names[0])
         printer.setOutputFormat(QPrinter.PdfFormat)
         printer.setPageMargins(10, 10, 10, 10, QPrinter.Point)

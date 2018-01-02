@@ -16,21 +16,25 @@ from constants.colors import (
 # ____________LABEL STYLESHEET____________
 
 
-def create_qlabel_stylesheet(background_color=None, color=color_blanc, font_size="14px"):
+def create_qlabel_stylesheet(background_color=None, color=color_blanc, font_size="14px", padding="0px 5px 0px 5px", bold=None):
     return """
         QLabel {{
             background-color: {background_color};
             color: {color};
             font-size: {font_size};
-            padding: 0px 5px 0px 5px;
+            padding: {padding};
+            font-weight: {bold};
         }}
     """.format(
         background_color=background_color.hex_string if background_color else "transparent",
         color=color.hex_string,
-        font_size=font_size
+        font_size=font_size,
+        padding=padding,
+        bold=bold
     )
 
 white_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, background_color=color_bleu_gris)
+white_12_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, background_color=color_bleu_gris, font_size="12px")
 test_label_stylesheet = create_qlabel_stylesheet(color=color_orange, background_color=color_vert, font_size="14px")
 orange_label_stylesheet = create_qlabel_stylesheet(color=color_orange)
 red_label_stylesheet = create_qlabel_stylesheet(color=color_rouge)
@@ -38,6 +42,9 @@ white_title_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, backg
 white_22_label_stylesheet = create_qlabel_stylesheet(color=color_blanc,  font_size="22px")
 red_title_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, background_color=color_rouge, font_size="16px")
 red_12_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, background_color=color_rouge, font_size="12px")
+red_16_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, background_color=color_rouge, font_size="16px")
+gray_16_label_stylesheet = create_qlabel_stylesheet(color=color_noir, background_color=color_gris_moyen, font_size="16px")
+blue_16_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, background_color=color_bleu, font_size="16px")
 blue_title_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, background_color=color_bleu, font_size="16px")
 blue_12_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, background_color=color_bleu, font_size="12px")
 orange_title_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, background_color=color_orange, font_size="16px")
@@ -52,12 +59,14 @@ white_20_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, font_siz
 white_title_20_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, background_color=color_bleu_gris, font_size="20px")
 disable_16_label_stylesheet = create_qlabel_stylesheet(color=color_gris_moyen, font_size="16px")
 white_16_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, font_size="16px")
+white_16_bold_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, font_size="16px", bold="bold")
 black_12_label_stylesheet = create_qlabel_stylesheet(color=color_noir, font_size="12px")
 black_16_label_stylesheet = create_qlabel_stylesheet(color=color_noir, font_size="16px")
 white_24_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, font_size="24px")
 bleu_gris_20_label_stylesheet = create_qlabel_stylesheet(color=color_bleu_gris, background_color=color_blanc, font_size="20px")
 bleu_gris_16_label_stylesheet = create_qlabel_stylesheet(color=color_bleu_gris, background_color=color_blanc, font_size="16px")
 green_20_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, background_color=color_vert_fonce, font_size="20px")
+green_maj_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, background_color=color_vert_fonce, font_size="16px", padding="0px 20px 0px 20px", bold="bold")
 
 # ____________BUTTON STYLESHEET____________
 
@@ -81,6 +90,37 @@ button_stylesheet = """
     }}
 """.format(
     color_blanc=color_blanc.hex_string,
+    color_vert_fonce=color_vert_fonce.hex_string,
+    color_vert_moyen=color_vert_moyen.hex_string,
+    color_vert=color_vert.hex_string,
+    color_gris_moyen=color_gris_moyen.hex_string,
+    color_rouge=color_rouge.hex_string,
+)
+
+button_white_stylesheet = """
+    QPushButton {{
+        background-color: {color_blanc};
+        text-align: left;
+        padding-left: 5px;
+        border-radius: 0;
+        color: {color_bleu_gris};
+        font-size: 16px;
+    }}
+    QPushButton:hover {{
+        background-color: {color_vert_fonce};
+        color: {color_blanc};
+    }}
+    QPushButton:pressed {{
+        border-style: solid;
+        border-width: 1px;
+        border-color: {color_rouge}
+    }}
+    QPushButton:disabled {{
+        background-color: {color_gris_moyen};
+    }}
+""".format(
+    color_blanc=color_blanc.hex_string,
+    color_bleu_gris=color_bleu_gris.hex_string,
     color_vert_fonce=color_vert_fonce.hex_string,
     color_vert_moyen=color_vert_moyen.hex_string,
     color_vert=color_vert.hex_string,
@@ -326,6 +366,21 @@ check_box_on_stylesheet = """
     color_rouge=color_rouge.hex_string,
 )
 
+check_box_disabled_stylesheet = """
+    QPushButton {{
+        background-color: {color_gris_moyen};
+        border-radius: 2px;
+    }}
+""".format(
+    color_blanc=color_blanc.hex_string,
+    color_vert_fonce=color_vert_fonce.hex_string,
+    color_vert_moyen=color_vert_moyen.hex_string,
+    color_vert=color_vert.hex_string,
+    color_gris_moyen=color_gris_moyen.hex_string,
+    color_gris_fonce=color_gris_fonce.hex_string,
+    color_rouge=color_rouge.hex_string,
+)
+
 check_box_unselected_stylesheet = """
     QPushButton {{
         background-color: {color_gris_moyen};
@@ -423,4 +478,20 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {{
     color_gris_clair=color_gris_clair.hex_string,
     color_gris_fonce=color_gris_fonce.hex_string,
     color_blanc=color_blanc.hex_string
+)
+
+# ____________RADIOBUTTON STYLESHEET____________
+
+radio_button_stylesheet = """
+    QRadioButton {{
+        background: {color_vert_fonce}
+    }}
+""".format(
+    color_blanc=color_blanc.hex_string,
+    color_vert_fonce=color_vert_fonce.hex_string,
+    color_vert_moyen=color_vert_moyen.hex_string,
+    color_vert=color_vert.hex_string,
+    color_gris_moyen=color_gris_moyen.hex_string,
+    color_gris_fonce=color_gris_fonce.hex_string,
+    color_rouge=color_rouge.hex_string,
 )

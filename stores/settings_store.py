@@ -8,11 +8,8 @@ from ui.utils.timestamp import timestamp_at_day_ago
 
 
 class SettingsStore(QObject):
-    SETTINGS_CHANGED_SIGNAL = pyqtSignal(
-        bool,  # live
-        'unsigned long long',  # day_ago
-        'unsigned long long',  # zoom
-    )
+    # pyqtSignal(live, day_ago, zoom)
+    SETTINGS_CHANGED_SIGNAL = pyqtSignal(bool, int, int)
 
     def __init__(self):
         super(SettingsStore, self).__init__()
