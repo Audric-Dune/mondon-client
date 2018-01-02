@@ -23,7 +23,7 @@ class StatChartBar(MondonWidget):
         self.color_label = color_blanc
         self.color_bar = color
         if value < 0:
-            self.text_value = "Aucune donnée"
+            self.text_value = "NA"
         self.height_bar = 0
         self.set_background_color(color_blanc)
 

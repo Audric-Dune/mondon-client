@@ -1,5 +1,6 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
+
 from datetime import timedelta
 
 from PyQt5.QtCore import Qt
@@ -13,11 +14,7 @@ from constants.param import (DEBUT_PROD_MATIN,
                              FIN_PROD_SOIR_VENDREDI)
 from constants.stylesheets import white_title_label_stylesheet, red_title_label_stylesheet, green_title_label_stylesheet
 from stores.data_store_manager import data_store_manager
-from stores.settings_store import settings_store
-from ui.utils.timestamp import (
-    timestamp_at_day_ago,
-    timestamp_at_time,
-    timestamp_to_day)
+from ui.utils.timestamp import timestamp_to_day
 from ui.utils.data import affiche_entier, get_ratio_prod
 from ui.widgets.prod.chart_stat.bar import Bar
 from ui.widgets.public.mondon_widget import MondonWidget
@@ -104,11 +101,6 @@ class StatBar(MondonWidget):
         return start, end
 
     def get_stat(self):
-        ts = timestamp_at_day_ago(settings_store.day_ago)
-        time = self.get_start_and_end(ts)
-        start_ts = timestamp_at_time(ts, hours=time[0])
-        end_ts = timestamp_at_time(ts, hours=time[1])
-
         current_store = data_store_manager.get_current_store()
         metrage_matin = current_store.metrage_matin
         metrage_soir = current_store.metrage_soir
