@@ -304,3 +304,17 @@ class Database:
         dechets = cls._run_query(query, (start_time, end_time))
         return dechets
 
+    @classmethod
+    def get_team_gestion(cls):
+        """
+        Récupère les donnée de gestion des équipes
+        :return: Une liste
+        """
+        query = "SELECT ts, debut_prod, nombre_heure, nombre_equipe, ferier " \
+                "FROM mondon_equipe " \
+                "ORDER BY ts"\
+            .format()
+        print(query)
+        dechets = cls._run_query(query, ())
+        return dechets
+

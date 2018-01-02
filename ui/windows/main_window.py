@@ -18,6 +18,7 @@ from ui.widgets.stat.stat_menu import StatMenu
 from ui.widgets.stat.chart_bar_menu import ChartBarMenu
 from ui.widgets.rapport.menu_rapport import RapportMenu
 from ui.widgets.rapport.preview_rapport import PreviewRapport
+from ui.widgets.team_gestion.tab_team_gestion import TabTeamGestion
 
 
 class MainWindow(QMainWindow):
@@ -47,6 +48,8 @@ class MainWindow(QMainWindow):
             self.content_vbox.addLayout(self.create_stat_layout())
         elif menu_selected == "rapport":
             self.content_vbox.addLayout(self.create_rapport_layout())
+        elif menu_selected == "team_gestion":
+            self.content_vbox.addLayout(self.create_team_gestion_layout())
         else:
             self.content_vbox.addLayout(self.create_prod_layout())
 
@@ -104,6 +107,12 @@ class MainWindow(QMainWindow):
         preview_rapport = PreviewRapport(parent=self)
         vbox.addWidget(preview_rapport)
 
+        return vbox
+
+    def create_team_gestion_layout(self):
+        vbox = QVBoxLayout()
+        tab_team_gestion = TabTeamGestion(parent=self)
+        vbox.addWidget(tab_team_gestion)
         return vbox
 
     def resizeEvent(self, event):
