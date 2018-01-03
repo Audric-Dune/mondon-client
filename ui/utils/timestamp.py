@@ -55,6 +55,14 @@ def timestamp_to_month(timestamp):
     return datetime.fromtimestamp(timestamp).strftime('%B - %Y')
 
 
+def hour_in_timestamp(ts):
+    return datetime.fromtimestamp(ts).strftime("%H:%M")
+
+
+def get_hour_in_timestamp(ts):
+    return datetime.fromtimestamp(ts).hour
+
+
 def timestamp_now():
     now = datetime.now()
     return datetime(year=now.year,
@@ -141,11 +149,3 @@ def timestamp_au_debut_de_hour(ts, min=0):
                     minute=min,
                     second=0,
                     microsecond=0).timestamp()
-
-
-def hour_in_timestamp(ts):
-    return datetime.fromtimestamp(ts).strftime("%H:%M")
-
-
-def get_hour_in_timestamp(ts):
-    return datetime.fromtimestamp(ts).hour
