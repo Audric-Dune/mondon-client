@@ -25,7 +25,7 @@ DROPDOWN_MODEL = {"titre": str, "placeholder": str, "values": values}
 # Liste choix de raison d'un arrêt prévu
 TEXT_EDIT_AUTRE = {"titre": "Autre", "placeholder": "Entrer une raison..."}
 values = ["1 couleur", "2 couleurs", "3 couleurs"]
-DROPDOWN_CLICHE = {"titre": "Pose de cliché(s)",
+DROPDOWN_CLICHE = {"titre": "Pose cliché(s)",
                    "placeholder": "Sélectionner le nombre de couleur...",
                    "values": values}
 
