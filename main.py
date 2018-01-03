@@ -8,6 +8,7 @@ logger.log_app_start()
 
 import sys
 import sqlite3  # Import obligatoire pour la création du .exe
+import statistics  # Import obligatoire pour la création du .exe
 from PyQt5.QtGui import QIcon
 
 from ui.application import app

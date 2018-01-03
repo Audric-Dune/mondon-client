@@ -16,4 +16,4 @@ setup(name="DUNE production bobine 2.0",
       executables=[Executable(script="main.py",
                               base=base,
                               icon="assets/icons/logo_dune_production.ico",
-                              targetName="DUNE production bobines.exe")])
+                              targetName="DUNE_production_bobines.exe")])
