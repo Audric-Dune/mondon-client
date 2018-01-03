@@ -20,4 +20,8 @@ logger.log("INITIALISATION", "Définition de l'icone de l'application")
 app.setWindowIcon(QIcon("assets/icons/logo_dune_production.ico"))
 app.create_main_window()
 
+from ui.widgets.rapport.menu_rapport import RapportMenu
+rapport_menu = RapportMenu()
+rapport_menu._save_pdf()
+
 sys.exit(app.exec_())

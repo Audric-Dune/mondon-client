@@ -133,6 +133,19 @@ class RapportMenu(MondonWidget):
         painter.end()
         self.affiche_pdf(file_names[0])
 
+    def _save_pdf(self):
+        printer = QPrinter()
+        painter = QPainter()
+        ts = timestamp_at_day_ago(settings_store.day_ago)
+        file_names =\
+            'I:\Programme mondon/rp_prod/{} Rapport production bobines.pdf'.format(timestamp_to_inverse_date(ts))
+        printer.setOutputFileName(file_names)
+        printer.setOutputFormat(QPrinter.PdfFormat)
+        printer.setPageMargins(10, 10, 10, 10, QPrinter.Point)
+        painter.begin(printer)
+        self.rapport.drawing(painter)
+        painter.end()
+
     def impression(self):
         printer = QPrinter()
         dialog = QPrintDialog(printer, self)

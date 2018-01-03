@@ -314,7 +314,6 @@ class Database:
                 "FROM mondon_equipe " \
                 "ORDER BY ts"\
             .format()
-        print(query)
         dechets = cls._run_query(query, ())
         return dechets
 

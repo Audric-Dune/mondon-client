@@ -41,7 +41,6 @@ class TabTeamGestion(MondonWidget):
         return content_scroll
 
     def create_line(self, values):
-        print(values)
         background = MondonWidget(parent=self)
         background.set_background_color(color_bleu_gris)
         hbox = QHBoxLayout(background)
