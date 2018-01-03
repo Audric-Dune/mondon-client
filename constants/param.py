@@ -1,6 +1,9 @@
 # Database location
-# DATABASE_LOCATION = 'I:\data_prod_bob/mondon.db'
-DATABASE_LOCATION = '../mondon.db'
+DATABASE_LOCATION = 'I:\data_prod_bob/mondon.db'
+# DATABASE_LOCATION = '../mondon.db'
+
+# Mot de passe
+password = "dunesa"
 
 # Hypothèse
 VITESSE_LIMITE_ASSIMILATION_ARRET = 60
@@ -21,12 +24,17 @@ DROPDOWN_MODEL = {"titre": str, "placeholder": str, "values": values}
 
 # Liste choix de raison d'un arrêt prévu
 TEXT_EDIT_AUTRE = {"titre": "Autre", "placeholder": "Entrer une raison..."}
+values = ["1 couleur", "2 couleurs", "3 couleurs"]
+DROPDOWN_CLICHE = {"titre": "Pose de cliché(s)",
+                   "placeholder": "Sélectionner le nombre de couleur...",
+                   "values": values}
 
 LIST_CHOIX_RAISON_PREVU = [
     ("label", "Changement bobine papier"),
     ("label", "Changement bobine polypro"),
-    ("label", "Réglage nouvelle production"),
     ("label", "Changement bobine papier et polypro"),
+    ("dropdown", DROPDOWN_CLICHE),
+    ("label", "Réglage nouvelle production"),
     ("label", "Démarrage production sans réglage"),
     ("label", "Démarrage production avec réglage"),
     ("label", "Fin de journée"),

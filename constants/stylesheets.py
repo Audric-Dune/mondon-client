@@ -6,6 +6,7 @@ from constants.colors import (
     color_gris_clair,
     color_orange,
     color_rouge,
+    color_rouge_clair,
     color_vert,
     color_vert_fonce,
     color_vert_moyen,
@@ -252,6 +253,33 @@ button_little_stylesheet = """
     color_blanc=color_blanc.hex_string,
     color_vert_fonce=color_vert_fonce.hex_string,
     color_vert_moyen=color_vert_moyen.hex_string,
+    color_vert=color_vert.hex_string,
+    color_gris_moyen=color_gris_moyen.hex_string,
+    color_rouge=color_rouge.hex_string,)
+
+button_little_red_stylesheet = """
+    QPushButton {{
+        background-color: {color_rouge};
+        border-radius: 5;
+        color: {color_blanc};
+        font-size: 16px;
+    }}
+    QPushButton:hover {{
+        background-color: {color_rouge_clair};
+    }}
+    QPushButton:pressed {{
+        border-style: solid;
+        border-width: 1px;
+        border-color: {color_vert_fonce}
+    }}
+    QPushButton:disabled {{
+        background-color: {color_gris_moyen};
+    }}
+""".format(
+    color_blanc=color_blanc.hex_string,
+    color_vert_fonce=color_vert_fonce.hex_string,
+    color_vert_moyen=color_vert_moyen.hex_string,
+    color_rouge_clair=color_rouge_clair.hex_string,
     color_vert=color_vert.hex_string,
     color_gris_moyen=color_gris_moyen.hex_string,
     color_rouge=color_rouge.hex_string,)

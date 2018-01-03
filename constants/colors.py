@@ -31,7 +31,7 @@ color_vert_fonce = Color('#16A085')
 
 color_orange = Color('#E67E22')
 color_rouge = Color('#C0392B')
-color_rouge2 = Color('#96281B')
+color_rouge_clair = Color('#E74C3C')
 
 color_gris_moyen = Color('#BDC3C7')
 color_gris_clair = Color('#ECF0F1')
