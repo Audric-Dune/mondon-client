@@ -92,7 +92,6 @@ class DataStoreManager(QObject):
         return self.dic_data_store.get(jour_str, False)
 
     def refresh_data(self, force_refresh=False):
-        print("refresh_data")
         if self.refresh_timer:
             self.refresh_timer.cancel()
         self.refresh_once(force_refresh)
