@@ -65,7 +65,7 @@ class DataStoreManager(QObject):
         self.dic_data_store[jour_str] = new_store
         return new_store
 
-    def cancel_refresh(self):
+    def stop(self):
         if self.refresh_timer:
             self.refresh_timer.cancel()
 
@@ -92,11 +92,13 @@ class DataStoreManager(QObject):
         return self.dic_data_store.get(jour_str, False)
 
     def refresh_data(self, force_refresh=False):
+        print("refresh_data")
         if self.refresh_timer:
             self.refresh_timer.cancel()
         self.refresh_once(force_refresh)
         # Ré-exécute la fonction dans 1 seconde
         self.refresh_timer = threading.Timer(1, self.refresh_data)
+        self.refresh_timer.daemon = True
         self.refresh_timer.start()
 
 data_store_manager = DataStoreManager()

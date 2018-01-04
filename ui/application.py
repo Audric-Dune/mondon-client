@@ -31,26 +31,27 @@ class Application(QApplication):
 
     def on_close_main_window(self):
         self.main_window = None
-        self.close_data_store_manager()
+        self.close_app()
 
     def on_close_tracker_window(self):
         self.tracker_window = None
-        self.close_data_store_manager()
+        self.close_app()
 
     def on_close_arret_window(self, start_arret):
         if self.dic_arret_window:
             del self.dic_arret_window[start_arret]
-        self.close_data_store_manager()
+        self.close_app()
 
     def on_close_user_popup(self):
         self.popup_user = None
-        self.close_data_store_manager()
+        self.close_app()
 
-    def close_data_store_manager(self):
+    def close_app(self):
         # Fonction qui se charge de stopper le refresh data lorsque
         # la derniere fenetre de l'application est fermée
         if not self.main_window and not self.tracker_window and not self.dic_arret_window and not self.popup_user:
-            data_store_manager.cancel_refresh()
+            data_store_manager.stop()
+            app.quit()
 
     def create_main_window(self):
         if self.main_window:
@@ -98,6 +99,9 @@ class Application(QApplication):
             focus_window(self.popup_user)
         else:
             self.popup_user = PopupUser(on_close=self.on_close_user_popup)
+            x = self.main_window.pos().x() + (self.main_window.width() - self.popup_user.width()) / 2
+            y = self.main_window.pos().y() + 200
+            self.popup_user.move(x, y)
 
 
 app = Application()

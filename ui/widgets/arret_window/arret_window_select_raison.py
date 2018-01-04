@@ -165,6 +165,8 @@ class ArretWindowSelectRaison(MondonWidget):
         list_choice = self.select_choice_list()
         current_index = 0
         for choice in list_choice:
+            if current_index == index and choice[0] == "text_edit":
+                value_item = str.capitalize("{}: {}".format(choice[1]["titre"], value_item))
             if current_index == index and choice[0] == "dropdown":
                 titre = choice[1]["titre"]
                 value_item = str.capitalize("{titre} {value_item}".format(titre=titre, value_item=value_item))
@@ -231,7 +233,7 @@ class ArretWindowSelectRaison(MondonWidget):
         for value in data_dropdown["values"]:
             # On ajoute la valeur a la dropdown
             dropdown.add_item(value)
-        # On connect la dropdown a la fonction style_choice
+        # On connect la dropdown a la fonction editable_item_change
         dropdown.VALUE_SELECTED_SIGNAL.connect(self.editable_item_change)
         # On cache la dropdown
         dropdown.hide()
