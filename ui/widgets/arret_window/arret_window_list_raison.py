@@ -116,7 +116,7 @@ class ArretWindowListRaison(MondonWidget):
             label_stylesheet = gray_title_label_stylesheet
             bt_cross_stylesheet = button_gray_cross_stylesheet
         # On regarde si le type est égale au first type pour ajouter le radiobutton si besoin
-        if raison.type == first_type:
+        if raison.type == first_type and raison.type != "Nettoyage":
             radio_bt = RadioButton(parent=self)
             radio_bt.is_selected = raison.primaire == 1
             radio_bt.setStyleSheet(bt_cross_stylesheet)

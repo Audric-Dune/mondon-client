@@ -3,8 +3,7 @@
 
 from PyQt5.Qt import Qt
 from PyQt5.QtCore import QSize, pyqtSignal
-from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QLabel, QHBoxLayout, QVBoxLayout, QLineEdit
+from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QLineEdit
 
 from constants.colors import color_bleu_gris
 from constants.param import LIST_CHOIX_RAISON_PREVU, LIST_CHOIX_RAISON_IMPREVU, LIST_CHOIX_ENTRETIEN
@@ -116,6 +115,7 @@ class ArretWindowSelectRaison(MondonWidget):
             object.setStyleSheet(white_title_label_stylesheet)
         # Si l'item est une dropdown on la cache
         if format == "dropdown" or format == "text_edit":
+            object.clear()
             object.hide()
 
     @staticmethod
@@ -131,8 +131,8 @@ class ArretWindowSelectRaison(MondonWidget):
             object.show()
 
     def onclick_label(self, index):
-        self.buttons[index].flip_button()
         self.onclick_button(index)
+        self.buttons[index].flip_button()
 
     def onclick_button(self, index):
         """
@@ -143,7 +143,7 @@ class ArretWindowSelectRaison(MondonWidget):
         if self.is_selected(index):
             # On supprime l'index du bouton de la liste des indexs sélectionnés
             self.raison_index_selected.remove(index)
-            # On met a jour la variable mémoire de séléction des raisons dans l'object Arret
+            # On met a jour la variable mémoire de sélection des raisons dans l'object Arret
             self.arret.remove_raison_cache(index)
             # On test si il reste des indexs dans la liste des indexs sélectionnés
             self.check_valid_condition()

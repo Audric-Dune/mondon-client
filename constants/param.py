@@ -24,24 +24,19 @@ DROPDOWN_MODEL = {"titre": str, "placeholder": str, "values": values}
 
 # Liste choix de raison d'un arrêt prévu
 TEXT_EDIT_AUTRE = {"titre": "Autre", "placeholder": "Entrer une raison..."}
-values = ["1 couleur", "2 couleurs", "3 couleurs"]
-DROPDOWN_CLICHE = {"titre": "Pose cliché(s)",
-                   "placeholder": "Sélectionner le nombre de couleur...",
-                   "values": values}
 values = ["Papier", "Polypro", "Papier & polypro"]
-DROPDOWN_CHGT_BOB = {"titre": "Changement de bobine",
+DROPDOWN_CHGT_BOB = {"titre": "Changement de bobine mère (bobine finie)",
                      "placeholder": "Sélectionner une bobine...",
                      "values": values}
-values = ["Avec impression", "Sans impression"]
-DROPDOWN_CHGT_FORMAT = {"titre": "Changement de format de production",
-                        "placeholder": "Avec ou sans impression ?",
+values = ["Nouveau plan avec impression", "Nouveau plan sans impression"]
+DROPDOWN_CHGT_FORMAT = {"titre": "Changement de plan de production",
+                        "placeholder": "Nouveau avec ou sans impression ?",
                         "values": values}
 
 LIST_CHOIX_RAISON_PREVU = [
     ("dropdown", DROPDOWN_CHGT_BOB),
     ("dropdown", DROPDOWN_CHGT_FORMAT),
-    ("dropdown", DROPDOWN_CLICHE),
-    ("label", "Démarrage production sans réglage"),
+    ("label", "Démarrage production SANS REGLAGE"),
     ("label", "Fin de journée"),
     ("text_edit", TEXT_EDIT_AUTRE)]
 
@@ -57,37 +52,43 @@ values = ["Calandre",
           "Cadre guidage"]
 DROPDOWN_CASSE = {"titre": "Casse", "placeholder": "Sélectionner une casse...", "values": values}
 
-values = ["Impression",
-          "Colle à chaud",
-          "Taille perfo",
-          "Surtension polypro",
-          "Enroulement bobine fille"]
-DROPDOWN_QUALITE = {"titre": "Problème qualité nécessitant un arrêt",
+values = ["Bord flottant", "Choc sur bobine"]
+DROPDOWN_QUALITE_BM = {"titre": "Problème qualité bobine mère",
                     "placeholder": "Sélectionner la qualité défectueuse...",
+                    "values": values}
+
+values = ["Impression",
+          "Largeur : Mauvaise position couteaux",
+          "Défaut perfo",
+          "Flanc bobine fille inconvenable"]
+DROPDOWN_QUALITE_BF = {"titre": "Problème qualité bobine fille",
+                    "placeholder": "Sélectionner la qualité défectueuse...",
+                    "values": values}
+
+values = ["Buse de colle à chaud",
+          "Bobine mère polypro",
+          "Changement bande téflon"]
+DROPDOWN_MAUVAIS_COLLAGE = {"titre": "Mauvais collage",
+                    "placeholder": "Sélectionner la raison...",
                     "values": values}
 
 LIST_CHOIX_RAISON_IMPREVU = [
     ("dropdown", DROPDOWN_CASSE),
-    ("dropdown", DROPDOWN_QUALITE),
+    ("dropdown", DROPDOWN_MAUVAIS_COLLAGE),
+    ("dropdown", DROPDOWN_QUALITE_BF),
+    ("dropdown", DROPDOWN_QUALITE_BM),
     ("label", "Mauvais encollage axes cartons (colle à froid)"),
-    ("label", "Mauvais enroulement bobine fille au démarrage"),
-    ("label", "Problème buse colle à chaud"),
     ("text_edit", TEXT_EDIT_ESSAI),
     ("text_edit", TEXT_EDIT_MAINTENANCE),
     ("text_edit", TEXT_EDIT_AUTRE)]
 
 # Liste choix d'une tache d'entretien
-# Définition dropdown
-
-values = ["Calandre", "Couteau", "Barre axe carton", "Lame de coupe", "Bague perfo"]
-DROPDOWN_NETTOYAGE = {"titre": "Nettoyage", "placeholder": "Sélectionner un nettoyage...", "values": values}
-values = ["N.1", "N.2", "N.3", "N.4", "N.5", "N.6", "N.7", "N.8", "N.9"]
-DROPDOWN_N_BUSE = {"titre": "Changement buse", "placeholder": "Sélectionner un numero de buse...", "values": values}
 
 LIST_CHOIX_ENTRETIEN = [
-    ("dropdown", DROPDOWN_NETTOYAGE),
-    ("dropdown", DROPDOWN_N_BUSE),
-    ("label", "Changement bande téflon cylindre caoutchouc calandre"),
-    ("label", "Changement radian perforation"),
+    ("label", "Calandre"),
+    ("label", "Couteau"),
+    ("label", "Barre axe carton"),
+    ("label", "Lame coupe"),
+    ("label", "Bague perfo"),
     ("text_edit", TEXT_EDIT_AUTRE)]
 

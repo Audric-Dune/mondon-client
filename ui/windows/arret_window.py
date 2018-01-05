@@ -14,6 +14,7 @@ from ui.widgets.arret_window.arret_window_select_type import ArretWindowSelectTy
 from ui.widgets.arret_window.arret_window_title import ArretWindowTitle
 from ui.widgets.arret_window.popup_close_avertissement import PopupCloseAvertissement
 from ui.widgets.arret_window.popup_close_no_raison import PopupCloseNoRaison
+from ui.widgets.arret_window.popup_close_nettoyage import PopupCloseNettoyage
 
 
 class ArretWindow(QMainWindow):
@@ -40,6 +41,7 @@ class ArretWindow(QMainWindow):
         self.arret_window_finish = None
         self.popup_no_raison = None
         self.popup_avertissement = None
+        self.popup_nettoyage = None
         self.init_widget()
         self.setFixedSize(self.minimumSizeHint())
 
@@ -52,6 +54,8 @@ class ArretWindow(QMainWindow):
         self.vbox.addWidget(self.arret_window_title)
         self.vbox.addWidget(self.arret_window_list_raison)
         self.vbox.addWidget(self.arret_window_select_type)
+        if self.arret.raisons:
+            self.vbox.addWidget(self.create_arret_window_finish())
         # On ajoute le layout au widget central (permet de gérer les marges de la fenêtre
         self.central_widget.setLayout(self.vbox)
         self.setCentralWidget(self.central_widget)
@@ -79,9 +83,6 @@ class ArretWindow(QMainWindow):
             self.arret.remove_type()
             # On supprime le type d'arret stocker en mémoire
             self.last_type_selected = None
-            # On ajout le bloc terminé si il y a au moins une raison de renseigné
-            if self.arret.raison_cache_index:
-                self.create_arret_window_finish()
         else:
             # Sinon, on supprime le bloc arret raison et on la recrée pour quelle s'initialise
             # avec le type d'arret sélectionné
@@ -134,8 +135,9 @@ class ArretWindow(QMainWindow):
         # Réinitialise les variable mémoire de l'object arret
         self.arret.remove_raison_cache()
         self.arret.remove_type()
-        # On ajoute le bloc terminé
-        self.create_arret_window_finish()
+        if self.arret.raisons[0].type != "Nettoyage":
+            # On ajoute le bloc terminé
+            self.create_arret_window_finish()
         # Utilisation d'un QTimer pour redimensionner la window
         # (on attend que les fonctions ci-dessus soit réellement exécuté)
         QTimer.singleShot(0, self.resize_window)
@@ -150,10 +152,16 @@ class ArretWindow(QMainWindow):
         Si il n'y a plus de raison sélectionné on supprime le bloc terminé
         Si il n'ya pas de bloc terminé et qu'il y a des raisons sélectionné on en crée un
         """
-        if not self.arret.raisons and self.arret_window_finish:
-            self.remove_arret_window_finish()
-        elif self.arret.raisons and not self.arret_window_finish and not self.arret_window_select_raison:
-            self.create_arret_window_finish()
+        if self.arret.raisons:
+            if self.arret.raisons[0].type == "Nettoyage":
+                if self.arret_window_finish:
+                    self.remove_arret_window_finish()
+            else:
+                if not self.arret_window_finish:
+                    self.create_arret_window_finish()
+        else:
+            if self.arret_window_finish:
+                self.remove_arret_window_finish()
         # Utilisation d'un QTimer pour redimensionner la window
         # (on attend que les fonctions soit réellement exécuté)
         QTimer.singleShot(0, self.resize_window)
@@ -244,6 +252,7 @@ class ArretWindow(QMainWindow):
     def onclose_popup_avertissement(self):
         self.popup_no_raison = None
         self.popup_avertissement = None
+        self.popup_nettoyage = None
 
     def onselect_popup_avertissement(self, bool):
         if bool:
@@ -255,18 +264,27 @@ class ArretWindow(QMainWindow):
         if self.popup_no_raison:
             self.popup_no_raison.close()
             self.popup_no_raison = None
+        if self.popup_nettoyage:
+            self.popup_nettoyage.close()
+            self.popup_nettoyage = None
 
     def closeEvent(self, event):
         if not self.last_type_selected and self.arret.raisons:
-            self.can_exit = True
+            if self.arret.raisons[0].type != "Nettoyage":
+                self.can_exit = True
         if self.can_exit:
             event.accept()
             self.on_close(self.arret.start)
         else:
             if self.arret.raisons and not self.popup_avertissement:
-                self.popup_avertissement = PopupCloseAvertissement(onclose=self.onclose_popup_avertissement)
-                self.popup_avertissement.POPUP_CLOSE_AVERTISSEMENT_SIGNAL.connect(self.onselect_popup_avertissement)
-                self.move_popup_on_window(self.popup_avertissement)
+                if self.arret.raisons[0].type == "Nettoyage":
+                    self.popup_nettoyage = PopupCloseNettoyage(onclose=self.onclose_popup_avertissement)
+                    self.popup_nettoyage.POPUP_CLOSE_NETTOYAGE_SIGNAL.connect(self.onselect_popup_avertissement)
+                    self.move_popup_on_window(self.popup_nettoyage)
+                else:
+                    self.popup_avertissement = PopupCloseAvertissement(onclose=self.onclose_popup_avertissement)
+                    self.popup_avertissement.POPUP_CLOSE_AVERTISSEMENT_SIGNAL.connect(self.onselect_popup_avertissement)
+                    self.move_popup_on_window(self.popup_avertissement)
             elif self.popup_avertissement:
                 focus_window(self.popup_avertissement)
                 self.move_popup_on_window(self.popup_avertissement)

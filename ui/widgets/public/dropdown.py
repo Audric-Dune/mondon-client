@@ -54,7 +54,8 @@ class Dropdown(QWidget):
         # On crée un layout horizontal
         hbox = QHBoxLayout(self)
         # On set la dimension du 1er bouton
-        self.bt_dropdown.setFixedSize(250, 24)
+        self.bt_dropdown.setFixedHeight(24)
+        self.bt_dropdown.setMinimumWidth(200)
         # On ajoute le bouton au widget
         hbox.addWidget(self.bt_dropdown)
         # On set la dimension du 2e bouton
@@ -82,6 +83,10 @@ class Dropdown(QWidget):
             self.bt_arrow_dropdown.setDisabled(True)
             # On reset la valeur de la dropdown
             self.set_placeholder()
+
+    def clear(self):
+        self.selected = None
+        self.set_placeholder()
 
     def add_item(self, item_label):
         """

@@ -22,11 +22,11 @@ class ArretWindowSelectType(MondonWidget):
         self.arret = arret
         self.type_selected = None
         # _____INITIALISATION WIDGET_____
-        self.bt_prevu = QPushButton("Raison prévu", self)
+        self.bt_prevu = QPushButton("Raison prévue", self)
         self.bt_prevu.clicked.connect(self.on_click_bt_prevu)
-        self.bt_imprevu = QPushButton("Raison imprévu", self)
+        self.bt_imprevu = QPushButton("Raison imprévue", self)
         self.bt_imprevu.clicked.connect(self.on_click_bt_imprevu)
-        self.bt_entretien = QPushButton("Entretien", self)
+        self.bt_entretien = QPushButton("Nettoyage", self)
         self.bt_entretien.clicked.connect(self.on_click_bt_entretien)
         self.init_widget()
 
@@ -83,7 +83,7 @@ class ArretWindowSelectType(MondonWidget):
         """
         # De base met le style select sur le bouton "Imprévu"
         # De base met le style unselect sur le bouton "Prévu"
-        # De base met le style unselect sur le bouton "Entretien"
+        # De base met le style unselect sur le bouton "Nettoyage"
         self.bt_prevu.setStyleSheet(button_stylesheet_unselected)
         self.bt_imprevu.setStyleSheet(button_stylesheet)
         self.bt_entretien.setStyleSheet(button_stylesheet_unselected)
@@ -98,7 +98,7 @@ class ArretWindowSelectType(MondonWidget):
 
     def on_click_bt_entretien(self):
         """
-        Fonction appelé après un click sur le bouton "Entretien"
+        Fonction appelé après un click sur le bouton "Nettoyage"
         Met à jour les styles des boutons
         Met a jour la variable mémoire de séléction d'un type dans l'object Arret
         """
@@ -109,12 +109,12 @@ class ArretWindowSelectType(MondonWidget):
         self.bt_imprevu.setStyleSheet(button_stylesheet_unselected)
         # Si la variable mémoire de séléction d'un type dans l'object Arret est "Prévu",
         # on a déja sélectionner le bouton "Prévu"
-        if self.arret.type_cache == "Entretien":
+        if self.arret.type_cache == "Nettoyage":
             # Dans se cas on met le style select sur le bouton "Prévu"
             self.bt_prevu.setStyleSheet(button_stylesheet)
             self.bt_imprevu.setStyleSheet(button_stylesheet)
         # On met a jour la variable mémoire de séléction d'un type dans l'object Arret
-        self.arret.add_type_cache("Entretien")
+        self.arret.add_type_cache("Nettoyage")
 
     def remove_type(self):
         """
