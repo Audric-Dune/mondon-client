@@ -224,6 +224,14 @@ class StatStore(QObject):
             fin_prod = FIN_PROD_SOIR_VENDREDI if vendredi else FIN_PROD_SOIR
         return timestamp_now() < timestamp_at_time(ts_day, hours=fin_prod)
 
+    def empty_stat(self):
+        return {
+            'total': 0,
+            'max': 0,
+            'percent': 0,
+            'mean': 0,
+        }
+
     def stat_calculator(self, moment):
         """
         Calcul les statistiques de la série "moment"
@@ -231,8 +239,11 @@ class StatStore(QObject):
         :param total_time_prod: Temps de production total de la série total
         :return: Un dictionnaire contenant les statistiques : total, max, mean, percent
         """
+        data = self.data[moment]
+        if not data:
+            return self.empty_stat()
         dic_stat = {}
-        values = [t[1] for t in self.data[moment]]
+        values = [t[1] for t in data]
         sum_data = sum(values)
         max_data = max(values)
         mean_data = mean(values)

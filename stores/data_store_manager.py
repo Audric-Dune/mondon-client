@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import threading
+import time
 from PyQt5.QtCore import pyqtSignal, QObject
 
 from constants.param import DEBUT_PROD_MATIN, FIN_PROD_SOIR
@@ -14,12 +15,14 @@ from stores.settings_store import settings_store
 class DataStoreManager(QObject):
     DATA_CHANGED_SIGNAL = pyqtSignal()
     NEW_ARRET_SIGNAL = pyqtSignal(int, int)
+    SLEEP_TIME = 1
 
     def __init__(self):
         super(DataStoreManager, self).__init__()
         self.dic_data_store = {}
         self.current_store = None
         self.refresh_timer = None
+        self.is_running = False
         settings_store.SETTINGS_CHANGED_SIGNAL.connect(self.handle_settings_change)
         self.update_current_store()
 
@@ -66,6 +69,8 @@ class DataStoreManager(QObject):
         return new_store
 
     def stop(self):
+        while self.is_running:
+            time.sleep(0.1)
         if self.refresh_timer:
             self.refresh_timer.cancel()
 
@@ -92,12 +97,14 @@ class DataStoreManager(QObject):
         return self.dic_data_store.get(jour_str, False)
 
     def refresh_data(self, force_refresh=False):
+        self.is_running = True
         if self.refresh_timer:
             self.refresh_timer.cancel()
         self.refresh_once(force_refresh)
         # Ré-exécute la fonction dans 1 seconde
-        self.refresh_timer = threading.Timer(1, self.refresh_data)
+        self.refresh_timer = threading.Timer(self.SLEEP_TIME, self.refresh_data)
         self.refresh_timer.daemon = True
         self.refresh_timer.start()
+        self.is_running = False
 
 data_store_manager = DataStoreManager()

@@ -1,7 +1,7 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtCore import Qt, QRectF
+from PyQt5.QtCore import Qt, QRectF, QRect
 from PyQt5.QtGui import QBrush, QColor, QPen, QPainterPath, QFont
 
 
@@ -39,4 +39,10 @@ def draw_text(p, x, y, width, height, color, align, font_size, text, bold=False,
         qt_align = Qt.AlignLeft
     else:
         qt_align = Qt.AlignCenter
-    p.drawText(QRectF(x, y, width, height), qt_align | Qt.AlignVCenter, text)
+
+    text_flag = qt_align | Qt.AlignVCenter | Qt.TextWordWrap
+    text_size = p.fontMetrics().boundingRect(QRect(0, 0, width, height), text_flag, text)
+    text_height = text_size.height()
+
+    p.drawText(QRectF(x, y, width, text_height), text_flag, text)
+    return text_height
