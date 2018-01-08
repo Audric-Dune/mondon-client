@@ -26,6 +26,7 @@ class DataStore:
     def add_data(self):
         try:
             ts = timestamp_at_day_ago(self.day_ago)
+            self.update_raison_from_database()
             if self.data and self.day_ago > 0:
                 pass
             else:
@@ -52,6 +53,12 @@ class DataStore:
             return True, list_new_arret
         except:
             return False, []
+
+    def update_raison_from_database(self):
+        print("update_raison_from_database")
+        if self.arrets:
+            for (start, arret) in self.dic_arret.items():
+                arret.get_raisons()
 
     @staticmethod
     def get_live_stat(speeds, ts):
