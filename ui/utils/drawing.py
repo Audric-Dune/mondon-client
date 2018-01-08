@@ -42,7 +42,7 @@ def draw_text(p, x, y, width, height, color, align, font_size, text, bold=False,
 
     text_flag = qt_align | Qt.AlignVCenter | Qt.TextWordWrap
     text_size = p.fontMetrics().boundingRect(QRect(0, 0, width, height), text_flag, text)
-    text_height = text_size.height()
+    text_height = text_size.height() if text_size.height() > height else height
 
     p.drawText(QRectF(x, y, width, text_height), text_flag, text)
     return text_height
