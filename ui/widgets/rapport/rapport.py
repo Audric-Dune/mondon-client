@@ -404,19 +404,28 @@ class Rapport(MondonWidget):
                     color = color_bleu_dune
                 else:
                     color = color_gris_fonce
-                draw_text(p, DEC_X + 10, self.DEC_Y_LIST + DEC_Y, 330, 20, color, "G", 12, text_arret, bold=True)
+                height_calculate = draw_text(p,
+                                             DEC_X + 10,
+                                             self.DEC_Y_LIST + DEC_Y,
+                                             330,
+                                             20,
+                                             color,
+                                             "G",
+                                             12,
+                                             text_arret,
+                                             bold=True)
                 if type != "non renseigné":
-                    draw_text(p,
-                              DEC_X + 10,
-                              self.DEC_Y_LIST + DEC_Y + 20,
-                              330,
-                              20,
-                              color_noir,
-                              "G",
-                              12,
-                              arret[2][0].raison)
-                i += 1
-                DEC_Y += 50
+                    height_calculate = draw_text(p,
+                                                 DEC_X + 10,
+                                                 self.DEC_Y_LIST + DEC_Y + 20,
+                                                 330,
+                                                 20,
+                                                 color_noir,
+                                                 "G",
+                                                 12,
+                                                 arret[2][0].raison)
+                i += i
+                DEC_Y += (30 + 20 * (height_calculate / 20))
 
     def draw_logo(self, p):
         pixmap = QPixmap("assets/images/logo_dune.png")
