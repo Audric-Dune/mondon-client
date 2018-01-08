@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5.QtWidgets import QHBoxLayout, QLineEdit, QLabel
+from PyQt5.QtCore import pyqtSignal
 
 from constants.colors import color_bleu_gris
 from constants.stylesheets import line_edit_stylesheet, white_title_label_stylesheet

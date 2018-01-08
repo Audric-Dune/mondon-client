@@ -73,40 +73,35 @@ class Arret(QObject):
                 return True
         return False
 
-    def add_commentaire_on_database(self, commentaire):
-        # On génère un id aléatoire
-        random_id = random.randint(0, 1e15)
-        Database.create_raison_arret(
-            id=random_id,
-            start_arret=self.start,
-            type_arret="Commentaire",
-            raison_arret=commentaire,
-            primaire=0)
-
-    def add_raison_on_database(self):
+    def add_raison_on_database(self, commentaire=None):
         """
         Est appelé lorsque l'on click sur ajouter dans la window arret
         S'occupe de créer les objects raisons
         """
-        # On parcour tous les index sélectionner
-        for index, value_item in self.raison_cache_index.items():
-            # On génère un id aléatoire
-            random_id = random.randint(0, 1e15)
-            # Le dictionnaire raison_cache_index contient en clé l'index et en valeur
-            # la valeur de la dropdown sélectionné (ou None si c'est pas une dropdown)
-            # Si il y a une valeur dans value item
-            if value_item:
-                # La raison est la valeur de l'item
-                raison_arret = value_item
-            # Sinon on sélectionne la liste des arrets en fonction du type d'aret
-            else:
-                list_raison = self.select_list_raison()
-                # On récupère la valeur de l'index dans la liste
-                raison_arret = list_raison[index][1]
-            # On range les données définient ci-dessus
-            data_raison = [random_id, self.start, self.type_cache, raison_arret, None]
+        if commentaire:
+            data_raison = [random.randint(0, 1e15), self.start, "Commentaire", commentaire, None]
             # On crée notre object raison
             self.raisons.append(Raison(data_raison))
+        else:
+            # On parcour tous les index sélectionner
+            for index, value_item in self.raison_cache_index.items():
+                # On génère un id aléatoire
+                random_id = random.randint(0, 1e15)
+                # Le dictionnaire raison_cache_index contient en clé l'index et en valeur
+                # la valeur de la dropdown sélectionné (ou None si c'est pas une dropdown)
+                # Si il y a une valeur dans value item
+                if value_item:
+                    # La raison est la valeur de l'item
+                    raison_arret = value_item
+                # Sinon on sélectionne la liste des arrets en fonction du type d'aret
+                else:
+                    list_raison = self.select_list_raison()
+                    # On récupère la valeur de l'index dans la liste
+                    raison_arret = list_raison[index][1]
+                # On range les données définient ci-dessus
+                data_raison = [random_id, self.start, self.type_cache, raison_arret, None]
+                # On crée notre object raison
+                self.raisons.append(Raison(data_raison))
         self.raison_store()
 
     def select_list_raison(self):
