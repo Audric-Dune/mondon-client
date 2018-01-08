@@ -12,6 +12,7 @@ from ui.widgets.arret_window.arret_window_list_raison import ArretWindowListRais
 from ui.widgets.arret_window.arret_window_select_raison import ArretWindowSelectRaison
 from ui.widgets.arret_window.arret_window_select_type import ArretWindowSelectType
 from ui.widgets.arret_window.arret_window_title import ArretWindowTitle
+from ui.widgets.arret_window.arret_window_ajout_commentaire import ArretWindowAjoutCommentaire
 from ui.widgets.arret_window.popup_close_avertissement import PopupCloseAvertissement
 from ui.widgets.arret_window.popup_close_no_raison import PopupCloseNoRaison
 from ui.widgets.arret_window.popup_close_nettoyage import PopupCloseNettoyage
@@ -36,6 +37,7 @@ class ArretWindow(QMainWindow):
         self.arret_window_list_raison = ArretWindowListRaison(self.arret, parent=self.central_widget)
         self.arret_window_list_raison.DELETE_RAISON_SIGNAL.connect(self.update_widget_from_del_raison)
         self.arret_window_select_type = ArretWindowSelectType(self.arret, parent=self.central_widget)
+        self.arret_window_ajout_commentaire = ArretWindowAjoutCommentaire()
         self.arret_window_select_raison = None
         self.arret_window_ajout_raison = None
         self.arret_window_finish = None
@@ -54,6 +56,7 @@ class ArretWindow(QMainWindow):
         self.vbox.addWidget(self.arret_window_title)
         self.vbox.addWidget(self.arret_window_list_raison)
         self.vbox.addWidget(self.arret_window_select_type)
+        self.vbox.addWidget(self.arret_window_ajout_commentaire)
         if self.arret.raisons:
             self.vbox.addWidget(self.create_arret_window_finish())
         # On ajoute le layout au widget central (permet de gérer les marges de la fenêtre
@@ -143,6 +146,9 @@ class ArretWindow(QMainWindow):
         QTimer.singleShot(0, self.resize_window)
 
     def update_widget_from_finish(self):
+        commentaire = self.arret_window_ajout_commentaire.line_edit.text()
+        if commentaire:
+            self.arret.add_commentaire_on_database(commentaire)
         self.can_exit = True
         self.close()
 

@@ -73,6 +73,16 @@ class Arret(QObject):
                 return True
         return False
 
+    def add_commentaire_on_database(self, commentaire):
+        # On génère un id aléatoire
+        random_id = random.randint(0, 1e15)
+        Database.create_raison_arret(
+            id=random_id,
+            start_arret=self.start,
+            type_arret="Commentaire",
+            raison_arret=commentaire,
+            primaire=0)
+
     def add_raison_on_database(self):
         """
         Est appelé lorsque l'on click sur ajouter dans la window arret

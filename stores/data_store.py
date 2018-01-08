@@ -55,7 +55,6 @@ class DataStore:
             return False, []
 
     def update_raison_from_database(self):
-        print("update_raison_from_database")
         if self.arrets:
             for (start, arret) in self.dic_arret.items():
                 arret.get_raisons()
