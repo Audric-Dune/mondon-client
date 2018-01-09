@@ -34,8 +34,8 @@ DROPDOWN_CHGT_FORMAT = {"titre": "Changement de plan de production",
                         "values": values}
 
 LIST_CHOIX_RAISON_PREVU = [
-    ("dropdown", DROPDOWN_CHGT_BOB),
     ("dropdown", DROPDOWN_CHGT_FORMAT),
+    ("dropdown", DROPDOWN_CHGT_BOB),
     ("label", "Démarrage production SANS REGLAGE"),
     ("label", "Fin de journée"),
     ("text_edit", TEXT_EDIT_AUTRE)]
