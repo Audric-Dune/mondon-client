@@ -58,7 +58,17 @@ class Arret(QObject):
                     # Sinon on crée un models raison est on l'insert dans le tableau de raison de l'arret
                     raison_object = Raison(raison)
                     self.raisons.append(raison_object)
-                self.raison_store()
+        for raison in self.raisons:
+            raison_remove = True
+            for raison_on_data_base in list_raisons:
+                print(raison_on_data_base[0], raison.id)
+                if raison_on_data_base[0] == raison.id:
+                    raison_remove = False
+                    break
+            if raison_remove:
+                self.raisons.remove(raison)
+
+        self.raison_store()
 
     def check_id_raison(self, id):
         """
@@ -109,7 +119,7 @@ class Arret(QObject):
             return LIST_CHOIX_RAISON_PREVU
         elif self.type_cache == "Imprévu":
             return LIST_CHOIX_RAISON_IMPREVU
-        else:
+        elif self.type_cache == "Nettoyage":
             return LIST_CHOIX_ENTRETIEN
 
     def raison_store(self):

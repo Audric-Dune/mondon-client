@@ -31,6 +31,7 @@ class LineArret(QWidget):
         self.init_widgets(arret, number)
         self.arret = arret
         self.day_ago = day_ago
+        self.vbox = QVBoxLayout()
         self.installEventFilter(self)
 
     def init_widgets(self, arret, number):
@@ -79,7 +80,6 @@ class LineArret(QWidget):
             hbox.addWidget(no_raison_label)
             vbox.addLayout(hbox)
             return vbox
-        first_raison = True
         for raison in arret.raisons:
             hbox_temp = QHBoxLayout()
             hbox_temp.setSpacing(self.PADDING_HBOX)
@@ -100,7 +100,6 @@ class LineArret(QWidget):
             hbox_temp.addWidget(type_label)
             hbox_temp.addWidget(raison_label)
             vbox.addLayout(hbox_temp)
-            first_raison = False
         return vbox
 
     def eventFilter(self, object, event):
