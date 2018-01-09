@@ -1,9 +1,9 @@
 # Database location
-DATABASE_LOCATION = 'I:\data_prod_bob/mondon.db'
-# DATABASE_LOCATION = '../mondon.db'
+# DATABASE_LOCATION = 'I:\data_prod_bob/mondon.db'
+DATABASE_LOCATION = '../mondon.db'
 
 # Mot de passe
-password = "dunesa"
+USER = {"Opérateur": None, "Superviseur": "dunesa"}
 
 # Hypothèse
 VITESSE_LIMITE_ASSIMILATION_ARRET = 60

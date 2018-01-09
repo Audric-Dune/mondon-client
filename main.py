@@ -24,7 +24,8 @@ update_data_metrage()
 if mode == 'ui':
     logger.log("INITIALISATION", "Définition de l'icone de l'application")
     app.setWindowIcon(QIcon("assets/icons/logo_dune_production.ico"))
-    app.create_main_window()
+    from ui.application import app
+    app.create_popup_user()
 
 if mode in ('-r', '--rapport', 'rapport'):
     from ui.widgets.rapport.menu_rapport import RapportMenu

@@ -6,15 +6,15 @@ from PyQt5.QtCore import pyqtSignal, QSize, QMargins, Qt
 from PyQt5.QtGui import QPainter, QPixmap
 
 from constants.colors import color_bleu_gris
-from constants.param import password
-from constants.stylesheets import green_title_label_stylesheet,\
-    red_title_label_stylesheet,\
+from constants.param import USER
+from constants.stylesheets import red_title_label_stylesheet,\
     button_little_stylesheet,\
     button_little_red_stylesheet,\
     line_edit_stylesheet
 from stores.user_store import user_store
 
 from ui.utils.drawing import draw_rectangle
+from ui.widgets.public.dropdown import Dropdown
 
 
 class PopupUser(QWidget):
@@ -22,7 +22,8 @@ class PopupUser(QWidget):
     # Retourne la réponse de l'utilisateur
     POPUP_USER_SIGNAL = pyqtSignal(bool)
     # _____DEFINITION CONSTANTE CLASS_____
-    HEIGHT_LINE_EDIT = 30
+    HEIGHT_LINE_EDIT = 24
+    HEIGHT_BT = 30
     WIDTH_LINE_EDIT = 200
     SIZE = QSize(HEIGHT_LINE_EDIT, HEIGHT_LINE_EDIT)
     MARGIN_VBOX_PRINCIPALE = QMargins(15, 15, 15, 15)
@@ -30,12 +31,14 @@ class PopupUser(QWidget):
     def __init__(self, parent=None, on_close=None):
         super(PopupUser, self).__init__(parent=parent)
         self.on_close = on_close
+        self.user_selected = None
         self.setWindowTitle("Gestion utilisateur")
         # _____INITIALISATION WIDGET_____
         self.vbox = QVBoxLayout(self)
-        self.label_user = QLabel()
+        self.dropdown_user = self.create_dropdown_user()
         self.password = QLineEdit()
         self.label_invalid = QLabel("Mot de passe incorrect")
+        self.label_no_user = QLabel("Aucun utilisateur sélectionné")
         self.bt_valider = QPushButton("Valider")
         self.bt_valider.clicked.connect(self.on_click_bt_valider)
         self.bt_annuler = QPushButton("Annuler")
@@ -51,8 +54,7 @@ class PopupUser(QWidget):
 
         hbox_user = QHBoxLayout()
         hbox_user.addWidget(self.create_icone("assets/images/user_icon.png"))
-        self.label_user.setStyleSheet(green_title_label_stylesheet)
-        hbox_user.addWidget(self.label_user)
+        hbox_user.addWidget(self.dropdown_user)
         self.vbox.addLayout(hbox_user)
 
         hbox_password = QHBoxLayout()
@@ -71,25 +73,46 @@ class PopupUser(QWidget):
         hbox_invalid.addWidget(self.label_invalid)
         self.vbox.addLayout(hbox_invalid)
 
+        hbox_no_user = QHBoxLayout()
+        self.label_no_user.setStyleSheet(red_title_label_stylesheet)
+        self.label_no_user.hide()
+        self.label_no_user.setAlignment(Qt.AlignCenter)
+        hbox_invalid.addWidget(self.label_no_user)
+        self.vbox.addLayout(hbox_no_user)
+
         hbox_bt = QHBoxLayout()
         self.bt_valider.setStyleSheet(button_little_stylesheet)
-        self.bt_valider.setFixedHeight(self.HEIGHT_LINE_EDIT)
+        self.bt_valider.setFixedHeight(self.HEIGHT_BT)
         hbox_bt.addWidget(self.bt_valider)
         self.bt_annuler.setStyleSheet(button_little_red_stylesheet)
-        self.bt_annuler.setFixedHeight(self.HEIGHT_LINE_EDIT)
+        self.bt_annuler.setFixedHeight(self.HEIGHT_BT)
         hbox_bt.addWidget(self.bt_annuler)
         self.vbox.addLayout(hbox_bt)
 
         self.setLayout(self.vbox)
 
+    def create_dropdown_user(self):
+        dropdown_user = Dropdown(index=None)
+        dropdown_user.setFixedWidth(self.WIDTH_LINE_EDIT)
+        for user in USER.items():
+            dropdown_user.add_item(user[0])
+        dropdown_user.set_placeholder("Utilisateur")
+        dropdown_user.VALUE_SELECTED_SIGNAL.connect(self.on_select_user_changed)
+        return dropdown_user
+
+    def on_select_user_changed(self, user, index):
+        self.user_selected = user
+        self.update_widget()
+
     def update_widget(self):
-        if user_store.user_level == 0:
-            self.label_user.setText("Superviseur")
+        if self.user_selected == "Superviseur":
+            self.password.setDisabled(False)
             self.password.setPlaceholderText("Mot de passe")
-        else:
-            self.label_user.setText("Opérateur")
+        elif self.user_selected == "Opérateur":
             self.password.setDisabled(True)
             self.password.setPlaceholderText("Aucun mot de pase")
+        else:
+            self.password.setDisabled(True)
 
     def create_icone(self, path_img):
         icone_container = QLabel()
@@ -100,16 +123,21 @@ class PopupUser(QWidget):
         return icone_container
 
     def on_click_bt_valider(self):
-        password_value = self.password.text()
-        if password_value == password:
-            user_store.update_user_level(1)
-            self.on_close()
-        elif user_store.user_level == 1:
-            user_store.update_user_level(0)
-            self.on_close()
+        if not self.user_selected:
+            self.label_no_user.show()
         else:
-            self.label_invalid.show()
-            self.password.clear()
+            self.label_no_user.hide()
+            if USER[self.user_selected]:
+                password = USER[self.user_selected]
+                if password == self.password.text():
+                    user_store.update_user_level(1)
+                    self.on_close()
+                else:
+                    self.label_invalid.show()
+                    self.password.clear()
+            else:
+                user_store.update_user_level(0)
+                self.on_close()
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Enter or event.key() == Qt.Key_Return:

@@ -8,7 +8,8 @@ from PyQt5.Qt import Qt
 
 from constants.colors import color_vert_fonce, color_blanc
 from constants.stylesheets import black_16_label_stylesheet,\
-    white_16_label_stylesheet,\
+    white_16_label_stylesheet, \
+    button_dropdown_placeholder_stylesheet,\
     button_arrow_stylesheet,\
     button_dropdown_stylesheet
 
@@ -102,6 +103,7 @@ class Dropdown(QWidget):
         """
         # On met a jour la valeur du bouton pour qu'elle affiche la valeur sélectionnée
         self.bt_dropdown.setText(value)
+        self.bt_dropdown.setStyleSheet(button_dropdown_stylesheet)
         # On stock l'information que la dropdown a une valeur sélectionnée
         self.selected = True
         # On émet un signal qui indique que l'utilisateur a sélectionné une valeur
@@ -125,6 +127,7 @@ class Dropdown(QWidget):
             self.placeholder = placeholder
         # On met a jour le text de la dropdown avec la valeur initiale stocké dans les paramètres
         self.bt_dropdown.setText(self.placeholder)
+        self.bt_dropdown.setStyleSheet(button_dropdown_placeholder_stylesheet)
 
     def display_popup(self):
         """

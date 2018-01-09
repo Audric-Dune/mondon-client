@@ -25,6 +25,7 @@ class Application(QApplication):
         self.popup_user = None
         data_store_manager.NEW_ARRET_SIGNAL.connect(self.create_arret_window)
         user_store.OPEN_POPUP_USER_SIGNAL.connect(self.create_popup_user)
+        user_store.ON_USER_CHANGED_FIRST_TIME_SIGNAL.connect(self.create_main_window)
 
     def on_resize_main_window(self):
         self.RESIZED_SIGNAL.emit()
@@ -99,9 +100,10 @@ class Application(QApplication):
             focus_window(self.popup_user)
         else:
             self.popup_user = PopupUser(on_close=self.on_close_user_popup)
-            x = self.main_window.pos().x() + (self.main_window.width() - self.popup_user.width()) / 2
-            y = self.main_window.pos().y() + 200
-            self.popup_user.move(x, y)
+            if self.main_window:
+                x = self.main_window.pos().x() + (self.main_window.width() - self.popup_user.width()) / 2
+                y = self.main_window.pos().y() + 200
+                self.popup_user.move(x, y)
 
 
 app = Application()

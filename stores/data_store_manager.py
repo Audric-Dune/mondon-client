@@ -10,6 +10,7 @@ from constants.param import DEBUT_PROD_MATIN, FIN_PROD_SOIR
 from ui.utils.timestamp import timestamp_at_day_ago, timestamp_at_time
 from stores.data_store import DataStore
 from stores.settings_store import settings_store
+from stores.user_store import user_store
 
 
 class DataStoreManager(QObject):
@@ -40,7 +41,7 @@ class DataStoreManager(QObject):
         should_refresh = new_data or should_refresh
         if list_new_arret:
             for start_arret in list_new_arret:
-                if settings_store.day_ago == 0:
+                if settings_store.day_ago == 0 and user_store.user_level == 0:
                     self.NEW_ARRET_SIGNAL.emit(start_arret, current_store.day_ago)
         from stores.stat_store import stat_store
         stat_store.update_data()
