@@ -5,7 +5,7 @@ from constants.param import DEBUT_PROD_MATIN, FIN_PROD_MATIN_VENDREDI, FIN_PROD_
 
 from lib.base_de_donnee import Database
 from ui.utils.data import clean_data_per_second
-from ui.utils.timestamp import (timestamp_at_day_ago, timestamp_at_time, timestamp_to_day)
+from ui.utils.timestamp import timestamp_at_day_ago, timestamp_at_time, timestamp_to_day
 
 
 class DataStore:
@@ -22,6 +22,15 @@ class DataStore:
         self.imprevu_arret_time_soir = 0
         self.dic_arret = {}
         self.arrets = []
+        # _____VERIFICATION DATA BASE_____
+        # from ui.utils.timestamp import timestamp_to_hour, timestamp_to_day_month_little
+        # ts_min = 1515424080
+        # ts_max = 1515424260
+        # test_data = Database.get_speeds(ts_min * 1000, ts_max * 1000)
+        # for data in test_data:
+        #     print("{} à {}, Vitesse {}".format(timestamp_to_day_month_little(round(data[0]/1000)),
+        #                                        timestamp_to_hour(round(data[0]/1000)),
+        #                                        data[1]))
 
     def add_data(self):
         try:
