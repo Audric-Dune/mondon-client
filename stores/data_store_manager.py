@@ -7,7 +7,7 @@ from PyQt5.QtCore import pyqtSignal, QObject
 
 from constants.param import DEBUT_PROD_MATIN, FIN_PROD_SOIR
 
-from ui.utils.timestamp import timestamp_at_day_ago, timestamp_at_time
+from ui.utils.timestamp import timestamp_at_day_ago, timestamp_at_time, timestamp_now
 from stores.data_store import DataStore
 from stores.settings_store import settings_store
 from stores.user_store import user_store
@@ -39,15 +39,20 @@ class DataStoreManager(QObject):
         should_refresh = force_refresh
         new_data, list_new_arret = current_store.add_data()
         should_refresh = new_data or should_refresh
-        if list_new_arret:
-            for start_arret in list_new_arret:
-                if settings_store.day_ago == 0 and user_store.user_level == 0:
-                    self.NEW_ARRET_SIGNAL.emit(start_arret, current_store.day_ago)
+        self.check_create_window_new_arret(current_store)
         from stores.stat_store import stat_store
         stat_store.update_data()
         # Envois un signal que les data ont changées si nécessaire
         if should_refresh:
             self.DATA_CHANGED_SIGNAL.emit()
+
+    def check_create_window_new_arret(self, store):
+        if settings_store.day_ago == 0 and user_store.user_level == 0:
+            list_arrets = store.arrets
+            last_start_arret = list_arrets[-1][0]
+            ts_now = timestamp_now()
+            if ts_now - last_start_arret < 10:
+                self.NEW_ARRET_SIGNAL.emit(last_start_arret, 0)
 
     def update_current_store(self, *args):
         jour = round(timestamp_at_day_ago(settings_store.day_ago))
