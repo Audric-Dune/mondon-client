@@ -61,7 +61,6 @@ class Arret(QObject):
         for raison in self.raisons:
             raison_remove = True
             for raison_on_data_base in list_raisons:
-                print(raison_on_data_base[0], raison.id)
                 if raison_on_data_base[0] == raison.id:
                     raison_remove = False
                     break
