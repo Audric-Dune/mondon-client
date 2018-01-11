@@ -10,6 +10,7 @@ from stores.settings_store import settings_store
 from stores.data_store_manager import data_store_manager
 from stores.stat_store import stat_store
 from stores.settings_stat_store import settings_stat_store
+from stores.user_store import user_store
 from ui.application import app
 
 
@@ -23,6 +24,7 @@ class MondonWidget(QWidget):
         settings_stat_store.SETTINGS_STAT_CHANGED_SIGNAL.connect(self._handle_settings_stat_changed)
         settings_stat_store.SETTINGS_CHART_CHANGED_SIGNAL.connect(self._handle_settings_chart_changed)
         stat_store.ON_DATA_STAT_CHANGED_SIGNAL.connect(self._handle_data_stat_changed)
+        user_store.ON_USER_CHANGED_SIGNAL.connect(self._handle_user_changed)
         app.RESIZED_SIGNAL.connect(self._handle_size_main_window_changed)
 
     def on_data_changed(self):
@@ -43,11 +45,20 @@ class MondonWidget(QWidget):
     def on_settings_chart_changed(self):
         pass
 
+    def on_user_changed(self):
+        pass
+
     def set_background_color(self, color):
         self.background_color = color
 
     def set_padding(self, padding):
         self.padding = padding
+
+    def _handle_user_changed(self):
+        try:
+            self.on_user_changed()
+        except Exception as e:
+            logger.log(type(self), "Erreur pendant l'exécution de `on_user_changed`: {}".format(e))
 
     def _handle_data_changed(self):
         try:

@@ -20,10 +20,10 @@ class UserStore(QObject):
     def update_user_level(self, user_level):
         prev_user = self.user_level
         self.user_level = user_level
-        if prev_user:
-            self.ON_USER_CHANGED_SIGNAL.emit()
-        else:
+        if prev_user is None:
             self.ON_USER_CHANGED_FIRST_TIME_SIGNAL.emit()
+        else:
+            self.ON_USER_CHANGED_SIGNAL.emit()
 
 
 user_store = UserStore()

@@ -32,6 +32,10 @@ class AppMenu(MondonWidget):
         self.set_bt_stylesheet()
         self.update_widget()
 
+    def on_user_changed(self):
+        print("on_user_changed")
+        self.update_widget()
+
     def init_widget(self):
         self.hbox.setContentsMargins(0, 0, 0, 0)
         self.hbox.setSpacing(0)
