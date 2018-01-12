@@ -86,7 +86,8 @@ LIST_CHOIX_RAISON_IMPREVU = [
 
 LIST_CHOIX_ENTRETIEN = [
     ("label", "Calandre"),
-    ("label", "Couteau"),
+    ("label", "Couteaux"),
+    ("label", "Contre-couteaux"),
     ("label", "Barre axe carton"),
     ("label", "Lame coupe"),
     ("label", "Bague perfo"),
