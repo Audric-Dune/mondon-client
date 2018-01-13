@@ -70,6 +70,8 @@ class Application(QApplication):
 
             logger.log("INITIALISATION", "Affichage de MainWindow")
             self.main_window.show()
+            from ui.utils.pdf import save_pdf
+            save_pdf(self.main_window)
 
     def create_tracker_window(self):
         if self.tracker_window:
