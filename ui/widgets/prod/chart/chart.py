@@ -13,16 +13,9 @@ from constants.colors import (
     color_noir,
     color_rouge,
     color_vert,
+    color_bleu_dune
 )
-from constants.dimensions import (
-    chart_margin_bottom,
-    chart_margin_left,
-    chart_margin_right,
-    chart_margin_top,
-    chart_min_hour,
-    chart_max_hour,
-    width_grille,
-)
+from constants.dimensions import chart_min_hour, chart_max_hour, width_grille
 from stores.data_store_manager import data_store_manager
 from stores.settings_store import settings_store
 from ui.utils.drawing import draw_rectangle, draw_text
@@ -36,10 +29,16 @@ from ui.widgets.public.mondon_widget import MondonWidget
 
 
 class Chart(MondonWidget):
-    def __init__(self, parent):
+    def __init__(self, mode="ui", parent=None):
         super(Chart, self).__init__(parent=parent)
         self.drag_offset = 0
         self.mouse_move_pos = None
+        self.mode = mode
+
+        self.chart_margin_top = 10 if mode == "ui" else 10
+        self.chart_margin_left = 80  if mode == "ui" else 10
+        self.chart_margin_bottom = 50  if mode == "ui" else 10
+        self.chart_margin_right = 80  if mode == "ui" else 10
 
     def on_data_changed(self):
         self.update()
@@ -54,10 +53,10 @@ class Chart(MondonWidget):
             self.update()
 
     def get_chart_width(self):
-        return self.width() - chart_margin_left - chart_margin_right
+        return self.width() - self.chart_margin_left - self.chart_margin_right
 
     def get_chart_height(self):
-        return self.height() - chart_margin_top - chart_margin_bottom
+        return self.height() - self.chart_margin_top - self.chart_margin_bottom
 
     def mousePressEvent(self, event):
         self.mouse_move_pos = None
@@ -103,8 +102,8 @@ class Chart(MondonWidget):
     def draw_horizontal_grille(self, p):
             for i in range(4):
                 draw_rectangle(p,
-                               x=chart_margin_left,
-                               y=self.get_chart_height() + chart_margin_top - i * self.get_chart_height() / 4,
+                               x=self.chart_margin_left,
+                               y=self.get_chart_height() + self.chart_margin_top - i * self.get_chart_height() / 4,
                                width=self.get_chart_width(),
                                height=width_grille,
                                color=color_gris_clair)
@@ -112,8 +111,8 @@ class Chart(MondonWidget):
     def draw_horizontal_label(self, p):
             for i in range(4):
                 draw_text(p,
-                          x=chart_margin_left - 10 - 60,
-                          y=self.get_chart_height() + chart_margin_top - i * self.get_chart_height() / 4 - 10,
+                          x=self.chart_margin_left - 10 - 60,
+                          y=self.get_chart_height() + self.chart_margin_top - i * self.get_chart_height() / 4 - 10,
                           width=60,
                           height=20,
                           color=color_blanc,
@@ -121,8 +120,8 @@ class Chart(MondonWidget):
                           font_size=10,
                           text='{speed}m/min'.format(speed=50 * i))
                 draw_text(p,
-                          x=chart_margin_right - 10 + 20 + self.get_chart_width(),
-                          y=self.get_chart_height() + chart_margin_top - i * self.get_chart_height() / 4 - 10,
+                          x=self.chart_margin_right - 10 + 20 + self.get_chart_width(),
+                          y=self.get_chart_height() + self.chart_margin_top - i * self.get_chart_height() / 4 - 10,
                           width=60,
                           height=20,
                           color=color_blanc,
@@ -132,14 +131,14 @@ class Chart(MondonWidget):
 
     def draw_repere_maximum(self, p):
         draw_rectangle(p,
-                       x=chart_margin_left,
-                       y=self.get_chart_height() + chart_margin_top - self.get_chart_height() * 0.9,
+                       x=self.chart_margin_left,
+                       y=self.get_chart_height() + self.chart_margin_top - self.get_chart_height() * 0.9,
                        width=self.get_chart_width(),
                        height=width_grille * 2,
                        color=color_noir)
         draw_text(p,
-                  x=chart_margin_left - 10 - 60,
-                  y=self.get_chart_height() + chart_margin_top - self.get_chart_height() * 0.9 - 10,
+                  x=self.chart_margin_left - 10 - 60,
+                  y=self.get_chart_height() + self.chart_margin_top - self.get_chart_height() * 0.9 - 10,
                   width=60,
                   height=20,
                   color=color_blanc,
@@ -147,8 +146,8 @@ class Chart(MondonWidget):
                   font_size=10,
                   text='180m/min')
         draw_text(p,
-                  x=chart_margin_right - 10 + 20 + self.get_chart_width(),
-                  y=self.get_chart_height() + chart_margin_top - self.get_chart_height() * 0.9 - 10,
+                  x=self.chart_margin_right - 10 + 20 + self.get_chart_width(),
+                  y=self.get_chart_height() + self.chart_margin_top - self.get_chart_height() * 0.9 - 10,
                   width=60,
                   height=20,
                   color=color_blanc,
@@ -158,14 +157,14 @@ class Chart(MondonWidget):
 
     def draw_principale_x_axis(self, p, i, t):
         draw_rectangle(p,
-                       x=i + chart_margin_left,
-                       y=chart_margin_top,
+                       x=i + self.chart_margin_left,
+                       y=self.chart_margin_top,
                        width=width_grille,
-                       height=self.height() - chart_margin_bottom - chart_margin_top + 10,
+                       height=self.height() - self.chart_margin_bottom - self.chart_margin_top + 10,
                        color=color_gris_moyen)
         draw_text(p,
-                  x=i + chart_margin_left - 20,
-                  y=self.get_chart_height() + chart_margin_top + 10,
+                  x=i + self.chart_margin_left - 20,
+                  y=self.get_chart_height() + self.chart_margin_top + 10,
                   height=40,
                   width=40,
                   color=color_blanc,
@@ -175,18 +174,18 @@ class Chart(MondonWidget):
 
     def draw_secondaire_x_axis(self, p, i):
         draw_rectangle(p,
-                       x=i + chart_margin_left,
-                       y=chart_margin_top,
+                       x=i + self.chart_margin_left,
+                       y=self.chart_margin_top,
                        width=width_grille,
-                       height=self.height() - chart_margin_bottom - chart_margin_top + 5,
+                       height=self.height() - self.chart_margin_bottom - self.chart_margin_top + 5,
                        color=color_gris_clair)
 
     def draw_speed(self, p, i, speed):
         if speed < 0:
             color = color_gris_fonce
             draw_rectangle(p,
-                           x=i * 1 + chart_margin_left,
-                           y=chart_margin_top + self.get_chart_height() - 10,
+                           x=i * 1 + self.chart_margin_left,
+                           y=self.chart_margin_top + self.get_chart_height() - 10,
                            width=1,
                            height=10,
                            color=color)
@@ -196,8 +195,8 @@ class Chart(MondonWidget):
             else:
                 color = color_vert
             draw_rectangle(p,
-                           x=i * 1 + chart_margin_left,
-                           y=chart_margin_top + self.get_chart_height() - speed * (self.get_chart_height()/200) + 1,
+                           x=i * 1 + self.chart_margin_left,
+                           y=self.chart_margin_top + self.get_chart_height() - speed * (self.get_chart_height()/200) + 1,
                            width=1,
                            height=speed * (self.get_chart_height()/200),
                            color=color)
@@ -223,24 +222,55 @@ class Chart(MondonWidget):
             i += 1
 
     def draw_background(self, p):
-        draw_rectangle(p, chart_margin_left, chart_margin_top, self.get_chart_width(), self.get_chart_height(), color_blanc)
+        draw_rectangle(p, self.chart_margin_left, self.chart_margin_top, self.get_chart_width(), self.get_chart_height(), color_blanc)
 
     def draw_container_horizontal_background(self, p):
-        color = color_bleu_gris
+        color = color_bleu_gris if self.mode == "ui" else color_blanc
         # Bande horizontale haut
-        draw_rectangle(p, 0, 0, self.width(), chart_margin_top, color)
+        draw_rectangle(p, 0, 0, self.width(), self.chart_margin_top, color)
         # Bande horizontale haut
-        draw_rectangle(p, 0, self.height() - chart_margin_bottom, self.width(), chart_margin_bottom, color)
+        draw_rectangle(p, 0, self.height() - self.chart_margin_bottom, self.width(), self.chart_margin_bottom, color)
 
     def draw_container_vertical_background(self, p):
-        color = color_bleu_gris
+        color = color_bleu_gris if self.mode == "ui" else color_blanc
         # Le 10px de plus est pour cacher les barres de l'axis horizontal.
-        height = self.height() - chart_margin_top - chart_margin_bottom + 10
+        height = self.height() - self.chart_margin_top - self.chart_margin_bottom + 10
         # Bande verticale gauche
-        draw_rectangle(p, 0, chart_margin_top, chart_margin_left, height, color)
+        draw_rectangle(p, 0, self.chart_margin_top, self.chart_margin_left, height, color)
         # Bande verticale droite (le +1 pour la coordonnée "x" est pour ne pas cacher la dernière
         # barre de la grille verticale.
-        draw_rectangle(p, self.width() - chart_margin_right + 1, chart_margin_top, chart_margin_right, height, color)
+        draw_rectangle(p,
+                       self.width() - self.chart_margin_right + 1,
+                       self.chart_margin_top,
+                       self.chart_margin_right,
+                       height,
+                       color)
+
+    def draw_border_chart(self, p):
+        draw_rectangle(p,
+                       x=self.chart_margin_left,
+                       y=self.chart_margin_top,
+                       width=1,
+                       height=self.get_chart_height(),
+                       color=color_bleu_dune)
+        draw_rectangle(p,
+                       x=self.chart_margin_left,
+                       y=self.chart_margin_top,
+                       width=self.get_chart_width(),
+                       height=1,
+                       color=color_bleu_dune)
+        draw_rectangle(p,
+                       x=self.chart_margin_left + self.get_chart_width(),
+                       y=self.chart_margin_top,
+                       width=1,
+                       height=self.get_chart_height(),
+                       color=color_bleu_dune)
+        draw_rectangle(p,
+                       x=self.chart_margin_left,
+                       y=self.chart_margin_top + self.get_chart_height(),
+                       width=self.get_chart_width(),
+                       height=1,
+                       color=color_bleu_dune)
 
     def draw(self, p):
         self.draw_background(p)  # Le fond blanc
@@ -252,4 +282,6 @@ class Chart(MondonWidget):
         self.draw_container_vertical_background(p)  # Les côtés du fond (bleu) du container
         self.draw_horizontal_label(p)  # Les labels des axes verticaux
         self.draw_repere_maximum(p)  # Le repère de la vitesse maximum
+        if self.mode == "rapport":
+            self.draw_border_chart(p)
 

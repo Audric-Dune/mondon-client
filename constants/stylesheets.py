@@ -11,7 +11,9 @@ from constants.colors import (
     color_vert_fonce,
     color_vert_moyen,
     color_noir,
-    color_bleu)
+    color_bleu,
+    color_bleu_dune,
+    color_jaune_dune)
 
 # ____________LABEL STYLESHEET____________
 
@@ -126,6 +128,7 @@ black_12_label_stylesheet = create_qlabel_stylesheet(color=color_noir,
                                                      font_size="12px")
 black_16_label_stylesheet = create_qlabel_stylesheet(color=color_noir,
                                                      font_size="16px")
+black_20_label_stylesheet = create_qlabel_stylesheet(color=color_noir, font_size="20px")
 white_24_label_stylesheet = create_qlabel_stylesheet(color=color_blanc,
                                                      font_size="24px")
 bleu_gris_20_label_stylesheet = create_qlabel_stylesheet(color=color_bleu_gris,
@@ -137,11 +140,20 @@ bleu_gris_16_label_stylesheet = create_qlabel_stylesheet(color=color_bleu_gris,
 green_20_label_stylesheet = create_qlabel_stylesheet(color=color_blanc,
                                                      background_color=color_vert_fonce,
                                                      font_size="20px")
+yellow_20_label_stylesheet = create_qlabel_stylesheet(color=color_noir,
+                                                      background_color=color_jaune_dune,
+                                                      font_size="20px")
 green_maj_label_stylesheet = create_qlabel_stylesheet(color=color_blanc,
                                                       background_color=color_vert_fonce,
                                                       font_size="16px",
                                                       padding="0px 20px 0px 20px",
                                                       bold="bold")
+red_16_bold_label_stylesheet = create_qlabel_stylesheet(color=color_rouge, font_size="16px", bold="bold")
+green_16_bold_label_stylesheet = create_qlabel_stylesheet(color=color_vert_fonce, font_size="16px", bold="bold")
+orange_16_bold_label_stylesheet = create_qlabel_stylesheet(color=color_orange, font_size="16px", bold="bold")
+dune_title_stylesheet = create_qlabel_stylesheet(color=color_jaune_dune,
+                                                 font_size="20px",
+                                                 background_color=color_bleu_dune)
 
 # ____________BUTTON STYLESHEET____________
 

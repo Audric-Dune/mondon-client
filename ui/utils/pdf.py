@@ -9,7 +9,7 @@ from PyQt5.QtPrintSupport import QPrinter
 def save_pdf(widget):
     # Creation du printer
     printer = QPrinter()
-    file_names = '/Users/audricperrin/Desktop/test3.pdf'
+    file_names = 'C:/Users/Castor/Desktop/test3.pdf'
     printer.setOutputFileName(file_names)
     printer.setOutputFormat(QPrinter.PdfFormat)
     printer.setPageMargins(10, 10, 10, 10, QPrinter.Point)

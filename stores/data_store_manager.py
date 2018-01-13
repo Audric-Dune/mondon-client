@@ -49,10 +49,11 @@ class DataStoreManager(QObject):
     def check_create_window_new_arret(self, store):
         if settings_store.day_ago == 0 and user_store.user_level == 0:
             list_arrets = store.arrets
-            last_start_arret = list_arrets[-1][0]
-            ts_now = timestamp_now()
-            if ts_now - last_start_arret < 10:
-                self.NEW_ARRET_SIGNAL.emit(last_start_arret, 0)
+            if list_arrets:
+                last_start_arret = list_arrets[-1][0]
+                ts_now = timestamp_now()
+                if ts_now - last_start_arret < 10:
+                    self.NEW_ARRET_SIGNAL.emit(last_start_arret, 0)
 
     def update_current_store(self, *args):
         jour = round(timestamp_at_day_ago(settings_store.day_ago))
