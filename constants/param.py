@@ -54,23 +54,23 @@ DROPDOWN_CASSE = {"titre": "Casse", "placeholder": "Sélectionner une casse...",
 
 values = ["Bord flottant", "Choc sur bobine"]
 DROPDOWN_QUALITE_BM = {"titre": "Problème qualité bobine mère",
-                    "placeholder": "Sélectionner la qualité défectueuse...",
-                    "values": values}
+                       "placeholder": "Sélectionner la qualité défectueuse...",
+                       "values": values}
 
 values = ["Impression",
           "Largeur : Mauvaise position couteaux",
           "Défaut perfo",
           "Flanc bobine fille inconvenable"]
 DROPDOWN_QUALITE_BF = {"titre": "Problème qualité bobine fille",
-                    "placeholder": "Sélectionner la qualité défectueuse...",
-                    "values": values}
+                       "placeholder": "Sélectionner la qualité défectueuse...",
+                       "values": values}
 
 values = ["Buse de colle à chaud",
           "Bobine mère polypro",
           "Changement bande téflon"]
 DROPDOWN_MAUVAIS_COLLAGE = {"titre": "Mauvais collage",
-                    "placeholder": "Sélectionner la raison...",
-                    "values": values}
+                            "placeholder": "Sélectionner la raison...",
+                            "values": values}
 
 LIST_CHOIX_RAISON_IMPREVU = [
     ("dropdown", DROPDOWN_CASSE),
@@ -92,4 +92,3 @@ LIST_CHOIX_ENTRETIEN = [
     ("label", "Lame coupe"),
     ("label", "Bague perfo"),
     ("text_edit", TEXT_EDIT_AUTRE)]
-
