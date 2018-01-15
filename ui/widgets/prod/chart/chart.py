@@ -29,16 +29,15 @@ from ui.widgets.public.mondon_widget import MondonWidget
 
 
 class Chart(MondonWidget):
-    def __init__(self, mode="ui", parent=None):
+    def __init__(self, parent=None):
         super(Chart, self).__init__(parent=parent)
         self.drag_offset = 0
         self.mouse_move_pos = None
-        self.mode = mode
 
-        self.chart_margin_top = 10 if mode == "ui" else 10
-        self.chart_margin_left = 80  if mode == "ui" else 10
-        self.chart_margin_bottom = 50  if mode == "ui" else 10
-        self.chart_margin_right = 80  if mode == "ui" else 10
+        self.chart_margin_top = 10
+        self.chart_margin_left = 80
+        self.chart_margin_bottom = 50
+        self.chart_margin_right = 80
 
     def on_data_changed(self):
         self.update()
@@ -162,12 +161,13 @@ class Chart(MondonWidget):
                        width=width_grille,
                        height=self.height() - self.chart_margin_bottom - self.chart_margin_top + 10,
                        color=color_gris_moyen)
+        color = color_blanc
         draw_text(p,
                   x=i + self.chart_margin_left - 20,
                   y=self.get_chart_height() + self.chart_margin_top + 10,
                   height=40,
                   width=40,
-                  color=color_blanc,
+                  color=color,
                   align="C",
                   font_size=10,
                   text=hour_in_timestamp(t))
@@ -225,14 +225,14 @@ class Chart(MondonWidget):
         draw_rectangle(p, self.chart_margin_left, self.chart_margin_top, self.get_chart_width(), self.get_chart_height(), color_blanc)
 
     def draw_container_horizontal_background(self, p):
-        color = color_bleu_gris if self.mode == "ui" else color_blanc
+        color = color_bleu_gris
         # Bande horizontale haut
         draw_rectangle(p, 0, 0, self.width(), self.chart_margin_top, color)
         # Bande horizontale haut
         draw_rectangle(p, 0, self.height() - self.chart_margin_bottom, self.width(), self.chart_margin_bottom, color)
 
     def draw_container_vertical_background(self, p):
-        color = color_bleu_gris if self.mode == "ui" else color_blanc
+        color = color_bleu_gris
         # Le 10px de plus est pour cacher les barres de l'axis horizontal.
         height = self.height() - self.chart_margin_top - self.chart_margin_bottom + 10
         # Bande verticale gauche
@@ -246,32 +246,6 @@ class Chart(MondonWidget):
                        height,
                        color)
 
-    def draw_border_chart(self, p):
-        draw_rectangle(p,
-                       x=self.chart_margin_left,
-                       y=self.chart_margin_top,
-                       width=1,
-                       height=self.get_chart_height(),
-                       color=color_bleu_dune)
-        draw_rectangle(p,
-                       x=self.chart_margin_left,
-                       y=self.chart_margin_top,
-                       width=self.get_chart_width(),
-                       height=1,
-                       color=color_bleu_dune)
-        draw_rectangle(p,
-                       x=self.chart_margin_left + self.get_chart_width(),
-                       y=self.chart_margin_top,
-                       width=1,
-                       height=self.get_chart_height(),
-                       color=color_bleu_dune)
-        draw_rectangle(p,
-                       x=self.chart_margin_left,
-                       y=self.chart_margin_top + self.get_chart_height(),
-                       width=self.get_chart_width(),
-                       height=1,
-                       color=color_bleu_dune)
-
     def draw(self, p):
         self.draw_background(p)  # Le fond blanc
 
@@ -282,6 +256,4 @@ class Chart(MondonWidget):
         self.draw_container_vertical_background(p)  # Les côtés du fond (bleu) du container
         self.draw_horizontal_label(p)  # Les labels des axes verticaux
         self.draw_repere_maximum(p)  # Le repère de la vitesse maximum
-        if self.mode == "rapport":
-            self.draw_border_chart(p)
 

@@ -15,10 +15,11 @@ from ui.widgets.public.mondon_widget import MondonWidget
 
 
 class Bar(MondonWidget):
-    def __init__(self, parent, percent=0, little=False):
+    def __init__(self, parent, percent=0, mode="ui"):
         super(Bar, self).__init__(parent=parent)
+        self.set_border(color=color_bleu_gris, size=1)
         self.percent = percent
-        self.little = little
+        self.mode = mode
 
     def set_percent(self, percent):
         """
@@ -43,15 +44,15 @@ class Bar(MondonWidget):
         Draw le fond de la bar
         :param p: Paramètre de dessin
         """
-        height = self.height() if self.little else self.height() / 2
-        draw_rectangle(p, 0, 0, self.width(), height, color_blanc)
+        height = self.height()
+        draw_rectangle(p, 1, 1, self.width()-2, height-2, color_blanc)
 
     def draw_bar(self, p):
         """
         Dessine la bar
         :param p: Paramètre de dessin
         """
-        height = self.height() if self.little else self.height() / 2
+        height = self.height()
         scale = self.get_scale()
         if self.percent != 0:
             if self.percent < 25:
@@ -60,7 +61,7 @@ class Bar(MondonWidget):
                 color = color_orange
             else:
                 color = color_vert
-            draw_rectangle(p, 0, 0, self.percent*scale, height, color)
+            draw_rectangle(p, 1, 1, self.percent*scale-2, height-2, color)
 
     def draw_max_info(self, p):
         """
@@ -68,13 +69,13 @@ class Bar(MondonWidget):
         :param p: Paramètre de dessin
         """
         scale = self.get_scale()
-        width = (100 - PERCENT_PROD_THEROIQUE_MAXI) * scale if self.little else 100
-        y = 0 if self.little else self.height() / 2
-        height = self.height() if self.little else self.height() / 2
-        align = "C" if self.little else "D"
-        text = "82% \n (Max.)" if self.little else "Max 82%"
-        font_size = 8 if self.little else 10
-        x = PERCENT_PROD_THEROIQUE_MAXI*scale if self.little else PERCENT_PROD_THEROIQUE_MAXI*scale-width-5
+        width = (100 - PERCENT_PROD_THEROIQUE_MAXI) * scale
+        y = 0
+        height = self.height()
+        align = "C"
+        text = "82% \n (Max.)"
+        font_size = 8
+        x = PERCENT_PROD_THEROIQUE_MAXI*scale
         draw_rectangle(p, PERCENT_PROD_THEROIQUE_MAXI * scale, 0, 2, self.height(), color_bleu)
         draw_text(p,
                   x=x,
@@ -85,7 +86,7 @@ class Bar(MondonWidget):
                   align=align,
                   font_size=font_size,
                   text=text,
-                  bold=self.little)
+                  bold=True)
 
     def draw_percent(self, p):
         """
@@ -93,7 +94,7 @@ class Bar(MondonWidget):
         Si le % est inférieur à 22 on le dessine à droite la de la bar % sinon à gauche
         :param p: Paramètre de dessin
         """
-        height = self.height() if self.little else self.height() / 2
+        height = self.height()
         scale = self.get_scale()
         width = 150
         margin_text = 5
@@ -120,6 +121,8 @@ class Bar(MondonWidget):
         Dessine la bar
         :param p: Paramètre de dessin
         """
+        if self.mode != "ui":
+            self._draw_border(p)
         self.draw_bar_fond(p)
         self.draw_bar(p)
         # Si le % de la bar est supérieur à la valeur maxi théorique on ne dessine pas l'indicateur valeur maxi

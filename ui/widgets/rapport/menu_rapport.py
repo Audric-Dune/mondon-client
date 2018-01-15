@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5.QtWidgets import QHBoxLayout, QLabel, QFileDialog, QDialog, QPushButton
-from PyQt5.QtGui import QPainter
+from PyQt5.QtGui import QPainter, QPicture
 from PyQt5.QtPrintSupport import QPrinter, QPrintDialog
-from PyQt5.QtCore import QSize, Qt
+from PyQt5.QtCore import QSize, Qt, QPointF
 
 from constants.colors import color_bleu_gris
 from constants.stylesheets import button_stylesheet, white_22_label_stylesheet, button_little_stylesheet
@@ -13,6 +13,7 @@ from ui.utils.timestamp import timestamp_at_day_ago, timestamp_to_date, timestam
 from ui.widgets.public.mondon_widget import MondonWidget
 from ui.widgets.public.pixmap_button import PixmapButton
 from ui.widgets.rapport.rapport import Rapport
+from ui.utils.pdf import save_pdf
 
 
 class RapportMenu(MondonWidget):
@@ -70,7 +71,7 @@ class RapportMenu(MondonWidget):
 
     def init_button(self):
         # Bouton sauvegarder
-        self.bt_save.clicked.connect(self.save_pdf)
+        self.bt_save.clicked.connect(self.get_pdf)
         self.bt_save.setStyleSheet(button_stylesheet)
         self.bt_save.setFixedSize(self.PIXMAPBUTTON_SIZE)
         self.bt_save.setContentsMargins(8)
@@ -113,9 +114,7 @@ class RapportMenu(MondonWidget):
     def live():
         settings_store.set_day_ago(0)
 
-    def save_pdf(self):
-        printer = QPrinter()
-        painter = QPainter()
+    def get_pdf(self):
         defaut_path = 'I:\Programme mondon\Rapport production bobines'
         ts = timestamp_at_day_ago(settings_store.day_ago)
         defaut_name = "{} Rapport production bobines".format(timestamp_to_inverse_date(ts))
@@ -125,56 +124,46 @@ class RapportMenu(MondonWidget):
                                                  filter="Fichiers pdf (*.pdf)")
         if not file_names[0]:
             return
-        printer.setOutputFileName(file_names[0])
-        printer.setOutputFormat(QPrinter.PdfFormat)
-        printer.setPageMargins(10, 10, 10, 10, QPrinter.Point)
-        painter.begin(printer)
-        self.rapport.drawing(painter)
-        painter.end()
-        self.affiche_pdf(file_names[0])
+        save_pdf(self.rapport, filename=file_names[0], preview=True)
 
-    def _save_pdf(self):
-        printer = QPrinter()
-        painter = QPainter()
+    def _get_pdf(self):
         ts = timestamp_at_day_ago(settings_store.day_ago)
         file_names =\
             'I:\Programme mondon/rp_prod/{} Rapport production bobines.pdf'.format(timestamp_to_inverse_date(ts))
-        printer.setOutputFileName(file_names)
-        printer.setOutputFormat(QPrinter.PdfFormat)
-        printer.setPageMargins(10, 10, 10, 10, QPrinter.Point)
-        painter.begin(printer)
-        self.rapport.drawing(painter)
-        painter.end()
+        save_pdf(self.rapport, filename=file_names, preview=False)
 
     def impression(self):
+        # Creation du printer
         printer = QPrinter()
         dialog = QPrintDialog(printer, self)
         if dialog.exec_() != QDialog.Accepted:
             return
-        painter = QPainter()
         printer.setPageMargins(10, 10, 10, 10, QPrinter.Point)
-        painter.begin(printer)
-        x_scale = printer.pageRect().width() / self.PAGE_W
-        y_scale = printer.pageRect().height() / self.PAGE_H
-        scale = min(x_scale, y_scale)
-        painter.translate((printer.paperRect().x()) + (printer.pageRect().width() / 2),
-                          printer.paperRect().y() + (printer.pageRect().height() / 2))
-        painter.scale(scale, scale)
-        painter.translate(-1 * self.PAGE_W / 2, -1 * self.PAGE_H / 2)
-        self.rapport.drawing(painter)
-        painter.end()
 
-    @staticmethod
-    def affiche_pdf(name_file):
-        import os
-        """affiche le pdf créé, dans le visualiseur pdf par défaut de l'OS"""
-        if os.path.exists(name_file):
-            try:
-                # solution pour Windows
-                os.startfile(name_file)
-            except Exception as e:
-                from lib.logger import logger
-                logger.log("RAPPORT", "Impossible d'ouvrir le fichier PDF : {}".format(e))
+        # Calcul le ratio de redimensionnement
+        page_width = printer.pageRect().width()
+        page_height = printer.pageRect().height()
+        widget_width = self.rapport.width()
+        widget_height = self.rapport.height()
+        ratio = min(page_width / widget_width, page_height / widget_height)
+
+        # Calcul du positionnement
+        pos_x = max(0, (page_width - ratio * widget_width) / 2)
+        pos_y = max(0, (page_height - ratio * widget_height) / 2)
+
+        # Render le widget dans une image QPicture pour stocker
+        # les directives de dessin
+        picture = QPicture()
+        widget_painter = QPainter(picture)
+        widget_painter.scale(ratio, ratio)
+        self.rapport.render(widget_painter)
+        widget_painter.end()
+
+        # Render la QPicture en utilisant le QPrinter
+        picture_painter = QPainter()
+        picture_painter.begin(printer)
+        picture_painter.drawPicture(QPointF(pos_x, pos_y), picture)
+        picture_painter.end()
 
     @staticmethod
     def jour_moins():

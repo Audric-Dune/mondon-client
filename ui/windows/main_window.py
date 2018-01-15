@@ -88,7 +88,7 @@ class MainWindow(QMainWindow):
         vbox.addWidget(chart)
 
         stat_menu = StatTitre(parent=self.central_widget)
-        stat_menu.setFixedHeight(160)
+        stat_menu.setFixedHeight(170)
         vbox.addWidget(stat_menu)
 
         tab_arret_menu = TabArretMenu(parent=self.central_widget)

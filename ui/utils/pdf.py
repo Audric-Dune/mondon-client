@@ -6,10 +6,22 @@ from PyQt5.QtGui import QPicture, QPainter
 from PyQt5.QtPrintSupport import QPrinter
 
 
-def save_pdf(widget):
+def affiche_pdf(name_file):
+    import os
+    """affiche le pdf créé, dans le visualiseur pdf par défaut de l'OS"""
+    if os.path.exists(name_file):
+        try:
+            # solution pour Windows
+            os.startfile(name_file)
+        except Exception as e:
+            from lib.logger import logger
+            logger.log("RAPPORT", "Impossible d'ouvrir le fichier PDF : {}".format(e))
+
+
+def save_pdf(widget, filename, preview=False):
     # Creation du printer
     printer = QPrinter()
-    file_names = 'C:/Users/Castor/Desktop/test3.pdf'
+    file_names = filename
     printer.setOutputFileName(file_names)
     printer.setOutputFormat(QPrinter.PdfFormat)
     printer.setPageMargins(10, 10, 10, 10, QPrinter.Point)
@@ -38,3 +50,6 @@ def save_pdf(widget):
     picture_painter.begin(printer)
     picture_painter.drawPicture(QPointF(pos_x, pos_y), picture)
     picture_painter.end()
+
+    if preview:
+        affiche_pdf(file_names)

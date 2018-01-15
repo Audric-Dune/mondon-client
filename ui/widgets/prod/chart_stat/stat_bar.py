@@ -12,7 +12,7 @@ from constants.param import (DEBUT_PROD_MATIN,
                              FIN_PROD_MATIN_VENDREDI,
                              FIN_PROD_SOIR,
                              FIN_PROD_SOIR_VENDREDI)
-from constants.stylesheets import white_title_label_stylesheet, red_title_label_stylesheet, green_title_label_stylesheet
+from constants.stylesheets import white_title_label_stylesheet, red_title_label_stylesheet, green_title_label_stylesheet, black_16_label_stylesheet, black_20_label_stylesheet, green_16_label_stylesheet, red_16_no_background_label_stylesheet
 from stores.data_store_manager import data_store_manager
 from ui.utils.timestamp import timestamp_to_day
 from ui.utils.data import affiche_entier, get_ratio_prod
@@ -21,11 +21,13 @@ from ui.widgets.public.mondon_widget import MondonWidget
 
 
 class StatBar(MondonWidget):
-    HEIGHT_BAR = 50
+    HEIGHT_BAR = 35
 
-    def __init__(self, parent, titre, moment):
+    def __init__(self, parent=None, titre="", moment="", mode="ui"):
         super(StatBar, self).__init__(parent=parent)
-        self.set_background_color(color_bleu_gris)
+        if mode == "ui":
+            self.set_background_color(color_bleu_gris)
+        self.mode = mode
         self.moment = moment
         self.metre_value = 0
         self.arret_time = 0
@@ -34,7 +36,7 @@ class StatBar(MondonWidget):
         # _____INIT_WIDGET____
         self.vbox = QVBoxLayout(self)
         self.title = QLabel(titre, self)
-        self.bar = Bar(parent=self, percent=round(self.percent, 1))
+        self.bar = Bar(parent=self, percent=round(self.percent, 1), mode=self.mode)
         self.metre = QLabel(self)
         self.arret = QLabel(self)
         self.arret_imprevu = QLabel(self)
@@ -45,22 +47,22 @@ class StatBar(MondonWidget):
     def init_widget(self):
         self.vbox.setContentsMargins(5, 5, 5, 5)
 
-        self.title.setStyleSheet(white_title_label_stylesheet)
+        self.title.setStyleSheet(white_title_label_stylesheet if self.mode == "ui" else black_20_label_stylesheet)
         self.vbox.addWidget(self.title, alignment=Qt.AlignLeft)
 
         self.bar.setFixedHeight(self.HEIGHT_BAR)
         self.vbox.addWidget(self.bar)
 
-        self.metre.setStyleSheet(white_title_label_stylesheet)
+        self.metre.setStyleSheet(white_title_label_stylesheet if self.mode == "ui" else black_16_label_stylesheet)
         self.vbox.addWidget(self.metre, alignment=Qt.AlignLeft)
 
-        self.arret.setStyleSheet(white_title_label_stylesheet)
+        self.arret.setStyleSheet(white_title_label_stylesheet if self.mode == "ui" else black_16_label_stylesheet)
         self.vbox.addWidget(self.arret, alignment=Qt.AlignLeft)
 
-        self.arret_prevu.setStyleSheet(white_title_label_stylesheet)
+        self.arret_prevu.setStyleSheet(white_title_label_stylesheet if self.mode == "ui" else black_16_label_stylesheet)
         self.vbox.addWidget(self.arret_prevu, alignment=Qt.AlignLeft)
 
-        self.arret_imprevu.setStyleSheet(red_title_label_stylesheet)
+        self.arret_imprevu.setStyleSheet(red_title_label_stylesheet if self.mode == "ui" else black_16_label_stylesheet)
         self.vbox.addWidget(self.arret_imprevu, alignment=Qt.AlignLeft)
 
         self.setLayout(self.vbox)
@@ -82,12 +84,13 @@ class StatBar(MondonWidget):
         self.bar.set_percent(self.percent)
 
         if self.imprevu_arret_time == 0:
-            self.arret_imprevu.setStyleSheet(green_title_label_stylesheet)
+            self.arret_imprevu.setStyleSheet(green_title_label_stylesheet if self.mode == "ui"
+                                             else green_16_label_stylesheet)
         else:
-            self.arret_imprevu.setStyleSheet(red_title_label_stylesheet)
+            self.arret_imprevu.setStyleSheet(red_title_label_stylesheet if self.mode == "ui"
+                                             else red_16_no_background_label_stylesheet)
         arret_imprevu_time_str = str(timedelta(seconds=round(self.imprevu_arret_time)))
         self.arret_imprevu.setText("{time} d'arrêt imprévu".format(time=arret_imprevu_time_str))
-        self.bar.set_percent(self.percent)
 
     def get_start_and_end(self, ts):
         vendredi = timestamp_to_day(ts) == "vendredi"

@@ -150,7 +150,10 @@ green_maj_label_stylesheet = create_qlabel_stylesheet(color=color_blanc,
                                                       bold="bold")
 red_16_bold_label_stylesheet = create_qlabel_stylesheet(color=color_rouge, font_size="16px", bold="bold")
 green_16_bold_label_stylesheet = create_qlabel_stylesheet(color=color_vert_fonce, font_size="16px", bold="bold")
+red_16_no_background_label_stylesheet = create_qlabel_stylesheet(color=color_rouge, font_size="16px")
+green_16_label_stylesheet = create_qlabel_stylesheet(color=color_vert, font_size="16px")
 orange_16_bold_label_stylesheet = create_qlabel_stylesheet(color=color_orange, font_size="16px", bold="bold")
+blue_16_bold_label_stylesheet = create_qlabel_stylesheet(color=color_bleu_dune, font_size="16px", bold="bold")
 dune_title_stylesheet = create_qlabel_stylesheet(color=color_jaune_dune,
                                                  font_size="20px",
                                                  background_color=color_bleu_dune)
