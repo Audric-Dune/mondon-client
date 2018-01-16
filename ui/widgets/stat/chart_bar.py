@@ -95,7 +95,7 @@ class ContentChart(MondonWidget):
                         moment = "Imprévu" if index_data == 1 else moment
                         moment = "total" if index_data == 2 else moment
                     value = stat_store.data[moment][index][1] if len(stat_store.data[moment]) > index else -1
-                    color = self.color_data_metrage[index_data] if settings_stat_store.data_type == "métrage"\
+                    color = self.color_data_métrage[index_data] if settings_stat_store.data_type == "métrage"\
                         else self.color_data_temps[index_data]
                     hbox_multi_bar.addLayout(self.create_bar(value=value,
                                                              color=color))

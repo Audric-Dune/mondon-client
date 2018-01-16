@@ -107,7 +107,9 @@ class DataTab(MondonWidget):
         """
         content_bar_layout = QHBoxLayout()
         percent = stat_store.stat[team]["percent"]
-        bar = Bar(parent=self, percent=percent, display_max_value=False, parametric_color=False)
+        bar = Bar(parent=self, percent=percent,
+                  display_max_value=settings_stat_store.data_type == "métrage",
+                  parametric_color=settings_stat_store.data_type == "métrage")
         bar.setFixedHeight(30)
         content_bar_layout.addWidget(bar)
         return content_bar_layout

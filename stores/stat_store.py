@@ -92,6 +92,7 @@ class StatStore(QObject):
                     # Passe au jour suivant
                     current_day = timestamp_after_day_ago(start=current_day, day_ago=1)
         self.get_stat()
+        return True
 
     def get_stat(self):
         """
