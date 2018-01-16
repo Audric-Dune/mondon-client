@@ -14,11 +14,11 @@ class SettingsStatStore(QObject):
 
     def __init__(self):
         super(SettingsStatStore, self).__init__()
-        self.data_type = "métrage"
+        self.data_type = "temps"
         self.time_stat = ""
         self.format = ""
         self.display_setting = []
-        self.week_ago = 0
+        self.week_ago = 1
         self.month_ago = -1
         self.year_ago = -1
         self.update_display_setting()
@@ -66,7 +66,7 @@ class SettingsStatStore(QObject):
         self.SETTINGS_CHART_CHANGED_SIGNAL.emit()
 
     def set_new_settings(self, type, week_ago=-1, month_ago=-1, year_ago=-1):
-        self.data_type=type
+        self.data_type = type
         self.week_ago = week_ago
         self.month_ago = month_ago
         self.year_ago = year_ago

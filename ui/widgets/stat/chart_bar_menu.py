@@ -66,9 +66,11 @@ class ChartBarMenu(MondonWidget):
     def update_button(self):
         self.bt_plus.setEnabled(settings_stat_store.week_ago > 0 or settings_stat_store.month_ago > 0)
         disabled_bt_moins = False
-        if timestamp_at_week_ago(settings_stat_store.week_ago) == 1508709600:
+        limit_week_stat = 1508709600 if settings_stat_store.data_type == "métrage" else 1514761200
+        if timestamp_at_week_ago(settings_stat_store.week_ago) == limit_week_stat:
             disabled_bt_moins = True
-        if timestamp_at_month_ago(settings_stat_store.month_ago) == 1509490800:
+        limit_month_stat = 1509490800 if settings_stat_store.data_type == "métrage" else 1514761200
+        if timestamp_at_month_ago(settings_stat_store.month_ago) == limit_month_stat:
             disabled_bt_moins = True
         self.bt_moins.setDisabled(disabled_bt_moins)
 

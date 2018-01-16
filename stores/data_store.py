@@ -22,6 +22,7 @@ class DataStore:
         self.imprevu_arret_time_soir = 0
         self.dic_arret = {}
         self.arrets = []
+        self.add_data()
         # _____VERIFICATION DATA BASE_____
         # from ui.utils.timestamp import timestamp_to_hour, timestamp_to_day_month_little
         # ts_min = 1515424080
@@ -112,7 +113,10 @@ class DataStore:
         for arret in arrets:
             start_arret = arret[0]
             end_arret = arret[1]
-            arret_delay = end_arret - start_arret
+            if vendredi and end_arret > timestamp_at_time(ts, hours=FIN_PROD_SOIR_VENDREDI):
+                arret_delay = timestamp_at_time(ts, hours=FIN_PROD_SOIR_VENDREDI) - start_arret
+            else:
+                arret_delay = end_arret - start_arret
             if start_arret <= ts_change_of_team > end_arret:
                 self.arret_time_matin += arret_delay
             elif start_arret <= ts_change_of_team < end_arret:

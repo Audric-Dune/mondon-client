@@ -37,10 +37,21 @@ class StatStore(QObject):
         if settings_stat_store.data_type == "métrage":
             self.data = {"matin": [], "soir": [], "total": []}
             self.stat = {"matin": {}, "soir": {}, "total": {}}
+        if settings_stat_store.data_type == "temps":
+            self.data = {"Prévu": [], "Imprévu": [], "total": []}
+            self.stat = {"Prévu": {}, "Imprévu": {}, "total": {}}
 
     def update_data(self):
         if self.get_data():
             self.ON_DATA_STAT_CHANGED_SIGNAL.emit()
+
+    @staticmethod
+    def get_data_store(ts_day):
+        data_store = data_store_manager.get_store_at_time(ts_day)
+        # Si elle n'y sont pas crée un nouveau store
+        if not data_store:
+            data_store = data_store_manager.add_new_store(ts_day)
+        return data_store
 
     def get_data(self):
         """
@@ -53,31 +64,34 @@ class StatStore(QObject):
         self.data_on_database = self.get_data_on_database(start, end)
         self.init_var()
         if self.data_on_database:
-            # GESTION DES DATA METRAGE PAR JOUR
-            if settings_stat_store.data_type == "métrage" and settings_stat_store.year_ago < 0:
+            if settings_stat_store.year_ago < 0:
                 # On parcour tout les jours entre start et end
                 current_day = start
                 while current_day < end:
                     data = []
                     # Vérifie si on est pas dans un jours du weekend
                     if not self.is_weekend(ts_day=current_day):
-                        # Récupère les data du ts courant dans les data en database
-                        data = self.get_data_on_ts(data=self.data_on_database, ts=current_day)
-                        # Si elle n'y sont pas cherche dans les stores existants
-                        if not data:
-                            data_store = data_store_manager.get_store_at_time(current_day)
-                            # Si elle n'y sont pas crée un nouveau store
-                            if not data_store:
-                                data_store = data_store_manager.add_new_store(current_day)
+                        if settings_stat_store.data_type == "métrage":
+                            # Récupère les data du ts courant dans les data en database
+                            data = self.get_data_on_ts(data=self.data_on_database, ts=current_day)
+                            if not data:
+                                data_store = self.get_data_store(ts_day=current_day)
+                                data.append(round(current_day))
+                                data.append(data_store.metrage_matin)
+                                data.append(data_store.metrage_soir)
+                        else:
+                            data_store = self.get_data_store(ts_day=current_day)
                             data.append(round(current_day))
-                            data.append(data_store.metrage_matin)
-                            data.append(data_store.metrage_soir)
+                            data.append(data_store.arret_time_matin + data_store.arret_time_soir)
+                            data.append(data_store.imprevu_arret_time_matin + data_store.imprevu_arret_time_soir)
                     # Ajoute les data du jour courant au data générale
-                    self.add_data_metrage(data)
+                    if settings_stat_store.data_type == "métrage":
+                        self.add_data_metrage(data)
+                    else:
+                        self.add_data_temps(data)
                     # Passe au jour suivant
                     current_day = timestamp_after_day_ago(start=current_day, day_ago=1)
         self.get_stat()
-        return True
 
     def get_stat(self):
         """
@@ -85,9 +99,13 @@ class StatStore(QObject):
         """
         if self.data:
             if settings_stat_store.data_type == "métrage":
-                self.stat["matin"] = self.stat_calculator(moment="matin")
-                self.stat["soir"] = self.stat_calculator(moment="soir")
-                self.stat["total"] = self.stat_calculator(moment="total")
+                self.stat["matin"] = self.stat_calculator_metrage(moment="matin")
+                self.stat["soir"] = self.stat_calculator_metrage(moment="soir")
+                self.stat["total"] = self.stat_calculator_metrage(moment="total")
+            if settings_stat_store.data_type == "temps":
+                self.stat["Prévu"] = self.stat_calculator_temps(type="Prévu")
+                self.stat["Imprévu"] = self.stat_calculator_temps(type="Imprévu")
+                self.stat["total"] = self.stat_calculator_temps(type="total")
 
     @staticmethod
     def get_start_end():
@@ -123,6 +141,8 @@ class StatStore(QObject):
         if settings_stat_store.data_type == "métrage":
             data = Database.get_metrages(start_time=start, end_time=end)
             data.sort()
+        if settings_stat_store.data_type == "temps":
+            data = Database.get_arret(start_time=start, end_time=end)
         return data
 
     @staticmethod
@@ -150,7 +170,7 @@ class StatStore(QObject):
 
     def add_data_metrage(self, data):
         """
-        Ajoute une série de data au data globals
+        Ajoute une série de data métrage au data globals
         :param data: Les data à ajouter
         """
         if data:
@@ -162,42 +182,56 @@ class StatStore(QObject):
             self.data["soir"].append((ts, metrage_soir))
             self.data["total"].append((ts, metrage_total))
 
+    def add_data_temps(self, data):
+        """
+        Ajoute une série de data temps au data globals
+        :param data: Les data à ajouter
+        """
+        if data:
+            ts = data[0]
+            metrage_total = data[1]
+            metrage_imprévu = data[2]
+            metrage_prévu = metrage_total - metrage_imprévu
+            self.data["Prévu"].append((ts, metrage_prévu))
+            self.data["Imprévu"].append((ts, metrage_imprévu))
+            self.data["total"].append((ts, metrage_total))
+
     def get_total_time_prod(self, moment):
         """
         Calcul le temps de production entre deux ts
-        :param start: Ts de début du calcul
-        :param end:  Ts de fin du calcul
+        :param moment: Permet d'identifier la plage d'étude (matin, soir, total)
         :return: Le temps de production en s
         """
         data_time = self.get_start_end()
         start = data_time[0]
         end = data_time[1]
         total_time_prod = 0
-        if settings_stat_store.data_type == "métrage":
-            # On parcour tout les jours entre start et end
-            current_day = start
-            while current_day < end:
-                # Vérifie si on est pas dans un jours du weekend
-                if not self.is_weekend(ts_day=current_day):
-                    # On calcul le temps de production d'une journée normal
-                    current_time_prod = (FIN_PROD_SOIR - DEBUT_PROD_MATIN) * 3600
-                    # On modifie le temps de production si on est vendredi
-                    vendredi = self.is_vendredi(ts_day=current_day)
-                    if vendredi:
-                        current_time_prod = (FIN_PROD_SOIR_VENDREDI - DEBUT_PROD_MATIN) * 3600
-                    # Si la période est une demi-journée on divise par 2
-                    if moment == "matin" or moment == "soir":
-                        current_time_prod /= 2
-                    # On modifie le temps de production si on est en cour de journée
-                    if self.day_not_finish(ts_day=current_day, vendredi=vendredi, moment=moment):
-                        if moment == "soir":
-                            debut_prod = FIN_PROD_MATIN_VENDREDI if vendredi else FIN_PROD_MATIN
-                        else:
-                            debut_prod = DEBUT_PROD_MATIN
-                        current_time_prod = timestamp_now() - timestamp_at_time(end, hours=debut_prod)
-                    total_time_prod += current_time_prod
-                # Passe au jour suivant
-                current_day = timestamp_after_day_ago(start=current_day, day_ago=1)
+        # On parcour tout les jours entre start et end
+        current_day = start
+        while current_day < end:
+            # Vérifie si on est pas dans un jours du weekend
+            if not self.is_weekend(ts_day=current_day):
+                # On calcul le temps de production d'une journée normal
+                current_time_prod = (FIN_PROD_SOIR - DEBUT_PROD_MATIN) * 3600
+                # On modifie le temps de production si on est vendredi
+                vendredi = self.is_vendredi(ts_day=current_day)
+                if vendredi:
+                    current_time_prod = (FIN_PROD_SOIR_VENDREDI - DEBUT_PROD_MATIN) * 3600
+                # Si la période est une demi-journée on divise par 2
+                if moment == "matin" or moment == "soir":
+                    current_time_prod /= 2
+                # On modifie le temps de production si on est en cour de journée
+                if self.day_not_finish(ts_day=current_day, vendredi=vendredi, moment=moment):
+                    if moment == "soir":
+                        debut_prod = FIN_PROD_MATIN_VENDREDI if vendredi else FIN_PROD_MATIN
+                    else:
+                        debut_prod = DEBUT_PROD_MATIN
+                    if timestamp_now() - timestamp_at_time(end, hours=debut_prod) < 0:
+                        break
+                    current_time_prod = timestamp_now() - timestamp_at_time(end, hours=debut_prod)
+                total_time_prod += current_time_prod
+            # Passe au jour suivant
+            current_day = timestamp_after_day_ago(start=current_day, day_ago=1)
         return total_time_prod
 
     @staticmethod
@@ -224,7 +258,8 @@ class StatStore(QObject):
             fin_prod = FIN_PROD_SOIR_VENDREDI if vendredi else FIN_PROD_SOIR
         return timestamp_now() < timestamp_at_time(ts_day, hours=fin_prod)
 
-    def empty_stat(self):
+    @staticmethod
+    def empty_stat():
         return {
             'total': 0,
             'max': 0,
@@ -232,11 +267,10 @@ class StatStore(QObject):
             'mean': 0,
         }
 
-    def stat_calculator(self, moment):
+    def stat_calculator_metrage(self, moment):
         """
         Calcul les statistiques de la série "moment"
         :param moment: Le moment étudié (matin, soir, ou total)
-        :param total_time_prod: Temps de production total de la série total
         :return: Un dictionnaire contenant les statistiques : total, max, mean, percent
         """
         data = self.data[moment]
@@ -258,5 +292,23 @@ class StatStore(QObject):
         dic_stat["mean"] = round(mean_data)
         return dic_stat
 
+    def stat_calculator_temps(self, type):
+        data = self.data[type]
+        if not data:
+            return self.empty_stat()
+        dic_stat = {}
+        values = [t[1] for t in data]
+        sum_data = sum(values)
+        max_data = max(values)
+        mean_data = mean(values)
+        total_time_prod = self.get_total_time_prod("total")
+        percent_prod = 0
+        if total_time_prod:
+            percent_prod = sum_data * 100 / total_time_prod
+        dic_stat["total"] = sum_data
+        dic_stat["max"] = max_data
+        dic_stat["percent"] = round(percent_prod, 2)
+        dic_stat["mean"] = round(mean_data)
+        return dic_stat
 
 stat_store = StatStore()

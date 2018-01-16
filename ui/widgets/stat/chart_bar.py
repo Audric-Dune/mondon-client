@@ -7,13 +7,13 @@ from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel
 from stores.stat_store import stat_store
 from stores.settings_stat_store import settings_stat_store
 from constants import colors
-from constants.stylesheets import black_12_label_stylesheet,\
-    white_12_label_stylesheet,\
+from constants.stylesheets import white_12_label_stylesheet,\
     gris_fonce_label_stylesheet,\
     gris_moyen_label_stylesheet,\
-    vert_fonce_label_stylesheet
+    vert_fonce_label_stylesheet,\
+    blue_16_label_stylesheet,\
+    red_16_label_stylesheet
 from ui.widgets.public.mondon_widget import MondonWidget
-from ui.utils.data import affiche_entier
 from lib.logger import logger
 from ui.widgets.public.checkbox_button import CheckboxButton
 from ui.utils.layout import clear_layout
@@ -47,7 +47,8 @@ class ContentChart(MondonWidget):
     def __init__(self, parent=None):
         super(ContentChart, self).__init__(parent=parent)
         self.background_color = colors.color_blanc
-        self.color_data = [colors.color_gris_moyen, colors.color_gris_fonce, colors.color_vert_fonce]
+        self.color_data_métrage = [colors.color_gris_moyen, colors.color_gris_fonce, colors.color_vert_fonce]
+        self.color_data_temps = [colors.color_bleu, colors.color_rouge, colors.color_gris_fonce]
         self.bars = []
         self.hbox = QHBoxLayout()
         try:
@@ -85,12 +86,19 @@ class ContentChart(MondonWidget):
             index_data = 0
             while index_data < len(stat_store.data):
                 if settings_stat_store.display_setting[index_data]:
-                    moment = "matin" if index_data == 0 else ""
-                    moment = "soir" if index_data == 1 else moment
-                    moment = "total" if index_data == 2 else moment
+                    if settings_stat_store.data_type == "métrage":
+                        moment = "matin" if index_data == 0 else ""
+                        moment = "soir" if index_data == 1 else moment
+                        moment = "total" if index_data == 2 else moment
+                    else:
+                        moment = "Prévu" if index_data == 0 else ""
+                        moment = "Imprévu" if index_data == 1 else moment
+                        moment = "total" if index_data == 2 else moment
                     value = stat_store.data[moment][index][1] if len(stat_store.data[moment]) > index else -1
+                    color = self.color_data_metrage[index_data] if settings_stat_store.data_type == "métrage"\
+                        else self.color_data_temps[index_data]
                     hbox_multi_bar.addLayout(self.create_bar(value=value,
-                                                             color=self.color_data[index_data]))
+                                                             color=color))
                 index_data += 1
             self.hbox.addLayout(hbox_multi_bar)
             index += 1
@@ -162,18 +170,26 @@ class ChartSettings(MondonWidget):
     def init_widget(self):
         self.hbox.setSpacing(20)
         self.hbox.addStretch(1)
-
+        texte = "Equipe matin" if settings_stat_store.data_type == "métrage" else "Arrêt Prévu"
+        stylesheet = gris_moyen_label_stylesheet if settings_stat_store.data_type == "métrage"\
+            else blue_16_label_stylesheet
         self.add_check_box_layout(index_data=0,
-                                  stylecheet_label=gris_moyen_label_stylesheet,
-                                  text_label="Equipe matin",
+                                  stylecheet_label=stylesheet,
+                                  text_label=texte,
                                   preset=settings_stat_store.display_setting[0])
+        texte = "Equipe soir" if settings_stat_store.data_type == "métrage" else "Arrêt Imprévu"
+        stylesheet = gris_fonce_label_stylesheet if settings_stat_store.data_type == "métrage"\
+            else red_16_label_stylesheet
         self.add_check_box_layout(index_data=1,
-                                  stylecheet_label=gris_fonce_label_stylesheet,
-                                  text_label="Equipe soir",
+                                  stylecheet_label=stylesheet,
+                                  text_label=texte,
                                   preset=settings_stat_store.display_setting[1])
+        texte = "Equipes cumulées" if settings_stat_store.data_type == "métrage" else "Arrêt cumulées"
+        stylesheet = vert_fonce_label_stylesheet if settings_stat_store.data_type == "métrage"\
+            else gris_fonce_label_stylesheet
         self.add_check_box_layout(index_data=2,
-                                  stylecheet_label=vert_fonce_label_stylesheet,
-                                  text_label="Equipes cumulées",
+                                  stylecheet_label=stylesheet,
+                                  text_label=texte,
                                   preset=settings_stat_store.display_setting[2])
 
         self.hbox.addStretch(1)

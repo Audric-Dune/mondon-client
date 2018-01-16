@@ -1,6 +1,7 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from datetime import timedelta
 from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QLabel
 from PyQt5.QtCore import Qt
 
@@ -12,6 +13,7 @@ from ui.widgets.prod.chart_stat.bar import Bar
 from stores.stat_store import stat_store
 from stores.settings_stat_store import settings_stat_store
 from ui.utils.layout import clear_layout
+from ui.utils.timestamp import format_timedelta
 
 
 class DataTab(MondonWidget):
@@ -39,9 +41,14 @@ class DataTab(MondonWidget):
         self.vbox_master.setContentsMargins(0, 0, 0, 0)
         self.vbox_master.setSpacing(2)
         self.vbox_master.addLayout(self.create_line_tittle())
-        self.vbox_master.addWidget(self.create_line_stat(team="matin"))
-        self.vbox_master.addWidget(self.create_line_stat(team="soir"))
-        self.vbox_master.addWidget(self.create_line_stat(team="total"))
+        if settings_stat_store.data_type == "métrage":
+            self.vbox_master.addWidget(self.create_line_stat(team="matin"))
+            self.vbox_master.addWidget(self.create_line_stat(team="soir"))
+            self.vbox_master.addWidget(self.create_line_stat(team="total"))
+        else:
+            self.vbox_master.addWidget(self.create_line_stat(team="Prévu"))
+            self.vbox_master.addWidget(self.create_line_stat(team="Imprévu"))
+            self.vbox_master.addWidget(self.create_line_stat(team="total"))
         self.setLayout(self.vbox_master)
 
     def create_line_tittle(self):
@@ -51,13 +58,20 @@ class DataTab(MondonWidget):
         """
         hbox = QHBoxLayout()
         hbox.setSpacing(0)
-        hbox.addWidget(self.create_label_tittle(text="Equipe", align=Qt.AlignLeft | Qt.AlignVCenter))
+        texte = "Equipe" if settings_stat_store.data_type == "métrage" else "Type"
+        hbox.addWidget(self.create_label_tittle(text=texte, align=Qt.AlignLeft | Qt.AlignVCenter))
         text_total = "Total semaine" if settings_stat_store.format == "week" else "Total mois"
         hbox.addWidget(self.create_label_tittle(text=text_total, align=Qt.AlignCenter | Qt.AlignVCenter))
         hbox.addWidget(self.create_label_tittle(text="Moyenne jour", align=Qt.AlignCenter | Qt.AlignVCenter))
         hbox.addWidget(self.create_label_tittle(text="Maximum", align=Qt.AlignCenter | Qt.AlignVCenter))
-        hbox.addWidget(self.create_label_tittle(text="Ratio capacité", align=Qt.AlignRight | Qt.AlignVCenter))
+        texte = "Equipe" if settings_stat_store.data_type == "Ratio capacité" else "Ratio temps d'arrêt"
+        hbox.addWidget(self.create_label_tittle(text=texte, align=Qt.AlignRight | Qt.AlignVCenter))
         return hbox
+
+    @staticmethod
+    def format_data(data):
+        return affiche_entier(data) if settings_stat_store.data_type == "métrage"\
+            else format_timedelta(timedelta(seconds=round(data)))
 
     def create_line_stat(self, team):
         """
@@ -73,13 +87,13 @@ class DataTab(MondonWidget):
         bold = team == "total"
         name = "cumulée" if team == "total" else team
         hbox.addWidget(self.create_label(text=name, align=Qt.AlignLeft | Qt.AlignVCenter, bold=bold))
-        hbox.addWidget(self.create_label(text=affiche_entier(stat_store.stat[team]["total"]),
+        hbox.addWidget(self.create_label(text=self.format_data(stat_store.stat[team]["total"]),
                                          align=Qt.AlignCenter | Qt.AlignVCenter,
                                          bold=bold))
-        hbox.addWidget(self.create_label(text=affiche_entier(stat_store.stat[team]["mean"]),
+        hbox.addWidget(self.create_label(text=self.format_data(stat_store.stat[team]["mean"]),
                                          align=Qt.AlignCenter | Qt.AlignVCenter,
                                          bold=bold))
-        hbox.addWidget(self.create_label(text=affiche_entier(stat_store.stat[team]["max"]),
+        hbox.addWidget(self.create_label(text=self.format_data(stat_store.stat[team]["max"]),
                                          align=Qt.AlignCenter | Qt.AlignVCenter,
                                          bold=bold))
         hbox.addLayout(self.create_bar(team=team))
@@ -92,7 +106,8 @@ class DataTab(MondonWidget):
         :return: Le layout contenant la bar
         """
         content_bar_layout = QHBoxLayout()
-        bar = Bar(parent=self, percent=stat_store.stat[team]["percent"], little=True)
+        percent = stat_store.stat[team]["percent"]
+        bar = Bar(parent=self, percent=percent, display_max_value=False, parametric_color=False)
         bar.setFixedHeight(30)
         content_bar_layout.addWidget(bar)
         return content_bar_layout
@@ -117,6 +132,7 @@ class DataTab(MondonWidget):
         Crée un label standard (avec la possibilité de le mettre ne gras)
         :param text: Le texte du label
         :param align: L'alignement du label
+        :param bold: True si texte en gras sinon False
         :return: Le label
         """
         label = QLabel(text.capitalize())

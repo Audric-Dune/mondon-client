@@ -15,11 +15,13 @@ from ui.widgets.public.mondon_widget import MondonWidget
 
 
 class Bar(MondonWidget):
-    def __init__(self, parent, percent=0, mode="ui"):
+    def __init__(self, parent, percent=0, mode="ui", display_max_value=True, parametric_color=True):
         super(Bar, self).__init__(parent=parent)
         self.set_border(color=color_bleu_gris, size=1)
         self.percent = percent
         self.mode = mode
+        self.display_max_value = display_max_value
+        self.parametric_color = parametric_color
 
     def set_percent(self, percent):
         """
@@ -55,12 +57,15 @@ class Bar(MondonWidget):
         height = self.height()
         scale = self.get_scale()
         if self.percent != 0:
-            if self.percent < 25:
-                color = color_rouge
-            elif self.percent < 50:
-                color = color_orange
+            if self.parametric_color:
+                if self.percent < 25:
+                    color = color_rouge
+                elif self.percent < 50:
+                    color = color_orange
+                else:
+                    color = color_vert
             else:
-                color = color_vert
+                color = color_bleu
             draw_rectangle(p, 1, 1, self.percent*scale-2, height-2, color)
 
     def draw_max_info(self, p):
@@ -76,7 +81,7 @@ class Bar(MondonWidget):
         text = "82% \n (Max.)"
         font_size = 8
         x = PERCENT_PROD_THEROIQUE_MAXI*scale
-        draw_rectangle(p, PERCENT_PROD_THEROIQUE_MAXI * scale, 0, 2, self.height(), color_bleu)
+        draw_rectangle(p, PERCENT_PROD_THEROIQUE_MAXI * scale, 0 + 1, 2, self.height() - 2, color_bleu)
         draw_text(p,
                   x=x,
                   y=y,
@@ -126,6 +131,6 @@ class Bar(MondonWidget):
         self.draw_bar_fond(p)
         self.draw_bar(p)
         # Si le % de la bar est supérieur à la valeur maxi théorique on ne dessine pas l'indicateur valeur maxi
-        if self.percent < PERCENT_PROD_THEROIQUE_MAXI:
+        if self.percent < PERCENT_PROD_THEROIQUE_MAXI and self.display_max_value:
             self.draw_max_info(p)
         self.draw_percent(p)

@@ -7,7 +7,7 @@ from PyQt5.QtCore import pyqtSignal, QObject
 
 from constants.param import DEBUT_PROD_MATIN, FIN_PROD_SOIR
 
-from ui.utils.timestamp import timestamp_at_day_ago, timestamp_at_time, timestamp_now
+from ui.utils.timestamp import timestamp_at_day_ago, timestamp_at_time, timestamp_now, get_day_ago
 from stores.data_store import DataStore
 from stores.settings_store import settings_store
 from stores.user_store import user_store
@@ -69,9 +69,10 @@ class DataStoreManager(QObject):
     def add_new_store(self, ts):
         jour = round(ts)
         jour_str = str(jour)
+        day_ago = get_day_ago(ts)
         start = timestamp_at_time(jour, hours=DEBUT_PROD_MATIN)
         end = timestamp_at_time(jour, hours=FIN_PROD_SOIR)
-        new_store = DataStore(start, end, settings_store.day_ago)
+        new_store = DataStore(start, end, day_ago)
         self.dic_data_store[jour_str] = new_store
         return new_store
 

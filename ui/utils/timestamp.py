@@ -5,6 +5,17 @@ from datetime import datetime, timedelta
 import locale
 
 
+def format_timedelta(td):
+    minutes, seconds = divmod(td.seconds + td.days * 86400, 60)
+    hours, minutes = divmod(minutes, 60)
+    return '{:d}:{:02d}:{:02d}'.format(hours, minutes, seconds)
+
+
+def get_day_ago(timestamp):
+    now = timestamp_now() - round(timestamp)
+    return int(now / (3600 * 24))
+
+
 def timestamp_to_inverse_date(timestamp):
     locale.setlocale(locale.LC_TIME, '')
     return datetime.fromtimestamp(timestamp).strftime('%Y_%m_%d')

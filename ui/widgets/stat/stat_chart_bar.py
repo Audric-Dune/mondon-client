@@ -1,10 +1,13 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from datetime import timedelta
+
 from constants.colors import color_bleu_gris, color_blanc, color_noir
 from ui.widgets.public.mondon_widget import MondonWidget
 from ui.utils.drawing import draw_text, draw_rectangle
 from ui.utils.data import affiche_entier
+from stores.settings_stat_store import settings_stat_store
 
 
 class StatChartBar(MondonWidget):
@@ -17,7 +20,10 @@ class StatChartBar(MondonWidget):
 
     def __init__(self, value, color, max_value, parent=None):
         super(StatChartBar, self).__init__(parent=parent)
-        self.text_value = str(affiche_entier(value))
+        if settings_stat_store.data_type == "métrage":
+            self.text_value = str(affiche_entier(value))
+        else:
+            self.text_value = str(timedelta(seconds=round(value)))
         self.value = value
         self.max_value = max_value
         self.color_label = color_blanc
