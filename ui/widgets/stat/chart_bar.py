@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5.QtCore import Qt, QSize
-from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel
+from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel, QSizePolicy
 
 from stores.stat_store import stat_store
 from stores.settings_stat_store import settings_stat_store
@@ -36,6 +36,7 @@ class ChartBar(MondonWidget):
         self.vbox.setSpacing(0)
         self.vbox.addWidget(self.chart_settings)
         self.vbox.addWidget(self.content_chart)
+        self.content_chart.setSizePolicy(QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding))
         self.vbox.addWidget(self.chart_legend)
         self.setLayout(self.vbox)
 
@@ -62,6 +63,12 @@ class ContentChart(MondonWidget):
         except:
             logger.log("CHART_STAT", "Erreur de mise à jour lors du changement de data chart")
 
+    def on_settings_stat_changed(self):
+        try:
+            self.on_loading(layout=self.hbox, gif_name="loader_white_green", set_text=True, size=40)
+        except:
+            logger.log("CHART_STAT", "Erreur d'affichage chargement")
+
     def on_settings_chart_changed(self):
         try:
             self.init_widget()
@@ -69,7 +76,7 @@ class ContentChart(MondonWidget):
             logger.log("CHART_STAT", "Erreur de mise à jour lors du changement de settings du chart")
 
     def init_widget(self):
-        self.hbox = clear_layout(self.hbox)
+        clear_layout(self.hbox)
         self.bars = []
         self.hbox.setContentsMargins(10, 0, 10, 0)
         self.hbox.setSpacing(5)
@@ -103,7 +110,6 @@ class ContentChart(MondonWidget):
             self.hbox.addLayout(hbox_multi_bar)
             index += 1
         self.setLayout(self.hbox)
-        self.update_widget()
 
     def create_bar(self, value, color):
         vbox = QVBoxLayout()
@@ -123,6 +129,9 @@ class ChartLegend(MondonWidget):
         self.hbox = QHBoxLayout(self)
         self.hbox.setSpacing(0)
         self.init_widget()
+
+    def on_settings_stat_changed(self):
+        self.on_loading(layout=self.hbox, gif_name="loader_blue_white", set_text=False, size=self.LEGEND_LABEL_HEIGHT)
 
     def on_data_stat_changed(self):
         self.update_widget()

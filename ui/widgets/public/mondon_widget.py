@@ -51,6 +51,30 @@ class MondonWidget(QWidget):
     def on_user_changed(self):
         pass
 
+    def on_loading(self, layout, gif_name="loader_white_green", set_text=True, size=40):
+        from ui.utils.layout import clear_layout
+        clear_layout(layout)
+        from PyQt5.QtWidgets import QVBoxLayout, QLabel
+        from PyQt5.Qt import Qt, QSize
+        container_loader = QVBoxLayout()
+        container_loader.addStretch(1)
+        loader = QLabel()
+        from PyQt5.QtGui import QMovie
+        movie = QMovie("assets/movie/{}.gif".format(gif_name))
+        movie.setScaledSize(QSize(size, size))
+        loader.setMovie(movie)
+        loader.setFixedSize(size, size)
+        movie.start()
+        container_loader.addWidget(loader, alignment=Qt.AlignCenter | Qt.AlignVCenter)
+        if set_text:
+            label_loading = QLabel("Chargement...")
+            from constants.stylesheets import black_16_label_stylesheet
+            label_loading.setStyleSheet(black_16_label_stylesheet)
+            container_loader.addWidget(label_loading, alignment=Qt.AlignCenter | Qt.AlignVCenter)
+        container_loader.addStretch(1)
+        layout.addLayout(container_loader)
+        self.setLayout(layout)
+
     def set_background_color(self, color):
         self.background_color = color
 

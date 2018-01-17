@@ -19,15 +19,17 @@ class Arret(QObject):
     Object model qui stocke des informations sur un arret
     S'occupe de modifier la base de donnée si besoin
     """
-    def __init__(self, arret_data):
+    def __init__(self, arret_data, create_arret=True):
         super(Arret, self).__init__(None)
         self.start = arret_data[0]
         self.end = arret_data[1]
         self.raisons = []
         self.type_cache = None
         self.raison_cache_index = {}
-        self.create_on_database()
-        self.get_raisons()
+        if create_arret:
+            self.create_on_database()
+        else:
+            self.get_raisons()
 
     def create_on_database(self):
         """
@@ -66,7 +68,6 @@ class Arret(QObject):
                     break
             if raison_remove:
                 self.raisons.remove(raison)
-
         self.raison_store()
 
     def check_id_raison(self, id):

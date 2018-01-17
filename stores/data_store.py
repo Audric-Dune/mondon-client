@@ -1,6 +1,5 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
-import time
 from constants.param import DEBUT_PROD_MATIN, FIN_PROD_MATIN_VENDREDI, FIN_PROD_MATIN, FIN_PROD_SOIR, FIN_PROD_SOIR_VENDREDI, VITESSE_LIMITE_ASSIMILATION_ARRET
 
 from lib.base_de_donnee import Database
@@ -10,7 +9,6 @@ from ui.utils.timestamp import timestamp_at_day_ago, timestamp_at_time, timestam
 
 class DataStore:
     def __init__(self, start, end, day_ago):
-        # t0 = time.time()
         self.start = start
         self.end = end
         self.day_ago = day_ago
@@ -23,9 +21,7 @@ class DataStore:
         self.imprevu_arret_time_soir = 0
         self.dic_arret = {}
         self.arrets = []
-        self.add_data()
-        # t1 = time.time()
-        # print("DataStore at day_ago: {}, temps chargement: {}".format(day_ago, t1 - t0))
+        self.update_arret()
         # _____VERIFICATION DATA BASE_____
         # from ui.utils.timestamp import timestamp_to_hour, timestamp_to_day_month_little
         # ts_min = 1515424080
@@ -38,6 +34,7 @@ class DataStore:
 
     def add_data(self):
         try:
+            print("add_data : day_ago {}".format(self.day_ago))
             ts = timestamp_at_day_ago(self.day_ago)
             self.update_raison_from_database()
             if self.data and self.day_ago > 0:
@@ -56,16 +53,20 @@ class DataStore:
                     metrage = self.get_live_stat(self.data, ts)
                 self.metrage_matin = round(metrage[0])
                 self.metrage_soir = round(metrage[1])
-            list_arrets_database = Database.get_arret(self.start, self.end)
-            self.dic_arret_from_database(list_arrets_database)
-            list_arrets_data = self.list_new_arret_data()
-            list_new_arret = self.update_dic_arret(list_arrets_data)
-            self.arrets = self.convert_dic_to_array(self.dic_arret)
-            if self.arrets:
-                self.get_arret_stat(ts)
-            return True, list_new_arret
+            return True, self.update_arret()
         except:
             return False, []
+
+    def update_arret(self):
+        ts = timestamp_at_day_ago(self.day_ago)
+        list_arrets_database = Database.get_arret(self.start, self.end)
+        self.dic_arret_from_database(list_arrets_database)
+        list_arrets_data = self.list_new_arret_data()
+        list_new_arret = self.update_dic_arret(list_arrets_data)
+        self.arrets = self.convert_dic_to_array(self.dic_arret)
+        if self.arrets:
+            self.get_arret_stat(ts)
+        return list_new_arret
 
     def update_raison_from_database(self):
         if self.arrets:
@@ -203,7 +204,7 @@ class DataStore:
             # Sinon on ajoute un models Arret au dictionnaire avec les datas de la base de donnée
             else:
                 from models.arret import Arret
-                object_arret = Arret(arret_database)
+                object_arret = Arret(arret_database, create_arret=False)
                 self.dic_arret[start_arret] = object_arret
 
     def update_dic_arret(self, list_arrets_data):

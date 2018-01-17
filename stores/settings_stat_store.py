@@ -51,7 +51,6 @@ class SettingsStatStore(QObject):
         if self.year_ago >= 0:
             self.year_ago += delta
         self.update_param()
-        self.update_data()
         self.SETTINGS_STAT_CHANGED_SIGNAL.emit()
 
     def update_param(self):
