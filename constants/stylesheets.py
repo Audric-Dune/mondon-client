@@ -223,10 +223,10 @@ button_white_stylesheet = """
 button_green_stylesheet = """
     QPushButton {{
         background-color: {color_vert_fonce};
+        color: {color_blanc};
         text-align: left;
         padding-left: 5px;
         border-radius: 0;
-        color: {color_bleu_gris};
         font-size: 16px;
     }}
     QPushButton:hover {{

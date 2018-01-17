@@ -57,7 +57,6 @@ class MainWindow(QMainWindow):
         hbox = QHBoxLayout()
 
         stat_menu = StatMenu(parent=self)
-        stat_menu.setFixedWidth(200)
         hbox.addWidget(stat_menu)
 
         vbox = QVBoxLayout()
