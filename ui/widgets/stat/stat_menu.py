@@ -33,21 +33,25 @@ class StatMenu(MondonWidget):
 
         self.label_stat_raisons = QLabel("Statistique raisons")
 
-        self.label_stat_raisons_prévue = QLabel("Raisons prévu")
-        self.bt_raisons_prévue_semaine = QPushButton("Par semaine")
-        self.bt_raisons_prévue_semaine.clicked.connect(self.on_click_raisons_prévue_semaine)
-        self.bt_raisons_prévue_mois = QPushButton("Par mois")
-        self.bt_raisons_prévue_mois.clicked.connect(self.on_click_raisons_prévue_mois)
+        self.label_stat_raisons_prevue = QLabel("Raisons prévu")
+        self.bt_raisons_prevue_semaine = QPushButton("Par semaine")
+        self.bt_raisons_prevue_semaine.clicked.connect(self.on_click_raisons_prevue_semaine)
+        self.bt_raisons_prevue_mois = QPushButton("Par mois")
+        self.bt_raisons_prevue_mois.clicked.connect(self.on_click_raisons_prevue_mois)
 
-        self.label_stat_imprévue_raisons = QLabel("Raisons imprévu")
-        self.bt_raisons_imprévue_semaine = QPushButton("Par semaine")
-        self.bt_raisons_imprévue_semaine.clicked.connect(self.on_click_raisons_imprévue_semaine)
-        self.bt_raisons_imprévue_mois = QPushButton("Par mois")
-        self.bt_raisons_imprévue_mois.clicked.connect(self.on_click_raisons_imprévue_mois)
+        self.label_stat_imprevue_raisons = QLabel("Raisons imprévu")
+        self.bt_raisons_imprevue_semaine = QPushButton("Par semaine")
+        self.bt_raisons_imprevue_semaine.clicked.connect(self.on_click_raisons_imprevue_semaine)
+        self.bt_raisons_imprevue_mois = QPushButton("Par mois")
+        self.bt_raisons_imprevue_mois.clicked.connect(self.on_click_raisons_imprevue_mois)
 
         self.init_widget()
+        self.update_stylesheet()
 
     def on_settings_stat_changed(self):
+        self.update_stylesheet()
+
+    def update_stylesheet(self):
         self.bt_metrage_semaine.setStyleSheet(button_white_stylesheet)
         self.bt_metrage_mois.setStyleSheet(button_white_stylesheet)
         self.bt_temps_semaine.setStyleSheet(button_white_stylesheet)
@@ -87,39 +91,39 @@ class StatMenu(MondonWidget):
         self.label_stat_raisons.setStyleSheet(white_title_label_stylesheet)
         self.label_stat_raisons.setFixedHeight(self.BUTTON_HEIGHT)
 
-        self.label_stat_raisons_prévue.setStyleSheet(blue_title_label_stylesheet)
-        self.label_stat_raisons_prévue.setFixedHeight(self.BUTTON_HEIGHT)
+        self.label_stat_raisons_prevue.setStyleSheet(blue_title_label_stylesheet)
+        self.label_stat_raisons_prevue.setFixedHeight(self.BUTTON_HEIGHT)
 
-        self.bt_raisons_prévue_semaine.setStyleSheet(button_white_stylesheet)
-        self.bt_raisons_prévue_semaine.setFixedHeight(self.BUTTON_HEIGHT)
-        self.bt_raisons_prévue_mois.setStyleSheet(button_white_stylesheet)
-        self.bt_raisons_prévue_mois.setFixedHeight(self.BUTTON_HEIGHT)
+        self.bt_raisons_prevue_semaine.setStyleSheet(button_white_stylesheet)
+        self.bt_raisons_prevue_semaine.setFixedHeight(self.BUTTON_HEIGHT)
+        self.bt_raisons_prevue_mois.setStyleSheet(button_white_stylesheet)
+        self.bt_raisons_prevue_mois.setFixedHeight(self.BUTTON_HEIGHT)
 
-        self.label_stat_imprévue_raisons.setStyleSheet(red_title_label_stylesheet)
-        self.label_stat_imprévue_raisons.setFixedHeight(self.BUTTON_HEIGHT)
+        self.label_stat_imprevue_raisons.setStyleSheet(red_title_label_stylesheet)
+        self.label_stat_imprevue_raisons.setFixedHeight(self.BUTTON_HEIGHT)
 
-        self.bt_raisons_imprévue_semaine.setStyleSheet(button_white_stylesheet)
-        self.bt_raisons_imprévue_semaine.setFixedHeight(self.BUTTON_HEIGHT)
-        self.bt_raisons_imprévue_mois.setStyleSheet(button_white_stylesheet)
-        self.bt_raisons_imprévue_mois.setFixedHeight(self.BUTTON_HEIGHT)
+        self.bt_raisons_imprevue_semaine.setStyleSheet(button_white_stylesheet)
+        self.bt_raisons_imprevue_semaine.setFixedHeight(self.BUTTON_HEIGHT)
+        self.bt_raisons_imprevue_mois.setStyleSheet(button_white_stylesheet)
+        self.bt_raisons_imprevue_mois.setFixedHeight(self.BUTTON_HEIGHT)
 
         self.vbox.addWidget(self.label_stat_metrage)
         self.vbox.addWidget(self.bt_metrage_semaine)
         self.vbox.addWidget(self.bt_metrage_mois)
-        self.vbox.addStretch(10)
+        self.vbox.addStretch(2)
         self.vbox.addWidget(self.label_stat_temps)
         self.vbox.addWidget(self.bt_temps_semaine)
         self.vbox.addWidget(self.bt_temps_mois)
-        self.vbox.addStretch(10)
+        self.vbox.addStretch(2)
         self.vbox.addWidget(self.label_stat_raisons)
         self.vbox.addStretch(1)
-        self.vbox.addWidget(self.label_stat_raisons_prévue)
-        self.vbox.addWidget(self.bt_raisons_prévue_semaine)
-        self.vbox.addWidget(self.bt_raisons_prévue_mois)
+        self.vbox.addWidget(self.label_stat_raisons_prevue)
+        self.vbox.addWidget(self.bt_raisons_prevue_semaine)
+        self.vbox.addWidget(self.bt_raisons_prevue_mois)
         self.vbox.addStretch(1)
-        self.vbox.addWidget(self.label_stat_imprévue_raisons)
-        self.vbox.addWidget(self.bt_raisons_imprévue_semaine)
-        self.vbox.addWidget(self.bt_raisons_imprévue_mois)
+        self.vbox.addWidget(self.label_stat_imprevue_raisons)
+        self.vbox.addWidget(self.bt_raisons_imprevue_semaine)
+        self.vbox.addWidget(self.bt_raisons_imprevue_mois)
 
         self.vbox.addStretch(100)
         self.setLayout(self.vbox)
@@ -141,17 +145,17 @@ class StatMenu(MondonWidget):
         settings_stat_store.set_new_settings(type="temps", month_ago=0)
 
     @staticmethod
-    def on_click_raisons_prévue_semaine():
+    def on_click_raisons_prevue_semaine():
         settings_stat_store.set_new_settings(type="raisons prévue", week_ago=0)
 
     @staticmethod
-    def on_click_raisons_prévue_mois():
+    def on_click_raisons_prevue_mois():
         settings_stat_store.set_new_settings(type="raisons prévue", month_ago=0)
 
     @staticmethod
-    def on_click_raisons_imprévue_semaine():
+    def on_click_raisons_imprevue_semaine():
         settings_stat_store.set_new_settings(type="raisons imprévue", week_ago=0)
 
     @staticmethod
-    def on_click_raisons_imprévue_mois():
+    def on_click_raisons_imprevue_mois():
         settings_stat_store.set_new_settings(type="raisons imprévue", month_ago=0)

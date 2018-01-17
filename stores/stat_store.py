@@ -40,6 +40,12 @@ class StatStore(QObject):
         if settings_stat_store.data_type == "temps":
             self.data = {"Prévu": [], "Imprévu": [], "total": []}
             self.stat = {"Prévu": {}, "Imprévu": {}, "total": {}}
+        if settings_stat_store.data_type == "raisons_prévue":
+            self.data = {}
+            self.stat = {}
+        if settings_stat_store.data_type == "raisons_imprévue":
+            self.data = {}
+            self.stat = {}
 
     def update_data(self):
         if self.get_data():
@@ -64,35 +70,72 @@ class StatStore(QObject):
         self.data_on_database = self.get_data_on_database(start, end)
         self.init_var()
         if self.data_on_database:
-            if settings_stat_store.year_ago < 0:
-                # On parcour tout les jours entre start et end
-                current_day = start
-                while current_day < end:
-                    data = []
-                    # Vérifie si on est pas dans un jours du weekend
-                    if not self.is_weekend(ts_day=current_day):
-                        if settings_stat_store.data_type == "métrage":
-                            # Récupère les data du ts courant dans les data en database
-                            data = self.get_data_on_ts(data=self.data_on_database, ts=current_day)
-                            if not data:
-                                data_store = self.get_data_store(ts_day=current_day)
-                                data.append(round(current_day))
-                                data.append(data_store.metrage_matin)
-                                data.append(data_store.metrage_soir)
-                        else:
-                            data_store = self.get_data_store(ts_day=current_day)
-                            data.append(round(current_day))
-                            data.append(data_store.arret_time_matin + data_store.arret_time_soir)
-                            data.append(data_store.imprevu_arret_time_matin + data_store.imprevu_arret_time_soir)
-                    # Ajoute les data du jour courant au data générale
-                    if settings_stat_store.data_type == "métrage":
-                        self.add_data_metrage(data)
-                    else:
-                        self.add_data_temps(data)
-                    # Passe au jour suivant
-                    current_day = timestamp_after_day_ago(start=current_day, day_ago=1)
+            if settings_stat_store.data_type == "métrage" or settings_stat_store.data_type == "temps":
+                self.get_data_metrage_or_temps(start, end)
+            else:
+                self.get_data_raisons()
         self.get_stat()
         return True
+
+    def get_data_metrage_or_temps(self, start, end):
+        if settings_stat_store.year_ago < 0:
+            # On parcour tout les jours entre start et end
+            current_day = start
+            while current_day < end:
+                data = []
+                # Vérifie si on est pas dans un jours du weekend
+                if not self.is_weekend(ts_day=current_day):
+                    if settings_stat_store.data_type == "métrage":
+                        # Récupère les data du ts courant dans les data en database
+                        data = self.get_data_on_ts(data=self.data_on_database, ts=current_day)
+                        if not data:
+                            data_store = self.get_data_store(ts_day=current_day)
+                            data.append(round(current_day))
+                            data.append(data_store.metrage_matin)
+                            data.append(data_store.metrage_soir)
+                    elif settings_stat_store.data_type == "temps":
+                        data_store = self.get_data_store(ts_day=current_day)
+                        data.append(round(current_day))
+                        data.append(data_store.arret_time_matin + data_store.arret_time_soir)
+                        data.append(data_store.imprevu_arret_time_matin + data_store.imprevu_arret_time_soir)
+                # Ajoute les data du jour courant au data générale
+                if settings_stat_store.data_type == "métrage":
+                    self.add_data_metrage(data)
+                elif settings_stat_store.data_type == "temps":
+                    self.add_data_temps(data)
+                # Passe au jour suivant
+                current_day = timestamp_after_day_ago(start=current_day, day_ago=1)
+
+    def get_data_raisons(self):
+        list_arret = self.data_on_database[0]
+        list_raisons = self.data_on_database[1]
+        self.data = {}
+        for arret in list_arret:
+            arret_start = arret[0]
+            arret_end = arret[1]
+            raison = self.get_raison(list_raisons, arret_start)
+            if raison:
+                raison_type = raison[2]
+                raison_texte = raison[3]
+                if raison_texte[0:5] == "Autre":
+                    raison_texte = "Autre"
+                if raison_type == "Prévu" if settings_stat_store.data_type == "raison prévue" else "Imprévu":
+                    if self.data.get(raison_texte):
+                        count = self.data[raison_texte][0] + 1
+                        total_time = self.data[raison_texte][1] + (arret_end - arret_start)
+                    else:
+                        count = 1
+                        total_time = arret_end - arret_start
+                    self.data[raison_texte] = [count, total_time]
+                print(self.data)
+            else:
+                continue
+
+    @staticmethod
+    def get_raison(raisons, start):
+        for raison in raisons:
+            if raison[1] == start and raison[4] == 1:
+                return raison
 
     def get_stat(self):
         """
@@ -142,8 +185,11 @@ class StatStore(QObject):
         if settings_stat_store.data_type == "métrage":
             data = Database.get_metrages(start_time=start, end_time=end)
             data.sort()
-        if settings_stat_store.data_type == "temps":
+        elif settings_stat_store.data_type == "temps":
             data = Database.get_arret(start_time=start, end_time=end)
+        else:
+            data = [Database.get_arret(start_time=start, end_time=end),
+                    Database.get_raison(start_time=start, end_time=end)]
         return data
 
     @staticmethod
@@ -191,10 +237,10 @@ class StatStore(QObject):
         if data:
             ts = data[0]
             metrage_total = data[1]
-            metrage_imprévu = data[2]
-            metrage_prévu = metrage_total - metrage_imprévu
-            self.data["Prévu"].append((ts, metrage_prévu))
-            self.data["Imprévu"].append((ts, metrage_imprévu))
+            metrage_imprevu = data[2]
+            metrage_prevu = metrage_total - metrage_imprevu
+            self.data["Prévu"].append((ts, metrage_prevu))
+            self.data["Imprévu"].append((ts, metrage_imprevu))
             self.data["total"].append((ts, metrage_total))
 
     def get_total_time_prod(self, moment):
