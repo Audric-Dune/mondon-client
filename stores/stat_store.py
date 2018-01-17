@@ -147,9 +147,9 @@ class StatStore(QObject):
                 self.stat["soir"] = self.stat_calculator_metrage(moment="soir")
                 self.stat["total"] = self.stat_calculator_metrage(moment="total")
             if settings_stat_store.data_type == "temps":
-                self.stat["Prévu"] = self.stat_calculator_temps(type="Prévu")
-                self.stat["Imprévu"] = self.stat_calculator_temps(type="Imprévu")
-                self.stat["total"] = self.stat_calculator_temps(type="total")
+                self.stat["Prévu"] = self.stat_calculator_temps(_type="Prévu")
+                self.stat["Imprévu"] = self.stat_calculator_temps(_type="Imprévu")
+                self.stat["total"] = self.stat_calculator_temps(_type="total")
 
     @staticmethod
     def get_start_end():
@@ -181,7 +181,6 @@ class StatStore(QObject):
         :param end: Fin des données a récupérer
         :return: Les données
         """
-        data = []
         if settings_stat_store.data_type == "métrage":
             data = Database.get_metrages(start_time=start, end_time=end)
             data.sort()
@@ -339,8 +338,8 @@ class StatStore(QObject):
         dic_stat["mean"] = round(mean_data)
         return dic_stat
 
-    def stat_calculator_temps(self, type):
-        data = self.data[type]
+    def stat_calculator_temps(self, _type):
+        data = self.data[_type]
         if not data:
             return self.empty_stat()
         dic_stat = {}
@@ -357,5 +356,6 @@ class StatStore(QObject):
         dic_stat["percent"] = round(percent_prod, 2)
         dic_stat["mean"] = round(mean_data)
         return dic_stat
+
 
 stat_store = StatStore()

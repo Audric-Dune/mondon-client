@@ -13,10 +13,10 @@ class Database:
     S'occupe de maintenir une connexion à une base de données SQLite3 et d'exécuter des requêtes
     """
     MAX_ATTEMPT_ON_ERROR = 3  # Nombre de fois que l'on réessaye d'exécuter une requête SQL avant
-                              # d'abandonner en cas d'erreurs qui n'ont rien à voir avec la requête
-                              # elle même. Par exemple, si la base de données est vérouillée parce
-                              # que un autre programme essaye d'y accéder. Ou si la connexion à la
-                              # base de données est cassée pour une raison inconnue.
+    # d'abandonner en cas d'erreurs qui n'ont rien à voir avec la requête
+    # elle même. Par exemple, si la base de données est vérouillée parce
+    # que un autre programme essaye d'y accéder. Ou si la connexion à la
+    # base de données est cassée pour une raison inconnue.
     SLEEP_ON_ERROR_MS = 10  # Temps d'attent en millisecondes en cas d'erreur avant de réessayer.
 
     def __init__(self, database_location):
@@ -25,10 +25,9 @@ class Database:
         :param database_location: Chemin du fichier contenant la base de données
         """
         self.database_location = database_location
-        self._init_db_connection()
 
     @classmethod
-    def _create_database_connection(cls):
+    def create_database_connection(cls):
         """
         Crée une nouvelle connexion à la base de données.
         :return: Une nouvelle connexion à la base de données
@@ -38,7 +37,7 @@ class Database:
         return conn
 
     @classmethod
-    def _run_query(cls, query, args):
+    def run_query(cls, query, args):
         """
         Exécute une requête sur la base de données
         :param query: Requête SQL à exécuter
@@ -49,7 +48,7 @@ class Database:
         logger.log("DATABASE", "Requête: {} - Paramêtres: {}".format(query, args))
         data = None
         attempt = 0
-        conn = cls._create_database_connection()
+        conn = cls.create_database_connection()
 
         while attempt < Database.MAX_ATTEMPT_ON_ERROR:
             if attempt > 0:
@@ -76,7 +75,7 @@ class Database:
                     # la connexion à la base de données.
                     logger.log("DATABASE", "DatabaseError: {}".format(e))
                     attempt += 1
-                    conn = cls._create_database_connection()
+                    conn = cls.create_database_connection()
                 # Si l'exception n'est pas directement une DatabaseError (ex: une sous class de
                 # DatabaseError comme IntegrityError), on abandonne directement.
                 else:
@@ -103,7 +102,7 @@ class Database:
                 "WHERE time > ? AND time <= ? AND speed IS NOT NULL " \
                 "ORDER BY time"\
             .format(start_time=start_time, end_time=end_time)
-        speeds = cls._run_query(query, (start_time, end_time))
+        speeds = cls.run_query(query, (start_time, end_time))
         return speeds
 
     @classmethod
@@ -115,7 +114,7 @@ class Database:
         query = "SELECT ts_jour " \
                 "FROM mondon_metrage " \
                 "ORDER BY ts_jour"
-        jour_metrage = cls._run_query(query, ())
+        jour_metrage = cls.run_query(query, ())
         return jour_metrage
 
     @classmethod
@@ -131,7 +130,7 @@ class Database:
                 "WHERE ts_jour >= ? AND ts_jour < ? " \
                 "ORDER BY ts_jour"\
             .format(start_time=start_time, end_time=end_time)
-        speeds = cls._run_query(query, (start_time, end_time))
+        speeds = cls.run_query(query, (start_time, end_time))
         return speeds
 
     @classmethod
@@ -145,7 +144,7 @@ class Database:
                 "FROM mondon_metrage " \
                 "WHERE ts_jour = ? "\
             .format(start_time=start_time)
-        metrages = cls._run_query(query, (start_time,))
+        metrages = cls.run_query(query, (start_time,))
         return metrages
 
     @classmethod
@@ -157,7 +156,7 @@ class Database:
         :param metrage_soir: la somme du metrage pour l'equipe du soir
         """
         try:
-            cls._run_query("INSERT INTO mondon_metrage VALUES (?, ?, ?)", (ts_jour, metrage_matin, metrage_soir))
+            cls.run_query("INSERT INTO mondon_metrage VALUES (?, ?, ?)", (ts_jour, metrage_matin, metrage_soir))
         except sqlite3.IntegrityError as e:
             # IntegrityError veut dire que l'on essaye d'insérer une vitesse avec un timestamp
             # qui existe déjà dans la base de données.
@@ -179,7 +178,7 @@ class Database:
                 "WHERE start >= ? AND start <= ? " \
                 "ORDER BY start"\
             .format(start_time=start_time, end_time=end_time)
-        arrets = cls._run_query(query, (start_time, end_time))
+        arrets = cls.run_query(query, (start_time, end_time))
         return arrets
 
     @classmethod
@@ -190,7 +189,7 @@ class Database:
         :param end_arret: Timestamp fin de l'arrêt
         """
         try:
-            cls._run_query("INSERT INTO mondon_arret VALUES (?, ?)", (start_arret, end_arret))
+            cls.run_query("INSERT INTO mondon_arret VALUES (?, ?)", (start_arret, end_arret))
         except sqlite3.IntegrityError as e:
             # IntegrityError veut dire que l'on essaye d'insérer une vitesse avec un timestamp
             # qui existe déjà dans la base de données.
@@ -211,7 +210,7 @@ class Database:
                 "WHERE start = ?" \
             .format(end_arret, start_arret)
         try:
-            cls._run_query(query, (end_arret, start_arret))
+            cls.run_query(query, (end_arret, start_arret))
         except sqlite3.IntegrityError as e:
             # IntegrityError veut dire que l'on essaye d'insérer une vitesse avec un timestamp
             # qui existe déjà dans la base de données.
@@ -233,21 +232,22 @@ class Database:
                 "WHERE start_arret >= ? AND start_arret <= ? " \
                 "ORDER BY start_arret"\
             .format(start_time=start_time, end_time=end_time)
-        raisons = cls._run_query(query, (start_time, end_time))
+        raisons = cls.run_query(query, (start_time, end_time))
         return raisons
 
     @classmethod
-    def update_to_raison_primaire(cls, id, primaire):
+    def update_to_raison_primaire(cls, _id, primaire):
         """
         Update une raison pour la rendre primaire
-        :param id: L'id de la raison
+        :param _id: L'id de la raison
+        :param primaire: 1 si la raison est primaire
         """
         query = "UPDATE mondon_raison_arret " \
                 "SET primaire = ? " \
                 "WHERE id = ?" \
-            .format(primaire, id)
+            .format(primaire, _id)
         try:
-            cls._run_query(query, (primaire, id))
+            cls.run_query(query, (primaire, _id))
         except sqlite3.IntegrityError as e:
             # IntegrityError veut dire que l'on essaye d'insérer une vitesse avec un timestamp
             # qui existe déjà dans la base de données.
@@ -257,15 +257,15 @@ class Database:
             pass
 
     @classmethod
-    def create_raison_arret(cls, id, start_arret, type_arret, raison_arret, primaire=0):
+    def create_raison_arret(cls, _id, start_arret, type_arret, raison_arret, primaire=0):
         query = "INSERT INTO mondon_raison_arret VALUES (?, ?, ?, ?, ?)"\
-            .format(id=id,
+            .format(id=_id,
                     start_arret=start_arret,
                     type_arret=type_arret,
                     raison_arret=raison_arret,
                     prioritaire=primaire)
         try:
-            cls._run_query(query, (id, start_arret, type_arret, raison_arret, primaire))
+            cls.run_query(query, (_id, start_arret, type_arret, raison_arret, primaire))
         except sqlite3.IntegrityError as e:
             # IntegrityError veut dire que l'on essaye d'insérer une vitesse avec un timestamp
             # qui existe déjà dans la base de données.
@@ -275,11 +275,11 @@ class Database:
             pass
 
     @classmethod
-    def delete_raison_arret(cls, id):
+    def delete_raison_arret(cls, _id):
         query = "DELETE FROM mondon_raison_arret WHERE id = ?"\
-            .format(id=id)
+            .format(id=_id)
         try:
-            cls._run_query(query, (id,))
+            cls.run_query(query, (_id,))
         except sqlite3.IntegrityError as e:
             # IntegrityError veut dire que l'on essaye d'insérer une vitesse avec un timestamp
             # qui existe déjà dans la base de données.
@@ -301,7 +301,7 @@ class Database:
                 "WHERE start_arret > ? AND arret_start <= ? " \
                 "ORDER BY start_arret"\
             .format(start_time=start_time, end_time=end_time)
-        dechets = cls._run_query(query, (start_time, end_time))
+        dechets = cls.run_query(query, (start_time, end_time))
         return dechets
 
     @classmethod
@@ -314,6 +314,5 @@ class Database:
                 "FROM mondon_equipe " \
                 "ORDER BY ts"\
             .format()
-        dechets = cls._run_query(query, ())
+        dechets = cls.run_query(query, ())
         return dechets
-

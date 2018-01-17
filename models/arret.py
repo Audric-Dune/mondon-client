@@ -70,7 +70,7 @@ class Arret(QObject):
                 self.raisons.remove(raison)
         self.raison_store()
 
-    def check_id_raison(self, id):
+    def check_id_raison(self, _id):
         """
         Permet de checker si une raison est déja présente dans le tableau de raison d'un arret
         :param arret_object: Object arret ou l'on test
@@ -79,7 +79,7 @@ class Arret(QObject):
         """
         for raison in self.raisons:
             raison_id = raison.id
-            if raison_id == id:
+            if raison_id == _id:
                 return True
         return False
 

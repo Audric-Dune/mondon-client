@@ -30,7 +30,7 @@ if mode == 'ui':
 if mode in ('-r', '--rapport', 'rapport'):
     from ui.widgets.rapport.menu_rapport import RapportMenu
     rapport_menu = RapportMenu()
-    rapport_menu._get_pdf()
+    rapport_menu.externat_get_pdf()
 
 if mode == 'ui':
     sys.exit(app.exec_())

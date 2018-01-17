@@ -17,18 +17,18 @@ class Raison(QObject):
 
     def add_raison_on_database(self):
         Database.create_raison_arret(
-            id=self.id,
+            _id=self.id,
             start_arret=self.start,
             type_arret=self.type,
             raison_arret=self.raison,
             primaire=self.primaire)
 
     def update_to_raison_primaire(self):
-        Database.update_to_raison_primaire(id=self.id, primaire=1)
+        Database.update_to_raison_primaire(_id=self.id, primaire=1)
         self.primaire = 1
 
     def remove_to_raison_primaire(self):
-        Database.update_to_raison_primaire(id=self.id, primaire=0)
+        Database.update_to_raison_primaire(_id=self.id, primaire=0)
         self.primaire = 0
 
     def del_raison_on_database(self):

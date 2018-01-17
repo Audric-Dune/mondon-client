@@ -126,7 +126,7 @@ class RapportMenu(MondonWidget):
             return
         save_pdf(self.rapport, filename=file_names[0], preview=True)
 
-    def _get_pdf(self):
+    def externat_get_pdf(self):
         ts = timestamp_at_day_ago(settings_store.day_ago)
         file_names =\
             'I:\Programme mondon/rp_prod/{} Rapport production bobines.pdf'.format(timestamp_to_inverse_date(ts))
