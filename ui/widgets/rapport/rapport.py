@@ -23,7 +23,8 @@ from constants.stylesheets import yellow_20_label_stylesheet,\
     green_16_bold_label_stylesheet,\
     orange_16_bold_label_stylesheet,\
     dune_title_stylesheet,\
-    blue_16_bold_label_stylesheet
+    blue_16_bold_label_stylesheet, \
+    gray_italic_stylesheet
 from ui.widgets.public.mondon_widget import MondonWidget
 
 
@@ -51,6 +52,8 @@ class Rapport(MondonWidget):
         self.vbox.addWidget(self.create_title("Performance de la journée"))
         self.vbox.addLayout(self.create_stat())
         self.vbox.addWidget(self.create_title("Détail des arrêts remarquables machine"))
+        self.vbox.setSpacing(10)
+        self.vbox.addLayout(self.create_info_arret())
         self.vbox.addLayout(self.create_list_arret())
         self.setLayout(self.vbox)
 
@@ -147,6 +150,14 @@ class Rapport(MondonWidget):
         vbox_bloc_stat.addWidget(StatBar(titre=team_str, moment=team, mode="rapport"))
         return vbox_bloc_stat
 
+    @staticmethod
+    def create_info_arret():
+        hbox = QHBoxLayout()
+        label_info = QLabel("Par remarquable on assimile les arrêts imprévus ou supérieurs à 30 minutes")
+        label_info.setStyleSheet(gray_italic_stylesheet)
+        hbox.addWidget(label_info)
+        return hbox
+
     def create_list_arret(self):
         hbox = QHBoxLayout()
         hbox.addLayout(self.create_bloc_arret(moment="matin"))
@@ -187,13 +198,21 @@ class Rapport(MondonWidget):
                 title_arret = QLabel(text_arret)
                 title_arret.setStyleSheet(stylesheet)
                 container_arret.addWidget(title_arret, alignment=Qt.AlignTop)
+
+                def add_label_to_container(vbox, label):
+                    label.setStyleSheet(black_16_label_stylesheet)
+                    label.setWordWrap(True)
+                    vbox.addWidget(label, alignment=Qt.AlignTop)
+                    vbox.addLayout(container_arret)
+
                 if arret[2]:
-                    raison_arret = QLabel(arret[2][0].raison)
+                    if type == "Imprévu":
+                        for raison in arret[2]:
+                            add_label_to_container(container_arret, QLabel(raison.raison))
+                    else:
+                        add_label_to_container(container_arret, QLabel(arret[2][0].raison))
                 else:
-                    raison_arret = QLabel("")
-                raison_arret.setStyleSheet(black_16_label_stylesheet)
-                raison_arret.setWordWrap(True)
-                container_arret.addWidget(raison_arret, alignment=Qt.AlignTop)
+                    add_label_to_container(container_arret, QLabel(""))
                 vbox.addLayout(container_arret)
         vbox.addStretch(1)
         return vbox

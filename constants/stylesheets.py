@@ -22,7 +22,8 @@ def create_qlabel_stylesheet(background_color=None,
                              color=color_blanc,
                              font_size="14px",
                              padding="0px 5px 0px 5px",
-                             bold=None):
+                             bold=None,
+                             italic=None):
     return """
         QLabel {{
             background-color: {background_color};
@@ -30,13 +31,15 @@ def create_qlabel_stylesheet(background_color=None,
             font-size: {font_size};
             padding: {padding};
             font-weight: {bold};
+            font-style: {italic};
         }}
     """.format(
         background_color=background_color.hex_string if background_color else "transparent",
         color=color.hex_string,
         font_size=font_size,
         padding=padding,
-        bold=bold
+        bold=bold,
+        italic=italic
     )
 
 
@@ -157,6 +160,7 @@ blue_16_bold_label_stylesheet = create_qlabel_stylesheet(color=color_bleu_dune, 
 dune_title_stylesheet = create_qlabel_stylesheet(color=color_jaune_dune,
                                                  font_size="20px",
                                                  background_color=color_bleu_dune)
+gray_italic_stylesheet = create_qlabel_stylesheet(color=color_gris_fonce, font_size="16px", italic="italic")
 
 # ____________BUTTON STYLESHEET____________
 

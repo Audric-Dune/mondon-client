@@ -10,6 +10,7 @@ from ui.utils.timestamp import timestamp_at_day_ago, timestamp_at_time, timestam
 
 class DataStore:
     def __init__(self, start, end, day_ago):
+        # t0 = time.time()
         self.start = start
         self.end = end
         self.day_ago = day_ago
@@ -23,6 +24,8 @@ class DataStore:
         self.dic_arret = {}
         self.arrets = []
         self.add_data()
+        # t1 = time.time()
+        # print("DataStore at day_ago: {}, temps chargement: {}".format(day_ago, t1 - t0))
         # _____VERIFICATION DATA BASE_____
         # from ui.utils.timestamp import timestamp_to_hour, timestamp_to_day_month_little
         # ts_min = 1515424080
