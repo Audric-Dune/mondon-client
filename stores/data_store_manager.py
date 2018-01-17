@@ -16,7 +16,7 @@ from stores.user_store import user_store
 class DataStoreManager(QObject):
     DATA_CHANGED_SIGNAL = pyqtSignal()
     NEW_ARRET_SIGNAL = pyqtSignal(int, int)
-    SLEEP_TIME = 1
+    SLEEP_TIME = 0.5
 
     def __init__(self):
         super(DataStoreManager, self).__init__()
@@ -109,7 +109,7 @@ class DataStoreManager(QObject):
         if self.refresh_timer:
             self.refresh_timer.cancel()
         self.refresh_once(force_refresh)
-        # Ré-exécute la fonction dans 1 seconde
+        # Ré-exécute la fonction dans SLEEP_TIME seconde
         self.refresh_timer = threading.Timer(self.SLEEP_TIME, self.refresh_data)
         self.refresh_timer.daemon = True
         self.refresh_timer.start()

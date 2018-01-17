@@ -17,7 +17,9 @@ from ui.widgets.public.mondon_widget import MondonWidget
 from lib.logger import logger
 from ui.widgets.public.checkbox_button import CheckboxButton
 from ui.utils.layout import clear_layout
-from ui.utils.timestamp import timestamp_to_name_number_day_month, timestamp_to_day_month_little
+from ui.utils.timestamp import timestamp_to_name_number_day_month,\
+    timestamp_to_day_month_little,\
+    timestamp_after_day_ago
 from ui.widgets.stat.stat_chart_bar import StatChartBar
 
 
@@ -137,14 +139,22 @@ class ChartLegend(MondonWidget):
         self.update_widget()
 
     def init_widget(self):
+        len_format = 0
+        if settings_stat_store.format == "week":
+            len_format = 5
+        if settings_stat_store.format == "month":
+            len_format = len(stat_store.data["total"])
+        start = stat_store.data["total"][0][0]
+        index = 0
         str_date = "NA"
-        for values in stat_store.data["total"]:
-            ts = values[0]
+        while index < len_format:
+            ts = timestamp_after_day_ago(start, day_ago=index)
             if settings_stat_store.format == "week":
                 str_date = timestamp_to_name_number_day_month(ts).capitalize()
             if settings_stat_store.format == "month":
                 str_date = timestamp_to_day_month_little(ts)
             self.hbox.addWidget(self.create_label(str_date))
+            index += 1
 
     def update_widget(self):
         clear_layout(self.hbox)
@@ -200,7 +210,6 @@ class ChartSettings(MondonWidget):
                                   stylecheet_label=stylesheet,
                                   text_label=texte,
                                   preset=settings_stat_store.display_setting[2])
-
         self.hbox.addStretch(1)
         self.setLayout(self.hbox)
 
