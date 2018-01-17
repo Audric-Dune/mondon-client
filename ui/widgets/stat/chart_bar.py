@@ -33,6 +33,12 @@ class ChartBar(MondonWidget):
         self.chart_legend = ChartLegend(parent=self)
         self.init_widget()
 
+    def on_settings_stat_changed(self):
+        if settings_stat_store.data_type == "raisons prévue" or settings_stat_store.data_type == "raisons imprévue":
+            self.hide()
+        else:
+            self.show()
+
     def init_widget(self):
         self.vbox.setContentsMargins(10, 0, 10, 0)
         self.vbox.setSpacing(0)

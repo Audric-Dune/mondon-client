@@ -34,7 +34,6 @@ class DataStore:
 
     def add_data(self):
         try:
-            print("add_data : day_ago {}".format(self.day_ago))
             ts = timestamp_at_day_ago(self.day_ago)
             self.update_raison_from_database()
             if self.data and self.day_ago > 0:

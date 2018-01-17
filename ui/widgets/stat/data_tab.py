@@ -42,13 +42,18 @@ class DataTab(MondonWidget):
         self.vbox_master.setSpacing(2)
         self.vbox_master.addWidget(LineTitle())
         if settings_stat_store.data_type == "métrage":
+            self.setFixedHeight(168)
             self.vbox_master.addWidget(LineStat(team="matin"))
             self.vbox_master.addWidget(LineStat(team="soir"))
             self.vbox_master.addWidget(LineStat(team="total"))
-        else:
+        elif settings_stat_store.data_type == "temps":
+            self.setFixedHeight(168)
             self.vbox_master.addWidget(LineStat(team="Prévu"))
             self.vbox_master.addWidget(LineStat(team="Imprévu"))
             self.vbox_master.addWidget(LineStat(team="total"))
+        else:
+            self.setFixedHeight(500)
+
         self.setLayout(self.vbox_master)
 
 

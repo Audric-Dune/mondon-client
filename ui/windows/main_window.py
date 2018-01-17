@@ -1,8 +1,8 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QSizePolicy, QHBoxLayout
+from PyQt5.Qt import Qt
 from ui.widgets.prod.chart.chart import Chart
 
 from constants.dimensions import chart_menu_height
@@ -41,7 +41,7 @@ class MainWindow(QMainWindow):
         self.central_widget.setLayout(self.master_vbox)
         self.setCentralWidget(self.central_widget)
 
-    def update_widget(self, menu_selected):
+    def update_widget(self, menu_selected="chart_stat"):
         clear_layout(self.content_vbox)
         if menu_selected == "chart_stat":
             settings_store.set(day_ago=0)
@@ -70,8 +70,7 @@ class MainWindow(QMainWindow):
         vbox.addWidget(self.chart_bar)
 
         data_tab = DataTab(parent=self)
-        data_tab.setFixedHeight(168)
-        vbox.addWidget(data_tab)
+        vbox.addWidget(data_tab, alignment=Qt.AlignTop)
 
         hbox.addLayout(vbox)
         return hbox
