@@ -42,17 +42,16 @@ class DataTab(MondonWidget):
         self.vbox_master.setSpacing(2)
         self.vbox_master.addWidget(LineTitle())
         if settings_stat_store.data_type == "métrage":
-            self.setFixedHeight(168)
             self.vbox_master.addWidget(LineStat(team="matin"))
             self.vbox_master.addWidget(LineStat(team="soir"))
             self.vbox_master.addWidget(LineStat(team="total"))
         elif settings_stat_store.data_type == "temps":
-            self.setFixedHeight(168)
             self.vbox_master.addWidget(LineStat(team="Prévu"))
             self.vbox_master.addWidget(LineStat(team="Imprévu"))
             self.vbox_master.addWidget(LineStat(team="total"))
         else:
-            self.setFixedHeight(500)
+            for raison in stat_store.stat:
+                self.vbox_master.addWidget(LineStat(raison=raison))
 
         self.setLayout(self.vbox_master)
 
@@ -100,17 +99,20 @@ class LineTitle(MondonWidget):
 
 
 class LineStat(MondonWidget):
-    def __init__(self, team, parent=None):
+    def __init__(self, raison=None, team=None, parent=None):
         super(LineStat, self).__init__(parent=parent)
         self.set_background_color(color_bleu_gris)
         self.setFixedHeight(40)
         self.hbox = QHBoxLayout()
-        self.create_line_stat(team)
+        if team:
+            self.create_line_stat_team(team)
+        else:
+            self.create_line_stat_raison(raison)
 
     def on_settings_stat_changed(self):
         self.on_loading(self.hbox, size=20, set_text=False, gif_name="loader_blue_white")
 
-    def create_line_stat(self, team):
+    def create_line_stat_team(self, team):
         """
         Crée le layout des stats d'une équipe avec un background
         :param team: L'équipe
@@ -131,6 +133,19 @@ class LineStat(MondonWidget):
                                               align=Qt.AlignCenter | Qt.AlignVCenter,
                                               bold=bold))
         self.hbox.addLayout(self.create_bar(team=team))
+        self.setLayout(self.hbox)
+
+    def create_line_stat_raison(self, raison):
+        self.hbox.setContentsMargins(0, 0, 5, 0)
+        self.hbox.setSpacing(0)
+        label_raison = self.create_label(text=raison["raison"], align=Qt.AlignLeft | Qt.AlignVCenter)
+        label_raison.setFixedWidth(500)
+        self.hbox.addWidget(label_raison)
+        self.hbox.addWidget(self.create_label(text=self.format_data(raison["total"]),
+                                              align=Qt.AlignCenter | Qt.AlignVCenter))
+        self.hbox.addWidget(self.create_label(text=raison["count"], align=Qt.AlignCenter | Qt.AlignVCenter))
+        self.hbox.addWidget(self.create_label(text=self.format_data(raison["mean"]),
+                                              align=Qt.AlignCenter | Qt.AlignVCenter))
         self.setLayout(self.hbox)
 
     def create_bar(self, team):
@@ -157,6 +172,7 @@ class LineStat(MondonWidget):
         :param bold: True si texte en gras sinon False
         :return: Le label
         """
+        text = str(text)
         label = QLabel(text.capitalize())
         if bold:
             label.setStyleSheet(white_16_bold_label_stylesheet)

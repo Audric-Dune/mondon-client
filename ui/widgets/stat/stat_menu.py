@@ -33,13 +33,13 @@ class StatMenu(MondonWidget):
 
         self.label_stat_raisons = QLabel("Statistique raisons")
 
-        self.label_stat_raisons_prevue = QLabel("Raisons prévu")
+        self.label_stat_raisons_prevue = QLabel("Raisons prévues")
         self.bt_raisons_prevue_semaine = QPushButton("Par semaine")
         self.bt_raisons_prevue_semaine.clicked.connect(self.on_click_raisons_prevue_semaine)
         self.bt_raisons_prevue_mois = QPushButton("Par mois")
         self.bt_raisons_prevue_mois.clicked.connect(self.on_click_raisons_prevue_mois)
 
-        self.label_stat_imprevue_raisons = QLabel("Raisons imprévu")
+        self.label_stat_imprevue_raisons = QLabel("Raisons imprévues")
         self.bt_raisons_imprevue_semaine = QPushButton("Par semaine")
         self.bt_raisons_imprevue_semaine.clicked.connect(self.on_click_raisons_imprevue_semaine)
         self.bt_raisons_imprevue_mois = QPushButton("Par mois")
@@ -56,6 +56,10 @@ class StatMenu(MondonWidget):
         self.bt_metrage_mois.setStyleSheet(button_white_stylesheet)
         self.bt_temps_semaine.setStyleSheet(button_white_stylesheet)
         self.bt_temps_mois.setStyleSheet(button_white_stylesheet)
+        self.bt_raisons_prevue_semaine.setStyleSheet(button_white_stylesheet)
+        self.bt_raisons_prevue_mois.setStyleSheet(button_white_stylesheet)
+        self.bt_raisons_imprevue_semaine.setStyleSheet(button_white_stylesheet)
+        self.bt_raisons_imprevue_mois.setStyleSheet(button_white_stylesheet)
 
         if settings_stat_store.data_type == "métrage":
             if settings_stat_store.week_ago >= 0:
@@ -67,6 +71,16 @@ class StatMenu(MondonWidget):
                 self.bt_temps_semaine.setStyleSheet(button_green_stylesheet)
             else:
                 self.bt_temps_mois.setStyleSheet(button_green_stylesheet)
+        if settings_stat_store.data_type == "raisons prévue":
+            if settings_stat_store.week_ago >= 0:
+                self.bt_raisons_prevue_semaine.setStyleSheet(button_green_stylesheet)
+            else:
+                self.bt_raisons_prevue_mois.setStyleSheet(button_green_stylesheet)
+        if settings_stat_store.data_type == "raisons imprévue":
+            if settings_stat_store.week_ago >= 0:
+                self.bt_raisons_imprevue_semaine.setStyleSheet(button_green_stylesheet)
+            else:
+                self.bt_raisons_imprevue_mois.setStyleSheet(button_green_stylesheet)
 
     def init_widget(self):
         self.vbox.setSpacing(0)

@@ -146,11 +146,13 @@ class ChartLegend(MondonWidget):
 
     def init_widget(self):
         len_format = 0
-        if settings_stat_store.format == "week":
-            len_format = 5
-        if settings_stat_store.format == "month":
-            len_format = len(stat_store.data["total"])
-        start = stat_store.data["total"][0][0]
+        start = 0
+        if stat_store.data.get("total"):
+            if settings_stat_store.format == "week":
+                len_format = 5
+            if settings_stat_store.format == "month":
+                len_format = len(stat_store.data["total"])
+            start = stat_store.data["total"][0][0]
         index = 0
         str_date = "NA"
         while index < len_format:

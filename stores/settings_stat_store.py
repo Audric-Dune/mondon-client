@@ -14,7 +14,7 @@ class SettingsStatStore(QObject):
 
     def __init__(self):
         super(SettingsStatStore, self).__init__()
-        self.data_type = "raison prévue"
+        self.data_type = "métrage"
         self.time_stat = ""
         self.format = ""
         self.display_setting = []

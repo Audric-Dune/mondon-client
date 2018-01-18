@@ -40,10 +40,10 @@ class StatStore(QObject):
         if settings_stat_store.data_type == "temps":
             self.data = {"Prévu": [], "Imprévu": [], "total": []}
             self.stat = {"Prévu": {}, "Imprévu": {}, "total": {}}
-        if settings_stat_store.data_type == "raisons_prévue":
+        if settings_stat_store.data_type == "raisons prévue":
             self.data = {}
             self.stat = {}
-        if settings_stat_store.data_type == "raisons_imprévue":
+        if settings_stat_store.data_type == "raisons imprévue":
             self.data = {}
             self.stat = {}
 
@@ -119,7 +119,8 @@ class StatStore(QObject):
                 raison_texte = raison[3]
                 if raison_texte[0:5] == "Autre":
                     raison_texte = "Autre"
-                if raison_type == "Prévu" if settings_stat_store.data_type == "raison prévue" else "Imprévu":
+                current_type = "Prévu" if settings_stat_store.data_type == "raisons prévue" else "Imprévu"
+                if raison_type == current_type:
                     if self.data.get(raison_texte):
                         count = self.data[raison_texte][0] + 1
                         total_time = self.data[raison_texte][1] + (arret_end - arret_start)
@@ -127,7 +128,6 @@ class StatStore(QObject):
                         count = 1
                         total_time = arret_end - arret_start
                     self.data[raison_texte] = [count, total_time]
-                print(self.data)
             else:
                 continue
 
@@ -146,10 +146,12 @@ class StatStore(QObject):
                 self.stat["matin"] = self.stat_calculator_metrage(moment="matin")
                 self.stat["soir"] = self.stat_calculator_metrage(moment="soir")
                 self.stat["total"] = self.stat_calculator_metrage(moment="total")
-            if settings_stat_store.data_type == "temps":
+            elif settings_stat_store.data_type == "temps":
                 self.stat["Prévu"] = self.stat_calculator_temps(_type="Prévu")
                 self.stat["Imprévu"] = self.stat_calculator_temps(_type="Imprévu")
                 self.stat["total"] = self.stat_calculator_temps(_type="total")
+            else:
+                self.stat_calculator_raison()
 
     @staticmethod
     def get_start_end():
@@ -357,5 +359,19 @@ class StatStore(QObject):
         dic_stat["mean"] = round(mean_data)
         return dic_stat
 
+    def stat_calculator_raison(self):
+        self.stat = []
+        for raison_text, data in self.data.items():
+            dic_stat = {}
+            dic_stat["raison"] = raison_text
+            dic_stat["total"] = data[1]
+            dic_stat["count"] = data[0]
+            dic_stat["mean"] = round(data[1] / data[0])
+            self.stat.append(dic_stat)
+
+        def conv(v):
+            return v["total"]
+        self.stat.sort(key=conv, reverse=True)
+        print(self.stat)
 
 stat_store = StatStore()
