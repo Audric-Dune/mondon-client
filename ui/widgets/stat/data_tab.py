@@ -61,17 +61,23 @@ class LineTitle(MondonWidget):
         super(LineTitle, self).__init__(parent=parent)
         self.hbox = QHBoxLayout()
         self.setFixedHeight(40)
-        self.create_line_tittle()
+        if settings_stat_store.data_type == "raisons prévue" or settings_stat_store.data_type == "raisons imprévue":
+            self.create_line_tittle_raison()
+        else:
+            self.create_line_tittle_team()
 
     def on_settings_stat_changed(self):
-        self.create_line_tittle()
+        clear_layout(self.hbox)
+        if settings_stat_store.data_type == "raisons prévue" or settings_stat_store.data_type == "raisons imprévue":
+            self.create_line_tittle_raison()
+        else:
+            self.create_line_tittle_team()
 
-    def create_line_tittle(self):
+    def create_line_tittle_team(self):
         """
         Crée le layout des titres
         :return: Le layout
         """
-        clear_layout(self.hbox)
         self.hbox.setContentsMargins(0, 0, 0, 0)
         self.hbox.setSpacing(0)
         texte = "Equipe" if settings_stat_store.data_type == "métrage" else "Type"
@@ -82,6 +88,19 @@ class LineTitle(MondonWidget):
         self.hbox.addWidget(self.create_label_tittle(text="Maximum", align=Qt.AlignCenter | Qt.AlignVCenter))
         texte = "Ratio capacité" if settings_stat_store.data_type == "métrage" else "Ratio temps d'arrêt"
         self.hbox.addWidget(self.create_label_tittle(text=texte, align=Qt.AlignRight | Qt.AlignVCenter))
+        self.setLayout(self.hbox)
+
+    def create_line_tittle_raison(self):
+        self.hbox.setContentsMargins(0, 0, 5, 0)
+        self.hbox.setSpacing(0)
+        label_raison = self.create_label_tittle(text="Raison d'arrêt", align=Qt.AlignLeft | Qt.AlignVCenter)
+        label_raison.setFixedWidth(500)
+        self.hbox.addWidget(label_raison)
+        text_total = "Total semaine" if settings_stat_store.format == "week" else "Total mois"
+        self.hbox.addWidget(self.create_label_tittle(text=text_total, align=Qt.AlignCenter | Qt.AlignVCenter))
+        self.hbox.addWidget(self.create_label_tittle(text="Nombre de fois", align=Qt.AlignCenter | Qt.AlignVCenter))
+        self.hbox.addWidget(self.create_label_tittle(text="Moyenne",
+                                                     align=Qt.AlignCenter | Qt.AlignVCenter))
         self.setLayout(self.hbox)
 
     @staticmethod

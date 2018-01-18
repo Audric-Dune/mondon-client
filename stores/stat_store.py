@@ -324,7 +324,7 @@ class StatStore(QObject):
         data = self.data[moment]
         if not data:
             return self.empty_stat()
-        dic_stat = {}
+        dic_stat = dict()
         values = [t[1] for t in data]
         sum_data = sum(values)
         max_data = max(values)
@@ -344,7 +344,7 @@ class StatStore(QObject):
         data = self.data[_type]
         if not data:
             return self.empty_stat()
-        dic_stat = {}
+        dic_stat = dict()
         values = [t[1] for t in data]
         sum_data = sum(values)
         max_data = max(values)
@@ -362,7 +362,7 @@ class StatStore(QObject):
     def stat_calculator_raison(self):
         self.stat = []
         for raison_text, data in self.data.items():
-            dic_stat = {}
+            dic_stat = dict()
             dic_stat["raison"] = raison_text
             dic_stat["total"] = data[1]
             dic_stat["count"] = data[0]
@@ -372,6 +372,5 @@ class StatStore(QObject):
         def conv(v):
             return v["total"]
         self.stat.sort(key=conv, reverse=True)
-        print(self.stat)
 
 stat_store = StatStore()
