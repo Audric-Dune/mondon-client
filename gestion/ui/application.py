@@ -3,6 +3,8 @@
 
 from PyQt5.QtWidgets import QApplication
 
+from gestion.window.main_window import MainWindow
+
 
 class Application(QApplication):
 
@@ -10,5 +12,8 @@ class Application(QApplication):
         if argv is None:
             argv = []
         super(Application, self).__init__(argv)
+        self.main_window = MainWindow()
+        self.main_window.show()
+
 
 app = Application()

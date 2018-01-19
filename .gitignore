@@ -42,3 +42,5 @@ tmtagsHistory
 *.sublime-workspace
 .bundle
 .pdf
+.mypy_cache
+.mypy_cache/3.6/_importlib_modulespec.data.json

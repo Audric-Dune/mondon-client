@@ -1,13 +1,35 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtCore import Qt, QRectF, QRect
+from PyQt5.QtCore import Qt, QRectF, QRect, QPoint
 from PyQt5.QtGui import QBrush, QColor, QPen, QPainterPath, QFont
 
 
-def draw_rectangle(p, x, y, width, height, color):
+def draw_rectangle(p, x, y, width, height, color, border_color=None, border_size=1):
+    if not border_color:
+        border_color = color
     color = color.rgb_components
-    p.fillRect(x, y, width, height, QColor(color[0], color[1], color[2]))
+    brush = QBrush(QColor(color[0], color[1], color[2]))
+    p.setBrush(brush)
+    border_color = border_color.rgb_components
+    pen = QPen(QColor(border_color[0], border_color[1], border_color[2]))  # set lineColor
+    pen.setWidth(border_size)  # set lineWidth
+    p.setPen(pen)
+    p.drawRect(x, y, width, height)
+
+
+def draw_triangle(p, x, y, width, height, background_color, border_color, border_size=1, reverse=False):
+    border_color = border_color.rgb_components
+    pen = QPen(QColor(border_color[0], border_color[1], border_color[2]))  # set lineColor
+    pen.setWidth(border_size)  # set lineWidth
+    background_color = background_color.rgb_components
+    brush = QBrush(QColor(background_color[0], background_color[1], background_color[2]))  # set fillColor
+    p.setPen(pen)
+    p.setBrush(brush)
+    if reverse:
+        p.drawPolygon(QPoint(x, y), QPoint(width/2+x, height+y), QPoint(width+x, y))
+    else:
+        p.drawPolygon(QPoint(x, height+y), QPoint(width/2+x, y), QPoint(width+x, height+y))
 
 
 def draw_rectangle_radius(p, x, y, width, height, color, radius=0):
