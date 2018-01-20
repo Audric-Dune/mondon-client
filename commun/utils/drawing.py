@@ -18,7 +18,9 @@ def draw_rectangle(p, x, y, width, height, color, border_color=None, border_size
     p.drawRect(x, y, width, height)
 
 
-def draw_triangle(p, x, y, width, height, background_color, border_color, border_size=1, reverse=False):
+def draw_triangle(p, x, y, width, height, background_color, border_color=None, border_size=1, reverse=False):
+    if not border_color:
+        border_color = background_color
     border_color = border_color.rgb_components
     pen = QPen(QColor(border_color[0], border_color[1], border_color[2]))  # set lineColor
     pen.setWidth(border_size)  # set lineWidth
