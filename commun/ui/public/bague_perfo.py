@@ -18,13 +18,13 @@ class BaguePerfo(MondonWidget):
         super(BaguePerfo, self).__init__(parent=parent)
         self.width_value = width_value
         self.ech = ech
-        self.setFixedSize(self.width_value*self.ech, (self.BAGUE_HEIGHT+self.ARROW_LENGTH)*self.ech)
+        self.setFixedSize(self.width_value*self.ech, (self.BAGUE_HEIGHT+self.ARROW_LENGTH*2)*self.ech)
 
     def draw_bague(self, p, pic_height, arrow_length):
         x = 0
-        y = pic_height
+        y = pic_height + arrow_length
         w = self.width() - 1
-        h = self.height() - 2 * pic_height - arrow_length
+        h = self.height() - 2 * (pic_height + arrow_length)
         draw_rectangle(p, x, y, w, h, color=color_gris_fonce, border_color=color_noir)
         font_size = 16 * self.ech
         draw_text(p, x, y, w, h, color=color_noir, align="C", font_size=font_size, text=str(self.width_value))
@@ -32,7 +32,7 @@ class BaguePerfo(MondonWidget):
     def draw_pic(self, p, pic_height, arrow_length):
         pic_count = 0
         while pic_count < self.PIC_NUMBER:
-            y = 0
+            y = arrow_length
             w = self.width() / self.PIC_NUMBER
             x = 0 + w * pic_count
             h = pic_height
