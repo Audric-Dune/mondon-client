@@ -95,7 +95,7 @@ class LineTitle(MondonWidget):
         self.setLayout(self.hbox)
 
     def create_line_tittle_raison(self):
-        self.hbox.setContentsMargins(0, 0, 5, 0)
+        self.hbox.setContentsMargins(0, 0, 0, 0)
         self.hbox.setSpacing(0)
         label_raison = self.create_label_tittle(text="Raison d'arrêt", align=Qt.AlignLeft | Qt.AlignVCenter)
         label_raison.setFixedWidth(500)
