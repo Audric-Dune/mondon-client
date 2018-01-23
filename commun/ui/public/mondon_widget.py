@@ -163,8 +163,8 @@ class MondonWidget(QWidget):
             draw_rectangle(p,
                            0 + self.padding + border_left,
                            0 + self.padding + border_top,
-                           self.width() - self.padding - border_right * 2,
-                           self.height() - self.padding - border_bottom * 2,
+                           self.width() - self.padding - border_right * 2 - 1,
+                           self.height() - self.padding - border_bottom * 2 - 1,
                            background_color)
         pass
 

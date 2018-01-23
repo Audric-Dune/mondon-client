@@ -45,7 +45,7 @@ class Bar(MondonWidget):
         :param p: Paramètre de dessin
         """
         height = self.height()
-        draw_rectangle(p, 1, 1, self.width()-2, height-2, color_blanc)
+        draw_rectangle(p, 1, 1, self.width()-2, height-2, color_blanc, border_color=color_bleu_gris)
 
     def draw_bar(self, p):
         """
@@ -64,7 +64,7 @@ class Bar(MondonWidget):
                     color = color_vert
             else:
                 color = color_bleu
-            draw_rectangle(p, 1, 1, self.percent*scale-2, height-2, color)
+            draw_rectangle(p, 2, 2, self.percent*scale-4, height-4, color)
 
     def draw_max_info(self, p):
         """
@@ -79,7 +79,7 @@ class Bar(MondonWidget):
         text = "82% \n (Max.)"
         font_size = 8
         x = PERCENT_PROD_THEROIQUE_MAXI*scale
-        draw_rectangle(p, PERCENT_PROD_THEROIQUE_MAXI * scale, 0 + 1, 2, self.height() - 2, color_bleu)
+        draw_rectangle(p, PERCENT_PROD_THEROIQUE_MAXI * scale, 0 + 2, 1, self.height() - 4, color_bleu)
         draw_text(p,
                   x=x,
                   y=y,
@@ -124,10 +124,10 @@ class Bar(MondonWidget):
         Dessine la bar
         :param p: Paramètre de dessin
         """
-        if self.mode != "ui":
-            self._draw_border(p)
         self.draw_bar_fond(p)
         self.draw_bar(p)
+        # if self.mode != "ui":
+        #     self._draw_border(p)
         # Si le % de la bar est supérieur à la valeur maxi théorique on ne dessine pas l'indicateur valeur maxi
         if self.percent < PERCENT_PROD_THEROIQUE_MAXI and self.display_max_value:
             self.draw_max_info(p)
