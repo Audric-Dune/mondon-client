@@ -121,6 +121,10 @@ class StatStore(QObject):
                 raison_texte = raison[3]
                 if raison_texte[0:5] == "Autre":
                     raison_texte = "Autre"
+                if raison_texte[0:5] == "Essai":
+                    raison_texte = "Essai technique"
+                if raison_texte[0:5] == "Maint":
+                    raison_texte = "Maintenance"
                 current_type = "Prévu" if settings_stat_store.data_type == "raisons prévue" else "Imprévu"
                 if raison_type == current_type:
                     if self.data.get(raison_texte):
