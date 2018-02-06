@@ -15,11 +15,13 @@ from commun.constants.param import DEBUT_PROD_MATIN,\
 from commun.constants.stylesheets import yellow_20_label_stylesheet,\
     black_16_label_stylesheet,\
     red_16_bold_label_stylesheet,\
+    red_12_bold_label_stylesheet,\
     green_16_bold_label_stylesheet,\
     orange_16_bold_label_stylesheet,\
     dune_title_stylesheet,\
-    blue_16_bold_label_stylesheet,\
-    gray_italic_stylesheet
+    blue_12_bold_label_stylesheet,\
+    gray_italic_stylesheet,\
+    black_12_label_stylesheet
 from commun.ui.public.mondon_widget import MondonWidget
 from commun.utils.data import affiche_entier, get_ratio_prod
 from commun.utils.layout import clear_layout
@@ -186,6 +188,23 @@ class Rapport(MondonWidget):
         end_ts = timestamp_at_time(timestamp_at_day_ago(current_store.day_ago), hours=end_hour)
         # Trie les arrets par ordre chronologique
         arrets = sorted(arrets, key=lambda arret: arret[0])
+        limit_imprevu = 0
+
+        def count_valid_arret(arrets, limit_imprevu):
+            count = 0
+            for arret in arrets:
+                start_arret = arret[0]
+                end_arret = arret[1]
+                type = arret[2][0].type if arret[2] else "non renseigné"
+                if (start_ts <= start_arret <= end_ts and end_arret - start_arret >= 1800)\
+                        or (start_ts <= start_arret <= end_ts and type == "Imprévu"
+                            and end_arret - start_arret >= limit_imprevu):
+                    count += 1
+            return count > 10
+
+        while count_valid_arret(arrets, limit_imprevu):
+            limit_imprevu += 10
+
         for arret in arrets:
             container_arret = QVBoxLayout()
             container_arret.setSpacing(0)
@@ -193,20 +212,21 @@ class Rapport(MondonWidget):
             end_arret = arret[1]
             type = arret[2][0].type if arret[2] else "non renseigné"
             if (start_ts <= start_arret <= end_ts and end_arret - start_arret >= 1800) \
-                    or (start_ts <= start_arret <= end_ts and type == "Imprévu"):
+                    or (start_ts <= start_arret <= end_ts and type == "Imprévu"
+                        and end_arret - start_arret >= limit_imprevu):
                 start = str(timestamp_to_hour_little(start_arret))
                 duree = str(timedelta(seconds=round(end_arret - start_arret)))
                 text_arret = "Arrêt {type} à {start}, durée {duree}".format(type=type, start=start, duree=duree)
                 if type == "Imprévu" or type == "non renseigné":
-                    stylesheet = red_16_bold_label_stylesheet
+                    stylesheet = red_12_bold_label_stylesheet
                 else:
-                    stylesheet = blue_16_bold_label_stylesheet
+                    stylesheet = blue_12_bold_label_stylesheet
                 title_arret = QLabel(text_arret)
                 title_arret.setStyleSheet(stylesheet)
                 container_arret.addWidget(title_arret, alignment=Qt.AlignTop)
 
                 def add_label_to_container(vbox, label):
-                    label.setStyleSheet(black_16_label_stylesheet)
+                    label.setStyleSheet(black_12_label_stylesheet)
                     label.setWordWrap(True)
                     vbox.addWidget(label, alignment=Qt.AlignTop)
                     vbox.addLayout(container_arret)
@@ -214,6 +234,8 @@ class Rapport(MondonWidget):
                 if arret[2]:
                     if type == "Imprévu":
                         for raison in arret[2]:
+                            if raison.type == "Nettoyage" or raison.type == "Prévu":
+                                continue
                             add_label_to_container(container_arret, QLabel(raison.raison))
                     else:
                         add_label_to_container(container_arret, QLabel(arret[2][0].raison))

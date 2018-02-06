@@ -26,16 +26,15 @@ class AppMenu(MondonWidget):
         self.menu_selected = None
         self.hbox = QHBoxLayout()
         self.list_bt = {}
-        self.bt_stat = QPushButton("Statistique")
+        # self.bt_stat = QPushButton("Statistique")
         self.bt_rapport = QPushButton("Rapport")
-        self.bt_team_gestion = QPushButton("Gestion équipes")
+        # self.bt_team_gestion = QPushButton("Gestion équipes")
         self.label_user = QLabel()
         self.init_widget()
         self.set_bt_stylesheet()
         self.update_widget()
 
     def on_user_changed(self):
-        print("on_user_changed")
         self.update_widget()
 
     def init_widget(self):
@@ -48,11 +47,11 @@ class AppMenu(MondonWidget):
         bt_acceuil.clicked.connect(lambda: self.on_click("prod"))
         self.hbox.addWidget(bt_acceuil)
 
-        self.bt_stat.setFixedWidth(self.WIDTH_BT)
-        self.bt_stat.hide()
-        self.list_bt["chart_stat"] = self.bt_stat
-        self.bt_stat.clicked.connect(lambda: self.on_click("chart_stat"))
-        self.hbox.addWidget(self.bt_stat)
+        # self.bt_stat.setFixedWidth(self.WIDTH_BT)
+        # self.bt_stat.hide()
+        # self.list_bt["chart_stat"] = self.bt_stat
+        # self.bt_stat.clicked.connect(lambda: self.on_click("chart_stat"))
+        # self.hbox.addWidget(self.bt_stat)
 
         self.bt_rapport.setFixedWidth(self.WIDTH_BT)
         self.bt_rapport.hide()
@@ -60,11 +59,11 @@ class AppMenu(MondonWidget):
         self.bt_rapport.clicked.connect(lambda: self.on_click("rapport"))
         self.hbox.addWidget(self.bt_rapport)
 
-        self.bt_team_gestion.setFixedWidth(self.WIDTH_BT)
-        self.bt_team_gestion.hide()
-        self.list_bt["team_gestion"] = self.bt_team_gestion
-        self.bt_team_gestion.clicked.connect(lambda: self.on_click("team_gestion"))
-        self.hbox.addWidget(self.bt_team_gestion)
+        # self.bt_team_gestion.setFixedWidth(self.WIDTH_BT)
+        # self.bt_team_gestion.hide()
+        # self.list_bt["team_gestion"] = self.bt_team_gestion
+        # self.bt_team_gestion.clicked.connect(lambda: self.on_click("team_gestion"))
+        # self.hbox.addWidget(self.bt_team_gestion)
 
         self.hbox.addStretch(1)
         self.label_user.setStyleSheet(white_16_label_stylesheet)
@@ -81,13 +80,13 @@ class AppMenu(MondonWidget):
         if user_store.user_level == 0:
             user = "Opérateur"
             self.bt_rapport.hide()
-            self.bt_stat.hide()
-            self.bt_team_gestion.hide()
+            # self.bt_stat.hide()
+            # self.bt_team_gestion.hide()
         else:
             user = "Superviseur"
             self.bt_rapport.show()
-            self.bt_stat.show()
-            self.bt_team_gestion.show()
+            # self.bt_stat.show()
+            # self.bt_team_gestion.show()
         self.label_user.setText(user)
 
     def on_click(self, menu_selected):

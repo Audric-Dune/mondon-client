@@ -152,15 +152,17 @@ green_maj_label_stylesheet = create_qlabel_stylesheet(color=color_blanc,
                                                       padding="0px 20px 0px 20px",
                                                       bold="bold")
 red_16_bold_label_stylesheet = create_qlabel_stylesheet(color=color_rouge, font_size="16px", bold="bold")
+red_12_bold_label_stylesheet = create_qlabel_stylesheet(color=color_rouge, font_size="12px", bold="bold")
 green_16_bold_label_stylesheet = create_qlabel_stylesheet(color=color_vert_fonce, font_size="16px", bold="bold")
 red_16_no_background_label_stylesheet = create_qlabel_stylesheet(color=color_rouge, font_size="16px")
 green_16_label_stylesheet = create_qlabel_stylesheet(color=color_vert, font_size="16px")
 orange_16_bold_label_stylesheet = create_qlabel_stylesheet(color=color_orange, font_size="16px", bold="bold")
 blue_16_bold_label_stylesheet = create_qlabel_stylesheet(color=color_bleu_dune, font_size="16px", bold="bold")
+blue_12_bold_label_stylesheet = create_qlabel_stylesheet(color=color_bleu_dune, font_size="12px", bold="bold")
 dune_title_stylesheet = create_qlabel_stylesheet(color=color_jaune_dune,
                                                  font_size="20px",
                                                  background_color=color_bleu_dune)
-gray_italic_stylesheet = create_qlabel_stylesheet(color=color_gris_fonce, font_size="16px", italic="italic")
+gray_italic_stylesheet = create_qlabel_stylesheet(color=color_gris_fonce, font_size="12px", italic="italic")
 
 # ____________BUTTON STYLESHEET____________
 

@@ -1,7 +1,8 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
-import time
-t1 = time.time()
+
+import statistics
+import sqlite3
 
 from commun.lib.logger import logger
 logger.log_app_start()
