@@ -7,7 +7,10 @@ import time
 from PyQt5.QtCore import pyqtSignal, QObject
 
 from commun.constants.param import DEBUT_PROD_MATIN, FIN_PROD_SOIR
-from commun.utils.timestamp import timestamp_at_day_ago, timestamp_at_time, timestamp_now, get_day_ago
+from commun.utils.timestamp import timestamp_at_day_ago,\
+    timestamp_at_time,\
+    timestamp_now,\
+    get_day_ago
 
 from production.stores.data_store import DataStore
 from production.stores.settings_store import settings_store
