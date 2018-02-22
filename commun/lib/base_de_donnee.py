@@ -6,6 +6,8 @@ from time import sleep
 
 from commun.constants.param import DATABASE_LOCATION
 from commun.lib.logger import logger
+from commun.constants.param import DEBUT_PROD_MATIN, FIN_PROD_SOIR, FIN_PROD_SOIR_VENDREDI
+from commun.utils.timestamp import timestamp_to_day
 
 
 class Database:
@@ -314,5 +316,33 @@ class Database:
                 "FROM mondon_equipe " \
                 "ORDER BY ts"\
             .format()
-        dechets = cls.run_query(query, ())
-        return dechets
+        data_team = cls.run_query(query, ())
+        return data_team
+
+    @staticmethod
+    def is_vendredi(ts_day):
+        """
+        Test si un ts correspond à un jour du weekend (samedi ou dimanche)
+        :return: True si le ts correspond a un samedi ou dimanche sinon False
+        """
+        day = timestamp_to_day(ts_day)
+        return day == "vendredi"
+
+    @classmethod
+    def add_defaut_day(cls, start_day):
+        """
+        Récupère les donnée de gestion des équipes
+        :return: Une liste
+        """
+        nombre_heure = FIN_PROD_SOIR_VENDREDI - DEBUT_PROD_MATIN if cls.is_vendredi(start_day)\
+            else FIN_PROD_SOIR - DEBUT_PROD_MATIN
+        query = "INSERT INTO mondon_equipe VALUES(?,?,?,2,0)".format(start_day, DEBUT_PROD_MATIN, nombre_heure)
+        try:
+            cls.run_query(query, (start_day, DEBUT_PROD_MATIN, nombre_heure))
+        except sqlite3.IntegrityError as e:
+            # IntegrityError veut dire que l'on essaye d'insérer une vitesse avec un timestamp
+            # qui existe déjà dans la base de données.
+            # Dans ce cas, on considère que cette valeur n'a pas besoin d'être insérée et on
+            # ignore l'exception.
+            logger.log("DATABASE", "(Ignorée) IntegrityError: {}".format(e))
+            pass

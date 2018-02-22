@@ -1,6 +1,6 @@
 # Database location
-DATABASE_LOCATION = 'I:\data_prod_bob/mondon.db'
-# DATABASE_LOCATION = '../mondon.db'
+# DATABASE_LOCATION = 'I:\data_prod_bob/mondon.db'
+DATABASE_LOCATION = '../mondon.db'
 
 # Mot de passe
 USER = {"Opérateur": None, "Superviseur": "dunesa"}
@@ -9,6 +9,9 @@ USER = {"Opérateur": None, "Superviseur": "dunesa"}
 VITESSE_LIMITE_ASSIMILATION_ARRET = 60
 VITESSE_MOYENNE_MAXI = 172.5
 PERCENT_PROD_THEROIQUE_MAXI = 82.12
+
+# Paramètre
+LIMIT_JOURS_GESTION_EQUIPE = 20
 
 # Horaire de production
 DEBUT_PROD_MATIN = 6

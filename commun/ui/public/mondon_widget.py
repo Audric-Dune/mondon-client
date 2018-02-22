@@ -8,6 +8,7 @@ from production.stores.settings_stat_store import settings_stat_store
 from production.stores.settings_store import settings_store
 from production.stores.stat_store import stat_store
 from production.stores.user_store import user_store
+from production.stores.settings_team_gestion_store import settings_team_gestion_store
 
 from commun.lib.logger import logger
 from commun.utils.drawing import draw_rectangle
@@ -26,6 +27,7 @@ class MondonWidget(QWidget):
         settings_store.SETTINGS_CHANGED_SIGNAL.connect(self._handle_settings_changed)
         settings_stat_store.SETTINGS_STAT_CHANGED_SIGNAL.connect(self._handle_settings_stat_changed)
         settings_stat_store.SETTINGS_CHART_CHANGED_SIGNAL.connect(self._handle_settings_chart_changed)
+        settings_team_gestion_store.SETTINGS_TEAM_GESTION_CHANGED_SIGNAL.connect(self._handle_settings_team_gestion_changed)
         stat_store.ON_DATA_STAT_CHANGED_SIGNAL.connect(self._handle_data_stat_changed)
         user_store.ON_USER_CHANGED_SIGNAL.connect(self._handle_user_changed)
         app.RESIZED_SIGNAL.connect(self._handle_size_main_window_changed)
@@ -46,6 +48,9 @@ class MondonWidget(QWidget):
         pass
 
     def on_settings_chart_changed(self):
+        pass
+
+    def on_settings_team_gestion_changed(self):
         pass
 
     def on_user_changed(self):
@@ -107,6 +112,12 @@ class MondonWidget(QWidget):
     def _handle_settings_stat_changed(self):
         try:
             self.on_settings_stat_changed()
+        except Exception as e:
+            logger.log(type(self), "Erreur pendant l'exécution de `on_settings_stat_changed`: {}".format(e))
+
+    def _handle_settings_team_gestion_changed(self):
+        try:
+            self.on_settings_team_gestion_changed()
         except Exception as e:
             logger.log(type(self), "Erreur pendant l'exécution de `on_settings_stat_changed`: {}".format(e))
 

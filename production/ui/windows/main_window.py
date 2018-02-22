@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QSizePolicy, QHBo
 
 from commun.constants.dimensions import chart_menu_height
 from commun.ui.team_gestion.tab_team_gestion import TabTeamGestion
+from commun.ui.team_gestion.menu_team_gestion import TeamGestionMenu
 from commun.utils.layout import clear_layout
 
 from production.stores.settings_store import settings_store
@@ -111,6 +112,8 @@ class MainWindow(QMainWindow):
 
     def create_team_gestion_layout(self):
         vbox = QVBoxLayout()
+        menu_team_gestion = TeamGestionMenu(parent=self)
+        vbox.addWidget(menu_team_gestion)
         tab_team_gestion = TabTeamGestion(parent=self)
         vbox.addWidget(tab_team_gestion)
         return vbox
