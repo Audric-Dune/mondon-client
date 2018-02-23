@@ -94,5 +94,4 @@ class TeamGestionMenu(MondonWidget):
 
     @staticmethod
     def time_less():
-        print("time_less")
         settings_team_gestion_store.update_week_ago(1)

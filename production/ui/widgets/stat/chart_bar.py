@@ -17,9 +17,8 @@ from commun.ui.public.mondon_widget import MondonWidget
 from commun.utils.layout import clear_layout
 from commun.utils.timestamp import timestamp_to_name_number_day_month,\
     timestamp_to_day_month_little,\
-    timestamp_after_day_ago,\
-    timestamp_to_day
-
+    timestamp_after_day_ago
+from commun.utils.day import is_weekend
 from production.stores.settings_stat_store import settings_stat_store
 from production.stores.stat_store import stat_store
 from production.ui.widgets.stat.stat_chart_bar import StatChartBar
@@ -147,15 +146,6 @@ class ChartLegend(MondonWidget):
     def on_data_stat_changed(self):
         self.update_widget()
 
-    @staticmethod
-    def is_weekend(ts_day):
-        """
-        Test si un ts correspond à un jour du weekend (samedi ou dimanche)
-        :return: True si le ts correspond a un samedi ou dimanche sinon False
-        """
-        day = timestamp_to_day(ts_day)
-        return day == "samedi" or day == "dimanche"
-
     def init_widget(self):
         len_format = 0
         start = 0
@@ -169,7 +159,7 @@ class ChartLegend(MondonWidget):
         str_date = "NA"
         dec_weekend = 0
         while index < len_format:
-            while self.is_weekend(timestamp_after_day_ago(start, day_ago=index + dec_weekend)):
+            while is_weekend(timestamp_after_day_ago(start, day_ago=index + dec_weekend)):
                 dec_weekend += 1
             ts = timestamp_after_day_ago(start, day_ago=index + dec_weekend)
             if settings_stat_store.format == "week":

@@ -6,8 +6,12 @@ from time import sleep
 
 from commun.constants.param import DATABASE_LOCATION
 from commun.lib.logger import logger
-from commun.constants.param import DEBUT_PROD_MATIN, FIN_PROD_SOIR, FIN_PROD_SOIR_VENDREDI
-from commun.utils.timestamp import timestamp_to_day
+from commun.constants.param import DEBUT_PROD_MATIN,\
+    FIN_PROD_MATIN_VENDREDI,\
+    FIN_PROD_MATIN,\
+    FIN_PROD_SOIR,\
+    FIN_PROD_SOIR_VENDREDI
+from commun.utils.day import is_vendredi
 
 
 class Database:
@@ -312,21 +316,13 @@ class Database:
         Récupère les donnée de gestion des équipes
         :return: Une liste
         """
-        query = "SELECT ts, debut_prod, nombre_heure, nombre_equipe, ferier " \
+        query = "SELECT ts, debut_prod, equipe_matin, conducteur_matin, aide_matin, heure_matin," \
+                " equipe_soir, conducteur_soir, aide_soir, heure_soir, ferier " \
                 "FROM mondon_equipe " \
                 "ORDER BY ts"\
             .format()
         data_team = cls.run_query(query, ())
         return data_team
-
-    @staticmethod
-    def is_vendredi(ts_day):
-        """
-        Test si un ts correspond à un jour du weekend (samedi ou dimanche)
-        :return: True si le ts correspond a un samedi ou dimanche sinon False
-        """
-        day = timestamp_to_day(ts_day)
-        return day == "vendredi"
 
     @classmethod
     def add_defaut_day(cls, start_day):
@@ -334,11 +330,28 @@ class Database:
         Récupère les donnée de gestion des équipes
         :return: Une liste
         """
-        nombre_heure = FIN_PROD_SOIR_VENDREDI - DEBUT_PROD_MATIN if cls.is_vendredi(start_day)\
-            else FIN_PROD_SOIR - DEBUT_PROD_MATIN
-        query = "INSERT INTO mondon_equipe VALUES(?,?,?,2,0)".format(start_day, DEBUT_PROD_MATIN, nombre_heure)
+        equipe_matin = 1
+        conducteur_matin = "Fred"
+        aide_matin = "Jean-Luc"
+        heure_matin = FIN_PROD_MATIN_VENDREDI - DEBUT_PROD_MATIN if is_vendredi(start_day) else FIN_PROD_MATIN - DEBUT_PROD_MATIN
+        equipe_soir = 1
+        conducteur_soir = "Fred2"
+        aide_soir = "Cyril"
+        heure_soir = FIN_PROD_SOIR_VENDREDI - FIN_PROD_MATIN_VENDREDI if is_vendredi(start_day) else FIN_PROD_SOIR - FIN_PROD_MATIN
+        ferier = 0
+        query = "INSERT INTO mondon_equipe VALUES(?,?,?,?,?,?,?,?,?,?,?)".format(start_day,
+                                                                                 DEBUT_PROD_MATIN,
+                                                                                 equipe_matin,
+                                                                                 conducteur_matin,
+                                                                                 aide_matin,
+                                                                                 heure_matin,
+                                                                                 equipe_soir,
+                                                                                 conducteur_soir,
+                                                                                 aide_soir,
+                                                                                 heure_soir, ferier)
         try:
-            cls.run_query(query, (start_day, DEBUT_PROD_MATIN, nombre_heure))
+            cls.run_query(query, (start_day, DEBUT_PROD_MATIN, equipe_matin, conducteur_matin, aide_matin, heure_matin,
+                                  equipe_soir, conducteur_soir, aide_soir, heure_soir, ferier))
         except sqlite3.IntegrityError as e:
             # IntegrityError veut dire que l'on essaye d'insérer une vitesse avec un timestamp
             # qui existe déjà dans la base de données.

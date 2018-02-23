@@ -113,6 +113,7 @@ class MainWindow(QMainWindow):
     def create_team_gestion_layout(self):
         vbox = QVBoxLayout()
         menu_team_gestion = TeamGestionMenu(parent=self)
+        menu_team_gestion.setFixedHeight(50)
         vbox.addWidget(menu_team_gestion)
         tab_team_gestion = TabTeamGestion(parent=self)
         vbox.addWidget(tab_team_gestion)

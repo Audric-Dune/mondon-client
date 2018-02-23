@@ -7,7 +7,8 @@ from commun.constants.param import (
     DEBUT_PROD_MATIN, FIN_PROD_MATIN_VENDREDI, FIN_PROD_MATIN, FIN_PROD_SOIR,
     FIN_PROD_SOIR_VENDREDI, VITESSE_LIMITE_ASSIMILATION_ARRET, )
 from commun.lib.base_de_donnee import Database
-from commun.utils.timestamp import timestamp_at_day_ago, timestamp_at_time, timestamp_to_day
+from commun.utils.timestamp import timestamp_at_day_ago, timestamp_at_time
+from commun.utils.day import is_vendredi
 
 
 class DataStore:
@@ -79,7 +80,7 @@ class DataStore:
     def get_live_stat(speeds, ts):
 
         def get_start_and_end(ts, moment):
-            vendredi = timestamp_to_day(ts) == "vendredi"
+            vendredi = is_vendredi(ts)
             start = DEBUT_PROD_MATIN
             mid = FIN_PROD_MATIN_VENDREDI if vendredi else FIN_PROD_MATIN
             end = FIN_PROD_SOIR_VENDREDI if vendredi else FIN_PROD_SOIR
@@ -112,7 +113,7 @@ class DataStore:
         self.imprevu_arret_time_matin = 0
         self.arret_time_soir = 0
         self.imprevu_arret_time_soir = 0
-        vendredi = timestamp_to_day(ts) == "vendredi"
+        vendredi = is_vendredi(ts)
         time_change_of_team = FIN_PROD_MATIN_VENDREDI if vendredi else FIN_PROD_MATIN
         ts_change_of_team = timestamp_at_time(ts, hours=time_change_of_team)
         arrets = self.arrets
@@ -248,7 +249,7 @@ class DataStore:
         # Récupère le timestamp du jours du store
         ts = timestamp_at_day_ago(self.day_ago)
         # Test si on est un vendredi
-        vendredi = timestamp_to_day(ts) == "vendredi"
+        vendredi = is_vendredi(ts)
         # Les équipes commence toujours à 6H
         start = DEBUT_PROD_MATIN
         # La fin de journée est 22h sauf le vendredi 20h
