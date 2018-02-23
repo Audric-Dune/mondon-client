@@ -580,7 +580,7 @@ line_edit_stylesheet = """
     QLineEdit {{
         qproperty-frame: false;
         background-color: {color_blanc};
-        color: {color_gris_fonce};
+        color: {color_noir};
         font-size: 16px;
         border: none;
     }}
@@ -590,7 +590,8 @@ line_edit_stylesheet = """
 """.format(
     color_vert_fonce=color_vert_fonce.hex_string,
     color_blanc=color_blanc.hex_string,
-    color_gris_fonce=color_gris_fonce.hex_string,)
+    color_gris_fonce=color_gris_fonce.hex_string,
+    color_noir=color_noir.hex_string,)
 
 # ____________SCROLLBAR STYLESHEET____________
 
