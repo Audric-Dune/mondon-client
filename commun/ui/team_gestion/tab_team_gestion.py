@@ -67,11 +67,21 @@ class TabTeamGestion(MondonWidget):
     def create_line(self, data):
         line = QHBoxLayout()
         line.addWidget(self.create_label(timestamp_to_name_number_day_month(data[0]), align=Qt.AlignCenter))
-        line.addWidget(self.create_text_edit(data[1]))
+        line.addLayout(self.create_input_hour(data[1]))
         line.addWidget(self.create_checkbox(data[2]))
         return line
 
-    def create_text_edit(self, value):
+    def create_input_hour(self, value):
+        hbox = QHBoxLayout()
+        number_hour = int(value)
+        hour_edit = self.create_text_edit(number_hour)
+        hbox.addWidget(hour_edit)
+        number_min = str(value - int(value))[2:]
+        min_edit = self.create_text_edit(number_min)
+        hbox.addWidget(min_edit)
+        return hbox
+
+    def create_text_edit(self, value, min=0, max=60):
         """
         S'occupe de créer un champs éditable
         """
@@ -82,7 +92,7 @@ class TabTeamGestion(MondonWidget):
         text_edit.setStyleSheet(line_edit_stylesheet)
         text_edit.setAttribute(Qt.WA_MacShowFocusRect, 0)
         text_edit.setFixedSize(20, 20)
-        text_edit.setValidator(QIntValidator(0, 24))
+        text_edit.setValidator(QIntValidator(min, max))
         text_edit.returnPressed.connect(lambda: self.editable_item_change(text_edit.text(), text_edit, clear_focus=True))
         text_edit.textChanged.connect(lambda: self.editable_item_change(text_edit.text(), text_edit))
         self.array_text_edit.append(text_edit)
