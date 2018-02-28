@@ -87,6 +87,7 @@ class MondonWidget(QWidget):
         self.border_color = color
         self.border_size = size
         self.border_manager = {"left": left, "top": top, "right": right, "bottom": bottom}
+        self.update()
 
     def set_padding(self, padding):
         self.padding = padding

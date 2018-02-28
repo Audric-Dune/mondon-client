@@ -18,7 +18,11 @@ class Application(QApplication):
         if argv is None:
             argv = []
         super(Application, self).__init__(argv)
+        self.main_window = None
         self.read_xlsm()
+        self.init_ui()
+
+    def init_ui(self):
         self.main_window = MainWindow()
         self.main_window.show()
 
@@ -27,7 +31,6 @@ class Application(QApplication):
         for sheet in wb.sheets():
             if sheet.name == "Liste bobine":
                 start_ligne = 20
-                code = 0
                 current_ligne = start_ligne
                 while current_ligne < sheet.nrows:
                     if sheet.cell_value(current_ligne, 1) == "":
@@ -36,17 +39,18 @@ class Application(QApplication):
                         color = self.get_color(sheet.cell_value(current_ligne, 8))
                         gr = self.get_gr(sheet.cell_value(current_ligne, 8))
                         alerte = self.is_alerte(wb, sheet.cell_value(current_ligne, 3), sheet.cell_value(current_ligne, 6))
-                        bobine_fille = BobineFille(code=code,
+                        sommeil = self.is_sommeil(sheet.cell_value(current_ligne, 2))
+                        bobine_fille = BobineFille(code=sheet.cell_value(current_ligne, 0),
                                                    color=color,
                                                    laize=sheet.cell_value(current_ligne, 9),
                                                    gr=gr,
                                                    lenght=sheet.cell_value(current_ligne, 26),
                                                    pose=randint(1, 7),
-                                                   alerte=alerte)
+                                                   alerte=alerte,
+                                                   sommeil=sommeil)
                         print(bobine_fille)
                         bobine_filles_store.add_bobine(bobine_fille)
                     current_ligne += 1
-                    code += 1
             if sheet.name == "TYPE BOBINE MERE":
                 start_ligne = 1
                 current_ligne = start_ligne
@@ -56,7 +60,7 @@ class Application(QApplication):
                     else:
                         code = sheet.cell_value(current_ligne, 3)
                         color = sheet.cell_value(current_ligne, 1)
-                        gr = self.get_gr_bobine_mere(gr=sheet.cell_value(current_ligne, 5))
+                        gr = self.get_gr_bobine_mere(gr=sheet.cell_value(current_ligne, 5), color=sheet.cell_value(current_ligne, 1))
                         bobine_mere = BobineMere(code=code,
                                                  color=color,
                                                  laize=sheet.cell_value(current_ligne, 0),
@@ -107,12 +111,20 @@ class Application(QApplication):
                 return False
 
     @staticmethod
-    def get_gr_bobine_mere(gr):
-        if gr != "":
+    def get_gr_bobine_mere(gr, color):
+        if gr != "" and color != "POLY":
             gr += "g"
             return gr
+        elif color == "POLY":
+            return "20µ"
         else:
             return "CX"
 
+    @staticmethod
+    def is_sommeil(sommeil):
+        if sommeil == "Sommeil":
+            return True
+        else:
+            return False
 
 app = Application()

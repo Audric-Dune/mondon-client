@@ -74,12 +74,12 @@ class Chart(MondonWidget):
         super(Chart, self).mouseReleaseEvent(event)
 
     def adjust_drag_offset(self):
-            min_offset = 0
-            max_offset = self.get_chart_width() * settings_store.zoom - self.get_chart_width()
-            if self.drag_offset < min_offset:
-                self.drag_offset = min_offset
-            if self.drag_offset > max_offset:
-                self.drag_offset = max_offset
+        min_offset = 0
+        max_offset = self.get_chart_width() * settings_store.zoom - self.get_chart_width()
+        if self.drag_offset < min_offset:
+            self.drag_offset = min_offset
+        if self.drag_offset > max_offset:
+            self.drag_offset = max_offset
 
     def paintEvent(self, event):
         p = QPainter()
