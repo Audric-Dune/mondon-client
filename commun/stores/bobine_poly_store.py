@@ -2,11 +2,12 @@
 # -*- coding: utf-8 -*-
 
 
-class BobineMereStore:
+class BobinePolyStore:
     def __init__(self):
         self.bobines = []
 
     def add_bobine(self, bobine):
         self.bobines.append(bobine)
 
-bobine_meres_store = BobineMereStore()
+
+bobine_poly_store = BobinePolyStore()

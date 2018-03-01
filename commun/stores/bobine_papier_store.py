@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
-class BobineFilleStore:
+class BobinePapierStore:
     def __init__(self):
         self.bobines = []
 
@@ -10,4 +10,4 @@ class BobineFilleStore:
         self.bobines.append(bobine)
 
 
-bobine_fille_store = BobineFilleStore()
+bobine_papier_store = BobinePapierStore()

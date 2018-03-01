@@ -5,9 +5,10 @@ from PyQt5.QtWidgets import QApplication
 from random import randint
 
 from gestion.window.main_window import MainWindow
-from commun.stores.bobine_fille_store import bobine_filles_store
+from commun.stores.bobine_fille_store import bobine_fille_store
 from commun.model.bobine_filles import BobineFille
-from commun.stores.bobine_mere_store import bobine_meres_store
+from commun.stores.bobine_poly_store import bobine_poly_store
+from commun.stores.bobine_papier_store import bobine_papier_store
 from commun.model.bobine_mere import BobineMere
 import xlrd
 
@@ -27,7 +28,7 @@ class Application(QApplication):
         self.main_window.show()
 
     def read_xlsm(self):
-        wb = xlrd.open_workbook('C:/Users\dessinateur3\Desktop\github\Etude stock bobine V5 MASTER 18-02-23.xlsm')
+        wb = xlrd.open_workbook('C:/Users\Castor\Desktop\github\Etude stock bobine V5 MASTER 18-02-23.xlsm')
         for sheet in wb.sheets():
             if sheet.name == "Liste bobine":
                 start_ligne = 20
@@ -38,7 +39,8 @@ class Application(QApplication):
                     else:
                         color = self.get_color(sheet.cell_value(current_ligne, 8))
                         gr = self.get_gr(sheet.cell_value(current_ligne, 8))
-                        alerte = self.is_alerte(wb, sheet.cell_value(current_ligne, 3), sheet.cell_value(current_ligne, 6))
+                        alerte = self.is_alerte(wb, sheet.cell_value(current_ligne, 3),
+                                                sheet.cell_value(current_ligne, 6))
                         sommeil = self.is_sommeil(sheet.cell_value(current_ligne, 2))
                         bobine_fille = BobineFille(code=sheet.cell_value(current_ligne, 0),
                                                    color=color,
@@ -49,7 +51,7 @@ class Application(QApplication):
                                                    alerte=alerte,
                                                    sommeil=sommeil)
                         print(bobine_fille)
-                        bobine_filles_store.add_bobine(bobine_fille)
+                        bobine_fille_store.add_bobine(bobine_fille)
                     current_ligne += 1
             if sheet.name == "TYPE BOBINE MERE":
                 start_ligne = 1
@@ -60,14 +62,18 @@ class Application(QApplication):
                     else:
                         code = sheet.cell_value(current_ligne, 3)
                         color = sheet.cell_value(current_ligne, 1)
-                        gr = self.get_gr_bobine_mere(gr=sheet.cell_value(current_ligne, 5), color=sheet.cell_value(current_ligne, 1))
+                        gr = self.get_gr_bobine_mere(gr=sheet.cell_value(current_ligne, 5),
+                                                     color=sheet.cell_value(current_ligne, 1))
                         bobine_mere = BobineMere(code=code,
                                                  color=color,
                                                  laize=sheet.cell_value(current_ligne, 0),
                                                  gr=gr,
                                                  lenght=sheet.cell_value(current_ligne, 6))
                         print(bobine_mere)
-                        bobine_meres_store.add_bobine(bobine_mere)
+                        if color == "Poly":
+                            bobine_poly_store.add_bobine(bobine_mere)
+                        else:
+                            bobine_papier_store.add_bobine(bobine_mere)
                     current_ligne += 1
 
     @staticmethod
@@ -126,5 +132,6 @@ class Application(QApplication):
             return True
         else:
             return False
+
 
 app = Application()

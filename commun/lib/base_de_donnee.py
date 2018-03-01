@@ -350,8 +350,9 @@ class Database:
                                                                                  aide_soir,
                                                                                  heure_soir, ferier)
         try:
-            cls.run_query(query, (start_day, DEBUT_PROD_MATIN, equipe_matin, conducteur_matin, aide_matin, heure_matin,
-                                  equipe_soir, conducteur_soir, aide_soir, heure_soir, ferier))
+            pass
+            # cls.run_query(query, (start_day, DEBUT_PROD_MATIN, equipe_matin, conducteur_matin, aide_matin, heure_matin,
+            #                       equipe_soir, conducteur_soir, aide_soir, heure_soir, ferier))
         except sqlite3.IntegrityError as e:
             # IntegrityError veut dire que l'on essaye d'insérer une vitesse avec un timestamp
             # qui existe déjà dans la base de données.
