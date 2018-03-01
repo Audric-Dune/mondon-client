@@ -9,6 +9,7 @@ from PyQt5.QtGui import QCursor
 from commun.model.plan_prod import PlanProd
 
 from gestion.ui.bobine_fille_selected import BobineFilleSelected
+from gestion.ui.refente_selected import RefenteSelected
 from gestion.ui.tab_bobine import TabBobine
 
 
@@ -22,6 +23,8 @@ class MainWindow(QMainWindow):
         self.setMouseTracking(True)
         self.bobine_fille_selected = BobineFilleSelected()
         self.installEventFilter(self.bobine_fille_selected)
+        self.refente_selected = RefenteSelected(self.plan_prod, parent=self)
+        self.refente_selected.setFixedWidth(980)
         self.tab_bobine = TabBobine(plan_prod=self.plan_prod)
         self.tab_bobine.setFixedWidth(400)
         self.tab_bobine.DRAG_SIGNAL.connect(self.handle_drag_bobine)
@@ -32,6 +35,7 @@ class MainWindow(QMainWindow):
         hbox = QHBoxLayout()
         hbox.addWidget(self.tab_bobine)
         hbox.addWidget(self.bobine_fille_selected)
+        hbox.addWidget(self.refente_selected)
         self.central_widget.setLayout(hbox)
         self.setCentralWidget(self.central_widget)
 

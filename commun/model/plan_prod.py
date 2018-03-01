@@ -14,6 +14,7 @@ class PlanProd(MondonWidget):
     def __init__(self, parent=None):
         super(PlanProd, self).__init__(parent=parent)
         self.refente_store = RefenteStore()
+        self.init_refente_store()
         self.perfo_store = PerfoStore()
         self.bobine_fille_store = BobineFilleStore()
         self.init_bobine_fille_store()
@@ -29,6 +30,11 @@ class PlanProd(MondonWidget):
         from commun.stores.bobine_fille_store import bobine_fille_store
         for bobine in bobine_fille_store.bobines:
             self.bobine_fille_store.add_bobine(bobine)
+
+    def init_refente_store(self):
+        from commun.stores.refente_store import refente_store
+        for refente in refente_store.refentes:
+            self.refente_store.add_refente(refente)
 
     def update_bobine_fille_store(self):
         new_bobine_fille_store = BobineFilleStore()

@@ -24,7 +24,7 @@ class Dropdown(QWidget):
     """
     Object générique dropdown
     """
-    def __init__(self, index, parent=None):
+    def __init__(self, index=None, parent=None):
         super(Dropdown, self).__init__(parent=parent)
         self.index = index
         self.placeholder = None
