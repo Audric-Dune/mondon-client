@@ -30,6 +30,8 @@ class LigneBobine(MondonWidget):
         hbox.addWidget(laize)
         color = QLabel(str(self.bobine.color.capitalize()))
         hbox.addWidget(color)
+        pose = QLabel(str(self.bobine.pose))
+        hbox.addWidget(pose)
 
     def eventFilter(self, QObject, e):
         if e.type() == QEvent.MouseButtonPress:

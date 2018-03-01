@@ -6,6 +6,8 @@ from PyQt5.QtWidgets import QMainWindow, QWidget, QHBoxLayout
 from PyQt5.QtCore import Qt, QRect
 from PyQt5.QtGui import QCursor
 
+from commun.model.plan_prod import PlanProd
+
 from gestion.ui.bobine_fille_selected import BobineFilleSelected
 from gestion.ui.tab_bobine import TabBobine
 
@@ -14,12 +16,14 @@ class MainWindow(QMainWindow):
 
     def __init__(self):
         super(MainWindow, self).__init__(parent=None, flags=Qt.Window)
+        self.plan_prod = PlanProd()
         self.drag_bobine = None
         self.central_widget = QWidget(parent=self, flags=Qt.Widget)
         self.setMouseTracking(True)
         self.bobine_fille_selected = BobineFilleSelected()
         self.installEventFilter(self.bobine_fille_selected)
-        self.tab_bobine = TabBobine()
+        self.tab_bobine = TabBobine(plan_prod=self.plan_prod)
+        self.tab_bobine.setFixedWidth(400)
         self.tab_bobine.DRAG_SIGNAL.connect(self.handle_drag_bobine)
         self.tab_bobine.STOP_DRAG_SIGNAL.connect(self.handle_stop_drag_bobine)
         self.init_widget()
@@ -36,7 +40,9 @@ class MainWindow(QMainWindow):
 
     def handle_stop_drag_bobine(self):
         if self.cursor_in_widget(self.bobine_fille_selected) and self.drag_bobine:
+            self.plan_prod.add_bobine_fille(self.drag_bobine)
             self.bobine_fille_selected.set_text(self.drag_bobine)
+            self.tab_bobine.update_widget()
         else:
             self.drag_bobine = None
 
