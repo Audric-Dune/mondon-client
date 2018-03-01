@@ -351,12 +351,15 @@ class Database:
                                                                                  heure_soir, ferier)
         try:
             pass
-            # cls.run_query(query, (start_day, DEBUT_PROD_MATIN, equipe_matin, conducteur_matin, aide_matin, heure_matin,
-            #                       equipe_soir, conducteur_soir, aide_soir, heure_soir, ferier))
         except sqlite3.IntegrityError as e:
-            # IntegrityError veut dire que l'on essaye d'insérer une vitesse avec un timestamp
-            # qui existe déjà dans la base de données.
-            # Dans ce cas, on considère que cette valeur n'a pas besoin d'être insérée et on
-            # ignore l'exception.
             logger.log("DATABASE", "(Ignorée) IntegrityError: {}".format(e))
             pass
+
+    @classmethod
+    def get_refente(cls):
+        query = "SELECT id, id_perfo, dec, laize1, laize2, laize3," \
+                " laize4, laize5, laize6, laize7 " \
+                "FROM mondon_refente " \
+            .format()
+        data_refente = cls.run_query(query, ())
+        return data_refente

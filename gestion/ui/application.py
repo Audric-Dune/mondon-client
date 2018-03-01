@@ -5,11 +5,14 @@ from PyQt5.QtWidgets import QApplication
 from random import randint
 
 from gestion.window.main_window import MainWindow
+from commun.lib. base_de_donnee import Database
 from commun.stores.bobine_fille_store import bobine_fille_store
 from commun.model.bobine_filles import BobineFille
 from commun.stores.bobine_poly_store import bobine_poly_store
 from commun.stores.bobine_papier_store import bobine_papier_store
+from commun.stores.refente_store import refente_store
 from commun.model.bobine_mere import BobineMere
+from commun.model.refente import Refente
 import xlrd
 
 
@@ -21,11 +24,29 @@ class Application(QApplication):
         super(Application, self).__init__(argv)
         self.main_window = None
         self.read_xlsm()
+        self.init_refente_store()
         self.init_ui()
 
     def init_ui(self):
         self.main_window = MainWindow()
         self.main_window.show()
+
+    @staticmethod
+    def init_refente_store():
+        data_refentes = Database.get_refente()
+        for data_refente in data_refentes:
+            new_refente = Refente(code=data_refente[0],
+                                  code_perfo=data_refente[1],
+                                  dec=data_refente[2],
+                                  laize1=data_refente[3],
+                                  laize2=data_refente[4],
+                                  laize3=data_refente[5],
+                                  laize4=data_refente[6],
+                                  laize5=data_refente[7],
+                                  laize6=data_refente[8],
+                                  laize7=data_refente[9])
+            refente_store.add_refente(new_refente)
+        print(refente_store)
 
     def read_xlsm(self):
         wb = xlrd.open_workbook('C:/Users\Castor\Desktop\github\Etude stock bobine V5 MASTER 18-02-23.xlsm')
