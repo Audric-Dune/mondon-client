@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5.QtWidgets import QScrollArea, QVBoxLayout, QWidget
-from PyQt5.QtCore import pyqtSignal, QPoint
+from PyQt5.QtCore import pyqtSignal
 from commun.constants.colors import color_bleu_gris
 from commun.ui.public.mondon_widget import MondonWidget
-from commun.stores.bobine_fille_store import bobine_filles_store
+from commun.stores.bobine_fille_store import bobine_fille_store
 from gestion.ui.line_bobine import LigneBobine
 
 
@@ -23,7 +23,7 @@ class TabBobine(MondonWidget):
         self.init_widget()
 
     def init_widget(self):
-        for bobine in bobine_filles_store.bobines:
+        for bobine in bobine_fille_store.bobines:
                 line_bobine = LigneBobine(parent=self, bobine=bobine)
                 line_bobine.DRAG_SIGNAL.connect(self.handle_drag_bobine_signal)
                 line_bobine.STOP_DRAG_SIGNAL.connect(self.handle_stop_drag_bobine_signal)
