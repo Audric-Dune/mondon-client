@@ -26,7 +26,7 @@ class LigneBobine(MondonWidget):
         code = QLabel(str(self.bobine.code))
         code.setFixedWidth(150)
         hbox.addWidget(code)
-        laize = QLabel(str(self.bobine.laize))
+        laize = QLabel(str(int(self.bobine.laize)))
         hbox.addWidget(laize)
         color = QLabel(str(self.bobine.color.capitalize()))
         hbox.addWidget(color)
