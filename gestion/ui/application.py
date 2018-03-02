@@ -114,7 +114,7 @@ class Application(QApplication):
                                                  laize=sheet.cell_value(current_ligne, 0),
                                                  gr=gr,
                                                  lenght=sheet.cell_value(current_ligne, 6))
-                        if color == "Poly":
+                        if color == "POLY":
                             bobine_poly_store.add_bobine(bobine_mere)
                         else:
                             bobine_papier_store.add_bobine(bobine_mere)

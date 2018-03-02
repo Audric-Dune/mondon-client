@@ -20,7 +20,9 @@ class PlanProd(MondonWidget):
         self.bobine_fille_store = BobineFilleStore()
         self.init_bobine_fille_store()
         self.bobine_papier_store = BobinePapierStore()
+        self.init_bobine_papier_store()
         self.bobine_poly_store = BobinePolyStore()
+        self.init_bobine_poly_store()
         self.refente_selected = None
         self.perfo_selected = None
         self.bobine_fille_selected = []
@@ -42,24 +44,12 @@ class PlanProd(MondonWidget):
         for perfo in perfo_store.perfos:
             self.perfo_store.add_perfo(perfo)
 
-    def update_bobine_fille_store(self):
-        new_bobine_fille_store = BobineFilleStore()
-        current_color = self.bobine_fille_selected[0].color
-        for bobine in self.bobine_fille_store.bobines:
-            if bobine.color == current_color:
-                new_bobine_fille_store.add_bobine(bobine)
-            else:
-                continue
-        self.bobine_fille_store = new_bobine_fille_store
+    def init_bobine_papier_store(self):
+        from commun.stores.bobine_papier_store import bobine_papier_store
+        for bobine in bobine_papier_store.bobines:
+            self.bobine_papier_store.add_bobine(bobine)
 
-    def add_bobine_fille(self, bobine_code):
-        bobine = self.get_bobine_with_code(bobine_code)
-        self.bobine_fille_selected.append(bobine)
-        self.update_bobine_fille_store()
-
-    @staticmethod
-    def get_bobine_with_code(bobine_code):
-        from commun.stores.bobine_fille_store import bobine_fille_store
-        for bobine in bobine_fille_store.bobines:
-            if bobine.code == bobine_code:
-                return bobine
+    def init_bobine_poly_store(self):
+        from commun.stores.bobine_poly_store import bobine_poly_store
+        for bobine in bobine_poly_store.bobines:
+            self.bobine_poly_store.add_bobine(bobine)

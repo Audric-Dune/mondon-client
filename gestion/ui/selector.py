@@ -9,6 +9,8 @@ from commun.utils.layout import clear_layout
 from gestion.ui.line_bobine import LigneBobine
 from gestion.ui.line_refente import LigneRefente
 from gestion.ui.line_perfo import LinePerfo
+from gestion.ui.line_bobine_papier import LineBobinePapier
+from gestion.ui.line_bobine_poly import LineBobinePoly
 
 
 class Selector(MondonWidget):
@@ -16,7 +18,7 @@ class Selector(MondonWidget):
     def __init__(self, plan_prod, parent=None):
         super(Selector, self).__init__(parent=parent)
         self.plan_prod = plan_prod
-        self.current_focus = "refente"
+        self.current_focus = "perfo"
         self.background_color = color_bleu_gris
         self.master_vbox = QVBoxLayout()
         self.vbox = QVBoxLayout()
@@ -48,4 +50,14 @@ class Selector(MondonWidget):
             for perfo in self.plan_prod.perfo_store.perfos:
                 line_perfo = LinePerfo(parent=self, perfo=perfo)
                 self.vbox.addWidget(line_perfo)
+        if self.current_focus == "papier":
+            for bobine in self.plan_prod.bobine_papier_store.bobines:
+                line_bobine_papier = LineBobinePapier(parent=self, bobine=bobine)
+                line_bobine_papier.setFixedHeight(20)
+                self.vbox.addWidget(line_bobine_papier)
+        if self.current_focus == "poly":
+            for bobine in self.plan_prod.bobine_poly_store.bobines:
+                line_bobine_poly = LineBobinePoly(parent=self, bobine=bobine)
+                line_bobine_poly.setFixedHeight(20)
+                self.vbox.addWidget(line_bobine_poly)
         self.vbox.addStretch(0)

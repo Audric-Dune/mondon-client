@@ -2,21 +2,16 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5.QtWidgets import QHBoxLayout, QLabel
-from PyQt5.QtCore import pyqtSignal
 from commun.ui.public.mondon_widget import MondonWidget
-from commun.constants.colors import color_blanc, color_rouge
 
 
-class LigneBobine(MondonWidget):
-    DRAG_SIGNAL = pyqtSignal(str)
-    STOP_DRAG_SIGNAL = pyqtSignal()
+class LineBobinePapier(MondonWidget):
 
     def __init__(self, parent=None, bobine=None):
-        super(LigneBobine, self).__init__(parent=parent)
+        super(LineBobinePapier, self).__init__(parent=parent)
         self.state = None
         self.installEventFilter(self)
         self.bobine = bobine
-        self.background_color = color_rouge if self.bobine.alert else color_blanc
         self.init_widget()
 
     def init_widget(self):
@@ -30,5 +25,8 @@ class LigneBobine(MondonWidget):
         hbox.addWidget(laize)
         color = QLabel(str(self.bobine.color.capitalize()))
         hbox.addWidget(color)
-        pose = QLabel(str(self.bobine.pose))
-        hbox.addWidget(pose)
+        gr = QLabel(str(self.bobine.gr))
+        hbox.addWidget(gr)
+        lenght = QLabel(str(self.bobine.lenght))
+        hbox.addWidget(lenght)
+
