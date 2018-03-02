@@ -23,6 +23,7 @@ class PlanProdCreator(MondonWidget):
     def __init__(self, parent=None):
         super(PlanProdCreator, self).__init__(parent=parent)
         self.plan_prod = PlanProd()
+        self.plan_prod.ON_CHANGED_SIGNAL.connect(self.update_bloc_selected)
         self.bloc_focus = None
         self.selector = Selector(parent=self, plan_prod=self.plan_prod)
         self.bloc_poly_selected = BlocPolySelected(parent=self)

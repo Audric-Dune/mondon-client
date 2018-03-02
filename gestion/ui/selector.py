@@ -69,4 +69,4 @@ class Selector(MondonWidget):
         self.update()
 
     def handle_selected_bobine(self, bobine):
-        print(bobine)
+        self.plan_prod.add_bobine_selected(bobine)

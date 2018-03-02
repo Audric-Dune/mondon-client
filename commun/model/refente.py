@@ -12,6 +12,7 @@ class Refente(MondonWidget):
         self.code = code
         self.code_perfo = code_perfo
         self.dec = dec
+        self.laizes = [laize1, laize2, laize3, laize4, laize5, laize6, laize7]
         self.laize1 = laize1
         self.laize2 = laize2
         self.laize3 = laize3
