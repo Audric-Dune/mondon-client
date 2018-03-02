@@ -11,8 +11,10 @@ from commun.model.bobine_filles import BobineFille
 from commun.stores.bobine_poly_store import bobine_poly_store
 from commun.stores.bobine_papier_store import bobine_papier_store
 from commun.stores.refente_store import refente_store
+from commun.stores.perfo_store import perfo_store
 from commun.model.bobine_mere import BobineMere
 from commun.model.refente import Refente
+from commun.model.perfo import Perfo
 import xlrd
 
 
@@ -25,6 +27,7 @@ class Application(QApplication):
         self.main_window = None
         self.read_xlsm()
         self.init_refente_store()
+        self.init_perfo_store()
         self.init_ui()
 
     def init_ui(self):
@@ -46,10 +49,32 @@ class Application(QApplication):
                                   laize6=data_refente[8],
                                   laize7=data_refente[9])
             refente_store.add_refente(new_refente)
-        print(refente_store)
+
+    @staticmethod
+    def init_perfo_store():
+        data_perfos = Database.get_perfo()
+        for data_perfo in data_perfos:
+            new_perfo = Perfo(code=data_perfo[0],
+                              dec_init=data_perfo[1],
+                              cale1=data_perfo[2],
+                              bague1=data_perfo[3],
+                              cale2=data_perfo[4],
+                              bague2=data_perfo[5],
+                              cale3=data_perfo[6],
+                              bague3=data_perfo[7],
+                              cale4=data_perfo[8],
+                              bague4=data_perfo[9],
+                              cale5=data_perfo[10],
+                              bague5=data_perfo[11],
+                              cale6=data_perfo[12],
+                              bague6=data_perfo[13],
+                              cale7=data_perfo[14],
+                              bague7=data_perfo[15])
+            perfo_store.add_perfo(new_perfo)
 
     def read_xlsm(self):
-        wb = xlrd.open_workbook('C:/Users\Castor\Desktop\github\Etude stock bobine V5 MASTER 18-02-23.xlsm')
+        # wb = xlrd.open_workbook('C:/Users\Castor\Desktop\github\Etude stock bobine V5 MASTER 18-02-23.xlsm')
+        wb = xlrd.open_workbook('C:/Users\dessinateur3\Desktop\github\Etude stock bobine V5 MASTER 18-02-23.xlsm')
         for sheet in wb.sheets():
             if sheet.name == "Liste bobine":
                 start_ligne = 20
@@ -71,7 +96,6 @@ class Application(QApplication):
                                                    pose=randint(1, 7),
                                                    alerte=alerte,
                                                    sommeil=sommeil)
-                        print(bobine_fille)
                         bobine_fille_store.add_bobine(bobine_fille)
                     current_ligne += 1
             if sheet.name == "TYPE BOBINE MERE":
@@ -90,7 +114,6 @@ class Application(QApplication):
                                                  laize=sheet.cell_value(current_ligne, 0),
                                                  gr=gr,
                                                  lenght=sheet.cell_value(current_ligne, 6))
-                        print(bobine_mere)
                         if color == "Poly":
                             bobine_poly_store.add_bobine(bobine_mere)
                         else:

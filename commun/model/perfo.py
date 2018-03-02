@@ -25,25 +25,25 @@ class Perfo(MondonWidget):
                  cale7=0,
                  bague7=0):
         super(Perfo, self).__init__(parent=parent)
-        self.code = code,
-        self.dec_init = dec_init,
-        self.cale1 = cale1,
-        self.bague1 = bague1,
-        self.cale2 = cale2,
-        self.bague2 = bague2,
-        self.cale3 = cale3,
-        self.bague3 = bague3,
-        self.cale4 = cale4,
-        self.bague4 = bague4,
-        self.cale5 = cale5,
-        self.bague5 = bague5,
-        self.cale6 = cale6,
-        self.bague6 = bague6,
-        self.cale7 = cale7,
+        self.code = code
+        self.dec_init = dec_init
+        self.cale1 = cale1
+        self.bague1 = bague1
+        self.cale2 = cale2
+        self.bague2 = bague2
+        self.cale3 = cale3
+        self.bague3 = bague3
+        self.cale4 = cale4
+        self.bague4 = bague4
+        self.cale5 = cale5
+        self.bague5 = bague5
+        self.cale6 = cale6
+        self.bague6 = bague6
+        self.cale7 = cale7
         self.bague7 = bague7
 
     def __str__(self):
-        return "PERFO{} : {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}".format(self.id,
+        return "PERFO{} : {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}".format(self.code,
                                                                                              self.dec_init,
                                                                                              self.cale1,
                                                                                              self.bague1,

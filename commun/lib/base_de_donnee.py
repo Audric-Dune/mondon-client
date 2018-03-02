@@ -363,3 +363,12 @@ class Database:
             .format()
         data_refente = cls.run_query(query, ())
         return data_refente
+
+    @classmethod
+    def get_perfo(cls):
+        query = "SELECT id, dec_init, cale1, bague1, cale2, bague2, cale3, bague3, cale4, bague4," \
+                "cale5, bague5, cale6, bague6, cale7, bague7 " \
+                "FROM mondon_perfo " \
+            .format()
+        data_perfo = cls.run_query(query, ())
+        return data_perfo

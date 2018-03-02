@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5.QtWidgets import QVBoxLayout, QLabel
-from PyQt5.QtCore import pyqtSignal
 from commun.constants.colors import color_bleu_gris
 from commun.constants.stylesheets import red_16_label_stylesheet
 from commun.ui.public.mondon_widget import MondonWidget

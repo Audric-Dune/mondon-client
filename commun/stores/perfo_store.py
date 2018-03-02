@@ -10,4 +10,4 @@ class PerfoStore:
         self.perfos.append(perfo)
 
 
-refente_store = PerfoStore()
+perfo_store = PerfoStore()

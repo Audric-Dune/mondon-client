@@ -10,11 +10,12 @@ class BaguePerfo(MondonWidget):
     BAGUE_HEIGHT = 50  # with pic
     PIC_NUMBER = 10
     PIC_HEIGHT = 8
-    ARROW_LENGTH = 20
+    # ARROW_LENGTH = 20
+    ARROW_LENGTH = 0
     ARROW_SIZE = 5
     BORDER_SIZE = 1
 
-    def __init__(self, parent=None, width_value=80, ech=1):
+    def __init__(self, parent=None, width_value=80, ech=0.5):
         super(BaguePerfo, self).__init__(parent=parent)
         self.width_value = width_value
         self.ech = ech
@@ -69,4 +70,4 @@ class BaguePerfo(MondonWidget):
         arrow_size = self.ARROW_SIZE * self.ech
         self.draw_bague(p, pic_height, arrow_length)
         self.draw_pic(p, pic_height, arrow_length)
-        self.draw_arrow(p, arrow_length, arrow_size)
+        # self.draw_arrow(p, arrow_length, arrow_size)
