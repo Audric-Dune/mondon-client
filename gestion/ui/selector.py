@@ -42,6 +42,7 @@ class Selector(MondonWidget):
         if self.current_focus == "bobine" or not self.current_focus:
             for bobine in self.plan_prod.bobine_fille_store.bobines:
                 line_bobine = LigneBobine(parent=self, bobine=bobine)
+                line_bobine.ON_DBCLICK_SIGNAL.connect(self.handle_selected_bobine)
                 line_bobine.setFixedHeight(20)
                 self.vbox.addWidget(line_bobine)
         if self.current_focus == "refente":
@@ -66,3 +67,6 @@ class Selector(MondonWidget):
         #   ajout label : "Aucun item disponible dans la configuration actuelle"
         self.vbox.addStretch(0)
         self.update()
+
+    def handle_selected_bobine(self, bobine):
+        print(bobine)

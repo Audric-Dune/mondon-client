@@ -1,15 +1,14 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtWidgets import QHBoxLayout, QLabel
+from PyQt5.QtWidgets import QHBoxLayout, QLabel, QWidget
 from PyQt5.QtCore import pyqtSignal
 from commun.ui.public.mondon_widget import MondonWidget
 from commun.constants.colors import color_blanc, color_rouge
 
 
 class LigneBobine(MondonWidget):
-    DRAG_SIGNAL = pyqtSignal(str)
-    STOP_DRAG_SIGNAL = pyqtSignal()
+    ON_DBCLICK_SIGNAL = pyqtSignal(QWidget)
 
     def __init__(self, parent=None, bobine=None):
         super(LigneBobine, self).__init__(parent=parent)
@@ -32,3 +31,6 @@ class LigneBobine(MondonWidget):
         hbox.addWidget(color)
         pose = QLabel(str(self.bobine.pose))
         hbox.addWidget(pose)
+
+    def mouseDoubleClickEvent(self, e):
+        self.ON_DBCLICK_SIGNAL.emit(self.bobine)
