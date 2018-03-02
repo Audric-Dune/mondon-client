@@ -5,12 +5,17 @@
 # -*- coding: utf-8 -*-
 
 
-from PyQt5.QtWidgets import QHBoxLayout
+from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout
 
 from commun.model.plan_prod import PlanProd
 from commun.ui.public.mondon_widget import MondonWidget
 
 from gestion.ui.selector import Selector
+from gestion.ui.bloc_poly_selected import BlocPolySelected
+from gestion.ui.bloc_papier_selected import BlocPapierSelected
+from gestion.ui.bloc_perfo_selected import BlocPerfoSelected
+from gestion.ui.bloc_refente_selected import BlocRefenteSelected
+from gestion.ui.bloc_bobines_selected import BlocBobinesSelected
 
 
 class PlanProdCreator(MondonWidget):
@@ -18,10 +23,48 @@ class PlanProdCreator(MondonWidget):
     def __init__(self, parent=None):
         super(PlanProdCreator, self).__init__(parent=parent)
         self.plan_prod = PlanProd()
-        self.selector = Selector(plan_prod=self.plan_prod)
+        self.bloc_focus = None
+        self.selector = Selector(parent=self, plan_prod=self.plan_prod)
+        self.bloc_poly_selected = BlocPolySelected(parent=self)
+        self.bloc_poly_selected.ON_CLICK_SIGNAL.connect(self.handle_click_on_bloc_selected)
+        self.bloc_papier_selected = BlocPapierSelected(parent=self)
+        self.bloc_papier_selected.ON_CLICK_SIGNAL.connect(self.handle_click_on_bloc_selected)
+        self.bloc_perfo_selected = BlocPerfoSelected(parent=self)
+        self.bloc_perfo_selected.ON_CLICK_SIGNAL.connect(self.handle_click_on_bloc_selected)
+        self.bloc_refente_selected = BlocRefenteSelected(parent=self)
+        self.bloc_refente_selected.ON_CLICK_SIGNAL.connect(self.handle_click_on_bloc_selected)
+        self.bloc_bobines_selected = BlocBobinesSelected(parent=self)
+        self.bloc_bobines_selected.ON_CLICK_SIGNAL.connect(self.handle_click_on_bloc_selected)
         self.init_ui()
 
     def init_ui(self):
         master_hbox = QHBoxLayout()
+        self.selector.setFixedWidth(650)
         master_hbox.addWidget(self.selector)
+        vbox = QVBoxLayout()
+        vbox.addWidget(self.bloc_poly_selected)
+        vbox.addWidget(self.bloc_perfo_selected)
+        vbox.addWidget(self.bloc_papier_selected)
+        vbox.addWidget(self.bloc_refente_selected)
+        vbox.addWidget(self.bloc_bobines_selected)
+        vbox.addStretch(0)
+        master_hbox.addLayout(vbox)
         self.setLayout(master_hbox)
+
+    def update_bloc_selected(self):
+        self.bloc_poly_selected.update_widget()
+        self.bloc_bobines_selected.update_widget()
+        self.bloc_refente_selected.update_widget()
+        self.bloc_perfo_selected.update_widget()
+        self.bloc_papier_selected.update_widget()
+
+    def update_selector(self):
+        self.selector.update_widget()
+
+    def handle_click_on_bloc_selected(self, name_bloc):
+        if self.bloc_focus == name_bloc:
+            self.bloc_focus = None
+        else:
+            self.bloc_focus = name_bloc
+        self.update_bloc_selected()
+        self.update_selector()

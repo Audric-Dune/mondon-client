@@ -18,6 +18,7 @@ class Selector(MondonWidget):
     def __init__(self, plan_prod, parent=None):
         super(Selector, self).__init__(parent=parent)
         self.plan_prod = plan_prod
+        self.parent = parent
         self.current_focus = "perfo"
         self.background_color = color_bleu_gris
         self.master_vbox = QVBoxLayout()
@@ -36,8 +37,9 @@ class Selector(MondonWidget):
         self.setLayout(self.master_vbox)
 
     def update_widget(self):
+        self.current_focus = self.parent.bloc_focus
         clear_layout(self.vbox)
-        if self.current_focus == "bobine":
+        if self.current_focus == "bobine" or not self.current_focus:
             for bobine in self.plan_prod.bobine_fille_store.bobines:
                 line_bobine = LigneBobine(parent=self, bobine=bobine)
                 line_bobine.setFixedHeight(20)
@@ -60,4 +62,7 @@ class Selector(MondonWidget):
                 line_bobine_poly = LineBobinePoly(parent=self, bobine=bobine)
                 line_bobine_poly.setFixedHeight(20)
                 self.vbox.addWidget(line_bobine_poly)
+        # if self.vbox.count() ==0:
+        #   ajout label : "Aucun item disponible dans la configuration actuelle"
         self.vbox.addStretch(0)
+        self.update()
