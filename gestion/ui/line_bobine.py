@@ -7,11 +7,11 @@ from commun.ui.public.mondon_widget import MondonWidget
 from commun.constants.colors import color_blanc, color_rouge
 
 
-class LigneBobine(MondonWidget):
+class LineBobine(MondonWidget):
     ON_DBCLICK_SIGNAL = pyqtSignal(QWidget)
 
     def __init__(self, parent=None, bobine=None):
-        super(LigneBobine, self).__init__(parent=parent)
+        super(LineBobine, self).__init__(parent=parent)
         self.state = None
         self.installEventFilter(self)
         self.bobine = bobine

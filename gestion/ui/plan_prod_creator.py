@@ -23,7 +23,7 @@ class PlanProdCreator(MondonWidget):
     def __init__(self, parent=None):
         super(PlanProdCreator, self).__init__(parent=parent)
         self.plan_prod = PlanProd()
-        self.plan_prod.ON_CHANGED_SIGNAL.connect(self.update_bloc_selected)
+        self.plan_prod.ON_CHANGED_SIGNAL.connect(self.handle_plan_prod_changed)
         self.bloc_focus = None
         self.selector = Selector(parent=self, plan_prod=self.plan_prod)
         self.bloc_poly_selected = BlocPolySelected(parent=self)
@@ -61,6 +61,10 @@ class PlanProdCreator(MondonWidget):
 
     def update_selector(self):
         self.selector.update_widget()
+
+    def handle_plan_prod_changed(self):
+        self.update_bloc_selected()
+        self.update_selector()
 
     def handle_click_on_bloc_selected(self, name_bloc):
         if self.bloc_focus == name_bloc:

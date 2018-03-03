@@ -7,7 +7,7 @@ from commun.constants.colors import color_gris_fonce, color_noir, color_rouge
 
 
 class BaguePerfo(MondonWidget):
-    BAGUE_HEIGHT = 50  # with pic
+    BAGUE_HEIGHT = 100  # with pic
     PIC_NUMBER = 10
     PIC_HEIGHT = 8
     # ARROW_LENGTH = 20
@@ -15,7 +15,7 @@ class BaguePerfo(MondonWidget):
     ARROW_SIZE = 5
     BORDER_SIZE = 1
 
-    def __init__(self, parent=None, width_value=80, ech=0.5):
+    def __init__(self, parent=None, width_value=80, ech=1):
         super(BaguePerfo, self).__init__(parent=parent)
         self.width_value = width_value
         self.ech = ech

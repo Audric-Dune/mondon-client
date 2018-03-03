@@ -6,7 +6,7 @@ from commun.constants.colors import color_bleu_gris
 from commun.constants.stylesheets import scroll_bar_stylesheet
 from commun.ui.public.mondon_widget import MondonWidget
 from commun.utils.layout import clear_layout
-from gestion.ui.line_bobine import LigneBobine
+from gestion.ui.line_bobine import LineBobine
 from gestion.ui.line_refente import LigneRefente
 from gestion.ui.line_perfo import LinePerfo
 from gestion.ui.line_bobine_papier import LineBobinePapier
@@ -41,7 +41,7 @@ class Selector(MondonWidget):
         clear_layout(self.vbox)
         if self.current_focus == "bobine" or not self.current_focus:
             for bobine in self.plan_prod.current_bobine_fille_store.bobines:
-                line_bobine = LigneBobine(parent=self, bobine=bobine)
+                line_bobine = LineBobine(parent=self, bobine=bobine)
                 line_bobine.ON_DBCLICK_SIGNAL.connect(self.handle_selected_bobine)
                 line_bobine.setFixedHeight(20)
                 self.vbox.addWidget(line_bobine)

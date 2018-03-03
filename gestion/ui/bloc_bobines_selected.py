@@ -7,6 +7,7 @@ from PyQt5.QtCore import pyqtSignal
 from commun.constants.colors import color_bleu_gris, color_vert_moyen
 from commun.ui.public.mondon_widget import MondonWidget
 from commun.utils.layout import clear_layout
+from gestion.ui.line_bobine import LineBobine
 
 
 class BlocBobinesSelected(MondonWidget):
@@ -23,9 +24,8 @@ class BlocBobinesSelected(MondonWidget):
         clear_layout(self.master_hbox)
         if self.parent.plan_prod.bobine_fille_selected:
             for bobine in self.parent.plan_prod.bobine_fille_selected:
-                label = QLabel(bobine.code)
-                label.setFixedSize(650, 30)
-                self.master_hbox.addWidget(label)
+                line_bobine = LineBobine(parent=self, bobine=bobine)
+                self.master_hbox.addWidget(line_bobine)
         else:
             label = QLabel("Bobines filles")
             label.setFixedSize(650, 30)
@@ -33,7 +33,6 @@ class BlocBobinesSelected(MondonWidget):
         self.setLayout(self.master_hbox)
 
     def update_widget(self):
-        print("BlocBobinesSelected update_widget")
         if self.parent.bloc_focus == "bobine" or not self.parent.bloc_focus:
             self.background_color = color_vert_moyen
         else:
