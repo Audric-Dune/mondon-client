@@ -1,15 +1,18 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtWidgets import QHBoxLayout, QLabel
+from PyQt5.QtWidgets import QHBoxLayout, QLabel, QWidget
+from PyQt5.QtCore import pyqtSignal
 from commun.ui.public.mondon_widget import MondonWidget
 from commun.ui.public.bobine_fille_vide import BobineFilleVide
 
 
 class LigneRefente(MondonWidget):
+    ON_DBCLICK_SIGNAL = pyqtSignal(QWidget)
 
     def __init__(self, parent=None, refente=None):
         super(LigneRefente, self).__init__(parent=parent)
+        self.refente = refente
         self.hbox = QHBoxLayout()
         self.init_widget(refente)
 
@@ -41,3 +44,6 @@ class LigneRefente(MondonWidget):
             self.hbox.addWidget(BobineFilleVide(parent=self, laize=laize7, number=7))
         self.hbox.addStretch(0)
         self.setLayout(self.hbox)
+
+    def mouseDoubleClickEvent(self, e):
+        self.ON_DBCLICK_SIGNAL.emit(self.refente)

@@ -33,6 +33,7 @@ class BlocBobinesSelected(MondonWidget):
         self.setLayout(self.master_hbox)
 
     def update_widget(self):
+        print("BlocBobinesSelected update_widget")
         if self.parent.bloc_focus == "bobine" or not self.parent.bloc_focus:
             self.background_color = color_vert_moyen
         else:

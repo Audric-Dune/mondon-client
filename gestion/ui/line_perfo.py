@@ -1,16 +1,19 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtWidgets import QHBoxLayout, QLabel
+from PyQt5.QtWidgets import QHBoxLayout, QLabel, QWidget
+from PyQt5.QtCore import pyqtSignal
 from commun.ui.public.mondon_widget import MondonWidget
 from commun.ui.public.bague_perfo import BaguePerfo
 from commun.ui.public.entretoise_perfo import EntretoisePerfo
 
 
 class LinePerfo(MondonWidget):
+    ON_DBCLICK_SIGNAL = pyqtSignal(QWidget)
 
     def __init__(self, parent=None, perfo=None):
         super(LinePerfo, self).__init__(parent=parent)
+        self.perfo = perfo
         self.hbox = QHBoxLayout()
         self.init_widget(perfo)
 
@@ -63,3 +66,6 @@ class LinePerfo(MondonWidget):
             self.hbox.addWidget(BaguePerfo(parent=self, width_value=bague7))
         self.hbox.addStretch(0)
         self.setLayout(self.hbox)
+
+    def mouseDoubleClickEvent(self, e):
+        self.ON_DBCLICK_SIGNAL.emit(self.perfo)
