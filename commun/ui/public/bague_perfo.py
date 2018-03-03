@@ -67,7 +67,7 @@ class BaguePerfo(MondonWidget):
     def draw(self, p):
         pic_height = self.PIC_HEIGHT * self.ech
         arrow_length = self.ARROW_LENGTH * self.ech
-        arrow_size = self.ARROW_SIZE * self.ech
+        # arrow_size = self.ARROW_SIZE * self.ech
         self.draw_bague(p, pic_height, arrow_length)
         self.draw_pic(p, pic_height, arrow_length)
         # self.draw_arrow(p, arrow_length, arrow_size)
