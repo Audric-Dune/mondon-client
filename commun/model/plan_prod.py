@@ -87,7 +87,7 @@ class PlanProd(MondonWidget):
 
     def del_item_selected(self, data_type):
         if data_type == "bobine":
-            self.bobine_fille_selected = None
+            self.bobine_fille_selected = []
         if data_type == "papier":
             self.bobine_papier_selected = None
         if data_type == "poly":
