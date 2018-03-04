@@ -90,6 +90,10 @@ class PlanProd(MondonWidget):
         self.filter_bobine_papier_from_plan_prod_param()
         self.filter_refente_from_plan_prod_param()
         self.filter_bobine_fille_from_plan_prod_param()
+        if self.bobine_fille_selected:
+            self.filter_from_bobine_selected()
+        self.filter_bobine_poly_from_bobine_papier()
+        self.filter_perfo_from_refente()
         self.get_new_item_selected_from_store()
 
     def definied_plan_prod_param(self):
@@ -151,6 +155,86 @@ class PlanProd(MondonWidget):
                 continue
             new_bobine_fille_store.add_bobine(bobine)
         self.current_bobine_fille_store = new_bobine_fille_store
+
+    def filter_from_bobine_selected(self):
+        new_refente_store = self.filter_refente_from_bobine_fille()
+        self.current_refente_store = new_refente_store
+
+    def filter_refente_from_bobine_fille(self):
+        new_refente_store = RefenteStore()
+        for refente in self.current_refente_store.refentes:
+            if self.refente_is_compatible_from_bobines_filles_selected(refente):
+                new_refente_store.add_refente(refente)
+        return new_refente_store
+
+    def refente_is_compatible_from_bobines_filles_selected(self, refente):
+        new_refente = refente
+        for bobine in self.bobine_fille_selected:
+            if self.refente_is_compatible_from_bobine(bobine, new_refente):
+                new_refente = self.get_new_refente_with_bobine(new_refente, bobine)
+                continue
+            else:
+                return False
+        return True
+
+    @staticmethod
+    def refente_is_compatible_from_bobine(bobine, refente):
+        counter_pose = 0
+        for laize_refente in refente.laizes:
+            if laize_refente and laize_refente == bobine.laize:
+                counter_pose += 1
+                if counter_pose >= bobine.pose:
+                    return True
+            else:
+                counter_pose = 0
+        return False
+
+    @staticmethod
+    def get_new_refente_with_bobine(refente, bobine):
+        start_index = 0
+        counter_pose = 0
+        for laize_refente in refente.laizes:
+            if laize_refente and laize_refente == bobine.laize:
+                counter_pose += 1
+                if counter_pose >= bobine.pose:
+                    break
+            else:
+                counter_pose = 0
+                start_index += 1
+        from commun.model.refente import Refente
+        new_refente = Refente()
+        index_refente = 0
+        for laize_refente in refente.laizes:
+            if index_refente < start_index or index_refente >= start_index + bobine.pose:
+                new_refente.laizes[index_refente] = laize_refente
+            index_refente += 1
+        return new_refente
+
+    def filter_bobine_poly_from_bobine_papier(self):
+        new_bobine_poly_store = BobinePolyStore()
+        for bobine_poly in bobine_poly_store.bobines:
+            if self.is_compatible_bobine_poly_from_bobine_papier_store(bobine_poly):
+                new_bobine_poly_store.add_bobine(bobine_poly)
+        self.current_bobine_poly_store = new_bobine_poly_store
+
+    def is_compatible_bobine_poly_from_bobine_papier_store(self, bobine_poly):
+        for bobine_papier in self.current_bobine_papier_store.bobines:
+            if bobine_poly.laize == bobine_papier.laize:
+                return True
+        return False
+
+    def filter_perfo_from_refente(self):
+        new_perfo_store = PerfoStore()
+        for perfo in perfo_store.perfos:
+            if self.is_compatible_perfo_from_refente_store(perfo):
+                new_perfo_store.add_perfo(perfo)
+        self.current_perfo_store = new_perfo_store
+
+    def is_compatible_perfo_from_refente_store(self, perfo):
+        for refente in self.current_refente_store.refentes:
+            if refente.code_perfo == perfo.code:
+                return True
+        return False
 
     def get_new_item_selected_from_store(self):
         if len(self.current_bobine_poly_store.bobines) == 1:

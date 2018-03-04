@@ -10,7 +10,7 @@ class EntretoisePerfo(MondonWidget):
     ENTRETOISE_HEIGHT = 60
     BORDER_SIZE = 1
 
-    def __init__(self, parent=None, width_value=80, ech=1):
+    def __init__(self, parent=None, width_value=80, ech=0.5):
         super(EntretoisePerfo, self).__init__(parent=parent)
         self.width_value = width_value
         self.ech = ech

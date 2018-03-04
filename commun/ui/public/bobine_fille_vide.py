@@ -9,18 +9,18 @@ from commun.constants.colors import color_gris_fonce, color_noir
 class BobineFilleVide(MondonWidget):
     BOBINE_HEIGHT = 200
 
-    def __init__(self, parent=None, laize=0, number=0, ech=1):
+    def __init__(self, parent=None, laize=0, number=0, ech=0.5):
         super(BobineFilleVide, self).__init__(parent=parent)
         self.laize = laize
         self.number = number
         self.ech = ech
-        self.setFixedSize(self.laize*self.ech, self.BOBINE_HEIGHT)
+        self.setFixedSize(self.laize*self.ech, self.BOBINE_HEIGHT*self.ech)
 
     def draw_bobine(self, p):
         x = 0
         y = 0
         w = self.laize * self.ech - 1
-        h = self.BOBINE_HEIGHT - 1 * self.ech
+        h = (self.BOBINE_HEIGHT - 1) * self.ech
         draw_rectangle(p, x, y, w, h, color=color_gris_fonce, border_color=color_noir)
 
     def draw_label_number(self, p):

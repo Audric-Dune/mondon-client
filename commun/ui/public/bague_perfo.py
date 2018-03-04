@@ -15,7 +15,7 @@ class BaguePerfo(MondonWidget):
     ARROW_SIZE = 5
     BORDER_SIZE = 1
 
-    def __init__(self, parent=None, width_value=80, ech=1):
+    def __init__(self, parent=None, width_value=80, ech=0.5):
         super(BaguePerfo, self).__init__(parent=parent)
         self.width_value = width_value
         self.ech = ech
