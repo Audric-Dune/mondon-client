@@ -6,16 +6,13 @@
 
 
 from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout
+from PyQt5.QtCore import Qt
 
 from commun.model.plan_prod import PlanProd
 from commun.ui.public.mondon_widget import MondonWidget
 
 from gestion.ui.selector import Selector
-from gestion.ui.bloc_poly_selected import BlocPolySelected
-from gestion.ui.bloc_papier_selected import BlocPapierSelected
-from gestion.ui.bloc_perfo_selected import BlocPerfoSelected
-from gestion.ui.bloc_refente_selected import BlocRefenteSelected
-from gestion.ui.bloc_bobines_selected import BlocBobinesSelected
+from gestion.ui.bloc_selected import BlocSelected
 
 
 class PlanProdCreator(MondonWidget):
@@ -24,17 +21,17 @@ class PlanProdCreator(MondonWidget):
         super(PlanProdCreator, self).__init__(parent=parent)
         self.plan_prod = PlanProd()
         self.plan_prod.ON_CHANGED_SIGNAL.connect(self.handle_plan_prod_changed)
-        self.bloc_focus = None
+        self.bloc_focus = "bobine"
         self.selector = Selector(parent=self, plan_prod=self.plan_prod)
-        self.bloc_poly_selected = BlocPolySelected(parent=self)
+        self.bloc_poly_selected = BlocSelected(data_type="poly", parent=self)
         self.bloc_poly_selected.ON_CLICK_SIGNAL.connect(self.handle_click_on_bloc_selected)
-        self.bloc_papier_selected = BlocPapierSelected(parent=self)
+        self.bloc_papier_selected = BlocSelected(data_type="papier", parent=self)
         self.bloc_papier_selected.ON_CLICK_SIGNAL.connect(self.handle_click_on_bloc_selected)
-        self.bloc_perfo_selected = BlocPerfoSelected(parent=self)
+        self.bloc_perfo_selected = BlocSelected(data_type="perfo", parent=self)
         self.bloc_perfo_selected.ON_CLICK_SIGNAL.connect(self.handle_click_on_bloc_selected)
-        self.bloc_refente_selected = BlocRefenteSelected(parent=self)
+        self.bloc_refente_selected = BlocSelected(data_type="refente", parent=self)
         self.bloc_refente_selected.ON_CLICK_SIGNAL.connect(self.handle_click_on_bloc_selected)
-        self.bloc_bobines_selected = BlocBobinesSelected(parent=self)
+        self.bloc_bobines_selected = BlocSelected(data_type="bobine", parent=self)
         self.bloc_bobines_selected.ON_CLICK_SIGNAL.connect(self.handle_click_on_bloc_selected)
         self.init_ui()
 
@@ -68,8 +65,12 @@ class PlanProdCreator(MondonWidget):
 
     def handle_click_on_bloc_selected(self, name_bloc):
         if self.bloc_focus == name_bloc:
-            self.bloc_focus = None
+            self.bloc_focus = "bobine"
         else:
             self.bloc_focus = name_bloc
         self.update_bloc_selected()
         self.update_selector()
+
+    def keyPressEvent(self, e):
+        if e.key() == Qt.Key_Delete:
+            self.plan_prod.del_item_selected(self.bloc_focus)

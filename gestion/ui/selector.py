@@ -7,7 +7,7 @@ from commun.constants.stylesheets import scroll_bar_stylesheet
 from commun.ui.public.mondon_widget import MondonWidget
 from commun.utils.layout import clear_layout
 from gestion.ui.line_bobine import LineBobine
-from gestion.ui.line_refente import LigneRefente
+from gestion.ui.line_refente import LineRefente
 from gestion.ui.line_perfo import LinePerfo
 from gestion.ui.line_bobine_papier import LineBobinePapier
 from gestion.ui.line_bobine_poly import LineBobinePoly
@@ -47,7 +47,7 @@ class Selector(MondonWidget):
                 self.vbox.addWidget(line_bobine)
         if self.current_focus == "refente":
             for refente in self.plan_prod.current_refente_store.refentes:
-                line_refente = LigneRefente(parent=self, refente=refente)
+                line_refente = LineRefente(parent=self, refente=refente)
                 line_refente.ON_DBCLICK_SIGNAL.connect(self.handle_selected_refente)
                 self.vbox.addWidget(line_refente)
         if self.current_focus == "perfo":

@@ -7,11 +7,11 @@ from commun.ui.public.mondon_widget import MondonWidget
 from commun.ui.public.bobine_fille_vide import BobineFilleVide
 
 
-class LigneRefente(MondonWidget):
+class LineRefente(MondonWidget):
     ON_DBCLICK_SIGNAL = pyqtSignal(QWidget)
 
     def __init__(self, parent=None, refente=None):
-        super(LigneRefente, self).__init__(parent=parent)
+        super(LineRefente, self).__init__(parent=parent)
         self.refente = refente
         self.hbox = QHBoxLayout()
         self.init_widget(refente)

@@ -85,11 +85,26 @@ class PlanProd(MondonWidget):
         self.update_all_current_store()
         self.ON_CHANGED_SIGNAL.emit()
 
+    def del_item_selected(self, data_type):
+        if data_type == "bobine":
+            self.bobine_fille_selected = None
+        if data_type == "papier":
+            self.bobine_papier_selected = None
+        if data_type == "poly":
+            self.bobine_poly_selected = None
+        if data_type == "refente":
+            self.refente_selected = None
+        if data_type == "perfo":
+            self.perfo_selected = None
+        self.update_all_current_store()
+        self.ON_CHANGED_SIGNAL.emit()
+
     def update_all_current_store(self):
         self.definied_plan_prod_param()
         self.filter_bobine_papier_from_plan_prod_param()
         self.filter_refente_from_plan_prod_param()
         self.filter_bobine_fille_from_plan_prod_param()
+        self.filter_perfo_from_plan_prod_param()
         if self.bobine_fille_selected:
             self.filter_from_bobine_selected()
         self.filter_bobine_poly_from_bobine_papier()
@@ -155,6 +170,12 @@ class PlanProd(MondonWidget):
                 continue
             new_bobine_fille_store.add_bobine(bobine)
         self.current_bobine_fille_store = new_bobine_fille_store
+
+    def filter_perfo_from_plan_prod_param(self):
+        if self.refente_selected:
+            for perfo in self.current_perfo_store.perfos:
+                if perfo.code == self.refente_selected.code_perfo:
+                    self.perfo_selected = perfo
 
     def filter_from_bobine_selected(self):
         new_refente_store = self.filter_refente_from_bobine_fille()

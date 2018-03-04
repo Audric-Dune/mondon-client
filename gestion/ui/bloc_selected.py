@@ -1,0 +1,99 @@
+# !/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+from PyQt5.QtWidgets import QVBoxLayout, QLabel
+from PyQt5.QtCore import pyqtSignal, Qt
+
+from commun.constants.colors import color_bleu_gris, color_vert_moyen
+from commun.ui.public.mondon_widget import MondonWidget
+from commun.utils.layout import clear_layout
+from gestion.ui.line_bobine import LineBobine
+from gestion.ui.line_perfo import LinePerfo
+from gestion.ui.line_refente import LineRefente
+# from gestion.ui.line_bobine_papier import LineBobinePapier
+# from gestion.ui.line_bobine_poly import LineBobinePoly
+
+
+class BlocSelected(MondonWidget):
+    ON_CLICK_SIGNAL = pyqtSignal(str)
+
+    def __init__(self, data_type, parent=None):
+        super(BlocSelected, self).__init__(parent=parent)
+        self.data_type = data_type
+        self.parent = parent
+        self.master_hbox = QVBoxLayout()
+        self.update_widget()
+
+    def init_ui(self):
+        clear_layout(self.master_hbox)
+        if self.data_type == "bobine":
+            self.init_ui_bobine_fille(self.master_hbox)
+        if self.data_type == "poly":
+            self.init_ui_bobine_poly(self.master_hbox)
+        if self.data_type == "papier":
+            self.init_ui_bobine_papier(self.master_hbox)
+        if self.data_type == "perfo":
+            self.init_ui_perfo(self.master_hbox)
+        if self.data_type == "refente":
+            self.init_ui_refente(self.master_hbox)
+        self.setLayout(self.master_hbox)
+
+    def init_ui_bobine_fille(self, layout):
+        if self.parent.plan_prod.bobine_fille_selected:
+            for bobine in self.parent.plan_prod.bobine_fille_selected:
+                line_bobine = LineBobine(parent=self, bobine=bobine)
+                layout.addWidget(line_bobine)
+        else:
+            label = QLabel("Bobines filles")
+            label.setFixedSize(650, 30)
+            layout.addWidget(label)
+
+    def init_ui_bobine_papier(self, layout):
+        label = QLabel("Bobine mère papier")
+        label.setFixedSize(650, 30)
+        layout.addWidget(label)
+        self.setLayout(layout)
+
+    def init_ui_bobine_poly(self, layout):
+        label = QLabel("Bobine mère polypro")
+        label.setFixedSize(650, 30)
+        layout.addWidget(label)
+        self.setLayout(layout)
+
+    def init_ui_refente(self, layout):
+        if self.parent.plan_prod.refente_selected:
+            line_refente = LineRefente(parent=self, refente=self.parent.plan_prod.refente_selected)
+            layout.addWidget(line_refente)
+        else:
+            label = QLabel("Refente")
+            label.setFixedSize(650, 30)
+            layout.addWidget(label)
+        self.setLayout(layout)
+
+    def init_ui_perfo(self, layout):
+        if self.parent.plan_prod.perfo_selected:
+            line_perfo = LinePerfo(parent=self, perfo=self.parent.plan_prod.perfo_selected)
+            layout.addWidget(line_perfo)
+        else:
+            label = QLabel("Campagne de perforation")
+            label.setFixedSize(650, 30)
+            layout.addWidget(label)
+        self.setLayout(layout)
+
+    def update_widget(self):
+        if self.parent.bloc_focus == self.data_type:
+            self.background_color = color_vert_moyen
+        else:
+            self.background_color = color_bleu_gris
+        self.init_ui()
+        self.update()
+
+    def mouseReleaseEvent(self, e):
+        print("mouseReleaseEvent")
+        self.ON_CLICK_SIGNAL.emit(self.data_type)
+
+    def keyPressEvent(self, e):
+        print("keyPressEvent")
+        if e.key() == Qt.Key_Space:
+            print("delete " + self.data_type)
+        e.accept()
