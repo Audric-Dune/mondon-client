@@ -216,6 +216,8 @@ class PlanProd(MondonWidget):
     def get_new_refente_with_bobine(refente, bobine):
         start_index = 0
         counter_pose = 0
+        if bobine.pose == 0:
+            bobine.pose = 1
         for laize_refente in refente.laizes:
             if laize_refente and laize_refente == bobine.laize:
                 counter_pose += 1
