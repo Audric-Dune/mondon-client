@@ -119,11 +119,11 @@ class PlanProd(MondonWidget):
     def definied_laize_plan_prod(self):
         self.laize_plan_prod = None
         if self.bobine_poly_selected:
-            self.laize_plan_prod = self.bobine_poly_selected.laize
+            self.laize_plan_prod = int(self.bobine_poly_selected.laize)
         if self.bobine_papier_selected:
-            self.laize_plan_prod = self.bobine_papier_selected.laize
+            self.laize_plan_prod = int(self.bobine_papier_selected.laize)
         if self.refente_selected:
-            self.laize_plan_prod = self.refente_selected.laize
+            self.laize_plan_prod = int(self.refente_selected.laize)
 
     def definied_color_plan_prod(self):
         self.color_plan_prod = None
@@ -154,6 +154,8 @@ class PlanProd(MondonWidget):
     def filter_refente_from_plan_prod_param(self):
         new_refente_store = RefenteStore()
         for refente in refente_store.refentes:
+            print(self.laize_plan_prod)
+            print(refente.laize)
             if self.laize_plan_prod and refente.laize != self.laize_plan_prod:
                 continue
             if self.perfo_selected and refente.code_perfo != self.perfo_selected.code:
