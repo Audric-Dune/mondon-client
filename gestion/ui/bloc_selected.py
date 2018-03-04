@@ -10,8 +10,8 @@ from commun.utils.layout import clear_layout
 from gestion.ui.line_bobine import LineBobine
 from gestion.ui.line_perfo import LinePerfo
 from gestion.ui.line_refente import LineRefente
-# from gestion.ui.line_bobine_papier import LineBobinePapier
-# from gestion.ui.line_bobine_poly import LineBobinePoly
+from gestion.ui.line_bobine_papier import LineBobinePapier
+from gestion.ui.line_bobine_poly import LineBobinePoly
 
 
 class BlocSelected(MondonWidget):
@@ -49,15 +49,23 @@ class BlocSelected(MondonWidget):
             layout.addWidget(label)
 
     def init_ui_bobine_papier(self, layout):
-        label = QLabel("Bobine mère papier")
-        label.setFixedSize(650, 30)
-        layout.addWidget(label)
+        if self.parent.plan_prod.bobine_papier_selected:
+            line_bobine_papier = LineBobinePapier(parent=self, bobine=self.parent.plan_prod.bobine_papier_selected)
+            layout.addWidget(line_bobine_papier)
+        else:
+            label = QLabel("Bobine mère papier")
+            label.setFixedSize(650, 30)
+            layout.addWidget(label)
         self.setLayout(layout)
 
     def init_ui_bobine_poly(self, layout):
-        label = QLabel("Bobine mère polypro")
-        label.setFixedSize(650, 30)
-        layout.addWidget(label)
+        if self.parent.plan_prod.bobine_poly_selected:
+            line_bobine_poly = LineBobinePoly(parent=self, bobine=self.parent.plan_prod.bobine_poly_selected)
+            layout.addWidget(line_bobine_poly)
+        else:
+            label = QLabel("Bobine mère poly")
+            label.setFixedSize(650, 30)
+            layout.addWidget(label)
         self.setLayout(layout)
 
     def init_ui_refente(self, layout):
