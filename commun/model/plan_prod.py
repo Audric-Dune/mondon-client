@@ -107,6 +107,9 @@ class PlanProd(MondonWidget):
         self.filter_perfo_from_plan_prod_param()
         if self.bobine_fille_selected:
             self.filter_from_bobine_selected()
+        self.current_refente_store = self.filter_refente_from_bobine_papier()
+        self.current_bobine_papier_store = self.filter_bobine_papier_from_refente()
+        self.current_bobine_fille_store = self.filter_bobine_fille_from_bobine_papier()
         self.filter_bobine_poly_from_bobine_papier()
         self.filter_perfo_from_refente()
         self.get_new_item_selected_from_store()
@@ -154,8 +157,6 @@ class PlanProd(MondonWidget):
     def filter_refente_from_plan_prod_param(self):
         new_refente_store = RefenteStore()
         for refente in refente_store.refentes:
-            print(self.laize_plan_prod)
-            print(refente.laize)
             if self.laize_plan_prod and refente.laize != self.laize_plan_prod:
                 continue
             if self.perfo_selected and refente.code_perfo != self.perfo_selected.code:
@@ -190,6 +191,33 @@ class PlanProd(MondonWidget):
                 new_refente_store.add_refente(refente)
         return new_refente_store
 
+    def filter_refente_from_bobine_papier(self):
+        new_refente_store = RefenteStore()
+        for refente in self.current_refente_store.refentes:
+            if self.refente_is_compatible_from_bobines_papier(refente):
+                new_refente_store.add_refente(refente)
+        return new_refente_store
+
+    def filter_bobine_papier_from_refente(self):
+        new_bobine_papier_store = BobinePapierStore()
+        for bobine_papier in self.current_bobine_papier_store.bobines:
+            if self.bobine_papier_is_compatible_from_refente(bobine_papier):
+                new_bobine_papier_store.add_bobine(bobine_papier)
+        return new_bobine_papier_store
+
+    def filter_bobine_fille_from_bobine_papier(self):
+        new_bobine_fille_store = BobineFilleStore()
+        for bobine_fille in self.current_bobine_fille_store.bobines:
+            if self.bobine_fille_is_compatible_from_bobine_papier(bobine_fille):
+                new_bobine_fille_store.add_bobine(bobine_fille)
+        return new_bobine_fille_store
+
+    def bobine_fille_is_compatible_from_bobine_papier(self, bobine_fille):
+        for bobine_papier in self.current_bobine_papier_store.bobines:
+            if bobine_papier.color == bobine_fille.color and bobine_papier.gr == bobine_fille.gr:
+                return True
+        return False
+
     def refente_is_compatible_from_bobines_filles_selected(self, refente):
         new_refente = refente
         for bobine in self.bobine_fille_selected:
@@ -199,6 +227,18 @@ class PlanProd(MondonWidget):
             else:
                 return False
         return True
+
+    def refente_is_compatible_from_bobines_papier(self, refente):
+        for bobine in self.current_bobine_papier_store.bobines:
+            if refente.laize == bobine.laize:
+                return True
+        return False
+
+    def bobine_papier_is_compatible_from_refente(self, bobine):
+        for refente in self.current_refente_store.refentes:
+            if bobine.laize == refente.laize:
+                return True
+        return False
 
     @staticmethod
     def refente_is_compatible_from_bobine(bobine, refente):
