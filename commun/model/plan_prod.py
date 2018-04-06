@@ -110,6 +110,7 @@ class PlanProd(MondonWidget):
         self.current_refente_store = self.filter_refente_from_bobine_papier()
         self.current_bobine_papier_store = self.filter_bobine_papier_from_refente()
         self.current_bobine_fille_store = self.filter_bobine_fille_from_bobine_papier()
+        self.current_bobine_fille_store = self.filter_bobine_fille_from_refente()
         self.filter_bobine_poly_from_bobine_papier()
         self.filter_perfo_from_refente()
         self.get_new_item_selected_from_store()
@@ -122,11 +123,11 @@ class PlanProd(MondonWidget):
     def definied_laize_plan_prod(self):
         self.laize_plan_prod = None
         if self.bobine_poly_selected:
-            self.laize_plan_prod = int(self.bobine_poly_selected.laize)
+            self.laize_plan_prod = self.bobine_poly_selected.laize
         if self.bobine_papier_selected:
-            self.laize_plan_prod = int(self.bobine_papier_selected.laize)
+            self.laize_plan_prod = self.bobine_papier_selected.laize
         if self.refente_selected:
-            self.laize_plan_prod = int(self.refente_selected.laize)
+            self.laize_plan_prod = self.refente_selected.laize
 
     def definied_color_plan_prod(self):
         self.color_plan_prod = None
@@ -210,6 +211,19 @@ class PlanProd(MondonWidget):
         for bobine_fille in self.current_bobine_fille_store.bobines:
             if self.bobine_fille_is_compatible_from_bobine_papier(bobine_fille):
                 new_bobine_fille_store.add_bobine(bobine_fille)
+        return new_bobine_fille_store
+
+    def filter_bobine_fille_from_refente(self):
+        new_bobine_fille_store = BobineFilleStore()
+        for bobine_fille in self.current_bobine_fille_store.bobines:
+            if self.refente_selected:
+                if self.refente_is_compatible_from_bobine(bobine=bobine_fille, refente=self.refente_selected):
+                    new_bobine_fille_store.add_bobine(bobine_fille)
+            else:
+                for refente in self.current_refente_store.refentes:
+                    if self.refente_is_compatible_from_bobine(bobine=bobine_fille, refente=refente):
+                        new_bobine_fille_store.add_bobine(bobine_fille)
+                        break
         return new_bobine_fille_store
 
     def bobine_fille_is_compatible_from_bobine_papier(self, bobine_fille):

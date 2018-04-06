@@ -9,8 +9,8 @@ class BobineFille(MondonWidget):
     def __init__(self, parent=None, code=0, laize=0, lenght=0, color="", alerte=False, gr="0g", pose=0, sommeil=False):
         super(BobineFille, self).__init__(parent=parent)
         self.code = code
-        self.laize = laize
-        self.lenght = lenght
+        self.laize = int(laize)
+        self.lenght = int(lenght)
         self.color = color
         self.alert = alerte
         self.gr = gr
