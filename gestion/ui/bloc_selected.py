@@ -39,8 +39,8 @@ class BlocSelected(MondonWidget):
         self.setLayout(self.master_hbox)
 
     def init_ui_bobine_fille(self, layout):
-        if self.parent.plan_prod.bobine_fille_selected:
-            for bobine in self.parent.plan_prod.bobine_fille_selected:
+        if self.parent.plan_prod.bobines_filles_selected:
+            for bobine in self.parent.plan_prod.bobines_filles_selected:
                 line_bobine = LineBobine(parent=self, bobine=bobine)
                 layout.addWidget(line_bobine)
         else:
