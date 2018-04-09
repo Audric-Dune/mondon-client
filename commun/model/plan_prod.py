@@ -103,6 +103,7 @@ class PlanProd(MondonWidget):
     def update_all_current_store(self):
         self.definied_plan_prod_param()
         self.update_current_bobine_fille_store()
+        self.update_current_refente_store()
         self.filter_bobine_poly_from_bobine_papier()
         self.filter_perfo_from_refente()
         self.get_new_item_selected_from_store()
@@ -177,53 +178,39 @@ class PlanProd(MondonWidget):
 
     def get_refente_and_bobine_papier_compatible_with_bobine(self, bobine, laize_prod, gr_prod, color_prod):
         if self.refente_selected:
-            if self.refente_is_comptatible_with_current_param_plan_prod(self.refente_selected, laize_prod):
-                if self.get_bobine_papier_compatible_with_refente(self.refente_selected, gr_prod, color_prod):
-                    if self.bobines_filles_selected:
-                        if self.refente_is_compatible_from_bobines_filles_selected(self.refente_selected):
-                            new_refente = self.refente_selected
-                            for bobines_filles_selected in self.bobines_filles_selected:
-                                new_refente = self.get_new_refente_with_bobine(new_refente, bobines_filles_selected)
-                                if self.refente_is_compatible_from_bobine(bobine=bobine, refente=new_refente):
-                                    return True
-                                else:
-                                    return False
-                        else:
-                            return False
-                    else:
-                        if self.refente_is_compatible_from_bobine(bobine=bobine, refente=self.refente_selected):
-                            return True
-                        else:
-                            return False
-                else:
-                    return False
-            else:
-                return False
+            if self.refente_is_compatible_from_bobine_and_bobine_papier(refente=self.refente_selected,
+                                                                        bobine=bobine,
+                                                                        color_prod=color_prod,
+                                                                        gr_prod=gr_prod,
+                                                                        laize_prod=laize_prod):
+                return True
         else:
             for refente in refente_store.refentes:
-                if self.refente_is_comptatible_with_current_param_plan_prod(refente, laize_prod):
-                    if self.get_bobine_papier_compatible_with_refente(refente, gr_prod, color_prod):
-                        if self.bobines_filles_selected:
-                            if self.refente_is_compatible_from_bobines_filles_selected(refente):
-                                new_refente = refente
-                                for bobines_filles_selected in self.bobines_filles_selected:
-                                    new_refente = self.get_new_refente_with_bobine(new_refente, bobines_filles_selected)
-                                    if self.refente_is_compatible_from_bobine(bobine=bobine, refente=new_refente):
-                                        return True
-                                    else:
-                                        continue
-                            else:
-                                return False
-                        else:
-                            if self.refente_is_compatible_from_bobine(bobine=bobine, refente=refente):
+                if self.refente_is_compatible_from_bobine_and_bobine_papier(refente=refente,
+                                                                            bobine=bobine,
+                                                                            color_prod=color_prod,
+                                                                            gr_prod=gr_prod,
+                                                                            laize_prod=laize_prod):
+                    return True
+        return False
+
+    def update_current_refente_store(self):
+        new_refente_store = RefenteStore()
+
+    def refente_is_compatible_from_bobine_and_bobine_papier(self, refente, bobine, laize_prod, gr_prod, color_prod):
+        if self.refente_is_comptatible_with_current_param_plan_prod(refente, laize_prod):
+            if self.get_bobine_papier_compatible_with_refente(refente, gr_prod, color_prod):
+                if self.bobines_filles_selected:
+                    if self.refente_is_compatible_from_bobines_filles_selected(refente):
+                        new_refente = refente
+                        for bobines_filles_selected in self.bobines_filles_selected:
+                            new_refente = self.get_new_refente_with_bobine(new_refente, bobines_filles_selected)
+                            if self.refente_is_compatible_from_bobine(bobine=bobine, refente=new_refente):
                                 return True
-                            else:
-                                continue
-                    else:
-                        continue
                 else:
-                    continue
-            return False
+                    if self.refente_is_compatible_from_bobine(bobine=bobine, refente=refente):
+                        return True
+        return False
 
     def get_bobine_papier_compatible_with_refente(self, refente, gr_prod, color_prod):
         if self.bobine_papier_selected:
