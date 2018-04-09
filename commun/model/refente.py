@@ -34,10 +34,10 @@ class Refente(MondonWidget):
         return "REFENTE{} / PERFO{} : DEC{}, {}, {}, {}, {}, {}, {}, {}".format(self.code,
                                                                                 self.code_perfo,
                                                                                 self.dec,
-                                                                                self.laize1,
-                                                                                self.laize2,
-                                                                                self.laize3,
-                                                                                self.laize4,
-                                                                                self.laize5,
-                                                                                self.laize6,
-                                                                                self.laize7)
+                                                                                self.laizes[0],
+                                                                                self.laizes[1],
+                                                                                self.laizes[2],
+                                                                                self.laizes[3],
+                                                                                self.laizes[4],
+                                                                                self.laizes[5],
+                                                                                self.laizes[6])

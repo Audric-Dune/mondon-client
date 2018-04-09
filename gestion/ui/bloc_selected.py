@@ -97,11 +97,4 @@ class BlocSelected(MondonWidget):
         self.update()
 
     def mouseReleaseEvent(self, e):
-        print("mouseReleaseEvent")
         self.ON_CLICK_SIGNAL.emit(self.data_type)
-
-    def keyPressEvent(self, e):
-        print("keyPressEvent")
-        if e.key() == Qt.Key_Space:
-            print("delete " + self.data_type)
-        e.accept()

@@ -73,8 +73,8 @@ class Application(QApplication):
             perfo_store.add_perfo(new_perfo)
 
     def read_xlsm(self):
-        wb = xlrd.open_workbook('C:/Users\Castor\Desktop\github\Etude stock bobine V5 MASTER 18-02-23.xlsm')
-        # wb = xlrd.open_workbook('C:/Users\dessinateur3\Desktop\github\Etude stock bobine V5 MASTER 18-02-23.xlsm')
+        # wb = xlrd.open_workbook('C:/Users\Castor\Desktop\github\Etude stock bobine V5 MASTER 18-02-23.xlsm')
+        wb = xlrd.open_workbook('C:/Users\dessinateur3\Desktop\github\Etude stock bobine V5 MASTER 18-02-23.xlsm')
         for sheet in wb.sheets():
             if sheet.name == "Liste bobine":
                 start_ligne = 20
@@ -93,7 +93,7 @@ class Application(QApplication):
                                                    laize=sheet.cell_value(current_ligne, 9),
                                                    gr=gr,
                                                    lenght=sheet.cell_value(current_ligne, 26),
-                                                   pose=randint(0, 6),
+                                                   pose=randint(0, 1),
                                                    alerte=alerte,
                                                    sommeil=sommeil)
                         bobine_fille_store.add_bobine(bobine_fille)
