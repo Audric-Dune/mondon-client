@@ -47,12 +47,12 @@ class Selector(MondonWidget):
                 self.vbox.addWidget(line_bobine)
         if self.current_focus == "refente":
             for refente in self.plan_prod.current_refente_store.refentes:
-                line_refente = LineRefente(parent=self, refente=refente)
+                line_refente = LineRefente(parent=self, refente=refente, ech=0.5)
                 line_refente.ON_DBCLICK_SIGNAL.connect(self.handle_selected_refente)
                 self.vbox.addWidget(line_refente)
         if self.current_focus == "perfo":
             for perfo in self.plan_prod.current_perfo_store.perfos:
-                line_perfo = LinePerfo(parent=self, perfo=perfo)
+                line_perfo = LinePerfo(parent=self, perfo=perfo, ech=0.5)
                 line_perfo.ON_DBCLICK_SIGNAL.connect(self.handle_selected_perfo)
                 self.vbox.addWidget(line_perfo)
         if self.current_focus == "papier":

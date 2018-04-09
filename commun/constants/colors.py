@@ -33,6 +33,21 @@ color_orange = Color('#E67E22')
 color_rouge = Color('#C0392B')
 color_rouge_clair = Color('#E74C3C')
 
+color_beige = Color('#ddd9c3')
+color_gris = Color('#f2f2f2')
 color_gris_moyen = Color('#BDC3C7')
 color_gris_clair = Color('#ECF0F1')
 color_gris_fonce = Color('#95A5A6')
+
+# Gestion des couleurs bobines
+bob_orange = Color("#e67e22")
+bob_blanc = Color("#ffda79")
+bob_ivoire = Color("#f7f1e3")
+bob_jaune = Color("#f1c40f")
+bob_ecru = Color("#f7d794")
+bob_noir = Color("#3d3d3d")
+bob_prune = Color("#9b59b6")
+bob_rouge = Color("#e74c3c")
+bob_vert = Color("#2ecc71")
+bob_marron = Color("#784212")
+

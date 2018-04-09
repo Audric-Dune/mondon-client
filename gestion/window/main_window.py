@@ -15,6 +15,7 @@ class MainWindow(QMainWindow):
 
     def __init__(self):
         super(MainWindow, self).__init__(parent=None, flags=Qt.Window)
+        self.installEventFilter(self)
         self.central_widget = QWidget(parent=self)
         self.plan_prod_creator = PlanProdCreator(parent=self)
         self.init_widget()

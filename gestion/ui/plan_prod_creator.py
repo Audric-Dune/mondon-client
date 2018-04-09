@@ -74,3 +74,5 @@ class PlanProdCreator(MondonWidget):
     def keyPressEvent(self, e):
         if e.key() == Qt.Key_Delete:
             self.plan_prod.del_item_selected(self.bloc_focus)
+        if e.key() == Qt.Key_Enter:
+            self.plan_prod.get_new_item_selected_from_store()

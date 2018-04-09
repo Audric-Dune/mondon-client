@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5.QtWidgets import QVBoxLayout, QLabel
-from PyQt5.QtCore import pyqtSignal, Qt
+from PyQt5.QtCore import pyqtSignal
 
-from commun.constants.colors import color_bleu_gris, color_vert_moyen
+from commun.constants.colors import color_bleu_gris, color_vert_moyen, color_blanc, color_noir
 from commun.ui.public.mondon_widget import MondonWidget
 from commun.utils.layout import clear_layout
 from gestion.ui.line_bobine import LineBobine
@@ -19,6 +19,7 @@ class BlocSelected(MondonWidget):
 
     def __init__(self, data_type, parent=None):
         super(BlocSelected, self).__init__(parent=parent)
+        self.background_color = color_blanc
         self.data_type = data_type
         self.parent = parent
         self.master_hbox = QVBoxLayout()
@@ -70,7 +71,9 @@ class BlocSelected(MondonWidget):
 
     def init_ui_refente(self, layout):
         if self.parent.plan_prod.refente_selected:
-            line_refente = LineRefente(parent=self, refente=self.parent.plan_prod.refente_selected)
+            line_refente = LineRefente(parent=self,
+                                       refente=self.parent.plan_prod.refente_selected,
+                                       bobines=self.parent.plan_prod.bobines_filles_selected)
             layout.addWidget(line_refente)
         else:
             label = QLabel("Refente")
@@ -90,9 +93,10 @@ class BlocSelected(MondonWidget):
 
     def update_widget(self):
         if self.parent.bloc_focus == self.data_type:
-            self.background_color = color_vert_moyen
+            self.set_border(color=color_vert_moyen, size=2)
         else:
-            self.background_color = color_bleu_gris
+            self.set_border(color=color_blanc)
+
         self.init_ui()
         self.update()
 

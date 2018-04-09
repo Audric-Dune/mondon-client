@@ -1,7 +1,7 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import pyqtSignal, Qt
 
 from commun.model.refente import Refente
 from commun.stores.refente_store import RefenteStore
@@ -107,7 +107,6 @@ class PlanProd(MondonWidget):
         self.update_current_bobine_papier_store()
         self.filter_bobine_poly_from_bobine_papier()
         self.filter_perfo_from_refente()
-        self.get_new_item_selected_from_store()
 
     def definied_plan_prod_param(self):
         self.definied_laize_plan_prod()
@@ -195,23 +194,24 @@ class PlanProd(MondonWidget):
     def update_current_refente_store(self):
         new_refente_store = RefenteStore()
         for refente in refente_store.refentes:
-            if self.refente_is_comptatible_with_current_param_plan_prod(refente=refente, laize=self.laize_plan_prod):
-                if self.refente_is_compatible_from_bobines_filles_selected(refente=refente):
-                    new_refente = refente
-                    for bobine_fille_selected in self.bobines_filles_selected:
-                        new_refente = self.get_new_refente_with_bobine(new_refente, bobine_fille_selected)
-                    refente_is_ok = True
-                    if self.refente_is_complete(new_refente):
-                        pass
-                    else:
-                        for laize in new_refente.laizes:
-                            if self.laize_is_compatible_with_current_bobine_fille_store(laize):
-                                continue
-                            else:
-                                refente_is_ok = False
-                                break
-                    if refente_is_ok:
-                        new_refente_store.add_refente(refente)
+            if self.refente_is_compatible_with_perfo(refente):
+                if self.refente_is_comptatible_with_current_param_plan_prod(refente=refente, laize=self.laize_plan_prod):
+                    if self.refente_is_compatible_from_bobines_filles_selected(refente=refente):
+                        new_refente = refente
+                        for bobine_fille_selected in self.bobines_filles_selected:
+                            new_refente = self.get_new_refente_with_bobine(new_refente, bobine_fille_selected)
+                        refente_is_ok = True
+                        if self.refente_is_complete(new_refente):
+                            pass
+                        else:
+                            for laize in new_refente.laizes:
+                                if self.laize_is_compatible_with_current_bobine_fille_store(laize):
+                                    continue
+                                else:
+                                    refente_is_ok = False
+                                    break
+                        if refente_is_ok:
+                            new_refente_store.add_refente(refente)
         self.current_refente_store = new_refente_store
 
     def update_current_bobine_papier_store(self):
@@ -240,19 +240,28 @@ class PlanProd(MondonWidget):
         return True
 
     def refente_is_compatible_from_bobine_and_bobine_papier(self, refente, bobine, laize_prod, gr_prod, color_prod):
-        if self.refente_is_comptatible_with_current_param_plan_prod(refente, laize_prod):
-            if self.get_bobine_papier_compatible_with_refente(refente, gr_prod, color_prod):
-                if self.bobines_filles_selected:
-                    if self.refente_is_compatible_from_bobines_filles_selected(refente):
-                        new_refente = refente
-                        for bobine_fille_selected in self.bobines_filles_selected:
-                            new_refente = self.get_new_refente_with_bobine(new_refente, bobine_fille_selected)
-                        if self.refente_is_compatible_from_bobine(bobine=bobine, refente=new_refente):
+        if self.refente_is_compatible_with_perfo(refente):
+            if self.refente_is_comptatible_with_current_param_plan_prod(refente, laize_prod):
+                if self.get_bobine_papier_compatible_with_refente(refente, gr_prod, color_prod):
+                    if self.bobines_filles_selected:
+                        if self.refente_is_compatible_from_bobines_filles_selected(refente):
+                            new_refente = refente
+                            for bobine_fille_selected in self.bobines_filles_selected:
+                                new_refente = self.get_new_refente_with_bobine(new_refente, bobine_fille_selected)
+                            if self.refente_is_compatible_from_bobine(bobine=bobine, refente=new_refente):
+                                return True
+                    else:
+                        if self.refente_is_compatible_from_bobine(bobine=bobine, refente=refente):
                             return True
-                else:
-                    if self.refente_is_compatible_from_bobine(bobine=bobine, refente=refente):
-                        return True
         return False
+
+    def refente_is_compatible_with_perfo(self, refente):
+        if self.perfo_selected:
+            if self.perfo_selected.code == refente.code_perfo:
+                return True
+            else:
+                return False
+        return True
 
     def get_bobine_papier_compatible_with_refente(self, refente, gr_prod, color_prod):
         if self.bobine_papier_selected:
@@ -402,3 +411,21 @@ class PlanProd(MondonWidget):
             self.bobine_papier_selected = self.current_bobine_papier_store.bobines[0]
         if len(self.current_refente_store.refentes) == 1:
             self.refente_selected = self.current_refente_store.refentes[0]
+        if self.refente_selected:
+            new_refente = self.refente_selected
+            for bobine in self.bobines_filles_selected:
+                new_refente = self.get_new_refente_with_bobine(new_refente, bobine)
+            for laize in new_refente.laizes:
+                count_bobine_compatible_with_laize = 0
+                bobine_compatible_with_laize = None
+                for bobine in self.current_bobine_fille_store.bobines:
+                    if bobine.laize == laize:
+                        count_bobine_compatible_with_laize += 1
+                        bobine_compatible_with_laize = bobine
+                    if count_bobine_compatible_with_laize > 1:
+                        bobine_compatible_with_laize = None
+                        break
+                if bobine_compatible_with_laize:
+                    self.bobines_filles_selected.append(bobine_compatible_with_laize)
+                    self.update_current_bobine_fille_store()
+        self.ON_CHANGED_SIGNAL.emit()
