@@ -4,14 +4,14 @@
 from PyQt5.QtWidgets import QVBoxLayout, QLabel
 from PyQt5.QtCore import pyqtSignal
 
-from commun.constants.colors import color_bleu_gris, color_vert_moyen, color_blanc, color_noir
+from commun.constants.colors import color_vert_moyen, color_blanc
 from commun.ui.public.mondon_widget import MondonWidget
 from commun.utils.layout import clear_layout
-from gestion.ui.line_bobine import LineBobine
-from gestion.ui.line_perfo import LinePerfo
-from gestion.ui.line_refente import LineRefente
-from gestion.ui.line_bobine_papier import LineBobinePapier
-from gestion.ui.line_bobine_poly import LineBobinePoly
+from gestion.ui.widgets.line_bobine import LineBobine
+from gestion.ui.widgets.line_perfo import LinePerfo
+from gestion.ui.widgets.line_refente import LineRefente
+from gestion.ui.widgets.line_bobine_papier import LineBobinePapier
+from gestion.ui.widgets.line_bobine_poly import LineBobinePoly
 
 
 class BlocSelected(MondonWidget):

@@ -6,11 +6,11 @@ from commun.constants.colors import color_bleu_gris
 from commun.constants.stylesheets import scroll_bar_stylesheet
 from commun.ui.public.mondon_widget import MondonWidget
 from commun.utils.layout import clear_layout
-from gestion.ui.line_bobine import LineBobine
-from gestion.ui.line_refente import LineRefente
-from gestion.ui.line_perfo import LinePerfo
-from gestion.ui.line_bobine_papier import LineBobinePapier
-from gestion.ui.line_bobine_poly import LineBobinePoly
+from gestion.ui.widgets.line_bobine import LineBobine
+from gestion.ui.widgets.line_refente import LineRefente
+from gestion.ui.widgets.line_perfo import LinePerfo
+from gestion.ui.widgets.line_bobine_papier import LineBobinePapier
+from gestion.ui.widgets.line_bobine_poly import LineBobinePoly
 
 
 class Selector(MondonWidget):

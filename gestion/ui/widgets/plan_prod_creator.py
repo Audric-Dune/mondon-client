@@ -11,8 +11,8 @@ from PyQt5.QtCore import Qt
 from commun.model.plan_prod import PlanProd
 from commun.ui.public.mondon_widget import MondonWidget
 
-from gestion.ui.selector import Selector
-from gestion.ui.bloc_selected import BlocSelected
+from gestion.ui.widgets.selector import Selector
+from gestion.ui.widgets.bloc_selected import BlocSelected
 
 
 class PlanProdCreator(MondonWidget):

@@ -4,7 +4,7 @@
 from PyQt5.QtWidgets import QApplication
 from random import randint
 
-from gestion.window.main_window import MainWindow
+from gestion.ui.window.main_window import MainWindow
 from commun.lib. base_de_donnee import Database
 from commun.stores.bobine_fille_store import bobine_fille_store
 from commun.model.bobine_filles import BobineFille
@@ -73,8 +73,8 @@ class Application(QApplication):
             perfo_store.add_perfo(new_perfo)
 
     def read_xlsm(self):
-        # wb = xlrd.open_workbook('C:/Users\Castor\Desktop\github\Etude stock bobine V5 MASTER 18-02-23.xlsm')
-        wb = xlrd.open_workbook('C:/Users\dessinateur3\Desktop\github\Etude stock bobine V5 MASTER 18-02-23.xlsm')
+        wb = xlrd.open_workbook('C:/Users\Castor\Desktop\github\Etude stock bobine V5 MASTER 18-02-23.xlsm')
+        # wb = xlrd.open_workbook('C:/Users\dessinateur3\Desktop\github\Etude stock bobine V5 MASTER 18-02-23.xlsm')
         for sheet in wb.sheets():
             if sheet.name == "Liste bobine":
                 start_ligne = 20
