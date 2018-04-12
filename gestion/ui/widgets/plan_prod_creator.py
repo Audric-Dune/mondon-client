@@ -17,9 +17,9 @@ from gestion.ui.widgets.bloc_selected import BlocSelected
 
 class PlanProdCreator(MondonWidget):
 
-    def __init__(self, parent=None):
+    def __init__(self, plan_prod, parent=None):
         super(PlanProdCreator, self).__init__(parent=parent)
-        self.plan_prod = PlanProd()
+        self.plan_prod = plan_prod
         self.plan_prod.ON_CHANGED_SIGNAL.connect(self.handle_plan_prod_changed)
         self.bloc_focus = "bobine"
         self.selector = Selector(parent=self, plan_prod=self.plan_prod)

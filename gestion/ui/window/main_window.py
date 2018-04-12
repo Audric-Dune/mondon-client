@@ -5,8 +5,12 @@
 from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout
 from PyQt5.QtCore import Qt
 
+from commun.utils.layout import clear_layout
+
 from gestion.ui.widgets.plan_prod_creator import PlanProdCreator
 from gestion.ui.widgets.day_menu import DayMenu
+from gestion.stores.settings_store import settings_store_gestion
+from gestion.stores.plan_prod_store import plan_prod_store
 
 
 class MainWindow(QMainWindow):
@@ -14,13 +18,20 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__(parent=None, flags=Qt.Window)
         self.central_widget = QWidget(parent=self)
-        self.plan_prod_creator = PlanProdCreator(parent=self)
         self.day_menu = DayMenu(parent=self)
+        self.plan_prod = None
+        self.vbox = QVBoxLayout()
+        settings_store_gestion.SETTINGS_CHANGED_SIGNAL.connect(self.update_widget)
         self.init_widget()
+        self.update_widget()
 
     def init_widget(self):
-        vbox = QVBoxLayout()
-        vbox.addWidget(self.day_menu)
-        vbox.addWidget(self.plan_prod_creator)
-        self.central_widget.setLayout(vbox)
+        self.vbox.addWidget(self.day_menu)
+        self.central_widget.setLayout(self.vbox)
         self.setCentralWidget(self.central_widget)
+
+    def update_widget(self):
+        if settings_store_gestion.plan_prod_id and not self.plan_prod:
+            self.plan_prod = plan_prod_store.get_plan_prod()
+            plan_prod_creator = PlanProdCreator(parent=self, plan_prod=self.plan_prod)
+            self.vbox.addWidget(plan_prod_creator)

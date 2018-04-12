@@ -20,8 +20,9 @@ from commun.stores.bobine_poly_store import bobine_poly_store
 class PlanProd(MondonWidget):
     ON_CHANGED_SIGNAL = pyqtSignal()
 
-    def __init__(self, parent=None):
+    def __init__(self, start, parent=None):
         super(PlanProd, self).__init__(parent=parent)
+        self.start = start
         self.current_refente_store = RefenteStore()
         self.init_refente_store()
         self.current_perfo_store = PerfoStore()

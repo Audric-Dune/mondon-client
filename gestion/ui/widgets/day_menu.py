@@ -9,6 +9,7 @@ from commun.constants.stylesheets import button_stylesheet, white_22_label_style
 from commun.ui.public.mondon_widget import MondonWidget
 from commun.ui.public.pixmap_button import PixmapButton
 from commun.utils.timestamp import timestamp_at_day_ago, timestamp_to_date
+from commun.utils.layout import clear_layout
 
 from gestion.stores.settings_store import settings_store_gestion
 
@@ -22,27 +23,42 @@ class DayMenu(MondonWidget):
     def __init__(self, parent):
         super(DayMenu, self).__init__(parent=parent)
         self.set_background_color(color_bleu_gris)
+        self.master_hbox = QHBoxLayout()
+        self.left_hbox = QHBoxLayout()
+        self.center_hbox = QHBoxLayout()
+        self.right_hbox = QHBoxLayout()
         self.bt_jour_plus = PixmapButton(parent=self)
         self.bt_jour_moins = PixmapButton(parent=self)
+        self.bt_new_plan = PixmapButton(parent=self)
         self.label_date = QLabel()
         self.init_widget()
-        self.update_label()
 
     def init_widget(self):
         self.init_button()
-        self.update_label()
-        master_hbox = QHBoxLayout()
+        self.setLayout(self.master_hbox)
+        self.update_widget()
 
-        center_hbox = QHBoxLayout()
-        center_hbox.addStretch(1)
-        center_hbox.addWidget(self.bt_jour_moins)
-        center_hbox.addWidget(self.label_date)
+    def update_widget(self):
+        self.left_hbox.addStretch(1)
+        self.master_hbox.addLayout(self.left_hbox)
+
+        self.center_hbox.addWidget(self.bt_jour_moins)
+        self.center_hbox.addStretch(1)
+        self.center_hbox.addWidget(self.label_date)
         self.label_date.setStyleSheet(white_22_label_stylesheet)
-        center_hbox.addWidget(self.bt_jour_plus)
-        center_hbox.addStretch(1)
-        master_hbox.addLayout(center_hbox)
+        self.center_hbox.addStretch(1)
+        self.center_hbox.addWidget(self.bt_jour_plus)
+        self.master_hbox.addLayout(self.center_hbox)
 
-        self.setLayout(master_hbox)
+        self.right_hbox.addStretch(1)
+        if settings_store_gestion.plan_prod_id:
+            self.bt_new_plan.hide()
+        else:
+            self.right_hbox.addWidget(self.bt_new_plan)
+            self.bt_new_plan.show()
+        self.master_hbox.addLayout(self.right_hbox)
+        self.update_label()
+
 
     def init_button(self):
         # Bouton jour plus
@@ -57,8 +73,14 @@ class DayMenu(MondonWidget):
         self.bt_jour_moins.setFixedSize(self.PIXMAPBUTTON_SIZE)
         self.bt_jour_moins.addImage("commun/assets/images/fleche_precedent.png")
 
+        # Bouton nouveau plan
+        self.bt_new_plan.clicked.connect(self.create_new_plan)
+        self.bt_new_plan.setStyleSheet(button_stylesheet)
+        self.bt_new_plan.setFixedSize(self.PIXMAPBUTTON_SIZE)
+        self.bt_new_plan.addImage("commun/assets/images/new_plan.png")
+
     def on_settings_gestion_changed(self):
-        self.update_label()
+        self.update_widget()
 
     def update_label(self):
         ts = timestamp_at_day_ago(settings_store_gestion.day_ago)
@@ -74,3 +96,7 @@ class DayMenu(MondonWidget):
     @staticmethod
     def jour_plus():
         settings_store_gestion.set_day_ago(settings_store_gestion.day_ago - 1)
+
+    @staticmethod
+    def create_new_plan():
+        settings_store_gestion.create_new_plan()
