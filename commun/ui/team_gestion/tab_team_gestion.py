@@ -44,7 +44,6 @@ class TabTeamGestion(MondonWidget):
             start_next_week = timestamp_at_week_ago(settings_team_gestion_store.week_ago - 1)
             if start_week <= start_day < start_next_week:
                 self.current_data.append(data)
-        print(self.current_data)
 
     def init_widget(self):
         self.add_data()
@@ -62,7 +61,6 @@ class TabTeamGestion(MondonWidget):
         self.array_text_edit = []
         for values in self.current_data:
             self.content_tab.addLayout(self.create_line(values))
-            print(values)
 
     def create_line(self, data):
         line = QHBoxLayout()
@@ -104,7 +102,6 @@ class TabTeamGestion(MondonWidget):
             text_edit.setText("0")
         if clear_focus:
             text_edit.clearFocus()
-        print(text)
 
     def create_checkbox(self, state):
         state = False if state == 1 else True

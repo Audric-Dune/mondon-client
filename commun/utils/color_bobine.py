@@ -15,7 +15,6 @@ from commun.constants.colors import \
 
 
 def get_color_bobine(bobine_color):
-    print(bobine_color)
     color = color_bleu_gris
     if bobine_color == "BLANC":
         color = bob_blanc
