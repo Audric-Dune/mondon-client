@@ -19,6 +19,7 @@ class PlanProdCreator(MondonWidget):
 
     def __init__(self, plan_prod, parent=None):
         super(PlanProdCreator, self).__init__(parent=parent)
+        print("PlanProdCreator")
         self.plan_prod = plan_prod
         self.plan_prod.ON_CHANGED_SIGNAL.connect(self.handle_plan_prod_changed)
         self.bloc_focus = "bobine"

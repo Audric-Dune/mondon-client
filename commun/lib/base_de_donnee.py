@@ -372,3 +372,14 @@ class Database:
             .format()
         data_perfo = cls.run_query(query, ())
         return data_perfo
+
+    @classmethod
+    def create_plan_prod(cls, start, refente, bobine_papier, code_bobines_selected):
+        query = "INSERT INTO mondon_plan_prod (refente,bobine_papier,start,code_bobines_selected) " \
+                "VALUES (?, ?, ?, ?)".format(refente, bobine_papier, start, code_bobines_selected)
+        try:
+            print(query)
+            cls.run_query(query, (refente, bobine_papier, start, code_bobines_selected))
+        except sqlite3.IntegrityError as e:
+            logger.log("DATABASE", "(Ignorée) IntegrityError: {}".format(e))
+            pass

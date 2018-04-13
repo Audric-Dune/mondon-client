@@ -30,6 +30,7 @@ class DayMenu(MondonWidget):
         self.bt_jour_plus = PixmapButton(parent=self)
         self.bt_jour_moins = PixmapButton(parent=self)
         self.bt_new_plan = PixmapButton(parent=self)
+        self.bt_save_plan = PixmapButton(parent=self)
         self.label_date = QLabel()
         self.init_widget()
 
@@ -51,14 +52,16 @@ class DayMenu(MondonWidget):
         self.master_hbox.addLayout(self.center_hbox)
 
         self.right_hbox.addStretch(1)
-        if settings_store_gestion.plan_prod_id:
+        if settings_store_gestion.plan_prod:
+            self.right_hbox.addWidget(self.bt_save_plan)
+            self.bt_save_plan.show()
             self.bt_new_plan.hide()
         else:
             self.right_hbox.addWidget(self.bt_new_plan)
+            self.bt_save_plan.hide()
             self.bt_new_plan.show()
         self.master_hbox.addLayout(self.right_hbox)
         self.update_label()
-
 
     def init_button(self):
         # Bouton jour plus
@@ -78,6 +81,12 @@ class DayMenu(MondonWidget):
         self.bt_new_plan.setStyleSheet(button_stylesheet)
         self.bt_new_plan.setFixedSize(self.PIXMAPBUTTON_SIZE)
         self.bt_new_plan.addImage("commun/assets/images/new_plan.png")
+
+        # Bouton sauvegarde plan
+        self.bt_save_plan.clicked.connect(self.save_plan_prod)
+        self.bt_save_plan.setStyleSheet(button_stylesheet)
+        self.bt_save_plan.setFixedSize(self.PIXMAPBUTTON_SIZE)
+        self.bt_save_plan.addImage("commun/assets/images/save_as.png")
 
     def on_settings_gestion_changed(self):
         self.update_widget()
@@ -100,3 +109,7 @@ class DayMenu(MondonWidget):
     @staticmethod
     def create_new_plan():
         settings_store_gestion.create_new_plan()
+
+    @staticmethod
+    def save_plan_prod():
+        settings_store_gestion.save_plan_prod()

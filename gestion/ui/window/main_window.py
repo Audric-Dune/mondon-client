@@ -19,11 +19,9 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__(parent=None, flags=Qt.Window)
         self.central_widget = QWidget(parent=self)
         self.day_menu = DayMenu(parent=self)
-        self.plan_prod = None
         self.vbox = QVBoxLayout()
         settings_store_gestion.SETTINGS_CHANGED_SIGNAL.connect(self.update_widget)
         self.init_widget()
-        self.update_widget()
 
     def init_widget(self):
         self.vbox.addWidget(self.day_menu)
@@ -31,7 +29,6 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.central_widget)
 
     def update_widget(self):
-        if settings_store_gestion.plan_prod_id and not self.plan_prod:
-            self.plan_prod = plan_prod_store.get_plan_prod()
-            plan_prod_creator = PlanProdCreator(parent=self, plan_prod=self.plan_prod)
+        if settings_store_gestion.plan_prod:
+            plan_prod_creator = PlanProdCreator(parent=self, plan_prod=settings_store_gestion.plan_prod)
             self.vbox.addWidget(plan_prod_creator)
