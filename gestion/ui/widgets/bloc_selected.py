@@ -73,7 +73,8 @@ class BlocSelected(MondonWidget):
         if self.parent.plan_prod.refente_selected:
             line_refente = LineRefente(parent=self,
                                        refente=self.parent.plan_prod.refente_selected,
-                                       bobines=self.parent.plan_prod.bobines_filles_selected)
+                                       bobines=self.parent.plan_prod.bobines_filles_selected,
+                                       ech=0.5)
             layout.addWidget(line_refente)
         else:
             label = QLabel("Refente")
@@ -83,7 +84,7 @@ class BlocSelected(MondonWidget):
 
     def init_ui_perfo(self, layout):
         if self.parent.plan_prod.perfo_selected:
-            line_perfo = LinePerfo(parent=self, perfo=self.parent.plan_prod.perfo_selected)
+            line_perfo = LinePerfo(parent=self, perfo=self.parent.plan_prod.perfo_selected, ech=0.5)
             layout.addWidget(line_perfo)
         else:
             label = QLabel("Campagne de perforation")

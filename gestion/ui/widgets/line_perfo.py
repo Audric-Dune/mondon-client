@@ -3,9 +3,11 @@
 
 from PyQt5.QtWidgets import QHBoxLayout, QLabel, QWidget
 from PyQt5.QtCore import pyqtSignal
+
 from commun.ui.public.mondon_widget import MondonWidget
 from commun.ui.public.bague_perfo import BaguePerfo
 from commun.ui.public.entretoise_perfo import EntretoisePerfo
+from commun.constants.colors import color_blanc
 
 
 class LinePerfo(MondonWidget):
@@ -13,6 +15,7 @@ class LinePerfo(MondonWidget):
 
     def __init__(self, parent=None, perfo=None, ech=1):
         super(LinePerfo, self).__init__(parent=parent)
+        self.set_background_color(color_blanc)
         self.ech = ech
         self.perfo = perfo
         self.hbox = QHBoxLayout()

@@ -5,11 +5,11 @@
 # -*- coding: utf-8 -*-
 
 
-from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout
+from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QLabel
 from PyQt5.QtCore import Qt
 
-from commun.model.plan_prod import PlanProd
 from commun.ui.public.mondon_widget import MondonWidget
+from commun.constants.stylesheets import white_12_bold_label_stylesheet
 
 from gestion.ui.widgets.selector import Selector
 from gestion.ui.widgets.bloc_selected import BlocSelected
@@ -19,11 +19,11 @@ class PlanProdCreator(MondonWidget):
 
     def __init__(self, plan_prod, parent=None):
         super(PlanProdCreator, self).__init__(parent=parent)
-        print("PlanProdCreator")
         self.plan_prod = plan_prod
         self.plan_prod.ON_CHANGED_SIGNAL.connect(self.handle_plan_prod_changed)
         self.bloc_focus = "bobine"
         self.selector = Selector(parent=self, plan_prod=self.plan_prod)
+        self.titre_prod = QLabel("NOUVELLE PRODUCTION")
         self.bloc_poly_selected = BlocSelected(data_type="poly", parent=self)
         self.bloc_poly_selected.ON_CLICK_SIGNAL.connect(self.handle_click_on_bloc_selected)
         self.bloc_papier_selected = BlocSelected(data_type="papier", parent=self)
@@ -37,18 +37,24 @@ class PlanProdCreator(MondonWidget):
         self.init_ui()
 
     def init_ui(self):
-        master_hbox = QHBoxLayout()
-        self.selector.setFixedWidth(650)
-        master_hbox.addWidget(self.selector)
+        master_vbox = QVBoxLayout()
+        self.selector.setFixedSize(600, 300)
+        hbox = QHBoxLayout()
+        hbox.addWidget(self.selector)
         vbox = QVBoxLayout()
+        self.titre_prod.setFixedHeight(30)
+        self.titre_prod.setStyleSheet(white_12_bold_label_stylesheet)
+        self.titre_prod.setContentsMargins(5, 0, 0, 0)
+        vbox.addWidget(self.titre_prod)
         vbox.addWidget(self.bloc_poly_selected)
         vbox.addWidget(self.bloc_perfo_selected)
         vbox.addWidget(self.bloc_papier_selected)
         vbox.addWidget(self.bloc_refente_selected)
-        vbox.addWidget(self.bloc_bobines_selected)
         vbox.addStretch(0)
-        master_hbox.addLayout(vbox)
-        self.setLayout(master_hbox)
+        hbox.addLayout(vbox)
+        master_vbox.addLayout(hbox)
+        master_vbox.addWidget(self.bloc_bobines_selected)
+        self.setLayout(master_vbox)
 
     def update_bloc_selected(self):
         self.bloc_poly_selected.update_widget()

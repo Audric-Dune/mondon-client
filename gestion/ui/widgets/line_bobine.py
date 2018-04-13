@@ -12,6 +12,7 @@ class LineBobine(MondonWidget):
 
     def __init__(self, parent=None, bobine=None):
         super(LineBobine, self).__init__(parent=parent)
+        self.set_background_color(color_blanc)
         self.state = None
         self.installEventFilter(self)
         self.bobine = bobine
@@ -31,6 +32,8 @@ class LineBobine(MondonWidget):
         hbox.addWidget(gr)
         color = QLabel(str(self.bobine.color.capitalize()))
         hbox.addWidget(color)
+        pose = QLabel(str(self.bobine.pose))
+        hbox.addWidget(pose)
         pose = QLabel(str(self.bobine.pose))
         hbox.addWidget(pose)
 

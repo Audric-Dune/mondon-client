@@ -9,7 +9,6 @@ from commun.constants.stylesheets import button_stylesheet, white_22_label_style
 from commun.ui.public.mondon_widget import MondonWidget
 from commun.ui.public.pixmap_button import PixmapButton
 from commun.utils.timestamp import timestamp_at_day_ago, timestamp_to_date
-from commun.utils.layout import clear_layout
 
 from gestion.stores.settings_store import settings_store_gestion
 
@@ -31,6 +30,7 @@ class DayMenu(MondonWidget):
         self.bt_jour_moins = PixmapButton(parent=self)
         self.bt_new_plan = PixmapButton(parent=self)
         self.bt_save_plan = PixmapButton(parent=self)
+        self.bt_clear_plan = PixmapButton(parent=self)
         self.label_date = QLabel()
         self.init_widget()
 
@@ -40,7 +40,12 @@ class DayMenu(MondonWidget):
         self.update_widget()
 
     def update_widget(self):
-        self.left_hbox.addStretch(1)
+        if settings_store_gestion.plan_prod:
+            self.left_hbox.addWidget(self.bt_clear_plan)
+            self.bt_clear_plan.show()
+            self.left_hbox.addStretch(1)
+        else:
+            self.bt_clear_plan.hide()
         self.master_hbox.addLayout(self.left_hbox)
 
         self.center_hbox.addWidget(self.bt_jour_moins)
@@ -88,6 +93,12 @@ class DayMenu(MondonWidget):
         self.bt_save_plan.setFixedSize(self.PIXMAPBUTTON_SIZE)
         self.bt_save_plan.addImage("commun/assets/images/save_as.png")
 
+        # Bouton effacer plan
+        self.bt_clear_plan.clicked.connect(self.clear_plan)
+        self.bt_clear_plan.setStyleSheet(button_stylesheet)
+        self.bt_clear_plan.setFixedSize(self.PIXMAPBUTTON_SIZE)
+        self.bt_clear_plan.addImage("commun/assets/images/clear.png")
+
     def on_settings_gestion_changed(self):
         self.update_widget()
 
@@ -113,3 +124,7 @@ class DayMenu(MondonWidget):
     @staticmethod
     def save_plan_prod():
         settings_store_gestion.save_plan_prod()
+
+    @staticmethod
+    def clear_plan():
+        settings_store_gestion.plan_prod.clear_plan_prod()

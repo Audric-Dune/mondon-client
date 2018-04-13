@@ -103,6 +103,10 @@ gray_title_label_stylesheet = create_qlabel_stylesheet(color=color_noir,
 gray_12_label_stylesheet = create_qlabel_stylesheet(color=color_noir,
                                                     background_color=color_gris_moyen,
                                                     font_size="12px")
+white_12_bold_label_stylesheet = create_qlabel_stylesheet(color=color_blanc,
+                                                          background_color=color_bleu_gris,
+                                                          font_size="12px",
+                                                          bold="bold")
 gray_14_label_stylesheet = create_qlabel_stylesheet(color=color_noir,
                                                     background_color=color_gris_moyen,
                                                     font_size="14px")

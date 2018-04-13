@@ -101,6 +101,19 @@ class PlanProd(MondonWidget):
         self.update_all_current_store()
         self.ON_CHANGED_SIGNAL.emit()
 
+    def clear_plan_prod(self):
+        self.bobines_filles_selected = []
+        self.bobine_papier_selected = None
+        self.bobine_poly_selected = None
+        self.refente_selected = None
+        self.perfo_selected = None
+        self.init_bobine_fille_store()
+        self.init_refente_store()
+        self.init_perfo_store()
+        self.init_bobine_papier_store()
+        self.init_bobine_poly_store()
+        self.ON_CHANGED_SIGNAL.emit()
+
     def update_all_current_store(self):
         self.definied_plan_prod_param()
         self.update_current_bobine_fille_store()

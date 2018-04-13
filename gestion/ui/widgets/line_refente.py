@@ -3,8 +3,10 @@
 
 from PyQt5.QtWidgets import QHBoxLayout, QLabel, QWidget
 from PyQt5.QtCore import pyqtSignal
+
 from commun.ui.public.mondon_widget import MondonWidget
 from commun.ui.public.bobine_fille_ui import BobineFille
+from commun.constants.colors import color_blanc
 
 
 class LineRefente(MondonWidget):
@@ -12,6 +14,7 @@ class LineRefente(MondonWidget):
 
     def __init__(self, parent=None, refente=None, ech=1, bobines=None):
         super(LineRefente, self).__init__(parent=parent)
+        self.set_background_color(color_blanc)
         self.bobines = bobines
         self.ech = ech
         self.refente = refente

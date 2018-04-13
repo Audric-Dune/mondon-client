@@ -4,6 +4,7 @@
 from PyQt5.QtWidgets import QHBoxLayout, QLabel, QWidget
 from PyQt5.QtCore import pyqtSignal
 from commun.ui.public.mondon_widget import MondonWidget
+from commun.constants.colors import color_blanc
 
 
 class LineBobinePapier(MondonWidget):
@@ -11,6 +12,7 @@ class LineBobinePapier(MondonWidget):
 
     def __init__(self, parent=None, bobine=None):
         super(LineBobinePapier, self).__init__(parent=parent)
+        self.set_background_color(color_blanc)
         self.state = None
         self.installEventFilter(self)
         self.bobine = bobine
