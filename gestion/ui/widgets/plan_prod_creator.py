@@ -12,6 +12,7 @@ from commun.ui.public.mondon_widget import MondonWidget
 from commun.constants.stylesheets import white_12_bold_label_stylesheet
 
 from gestion.ui.widgets.selector import Selector
+from gestion.ui.widgets.bloc_param_prod import BlocParamProd
 from gestion.ui.widgets.bloc_selected import BlocSelected
 
 
@@ -23,6 +24,7 @@ class PlanProdCreator(MondonWidget):
         self.plan_prod.ON_CHANGED_SIGNAL.connect(self.handle_plan_prod_changed)
         self.bloc_focus = "bobine"
         self.selector = Selector(parent=self, plan_prod=self.plan_prod)
+        self.bloc_param_prod = BlocParamProd(plan_prod=self.plan_prod, parent=self)
         self.titre_prod = QLabel("NOUVELLE PRODUCTION")
         self.bloc_poly_selected = BlocSelected(data_type="poly", parent=self)
         self.bloc_poly_selected.ON_CLICK_SIGNAL.connect(self.handle_click_on_bloc_selected)
@@ -38,9 +40,11 @@ class PlanProdCreator(MondonWidget):
 
     def init_ui(self):
         master_vbox = QVBoxLayout()
+        master_vbox.setContentsMargins(0, 0, 0, 0)
         self.selector.setFixedSize(600, 300)
         hbox = QHBoxLayout()
         hbox.addWidget(self.selector)
+        hbox.addStretch(0)
         vbox = QVBoxLayout()
         self.titre_prod.setFixedHeight(30)
         self.titre_prod.setStyleSheet(white_12_bold_label_stylesheet)
@@ -53,7 +57,10 @@ class PlanProdCreator(MondonWidget):
         vbox.addStretch(0)
         hbox.addLayout(vbox)
         master_vbox.addLayout(hbox)
-        master_vbox.addWidget(self.bloc_bobines_selected)
+        vbox = QVBoxLayout()
+        vbox.addWidget(self.bloc_param_prod)
+        vbox.addWidget(self.bloc_bobines_selected)
+        master_vbox.addLayout(vbox)
         self.setLayout(master_vbox)
 
     def update_bloc_selected(self):

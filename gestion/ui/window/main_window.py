@@ -10,7 +10,6 @@ from commun.utils.layout import clear_layout
 from gestion.ui.widgets.plan_prod_creator import PlanProdCreator
 from gestion.ui.widgets.day_menu import DayMenu
 from gestion.stores.settings_store import settings_store_gestion
-from gestion.stores.plan_prod_store import plan_prod_store
 
 
 class MainWindow(QMainWindow):

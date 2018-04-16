@@ -23,6 +23,9 @@ class PlanProd(MondonWidget):
     def __init__(self, start, parent=None):
         super(PlanProd, self).__init__(parent=parent)
         self.start = start
+        self.end = None
+        self.tours = 12
+        self.longueur = None
         self.current_refente_store = RefenteStore()
         self.init_refente_store()
         self.current_perfo_store = PerfoStore()
@@ -41,6 +44,9 @@ class PlanProd(MondonWidget):
         self.laize_plan_prod = None
         self.color_plan_prod = None
         self.gr_plan_prod = None
+
+    def get_end(self):
+        self.end = self.start + (((self.longueur * self.tours)/3)*1.18)
 
     def init_bobine_fille_store(self):
         for bobine in bobine_fille_store.bobines:
@@ -116,11 +122,16 @@ class PlanProd(MondonWidget):
 
     def update_all_current_store(self):
         self.definied_plan_prod_param()
+        self.definied_longueur()
         self.update_current_bobine_fille_store()
         self.update_current_refente_store()
         self.update_current_bobine_papier_store()
         self.filter_bobine_poly_from_bobine_papier()
         self.filter_perfo_from_refente()
+
+    def definied_longueur(self):
+        if self.bobines_filles_selected:
+            self.longueur = self.bobines_filles_selected[0].lenght
 
     def definied_plan_prod_param(self):
         self.definied_laize_plan_prod()
@@ -421,6 +432,10 @@ class PlanProd(MondonWidget):
             self.bobine_poly_selected = self.current_bobine_poly_store.bobines[0]
         if len(self.current_perfo_store.perfos) == 1:
             self.perfo_selected = self.current_perfo_store.perfos[0]
+        if self.refente_selected:
+            for perfo in perfo_store.perfos:
+                if perfo.code == self.refente_selected.code_perfo:
+                    self.perfo_selected = perfo
         if len(self.current_bobine_papier_store.bobines) == 1:
             self.bobine_papier_selected = self.current_bobine_papier_store.bobines[0]
         if len(self.current_refente_store.refentes) == 1:

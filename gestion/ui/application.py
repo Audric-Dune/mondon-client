@@ -31,6 +31,7 @@ class Application(QApplication):
         self.init_ui()
 
     def init_ui(self):
+        from gestion.stores.plan_prod_store import PlanProdStore
         self.main_window = MainWindow()
         self.main_window.show()
 

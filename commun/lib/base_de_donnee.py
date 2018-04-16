@@ -374,12 +374,17 @@ class Database:
         return data_perfo
 
     @classmethod
-    def create_plan_prod(cls, start, refente, bobine_papier, code_bobines_selected):
-        query = "INSERT INTO mondon_plan_prod (refente,bobine_papier,start,code_bobines_selected) " \
-                "VALUES (?, ?, ?, ?)".format(refente, bobine_papier, start, code_bobines_selected)
+    def create_plan_prod(cls, start, refente, bobine_papier, code_bobines_selected, longueur, tours):
+        query = "INSERT INTO mondon_plan_prod (refente,bobine_papier,start,code_bobines_selected,longueur,tours) " \
+                "VALUES (?, ?, ?, ?, ?, ?)".format(refente, bobine_papier, start, code_bobines_selected, longueur, tours)
         try:
-            print(query)
-            cls.run_query(query, (refente, bobine_papier, start, code_bobines_selected))
+            cls.run_query(query, (refente, bobine_papier, start, code_bobines_selected, longueur, tours))
         except sqlite3.IntegrityError as e:
             logger.log("DATABASE", "(Ignorée) IntegrityError: {}".format(e))
             pass
+
+    @classmethod
+    def get_plan_prod(cls):
+        query = "SELECT id, start, tours, longueur, bobine_papier, refente, code_bobines_selected FROM mondon_plan_prod"
+        data_plan_prod = cls.run_query(query, ())
+        return data_plan_prod
