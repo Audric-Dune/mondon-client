@@ -26,6 +26,7 @@ class PlanProd(MondonWidget):
         self.end = None
         self.tours = 12
         self.longueur = None
+        self.get_end()
         self.current_refente_store = RefenteStore()
         self.init_refente_store()
         self.current_perfo_store = PerfoStore()
@@ -46,7 +47,10 @@ class PlanProd(MondonWidget):
         self.gr_plan_prod = None
 
     def get_end(self):
-        self.end = self.start + (((self.longueur * self.tours)/3)*1.18)
+        if not self.longueur or not self.tours:
+            self.end = self.start
+        else:
+            self.end = self.start + (((self.longueur * self.tours)/3)*1.18)
 
     def init_bobine_fille_store(self):
         for bobine in bobine_fille_store.bobines:
@@ -128,6 +132,7 @@ class PlanProd(MondonWidget):
         self.update_current_bobine_papier_store()
         self.filter_bobine_poly_from_bobine_papier()
         self.filter_perfo_from_refente()
+        self.get_end()
 
     def definied_longueur(self):
         if self.bobines_filles_selected:

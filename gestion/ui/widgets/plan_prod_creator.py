@@ -75,6 +75,7 @@ class PlanProdCreator(MondonWidget):
 
     def handle_plan_prod_changed(self):
         self.update_bloc_selected()
+        self.bloc_param_prod.update_label()
         self.update_selector()
 
     def handle_click_on_bloc_selected(self, name_bloc):

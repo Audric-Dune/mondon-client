@@ -20,6 +20,8 @@ class Selector(MondonWidget):
         super(Selector, self).__init__(parent=parent)
         self.plan_prod = plan_prod
         self.parent = parent
+        self.sort_name = "alert"
+        self.sort_asc = False
         self.current_focus = "perfo"
         self.background_color = color_bleu_gris
         self.master_vbox = QVBoxLayout()
@@ -44,7 +46,12 @@ class Selector(MondonWidget):
         self.master_vbox.addWidget(self.scroll_bar)
         self.setLayout(self.master_vbox)
 
+    def sort_bobine(self):
+        self.plan_prod.current_bobine_fille_store.sort_bobines("code", True)
+        self.plan_prod.current_bobine_fille_store.sort_bobines(self.sort_name, self.sort_asc)
+
     def update_widget(self):
+        self.sort_bobine()
         self.current_focus = self.parent.bloc_focus
         clear_layout(self.vbox)
         if self.current_focus == "bobine" or not self.current_focus:

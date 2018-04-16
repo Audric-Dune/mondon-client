@@ -17,6 +17,21 @@ class BobineFille(MondonWidget):
         self.pose = pose
         self.sommeil = sommeil
 
+    def get_value(self, value_name):
+        if value_name == "code":
+            return self.code
+        if value_name == "laize":
+            return self.laize
+        if value_name == "lenght":
+            return self.lenght
+        if value_name == "color":
+            return self.color
+        if value_name == "alert":
+            return self.alert
+        if value_name == "pose":
+            return self.pose
+        return 0
+
     def __str__(self):
         return "B{}({}, {}, {}m, {} poses, {}, {}, {})".format(self.code,
                                                                self.color.capitalize(),

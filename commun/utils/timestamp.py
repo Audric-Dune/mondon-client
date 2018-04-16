@@ -74,6 +74,10 @@ def get_hour_in_timestamp(ts):
     return datetime.fromtimestamp(ts).hour
 
 
+def get_min_in_timestamp(ts):
+    return datetime.fromtimestamp(ts).minute
+
+
 def timestamp_now():
     now = datetime.now()
     return datetime(year=now.year,
