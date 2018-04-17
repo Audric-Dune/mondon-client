@@ -22,6 +22,7 @@ class PlanProdCreator(MondonWidget):
         super(PlanProdCreator, self).__init__(parent=parent)
         self.plan_prod = plan_prod
         self.plan_prod.ON_CHANGED_SIGNAL.connect(self.handle_plan_prod_changed)
+        self.plan_prod.ON_TOURS_CHANGED.connect(self.handle_tours_plan_prod_changed)
         self.bloc_focus = "bobine"
         self.selector = Selector(parent=self, plan_prod=self.plan_prod)
         self.bloc_param_prod = BlocParamProd(plan_prod=self.plan_prod, parent=self)
@@ -75,8 +76,11 @@ class PlanProdCreator(MondonWidget):
 
     def handle_plan_prod_changed(self):
         self.update_bloc_selected()
-        self.bloc_param_prod.update_label()
         self.update_selector()
+        self.bloc_param_prod.update_label()
+
+    def handle_tours_plan_prod_changed(self):
+        self.bloc_param_prod.update_label()
 
     def handle_click_on_bloc_selected(self, name_bloc):
         if self.bloc_focus == name_bloc:

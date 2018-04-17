@@ -1,12 +1,10 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from datetime import datetime
 
 from PyQt5.QtCore import pyqtSignal, QObject
 
 from commun.lib.base_de_donnee import Database
-from commun.utils.timestamp import timestamp_at_day_ago
 from commun.stores.bobine_papier_store import bobine_papier_store
 from commun.stores.refente_store import refente_store
 from commun.stores.bobine_fille_store import bobine_fille_store

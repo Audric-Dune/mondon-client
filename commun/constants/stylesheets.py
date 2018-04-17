@@ -608,6 +608,21 @@ line_edit_stylesheet = """
     color_gris_fonce=color_gris_fonce.hex_string,
     color_noir=color_noir.hex_string,)
 
+line_edit_green_stylesheet = """
+    QLineEdit {{
+        qproperty-frame: false;
+        background-color: {color_vert_fonce};
+        color: {color_blanc};
+        font-size: 16px;
+        border: none;
+        selection-background-color: {color_gris_fonce};
+    }}
+""".format(
+    color_vert_fonce=color_vert_fonce.hex_string,
+    color_blanc=color_blanc.hex_string,
+    color_gris_fonce=color_gris_fonce.hex_string,
+    color_noir=color_noir.hex_string,)
+
 # ____________SCROLLBAR STYLESHEET____________
 
 scroll_bar_stylesheet = """

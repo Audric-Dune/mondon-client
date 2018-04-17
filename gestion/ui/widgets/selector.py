@@ -20,8 +20,8 @@ class Selector(MondonWidget):
         super(Selector, self).__init__(parent=parent)
         self.plan_prod = plan_prod
         self.parent = parent
-        self.sort_name = "alert"
-        self.sort_asc = False
+        self.sort_name = "code"
+        self.sort_asc = True
         self.current_focus = "perfo"
         self.background_color = color_bleu_gris
         self.master_vbox = QVBoxLayout()

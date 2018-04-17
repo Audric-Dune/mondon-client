@@ -19,11 +19,12 @@ from commun.stores.bobine_poly_store import bobine_poly_store
 
 class PlanProd(MondonWidget):
     ON_CHANGED_SIGNAL = pyqtSignal()
+    ON_TOURS_CHANGED = pyqtSignal()
 
     def __init__(self, start, parent=None):
         super(PlanProd, self).__init__(parent=parent)
         self.start = start
-        self.end = None
+        self.end = start
         self.tours = 12
         self.longueur = None
         self.get_end()
@@ -51,6 +52,11 @@ class PlanProd(MondonWidget):
             self.end = self.start
         else:
             self.end = self.start + (((self.longueur * self.tours)/3)*1.18)
+
+    def set_tours(self, tours):
+        self.tours = tours
+        self.get_end()
+        self.ON_TOURS_CHANGED.emit()
 
     def init_bobine_fille_store(self):
         for bobine in bobine_fille_store.bobines:
@@ -117,10 +123,15 @@ class PlanProd(MondonWidget):
         self.bobine_poly_selected = None
         self.refente_selected = None
         self.perfo_selected = None
-        self.init_bobine_fille_store()
+        self.current_refente_store = RefenteStore()
         self.init_refente_store()
+        self.current_perfo_store = PerfoStore()
         self.init_perfo_store()
+        self.current_bobine_fille_store = BobineFilleStore()
+        self.init_bobine_fille_store()
+        self.current_bobine_papier_store = BobinePapierStore()
         self.init_bobine_papier_store()
+        self.current_bobine_poly_store = BobinePolyStore()
         self.init_bobine_poly_store()
         self.ON_CHANGED_SIGNAL.emit()
 
@@ -135,6 +146,7 @@ class PlanProd(MondonWidget):
         self.get_end()
 
     def definied_longueur(self):
+        self.longueur = None
         if self.bobines_filles_selected:
             self.longueur = self.bobines_filles_selected[0].lenght
 
