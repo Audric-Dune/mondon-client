@@ -41,7 +41,6 @@ class BlocParamProd(MondonWidget):
     def update_label(self):
         if self.text_edit_tours.text() != self.plan_prod.tours:
             self.text_edit_tours.setText(str(self.plan_prod.tours))
-        print(self.plan_prod.end)
         self.label_end.setText(timestamp_to_hour_little(self.plan_prod.end))
 
     def handle_tours_changed(self, text_edit_value):

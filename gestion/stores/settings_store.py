@@ -5,7 +5,8 @@ from datetime import datetime
 
 from PyQt5.QtCore import pyqtSignal, QObject
 
-from commun.utils.timestamp import timestamp_at_day_ago
+from commun.utils.timestamp import timestamp_at_day_ago, timestamp_at_time
+from commun.constants.param import DEBUT_PROD_MATIN
 from commun.lib.base_de_donnee import Database
 
 
@@ -26,9 +27,13 @@ class SettingsStore(QObject):
 
     def create_new_plan(self):
         from gestion.stores.plan_prod_store import plan_prod_store
-        last_plan_prod = plan_prod_store.plans_prods[-1]
         from commun.model.plan_prod import PlanProd
-        plan_prod = PlanProd(start=last_plan_prod.end)
+        if plan_prod_store.plans_prods:
+            last_plan_prod = plan_prod_store.plans_prods[-1]
+            plan_prod = PlanProd(start=last_plan_prod.end)
+        else:
+            start_day = timestamp_at_day_ago(self.day_ago)
+            plan_prod = PlanProd(start=timestamp_at_time(ts=start_day, hours=DEBUT_PROD_MATIN))
         self.set(plan_prod=plan_prod)
 
     def save_plan_prod(self):
@@ -38,13 +43,14 @@ class SettingsStore(QObject):
             code_bobines_selected += "_"
             code_bobines_selected += str(bobine.pose)
             code_bobines_selected += "_"
-        print(self.plan_prod.tours)
         Database.create_plan_prod(bobine_papier=self.plan_prod.bobine_papier_selected.code,
                                   code_bobines_selected=code_bobines_selected,
                                   refente=self.plan_prod.refente_selected.code,
                                   start=self.plan_prod.start,
                                   longueur=self.plan_prod.longueur,
                                   tours=self.plan_prod.tours)
+        self.plan_prod = None
+        self.SETTINGS_CHANGED_SIGNAL.emit()
 
     def set_day_ago(self, day_ago):
         # Test si nouveau jour est un samedi ou dimanche

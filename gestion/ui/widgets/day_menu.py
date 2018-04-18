@@ -12,7 +12,6 @@ from commun.utils.timestamp import timestamp_at_day_ago, timestamp_to_date
 
 from gestion.stores.settings_store import settings_store_gestion
 
-
 class DayMenu(MondonWidget):
     PIXMAPBUTTON_SIZE = QSize(40, 40)
     BUTTON_HEIGHT = 40
@@ -36,8 +35,16 @@ class DayMenu(MondonWidget):
 
     def init_widget(self):
         self.init_button()
+        self.update_state_bt()
         self.setLayout(self.master_hbox)
         self.update_widget()
+
+    def update_state_bt(self):
+        if settings_store_gestion.plan_prod:
+            if settings_store_gestion.plan_prod.is_valid():
+                self.bt_save_plan.setEnabled(True)
+            else:
+                self.bt_save_plan.setEnabled(False)
 
     def update_widget(self):
         if settings_store_gestion.plan_prod:
@@ -123,7 +130,10 @@ class DayMenu(MondonWidget):
 
     @staticmethod
     def save_plan_prod():
-        settings_store_gestion.save_plan_prod()
+        if settings_store_gestion.plan_prod.is_valid():
+            settings_store_gestion.save_plan_prod()
+            from gestion.stores.plan_prod_store import plan_prod_store
+            plan_prod_store.get_plan_prod_from_database()
 
     @staticmethod
     def clear_plan():

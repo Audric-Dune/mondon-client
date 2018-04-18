@@ -47,6 +47,27 @@ class PlanProd(MondonWidget):
         self.color_plan_prod = None
         self.gr_plan_prod = None
 
+    def is_valid(self):
+        if not self.bobine_poly_selected:
+            return False
+        if not self.bobine_papier_selected:
+            return False
+        if not self.perfo_selected:
+            return False
+        if not self.refente_selected:
+            return False
+        if not self.tours:
+            return False
+        if not self.refente_is_completed(refente=self.refente_selected, bobines_filles=self.bobines_filles_selected):
+            return False
+        return True
+
+    def refente_is_completed(self, refente, bobines_filles):
+        new_refente = refente
+        for bobine in bobines_filles:
+            new_refente = self.get_new_refente_with_bobine(refente=new_refente, bobine=bobine)
+        return self.refente_is_complete(refente=new_refente)
+
     def get_end(self):
         if not self.longueur or not self.tours:
             self.end = self.start
