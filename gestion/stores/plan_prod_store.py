@@ -22,7 +22,6 @@ class PlanProdStore(QObject):
         self.plans_prods = []
 
     def get_plan_prod_from_database(self):
-        print("get_plan_prod_from_database")
         self.plans_prods = []
         plan_prod_on_data_base = Database.get_plan_prod()
         start_ts = timestamp_at_day_ago(settings_store_gestion.day_ago)

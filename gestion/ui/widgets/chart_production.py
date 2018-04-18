@@ -25,9 +25,7 @@ class ChartProd(MondonWidget):
 
     def __init__(self, parent=None, prods=None):
         super(ChartProd, self).__init__(parent=parent)
-        print("__init__ChartProd")
         self.prods = prods
-        print(prods)
         self.setMinimumHeight(300)
 
     def draw_background(self, p):

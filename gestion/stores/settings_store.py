@@ -54,7 +54,6 @@ class SettingsStore(QObject):
 
     def set_day_ago(self, day_ago):
         # Test si nouveau jour est un samedi ou dimanche
-        print(day_ago)
         new_day = timestamp_at_day_ago(day_ago)
         week_day = datetime.fromtimestamp(new_day).weekday()
         if 5 <= week_day <= 6:

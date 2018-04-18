@@ -34,8 +34,8 @@ class LineBobine(MondonWidget):
         hbox.addWidget(color)
         pose = QLabel(str(self.bobine.pose))
         hbox.addWidget(pose)
-        pose = QLabel(str(self.bobine.pose))
-        hbox.addWidget(pose)
+        lenght = QLabel(str(self.bobine.lenght))
+        hbox.addWidget(lenght)
 
     def mouseDoubleClickEvent(self, e):
         self.ON_DBCLICK_SIGNAL.emit(self.bobine)
