@@ -12,6 +12,7 @@ from gestion.ui.widgets.plan_prod_creator import PlanProdCreator
 from gestion.ui.widgets.chart_production import ChartProd
 from gestion.ui.widgets.day_menu import DayMenu
 from gestion.stores.settings_store import settings_store_gestion
+from gestion.stores.plan_prod_store import plan_prod_store
 
 
 class MainWindow(QMainWindow):
@@ -21,6 +22,7 @@ class MainWindow(QMainWindow):
         self.central_widget = QWidget(parent=self)
         self.vbox = QVBoxLayout()
         settings_store_gestion.SETTINGS_CHANGED_SIGNAL.connect(self.update_widget)
+        plan_prod_store.get_plan_prod_from_database()
         self.init_widget()
         self.update_widget()
 
@@ -29,8 +31,9 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.central_widget)
 
     def update_widget(self):
+        plan_prod_store.get_plan_prod_from_database()
         clear_layout(self.vbox)
-        chart_prod = ChartProd(parent=self)
+        chart_prod = ChartProd(parent=self, prods=plan_prod_store.plans_prods)
         day_menu = DayMenu(parent=self)
         day_menu.setFixedHeight(chart_menu_height)
         self.vbox.addWidget(day_menu)

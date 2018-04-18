@@ -50,4 +50,3 @@ bob_prune = Color("#9b59b6")
 bob_rouge = Color("#e74c3c")
 bob_vert = Color("#2ecc71")
 bob_marron = Color("#784212")
-
