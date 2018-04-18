@@ -21,8 +21,9 @@ class PlanProd(MondonWidget):
     ON_CHANGED_SIGNAL = pyqtSignal()
     ON_TOURS_CHANGED = pyqtSignal()
 
-    def __init__(self, start, parent=None):
+    def __init__(self, start, parent=None, index=None):
         super(PlanProd, self).__init__(parent=parent)
+        self.index = index
         self.start = start
         self.end = start
         self.tours = 12
