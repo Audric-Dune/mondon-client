@@ -55,6 +55,8 @@ class PlanProd(MondonWidget):
             return False
         if not self.is_valid_tours():
             return False
+        if not self.is_completed():
+            return False
         return True
 
     def is_completed(self):

@@ -46,7 +46,7 @@ class BlocSelected(MondonWidget):
                 layout.addWidget(line_bobine)
         else:
             label = QLabel("Bobines filles")
-            label.setFixedSize(650, 30)
+            label.setFixedHeight(30)
             layout.addWidget(label)
 
     def init_ui_bobine_papier(self, layout):
@@ -55,7 +55,7 @@ class BlocSelected(MondonWidget):
             layout.addWidget(line_bobine_papier)
         else:
             label = QLabel("Bobine mère papier")
-            label.setFixedSize(650, 30)
+            label.setFixedHeight(30)
             layout.addWidget(label)
         self.setLayout(layout)
 
@@ -65,7 +65,7 @@ class BlocSelected(MondonWidget):
             layout.addWidget(line_bobine_poly)
         else:
             label = QLabel("Bobine mère poly")
-            label.setFixedSize(650, 30)
+            label.setFixedHeight(30)
             layout.addWidget(label)
         self.setLayout(layout)
 
@@ -78,7 +78,7 @@ class BlocSelected(MondonWidget):
             layout.addWidget(line_refente)
         else:
             label = QLabel("Refente")
-            label.setFixedSize(650, 30)
+            label.setFixedHeight(30)
             layout.addWidget(label)
         self.setLayout(layout)
 
@@ -88,7 +88,7 @@ class BlocSelected(MondonWidget):
             layout.addWidget(line_perfo)
         else:
             label = QLabel("Campagne de perforation")
-            label.setFixedSize(650, 30)
+            label.setFixedHeight(30)
             layout.addWidget(label)
         self.setLayout(layout)
 

@@ -42,7 +42,6 @@ class PlanProdCreator(MondonWidget):
     def init_ui(self):
         master_vbox = QVBoxLayout()
         master_vbox.setContentsMargins(0, 0, 0, 0)
-        self.selector.setFixedSize(600, 300)
         hbox = QHBoxLayout()
         hbox.addWidget(self.selector)
         hbox.addStretch(0)

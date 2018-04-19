@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import QVBoxLayout, QLabel
 from commun.utils.layout import clear_layout
 from commun.constants.colors import color_blanc
 from commun.ui.public.mondon_widget import MondonWidget
-from commun.constants.stylesheets import white_label_stylesheet, green_12_label_stylesheet, red_12_label_stylesheet
+from commun.constants.stylesheets import white_12_bold_label_stylesheet, green_12_label_stylesheet, red_12_label_stylesheet
 
 
 class BlocInformation(MondonWidget):
@@ -18,11 +18,12 @@ class BlocInformation(MondonWidget):
         self.master_vbox.setContentsMargins(0, 0, 0, 0)
         self.vbox = QVBoxLayout()
         self.label_titre = QLabel("Information")
-        self.label_titre.setStyleSheet(white_label_stylesheet)
+        self.label_titre.setStyleSheet(white_12_bold_label_stylesheet)
         self.init_ui()
         self.update_widget()
 
     def init_ui(self):
+        self.label_titre.setFixedHeight(30)
         self.master_vbox.addWidget(self.label_titre)
         self.master_vbox.addLayout(self.vbox)
         self.setLayout(self.master_vbox)
