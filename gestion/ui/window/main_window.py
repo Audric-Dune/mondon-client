@@ -19,6 +19,7 @@ class MainWindow(QMainWindow):
 
     def __init__(self):
         super(MainWindow, self).__init__(parent=None, flags=Qt.Window)
+        self.setMinimumWidth(1400)
         self.central_widget = QWidget(parent=self)
         self.vbox = QVBoxLayout()
         settings_store_gestion.SETTINGS_CHANGED_SIGNAL.connect(self.update_widget)

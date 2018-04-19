@@ -64,5 +64,9 @@ class SettingsStore(QObject):
         else:
             self.set(day_ago=day_ago)
 
+    def cancel_plan_prod(self):
+        self.plan_prod = None
+        self.SETTINGS_CHANGED_SIGNAL.emit()
+
 
 settings_store_gestion = SettingsStore()

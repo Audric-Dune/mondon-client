@@ -164,3 +164,12 @@ def timestamp_au_debut_de_hour(ts, min=0):
                     minute=min,
                     second=0,
                     microsecond=0).timestamp()
+
+
+def is_vendredi(ts):
+    """
+    Test si le jour d'un timestamp est vendredi
+    :param ts: Le timestamp a tester
+    :return: True si on est vendredi
+    """
+    return timestamp_to_day(ts) == "vendredi"
