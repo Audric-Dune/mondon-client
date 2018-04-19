@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
-from PyQt5.QtCore import pyqtSignal, QObject
+from PyQt5.QtCore import QObject
 
 from commun.lib.base_de_donnee import Database
 from commun.utils.timestamp import timestamp_at_day_ago

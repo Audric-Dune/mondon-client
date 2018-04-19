@@ -391,7 +391,7 @@ class Database:
 
     @classmethod
     def create_event_prod(cls, start, end, type, info=None):
-        query = "INSERT INTO mondon_event () " \
+        query = "INSERT INTO mondon_event (type,start,end,info) " \
                 "VALUES (?, ?, ?, ?)".format(type, start, end, info)
         try:
             cls.run_query(query, (type, start, end, info))

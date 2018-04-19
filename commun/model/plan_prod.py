@@ -170,7 +170,6 @@ class PlanProd(MondonWidget):
     def definied_longueur(self):
         self.longueur = None
         if self.bobines_filles_selected:
-            print(self.bobines_filles_selected[0].lenght)
             self.longueur = self.bobines_filles_selected[0].lenght
 
     def definied_plan_prod_param(self):
