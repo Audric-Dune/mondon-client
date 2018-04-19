@@ -34,6 +34,7 @@ class DayMenu(MondonWidget):
         self.bt_new_stop = PixmapButton(parent=self)
         self.bt_save_plan = PixmapButton(parent=self)
         self.bt_cancel_plan = PixmapButton(parent=self)
+        self.bt_update_plan = PixmapButton(parent=self)
         self.bt_clear_plan = PixmapButton(parent=self)
         self.label_date = QLabel()
         self.init_widget()
@@ -54,9 +55,12 @@ class DayMenu(MondonWidget):
     def update_widget(self):
         if settings_store_gestion.plan_prod:
             self.left_hbox.addWidget(self.bt_clear_plan)
+            self.left_hbox.addWidget(self.bt_update_plan)
             self.bt_clear_plan.show()
+            self.bt_update_plan.show()
         else:
             self.bt_clear_plan.hide()
+            self.bt_update_plan.hide()
         self.left_hbox.addStretch(1)
         self.master_hbox.addLayout(self.left_hbox)
 
@@ -105,51 +109,67 @@ class DayMenu(MondonWidget):
 
     def init_button(self):
         # Bouton jour plus
+        self.bt_jour_plus.setToolTip("Changement jours")
         self.bt_jour_plus.clicked.connect(self.jour_plus)
         self.bt_jour_plus.setStyleSheet(button_stylesheet)
         self.bt_jour_plus.setFixedSize(self.PIXMAPBUTTON_SIZE)
         self.bt_jour_plus.addImage("commun/assets/images/fleche_suivant.png")
 
         # Bouton jour moins
+        self.bt_jour_moins.setToolTip("Changement jours")
         self.bt_jour_moins.clicked.connect(self.jour_moins)
         self.bt_jour_moins.setStyleSheet(button_stylesheet)
         self.bt_jour_moins.setFixedSize(self.PIXMAPBUTTON_SIZE)
         self.bt_jour_moins.addImage("commun/assets/images/fleche_precedent.png")
 
         # Bouton nouveau plan
+        self.bt_new_plan.setToolTip("Ajouter un nouveau plan de production")
         self.bt_new_plan.clicked.connect(self.create_new_plan)
         self.bt_new_plan.setStyleSheet(button_stylesheet)
         self.bt_new_plan.setFixedSize(self.PIXMAPBUTTON_SIZE)
         self.bt_new_plan.addImage("commun/assets/images/icon_add_prod.png")
 
         # Bouton nouveau nettoyage
+        self.bt_new_clean.setToolTip("Ajouter une nouvelle période de nettoyage")
         self.bt_new_clean.setStyleSheet(button_stylesheet)
         self.bt_new_clean.setFixedSize(self.PIXMAPBUTTON_SIZE)
         self.bt_new_clean.addImage("commun/assets/images/icon_add_clean_prod.png")
 
         # Bouton nouvelle maintenance
+        self.bt_new_maintenance.setToolTip("Ajouter une nouvelle action de maintenance")
         self.bt_new_maintenance.setStyleSheet(button_stylesheet)
         self.bt_new_maintenance.setFixedSize(self.PIXMAPBUTTON_SIZE)
         self.bt_new_maintenance.addImage("commun/assets/images/icon_add_maintenance_prod.png")
 
         # Bouton nouvelle période sans production
+        self.bt_new_stop.setToolTip("Ajouter une nouvelle période sans production")
         self.bt_new_stop.setStyleSheet(button_stylesheet)
         self.bt_new_stop.setFixedSize(self.PIXMAPBUTTON_SIZE)
         self.bt_new_stop.addImage("commun/assets/images/icon_add_stop_prod.png")
 
         # Bouton sauvegarde plan
+        self.bt_save_plan.setToolTip("Enregistrer le plan de production")
         self.bt_save_plan.clicked.connect(self.save_plan_prod)
         self.bt_save_plan.setStyleSheet(button_stylesheet)
         self.bt_save_plan.setFixedSize(self.PIXMAPBUTTON_SIZE)
         self.bt_save_plan.addImage("commun/assets/images/save_as.png")
 
         # Bouton annuler plan
+        self.bt_cancel_plan.setToolTip("Annuler l'ajout du plan de production")
         self.bt_cancel_plan.clicked.connect(self.cancel_plan)
         self.bt_cancel_plan.setStyleSheet(button_red_stylesheet)
         self.bt_cancel_plan.setFixedSize(self.PIXMAPBUTTON_SIZE)
         self.bt_cancel_plan.addImage("commun/assets/images/white_cross.png")
 
+        # Bouton mettre à jours plan
+        self.bt_update_plan.setToolTip("Mettre à jours le plan de production")
+        self.bt_update_plan.clicked.connect(self.update_plan)
+        self.bt_update_plan.setStyleSheet(button_stylesheet)
+        self.bt_update_plan.setFixedSize(self.PIXMAPBUTTON_SIZE)
+        self.bt_update_plan.addImage("commun/assets/images/icon_update.png")
+
         # Bouton effacer plan
+        self.bt_clear_plan.setToolTip("Réinitialiser le plan de production")
         self.bt_clear_plan.clicked.connect(self.clear_plan)
         self.bt_clear_plan.setStyleSheet(button_stylesheet)
         self.bt_clear_plan.setFixedSize(self.PIXMAPBUTTON_SIZE)
@@ -191,3 +211,7 @@ class DayMenu(MondonWidget):
     @staticmethod
     def cancel_plan():
         settings_store_gestion.cancel_plan_prod()
+
+    @staticmethod
+    def update_plan():
+        settings_store_gestion.plan_prod.get_new_item_selected_from_store()
