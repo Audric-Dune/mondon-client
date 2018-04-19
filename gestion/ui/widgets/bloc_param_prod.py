@@ -45,12 +45,13 @@ class BlocParamProd(MondonWidget):
 
     def handle_tours_changed(self, text_edit_value):
         if text_edit_value == "":
+            self.plan_prod.set_tours(0)
             self.text_edit_tours.setStyleSheet(line_edit_red_stylesheet)
         else:
             self.text_edit_tours.setStyleSheet(line_edit_green_stylesheet)
             self.plan_prod.set_tours(int(text_edit_value))
-        if self.plan_prod.is_valid_tours():
-            self.text_edit_tours.setStyleSheet(line_edit_green_stylesheet)
-        else:
-            self.text_edit_tours.setStyleSheet(line_edit_red_stylesheet)
+            if self.plan_prod.is_valid_tours():
+                self.text_edit_tours.setStyleSheet(line_edit_green_stylesheet)
+            else:
+                self.text_edit_tours.setStyleSheet(line_edit_red_stylesheet)
 

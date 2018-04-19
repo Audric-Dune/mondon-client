@@ -3,7 +3,7 @@
 
 from PyQt5.QtCore import pyqtSignal
 
-from commun.constants.param import FIN_PROD_SOIR
+from commun.constants.param import FIN_PROD_SOIR, PERCENT_PROD_THEROIQUE_MAXI
 from commun.utils.timestamp import get_hour_in_timestamp, timestamp_at_time
 from commun.model.refente import Refente
 from commun.stores.refente_store import RefenteStore
@@ -51,6 +51,13 @@ class PlanProd(MondonWidget):
         self.gr_plan_prod = None
 
     def is_valid(self):
+        if not self.tours:
+            return False
+        if not self.is_valid_tours():
+            return False
+        return True
+
+    def is_completed(self):
         if not self.bobine_poly_selected:
             return False
         if not self.bobine_papier_selected:
@@ -59,29 +66,37 @@ class PlanProd(MondonWidget):
             return False
         if not self.refente_selected:
             return False
-        if not self.tours:
-            return False
-        if not self.refente_is_completed(refente=self.refente_selected, bobines_filles=self.bobines_filles_selected):
-            return False
-        if not self.is_valid_tours():
+        if not self.refente_is_completed():
             return False
         return True
 
     def is_valid_tours(self):
+        end_day_ts = self.get_end_day()
+        if self.end > end_day_ts:
+            return False
+        return True
+
+    def get_end_day(self):
         from gestion.stores.event_store import event_store
         if event_store.events:
             for event in event_store.events:
                 if event.type == "stop":
                     if get_hour_in_timestamp(event.end) == FIN_PROD_SOIR:
-                        if self.end > event.start:
-                            return False
-        if self.end > timestamp_at_time(self.start, hours=FIN_PROD_SOIR):
-            return False
-        return True
+                        return timestamp_at_time(self.start, hours=get_hour_in_timestamp(event.start))
+        return timestamp_at_time(self.start, hours=FIN_PROD_SOIR)
 
-    def refente_is_completed(self, refente, bobines_filles):
-        new_refente = refente
-        for bobine in bobines_filles:
+    def get_max_tour(self):
+        end_day_ts = self.get_end_day()
+        max_prod_ts = end_day_ts - self.start
+        print(max_prod_ts)
+        max_tour = (max_prod_ts*3/(PERCENT_PROD_THEROIQUE_MAXI/100)/self.longueur)
+        return int(max_tour)
+
+    def refente_is_completed(self):
+        new_refente = self.refente_selected
+        if not self.bobines_filles_selected or not new_refente:
+            return False
+        for bobine in self.bobines_filles_selected:
             new_refente = self.get_new_refente_with_bobine(refente=new_refente, bobine=bobine)
         return self.refente_is_complete(refente=new_refente)
 
@@ -89,7 +104,7 @@ class PlanProd(MondonWidget):
         if not self.longueur or not self.tours:
             self.end = self.start
         else:
-            self.end = self.start + (((self.longueur * self.tours)/3)*1.18)
+            self.end = self.start + (((self.longueur * self.tours)/3)*(PERCENT_PROD_THEROIQUE_MAXI/100))
 
     def set_tours(self, tours):
         self.tours = tours

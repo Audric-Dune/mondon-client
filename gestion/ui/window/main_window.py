@@ -12,6 +12,7 @@ from commun.utils.timestamp import timestamp_at_day_ago, is_vendredi
 from gestion.ui.widgets.plan_prod_creator import PlanProdCreator
 from gestion.ui.widgets.chart_production import ChartProd
 from gestion.ui.widgets.day_menu import DayMenu
+from gestion.ui.widgets.bloc_information import BlocInformation
 from gestion.stores.settings_store import settings_store_gestion
 from gestion.stores.plan_prod_store import plan_prod_store
 from gestion.stores.event_store import event_store
@@ -44,10 +45,14 @@ class MainWindow(QMainWindow):
         day_menu.setFixedHeight(chart_menu_height)
         self.vbox.addWidget(day_menu)
         if settings_store_gestion.plan_prod:
+            bloc_info = BlocInformation(parent=self, plan_prod=settings_store_gestion.plan_prod)
             settings_store_gestion.plan_prod.ON_CHANGED_SIGNAL.connect(day_menu.update_state_bt)
             settings_store_gestion.plan_prod.ON_TOURS_CHANGED.connect(day_menu.update_state_bt)
+            settings_store_gestion.plan_prod.ON_CHANGED_SIGNAL.connect(bloc_info.update_widget)
+            settings_store_gestion.plan_prod.ON_TOURS_CHANGED.connect(bloc_info.update_widget)
             plan_prod_creator = PlanProdCreator(parent=self, plan_prod=settings_store_gestion.plan_prod)
             self.vbox.addWidget(plan_prod_creator)
+            self.vbox.addWidget(bloc_info)
         else:
             self.vbox.addWidget(chart_prod)
 
