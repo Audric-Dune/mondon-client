@@ -1,8 +1,10 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtCore import pyqtSignal, Qt
+from PyQt5.QtCore import pyqtSignal
 
+from commun.constants.param import FIN_PROD_SOIR
+from commun.utils.timestamp import get_hour_in_timestamp, timestamp_at_time
 from commun.model.refente import Refente
 from commun.stores.refente_store import RefenteStore
 from commun.stores.perfo_store import PerfoStore
@@ -60,6 +62,20 @@ class PlanProd(MondonWidget):
         if not self.tours:
             return False
         if not self.refente_is_completed(refente=self.refente_selected, bobines_filles=self.bobines_filles_selected):
+            return False
+        if not self.is_valid_tours():
+            return False
+        return True
+
+    def is_valid_tours(self):
+        from gestion.stores.event_store import event_store
+        if event_store.events:
+            for event in event_store.events:
+                if event.type == "stop":
+                    if get_hour_in_timestamp(event.end) == FIN_PROD_SOIR:
+                        if self.end > event.start:
+                            return False
+        if self.end > timestamp_at_time(self.start, hours=FIN_PROD_SOIR):
             return False
         return True
 

@@ -10,7 +10,7 @@ from commun.utils.timestamp import timestamp_to_hour_little,\
 from commun.constants.colors import color_bleu_gris
 from commun.ui.public.mondon_widget import MondonWidget
 from commun.ui.public.text_edit import TextEdit
-from commun.constants.stylesheets import line_edit_green_stylesheet
+from commun.constants.stylesheets import line_edit_green_stylesheet, line_edit_red_stylesheet
 
 
 class BlocParamProd(MondonWidget):
@@ -45,6 +45,12 @@ class BlocParamProd(MondonWidget):
 
     def handle_tours_changed(self, text_edit_value):
         if text_edit_value == "":
-            pass
+            self.text_edit_tours.setStyleSheet(line_edit_red_stylesheet)
         else:
+            self.text_edit_tours.setStyleSheet(line_edit_green_stylesheet)
             self.plan_prod.set_tours(int(text_edit_value))
+        if self.plan_prod.is_valid_tours():
+            self.text_edit_tours.setStyleSheet(line_edit_green_stylesheet)
+        else:
+            self.text_edit_tours.setStyleSheet(line_edit_red_stylesheet)
+
