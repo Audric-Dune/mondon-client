@@ -9,17 +9,20 @@ from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QLabel
 from PyQt5.QtCore import Qt
 
 from commun.ui.public.mondon_widget import MondonWidget
+from commun.constants.colors import color_rouge_clair
 from commun.constants.stylesheets import white_12_bold_label_stylesheet
 
 from gestion.ui.widgets.selector import Selector
 from gestion.ui.widgets.bloc_param_prod import BlocParamProd
 from gestion.ui.widgets.bloc_selected import BlocSelected
+from gestion.ui.widgets.bloc_information import BlocInformation
 
 
 class PlanProdCreator(MondonWidget):
 
     def __init__(self, plan_prod, parent=None):
         super(PlanProdCreator, self).__init__(parent=parent)
+        self.set_background_color(color=color_rouge_clair)
         self.plan_prod = plan_prod
         self.plan_prod.ON_CHANGED_SIGNAL.connect(self.handle_plan_prod_changed)
         self.plan_prod.ON_TOURS_CHANGED.connect(self.handle_tours_plan_prod_changed)
@@ -37,30 +40,32 @@ class PlanProdCreator(MondonWidget):
         self.bloc_refente_selected.ON_CLICK_SIGNAL.connect(self.handle_click_on_bloc_selected)
         self.bloc_bobines_selected = BlocSelected(data_type="bobine", parent=self)
         self.bloc_bobines_selected.ON_CLICK_SIGNAL.connect(self.handle_click_on_bloc_selected)
+        self.bloc_info = BlocInformation(parent=self, plan_prod=plan_prod)
         self.init_ui()
 
     def init_ui(self):
         master_vbox = QVBoxLayout()
         master_vbox.setContentsMargins(0, 0, 0, 0)
+
         hbox = QHBoxLayout()
         hbox.addWidget(self.selector)
-        hbox.addStretch(0)
         vbox = QVBoxLayout()
         self.titre_prod.setFixedHeight(30)
         self.titre_prod.setStyleSheet(white_12_bold_label_stylesheet)
         self.titre_prod.setContentsMargins(5, 0, 0, 0)
+        self.titre_prod.setMinimumWidth(800)
         vbox.addWidget(self.titre_prod)
         vbox.addWidget(self.bloc_poly_selected)
         vbox.addWidget(self.bloc_perfo_selected)
         vbox.addWidget(self.bloc_papier_selected)
         vbox.addWidget(self.bloc_refente_selected)
-        vbox.addStretch(0)
         hbox.addLayout(vbox)
+
+        master_vbox.addWidget(self.bloc_param_prod)
         master_vbox.addLayout(hbox)
-        vbox = QVBoxLayout()
-        vbox.addWidget(self.bloc_param_prod)
-        vbox.addWidget(self.bloc_bobines_selected)
-        master_vbox.addLayout(vbox)
+        master_vbox.addWidget(self.bloc_bobines_selected)
+        master_vbox.addWidget(self.bloc_info)
+
         self.setLayout(master_vbox)
 
     def update_bloc_selected(self):
@@ -77,9 +82,11 @@ class PlanProdCreator(MondonWidget):
         self.update_bloc_selected()
         self.update_selector()
         self.bloc_param_prod.update_label()
+        self.bloc_info.update_widget()
 
     def handle_tours_plan_prod_changed(self):
         self.bloc_param_prod.update_label()
+        self.bloc_info.update_widget()
 
     def handle_click_on_bloc_selected(self, name_bloc):
         if self.bloc_focus == name_bloc:
@@ -88,6 +95,7 @@ class PlanProdCreator(MondonWidget):
             self.bloc_focus = name_bloc
         self.update_bloc_selected()
         self.update_selector()
+        self.bloc_info.update_widget()
 
     def keyPressEvent(self, e):
         if e.key() == Qt.Key_Delete:
