@@ -33,7 +33,7 @@ class SettingsStore(QObject):
             plan_prod = PlanProd(start=last_plan_prod.end, index=len(plan_prod_store.plans_prods) + 1)
         else:
             start_day = timestamp_at_day_ago(self.day_ago)
-            plan_prod = PlanProd(start=timestamp_at_time(ts=start_day, hours=DEBUT_PROD_MATIN))
+            plan_prod = PlanProd(start=timestamp_at_time(ts=start_day, hours=DEBUT_PROD_MATIN), index=1)
         self.set(plan_prod=plan_prod)
 
     def save_plan_prod(self):

@@ -90,7 +90,6 @@ class PlanProd(MondonWidget):
     def get_max_tour(self):
         end_day_ts = self.get_end_day()
         max_prod_ts = end_day_ts - self.start
-        print(max_prod_ts)
         max_tour = (max_prod_ts*3/(PERCENT_PROD_THEROIQUE_MAXI/100)/self.longueur)
         return int(max_tour)
 

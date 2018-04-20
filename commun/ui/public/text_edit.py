@@ -20,7 +20,6 @@ class TextEdit(QLineEdit):
                 self.only_int = QIntValidator()
             self.setValidator(self.only_int)
 
-
     def eventFilter(self, object, e):
         if e.type() == QEvent.MouseButtonPress:
             self.selectAll()
