@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QLabel
 from PyQt5.QtCore import Qt
 
 from commun.ui.public.mondon_widget import MondonWidget
-from commun.constants.colors import color_rouge_clair
+from commun.constants.colors import color_blanc
 from commun.constants.stylesheets import white_12_bold_label_stylesheet
 
 from gestion.ui.widgets.selector import Selector
@@ -22,7 +22,7 @@ class PlanProdCreator(MondonWidget):
 
     def __init__(self, plan_prod, parent=None):
         super(PlanProdCreator, self).__init__(parent=parent)
-        self.set_background_color(color=color_rouge_clair)
+        self.set_background_color(color=color_blanc)
         self.plan_prod = plan_prod
         self.plan_prod.ON_CHANGED_SIGNAL.connect(self.handle_plan_prod_changed)
         self.plan_prod.ON_TOURS_CHANGED.connect(self.handle_tours_plan_prod_changed)
