@@ -77,7 +77,8 @@ class Application(QApplication):
         self.get_bobine_fille_from_xls()
 
     def get_bobine_fille_from_xls(self):
-        xls = xlrd.open_workbook('C:/Users\dessinateur3\Desktop\github\ARTICLE BOBINE FILLE.xls')
+        # xls = xlrd.open_workbook('C:/Users\dessinateur3\Desktop\github\ARTICLE BOBINE FILLE.xls')
+        xls = xlrd.open_workbook('C:/Users\Castor\Desktop\github\ARTICLE BOBINE FILLE.xls')
         sheet = xls.sheet_by_name("Sage")
         max_row = sheet.nrows
         current_row = 0
@@ -119,8 +120,8 @@ class Application(QApplication):
             bobine_fille_store.add_bobine(current_bobine)
 
     def read_xlsm(self):
-        # wb = xlrd.open_workbook('C:/Users\Castor\Desktop\github\Etude stock bobine V5 MASTER 18-02-23.xlsm')
-        wb = xlrd.open_workbook('C:/Users\dessinateur3\Desktop\github\Etude stock bobine V5 MASTER 18-02-23.xlsm')
+        wb = xlrd.open_workbook('C:/Users\Castor\Desktop\github\Etude stock bobine V5 MASTER 18-02-23.xlsm')
+        # wb = xlrd.open_workbook('C:/Users\dessinateur3\Desktop\github\Etude stock bobine V5 MASTER 18-02-23.xlsm')
         for sheet in wb.sheets():
             # if sheet.name == "Liste bobine":
             #     start_ligne = 20
@@ -165,46 +166,46 @@ class Application(QApplication):
                         else:
                             bobine_papier_store.add_bobine(bobine_mere)
                     current_ligne += 1
-    #
-    # @staticmethod
-    # def get_color(string):
-    #     string_list = list(string)
-    #     color = ""
-    #     for character in string_list:
-    #         if character == " ":
-    #             break
-    #         else:
-    #             color += character
-    #     return color
 
-    # @staticmethod
-    # def get_gr(string):
-    #     string_list = list(string)
-    #     gr = ""
-    #     start_gr = False
-    #     for character in string_list:
-    #         if character == " ":
-    #             start_gr = True
-    #         if start_gr and character != " " and character != "G":
-    #             gr += character
-    #     if gr != "CX":
-    #         gr += "g"
-    #     return gr if start_gr else "35g"
+    @staticmethod
+    def get_color(string):
+        string_list = list(string)
+        color = ""
+        for character in string_list:
+            if character == " ":
+                break
+            else:
+                color += character
+        return color
 
-    # @staticmethod
-    # def is_alerte(wb, vente_annuel, stock_a_therme):
-    #     for sheet in wb.sheets():
-    #         if sheet.name == "Alerte Prod":
-    #             start_ligne = 1
-    #             current_ligne = start_ligne
-    #             while current_ligne < sheet.nrows:
-    #                 if sheet.cell_value(current_ligne, 1) == "":
-    #                     break
-    #                 elif sheet.cell_value(current_ligne, 0) <= vente_annuel <= sheet.cell_value(current_ligne, 1):
-    #                     if stock_a_therme <= sheet.cell_value(current_ligne, 2):
-    #                         return True
-    #                 current_ligne += 1
-    #             return False
+    @staticmethod
+    def get_gr(string):
+        string_list = list(string)
+        gr = ""
+        start_gr = False
+        for character in string_list:
+            if character == " ":
+                start_gr = True
+            if start_gr and character != " " and character != "G":
+                gr += character
+        if gr != "CX":
+            gr += "g"
+        return gr if start_gr else "35g"
+
+    @staticmethod
+    def is_alerte(wb, vente_annuel, stock_a_therme):
+        for sheet in wb.sheets():
+            if sheet.name == "Alerte Prod":
+                start_ligne = 1
+                current_ligne = start_ligne
+                while current_ligne < sheet.nrows:
+                    if sheet.cell_value(current_ligne, 1) == "":
+                        break
+                    elif sheet.cell_value(current_ligne, 0) <= vente_annuel <= sheet.cell_value(current_ligne, 1):
+                        if stock_a_therme <= sheet.cell_value(current_ligne, 2):
+                            return True
+                    current_ligne += 1
+                return False
 
     @staticmethod
     def get_gr_bobine_mere(gr, color):
