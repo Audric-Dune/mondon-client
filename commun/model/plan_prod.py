@@ -29,6 +29,7 @@ class PlanProd(MondonWidget):
         self.start = start
         self.end = start
         self.tours = 12
+        self.longueur = None
         self.get_end()
         self.current_refente_store = RefenteStore()
         self.init_refente_store()
@@ -40,7 +41,6 @@ class PlanProd(MondonWidget):
         self.init_bobine_papier_store()
         self.current_bobine_poly_store = BobinePolyStore()
         self.init_bobine_poly_store()
-        self.longueur = None
         self.refente_selected = None
         self.perfo_selected = None
         self.bobines_filles_selected = []
@@ -217,147 +217,15 @@ class PlanProd(MondonWidget):
         if self.bobines_filles_selected:
             self.longueur = self.bobines_filles_selected[0].lenght
 
-    # def update_all_current_store(self):
-    #     self.definied_plan_prod_param()
-    #     self.definied_longueur()
-    #     self.update_current_bobine_fille_store()
-    #     self.update_current_refente_store()
-    #     self.update_current_bobine_papier_store()
-    #     self.filter_bobine_poly_from_bobine_papier()
-    #     self.filter_perfo_from_refente()
-    #     self.get_end()
-    #
-    #
-    # def definied_plan_prod_param(self):
-    #     self.definied_laize_plan_prod()
-    #     self.definied_color_plan_prod()
-    #     self.definied_gr_plan_prod()
-    #
-    # def definied_laize_plan_prod(self):
-    #     self.laize_plan_prod = None
-    #     if self.bobine_poly_selected:
-    #         self.laize_plan_prod = self.bobine_poly_selected.laize
-    #     if self.bobine_papier_selected:
-    #         self.laize_plan_prod = self.bobine_papier_selected.laize
-    #     if self.refente_selected:
-    #         self.laize_plan_prod = self.refente_selected.laize
-    #
-    # def definied_color_plan_prod(self):
-    #     self.color_plan_prod = None
-    #     if self.bobine_papier_selected:
-    #         self.color_plan_prod = self.bobine_papier_selected.color
-    #     if self.bobines_filles_selected:
-    #         self.color_plan_prod = self.bobines_filles_selected[0].color
-    #
-    # def definied_gr_plan_prod(self):
-    #     self.gr_plan_prod = None
-    #     if self.bobine_papier_selected:
-    #         self.gr_plan_prod = self.bobine_papier_selected.gr
-    #     if self.bobines_filles_selected:
-    #         self.gr_plan_prod = self.bobines_filles_selected[0].gr
-    #
-    # def update_current_bobine_fille_store(self):
-    #     # Crée un nouveau magasin de bobine fille vide
-    #     new_bobine_fille_store = BobineFilleStore()
-    #     # Parcour les bobines filles du magasin bobine fille
-    #     for bobine in bobine_fille_store.bobines:
-    #         # Initialise paramètre de production courant
-    #         current_laize_plan_prod = self.laize_plan_prod
-    #         current_gr_plan_prod = self.gr_plan_prod
-    #         current_color_plan_prod = self.color_plan_prod
-    #         # Test bobine est déjà sélectionnée et nécessite une impression
-    #         if self.bobine_is_selected_and_printed(bobine):
-    #             continue
-    #         else:
-    #             pass
-    #         # Test bobine compatible avec paramètre production courant
-    #         if self.bobine_is_compatible_with_current_param_plan_prod(bobine=bobine,
-    #                                                                   gr=current_gr_plan_prod,
-    #                                                                   color=current_color_plan_prod):
-    #             pass
-    #         else:
-    #             continue
-    #         # Update paramètre de production courant
-    #         current_gr_plan_prod = self.gr_plan_prod if self.gr_plan_prod else bobine.gr
-    #         current_color_plan_prod = self.color_plan_prod if self.color_plan_prod else bobine.color
-    #         # Recherche une combinaison refente et bobine papier compatible avec la bobine
-    #         if self.get_refente_and_bobine_papier_compatible_with_bobine(bobine=bobine,
-    #                                                                      laize_prod=current_laize_plan_prod,
-    #                                                                      gr_prod=current_gr_plan_prod,
-    #                                                                      color_prod=current_color_plan_prod):
-    #             pass
-    #         else:
-    #             continue
-    #         # Ajoute bobine au nouveau magasin de bobine fille
-    #         new_bobine_fille_store.add_bobine(bobine)
-    #     # Remplace le magasin de bobine fille courant par le nouveau magasin de bobine fille
-    #     self.current_bobine_fille_store = new_bobine_fille_store
-    #
-    # def get_refente_and_bobine_papier_compatible_with_bobine(self, bobine, laize_prod, gr_prod, color_prod):
-    #     if self.refente_selected:
-    #         if self.refente_is_compatible_from_bobine_and_bobine_papier(refente=self.refente_selected,
-    #                                                                     bobine=bobine,
-    #                                                                     color_prod=color_prod,
-    #                                                                     gr_prod=gr_prod,
-    #                                                                     laize_prod=laize_prod):
-    #             return True
-    #     else:
-    #         for refente in refente_store.refentes:
-    #             if self.refente_is_compatible_from_bobine_and_bobine_papier(refente=refente,
-    #                                                                         bobine=bobine,
-    #                                                                         color_prod=color_prod,
-    #                                                                         gr_prod=gr_prod,
-    #                                                                         laize_prod=laize_prod):
-    #                 return True
-    #     return False
-    #
-    # def update_current_refente_store(self):
-    #     new_refente_store = RefenteStore()
-    #     for refente in refente_store.refentes:
-    #         if self.refente_is_compatible_with_perfo(refente):
-    #             if self.refente_is_comptatible_with_current_param_plan_prod(refente=refente, laize=self.laize_plan_prod):
-    #                 if self.refente_is_compatible_from_bobines_filles_selected(refente=refente):
-    #                     new_refente = refente
-    #                     for bobine_fille_selected in self.bobines_filles_selected:
-    #                         new_refente = self.get_new_refente_with_bobine(new_refente, bobine_fille_selected)
-    #                     refente_is_ok = True
-    #                     if self.refente_is_complete(new_refente):
-    #                         pass
-    #                     else:
-    #                         for laize in new_refente.laizes:
-    #                             if self.laize_is_compatible_with_current_bobine_fille_store(laize):
-    #                                 continue
-    #                             else:
-    #                                 refente_is_ok = False
-    #                                 break
-    #                     if refente_is_ok:
-    #                         new_refente_store.add_refente(refente)
-    #     self.current_refente_store = new_refente_store
-    #
-    # def update_current_bobine_papier_store(self):
-    #     new_bobine_papier_store = BobinePapierStore()
-    #     for bobine_papier in bobine_papier_store.bobines:
-    #         if self.bobine_papier_is_compatible_with_current_param_plan_prod(bobine=bobine_papier,
-    #                                                                          laize=self.laize_plan_prod,
-    #                                                                          color=self.color_plan_prod,
-    #                                                                          gr=self.gr_plan_prod):
-    #             if self.bobine_papier_is_compatible_with_current_refente_store(bobine_papier):
-    #                 if self.bobine_papier_is_compatible_with_current_bobine_store(bobine_papier):
-    #                     new_bobine_papier_store.add_bobine(bobine_papier)
-    #     self.current_bobine_papier_store = new_bobine_papier_store
-    #
-    # def laize_is_compatible_with_current_bobine_fille_store(self, laize):
-    #     for bobine in self.current_bobine_fille_store.bobines:
-    #         if bobine.laize == laize or not laize:
-    #             return True
-    #     return False
-    #
-    # @staticmethod
-    # def refente_is_complete(refente):
-    #     for laize in refente.laizes:
-    #         if laize:
-    #             return False
-    #     return True
+    def update_all_current_store(self):
+        pass
+
+    @staticmethod
+    def refente_is_complete(refente):
+        for laize in refente.laizes:
+            if laize:
+                return False
+        return True
     #
     # def refente_is_compatible_from_bobine_and_bobine_papier(self, refente, bobine, laize_prod, gr_prod, color_prod):
     #     if self.refente_is_compatible_with_perfo(refente):
@@ -530,3 +398,138 @@ class PlanProd(MondonWidget):
     #                 self.bobines_filles_selected.append(bobine_compatible_with_laize)
     #                 self.update_current_bobine_fille_store()
     #     self.ON_CHANGED_SIGNAL.emit()
+    # def update_all_current_store(self):
+    #     self.definied_plan_prod_param()
+    #     self.definied_longueur()
+    #     self.update_current_bobine_fille_store()
+    #     self.update_current_refente_store()
+    #     self.update_current_bobine_papier_store()
+    #     self.filter_bobine_poly_from_bobine_papier()
+    #     self.filter_perfo_from_refente()
+    #     self.get_end()
+    #
+    #
+    # def definied_plan_prod_param(self):
+    #     self.definied_laize_plan_prod()
+    #     self.definied_color_plan_prod()
+    #     self.definied_gr_plan_prod()
+    #
+    # def definied_laize_plan_prod(self):
+    #     self.laize_plan_prod = None
+    #     if self.bobine_poly_selected:
+    #         self.laize_plan_prod = self.bobine_poly_selected.laize
+    #     if self.bobine_papier_selected:
+    #         self.laize_plan_prod = self.bobine_papier_selected.laize
+    #     if self.refente_selected:
+    #         self.laize_plan_prod = self.refente_selected.laize
+    #
+    # def definied_color_plan_prod(self):
+    #     self.color_plan_prod = None
+    #     if self.bobine_papier_selected:
+    #         self.color_plan_prod = self.bobine_papier_selected.color
+    #     if self.bobines_filles_selected:
+    #         self.color_plan_prod = self.bobines_filles_selected[0].color
+    #
+    # def definied_gr_plan_prod(self):
+    #     self.gr_plan_prod = None
+    #     if self.bobine_papier_selected:
+    #         self.gr_plan_prod = self.bobine_papier_selected.gr
+    #     if self.bobines_filles_selected:
+    #         self.gr_plan_prod = self.bobines_filles_selected[0].gr
+    #
+    # def update_current_bobine_fille_store(self):
+    #     # Crée un nouveau magasin de bobine fille vide
+    #     new_bobine_fille_store = BobineFilleStore()
+    #     # Parcour les bobines filles du magasin bobine fille
+    #     for bobine in bobine_fille_store.bobines:
+    #         # Initialise paramètre de production courant
+    #         current_laize_plan_prod = self.laize_plan_prod
+    #         current_gr_plan_prod = self.gr_plan_prod
+    #         current_color_plan_prod = self.color_plan_prod
+    #         # Test bobine est déjà sélectionnée et nécessite une impression
+    #         if self.bobine_is_selected_and_printed(bobine):
+    #             continue
+    #         else:
+    #             pass
+    #         # Test bobine compatible avec paramètre production courant
+    #         if self.bobine_is_compatible_with_current_param_plan_prod(bobine=bobine,
+    #                                                                   gr=current_gr_plan_prod,
+    #                                                                   color=current_color_plan_prod):
+    #             pass
+    #         else:
+    #             continue
+    #         # Update paramètre de production courant
+    #         current_gr_plan_prod = self.gr_plan_prod if self.gr_plan_prod else bobine.gr
+    #         current_color_plan_prod = self.color_plan_prod if self.color_plan_prod else bobine.color
+    #         # Recherche une combinaison refente et bobine papier compatible avec la bobine
+    #         if self.get_refente_and_bobine_papier_compatible_with_bobine(bobine=bobine,
+    #                                                                      laize_prod=current_laize_plan_prod,
+    #                                                                      gr_prod=current_gr_plan_prod,
+    #                                                                      color_prod=current_color_plan_prod):
+    #             pass
+    #         else:
+    #             continue
+    #         # Ajoute bobine au nouveau magasin de bobine fille
+    #         new_bobine_fille_store.add_bobine(bobine)
+    #     # Remplace le magasin de bobine fille courant par le nouveau magasin de bobine fille
+    #     self.current_bobine_fille_store = new_bobine_fille_store
+    #
+    # def get_refente_and_bobine_papier_compatible_with_bobine(self, bobine, laize_prod, gr_prod, color_prod):
+    #     if self.refente_selected:
+    #         if self.refente_is_compatible_from_bobine_and_bobine_papier(refente=self.refente_selected,
+    #                                                                     bobine=bobine,
+    #                                                                     color_prod=color_prod,
+    #                                                                     gr_prod=gr_prod,
+    #                                                                     laize_prod=laize_prod):
+    #             return True
+    #     else:
+    #         for refente in refente_store.refentes:
+    #             if self.refente_is_compatible_from_bobine_and_bobine_papier(refente=refente,
+    #                                                                         bobine=bobine,
+    #                                                                         color_prod=color_prod,
+    #                                                                         gr_prod=gr_prod,
+    #                                                                         laize_prod=laize_prod):
+    #                 return True
+    #     return False
+    #
+    # def update_current_refente_store(self):
+    #     new_refente_store = RefenteStore()
+    #     for refente in refente_store.refentes:
+    #         if self.refente_is_compatible_with_perfo(refente):
+    #             if self.refente_is_comptatible_with_current_param_plan_prod(refente=refente, laize=self.laize_plan_prod):
+    #                 if self.refente_is_compatible_from_bobines_filles_selected(refente=refente):
+    #                     new_refente = refente
+    #                     for bobine_fille_selected in self.bobines_filles_selected:
+    #                         new_refente = self.get_new_refente_with_bobine(new_refente, bobine_fille_selected)
+    #                     refente_is_ok = True
+    #                     if self.refente_is_complete(new_refente):
+    #                         pass
+    #                     else:
+    #                         for laize in new_refente.laizes:
+    #                             if self.laize_is_compatible_with_current_bobine_fille_store(laize):
+    #                                 continue
+    #                             else:
+    #                                 refente_is_ok = False
+    #                                 break
+    #                     if refente_is_ok:
+    #                         new_refente_store.add_refente(refente)
+    #     self.current_refente_store = new_refente_store
+    #
+    # def update_current_bobine_papier_store(self):
+    #     new_bobine_papier_store = BobinePapierStore()
+    #     for bobine_papier in bobine_papier_store.bobines:
+    #         if self.bobine_papier_is_compatible_with_current_param_plan_prod(bobine=bobine_papier,
+    #                                                                          laize=self.laize_plan_prod,
+    #                                                                          color=self.color_plan_prod,
+    #                                                                          gr=self.gr_plan_prod):
+    #             if self.bobine_papier_is_compatible_with_current_refente_store(bobine_papier):
+    #                 if self.bobine_papier_is_compatible_with_current_bobine_store(bobine_papier):
+    #                     new_bobine_papier_store.add_bobine(bobine_papier)
+    #     self.current_bobine_papier_store = new_bobine_papier_store
+    #
+    # def laize_is_compatible_with_current_bobine_fille_store(self, laize):
+    #     for bobine in self.current_bobine_fille_store.bobines:
+    #         if bobine.laize == laize or not laize:
+    #             return True
+    #     return False
+    #
