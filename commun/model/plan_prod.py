@@ -5,7 +5,9 @@ from PyQt5.QtCore import pyqtSignal
 
 from commun.constants.param import FIN_PROD_SOIR, PERCENT_PROD_THEROIQUE_MAXI
 from commun.utils.timestamp import get_hour_in_timestamp, timestamp_at_time
+from commun.utils import filter
 from commun.model.refente import Refente
+from commun.model.contraintes import Contrainte
 from commun.stores.refente_store import RefenteStore
 from commun.stores.perfo_store import PerfoStore
 from commun.stores.bobine_fille_store import BobineFilleStore
@@ -218,7 +220,31 @@ class PlanProd(MondonWidget):
             self.longueur = self.bobines_filles_selected[0].lenght
 
     def update_all_current_store(self):
-        pass
+        contrainte = self.get_contrainte()
+        self.current_bobine_papier_store = filter.filter_bobines_papier_for_contrainte(bobines_papier=self.current_bobine_papier_store, contrainte=contrainte)
+
+    def get_contrainte(self):
+        bobine_poly = None
+        if self.bobine_poly_selected:
+            bobine_poly = self.bobine_poly_selected
+        perfo = None
+        if self.perfo_selected:
+            perfo = self.perfo_selected
+        bobine_papier = None
+        if self.bobine_papier_selected:
+            bobine_papier = self.bobine_papier_selected
+        refente = None
+        if self.refente_selected:
+            refente = self.refente_selected
+        bobines_filles = None
+        if self.bobines_filles_selected:
+            bobines_filles = self.bobines_filles_selected
+        contrainte = Contrainte(bobine_poly=bobine_poly,
+                                bobine_papier=bobine_papier,
+                                perfo=perfo,
+                                refente=refente,
+                                bobines_fille=bobines_filles)
+        return contrainte
 
     @staticmethod
     def refente_is_complete(refente):
@@ -398,15 +424,6 @@ class PlanProd(MondonWidget):
     #                 self.bobines_filles_selected.append(bobine_compatible_with_laize)
     #                 self.update_current_bobine_fille_store()
     #     self.ON_CHANGED_SIGNAL.emit()
-    # def update_all_current_store(self):
-    #     self.definied_plan_prod_param()
-    #     self.definied_longueur()
-    #     self.update_current_bobine_fille_store()
-    #     self.update_current_refente_store()
-    #     self.update_current_bobine_papier_store()
-    #     self.filter_bobine_poly_from_bobine_papier()
-    #     self.filter_perfo_from_refente()
-    #     self.get_end()
     #
     #
     # def definied_plan_prod_param(self):
