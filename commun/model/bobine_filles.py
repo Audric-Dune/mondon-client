@@ -6,12 +6,32 @@ from commun.ui.public.mondon_widget import MondonWidget
 
 class BobineFille(MondonWidget):
 
-    def __init__(self, parent=None, code=0, laize=0, lenght=0, color="", alerte=False, gr="0g", pose=0, sommeil=False):
+    def __init__(self, parent=None,
+                 code=0,
+                 name="",
+                 laize=0,
+                 lenght=0,
+                 color="",
+                 alerte=False,
+                 cliche_id_1=None,
+                 cliche_id_2=None,
+                 stock=0,
+                 stock_therme=0,
+                 creation_time="",
+                 gr=0,
+                 pose=0,
+                 sommeil=False):
         super(BobineFille, self).__init__(parent=parent)
+        self.name = name
         self.code = code
         self.laize = int(laize)
         self.lenght = int(lenght)
         self.color = color
+        self.cliche_id_1 = cliche_id_1
+        self.cliche_id_2 = cliche_id_2
+        self.stock = stock
+        self.stock_therme = stock_therme
+        self.creation_time = creation_time
         self.alert = alerte
         self.gr = gr
         self.pose = pose
