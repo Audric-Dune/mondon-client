@@ -19,6 +19,7 @@ class BobineFille(MondonWidget):
                  stock_therme=0,
                  creation_time="",
                  gr=0,
+                 poses=None,
                  pose=None,
                  sommeil=False):
         super(BobineFille, self).__init__(parent=parent)
@@ -34,7 +35,8 @@ class BobineFille(MondonWidget):
         self.creation_time = creation_time
         self.alert = alerte
         self.gr = gr
-        self.pose = pose if pose else [0]
+        self.poses = poses if poses else [0]
+        self.pose = pose
         self.sommeil = sommeil
 
     def get_value(self, value_name):

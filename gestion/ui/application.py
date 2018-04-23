@@ -7,7 +7,7 @@ from random import randint
 from gestion.ui.window.main_window import MainWindow
 from commun.lib. base_de_donnee import Database
 from commun.stores.bobine_fille_store import bobine_fille_store
-from commun.model.bobine_filles import BobineFille
+from commun.model.bobine_fille import BobineFille
 from commun.stores.bobine_poly_store import bobine_poly_store
 from commun.stores.bobine_papier_store import bobine_papier_store
 from commun.stores.refente_store import refente_store
@@ -78,8 +78,8 @@ class Application(QApplication):
 
     def get_bobine_fille_from_xls(self):
         # xls = xlrd.open_workbook('C:/Users\dessinateur3\Desktop\github\ARTICLE BOBINE FILLE.xls')
-        xls = xlrd.open_workbook('C:/Users\Castor\Desktop\github\ARTICLE BOBINE FILLE.xls')
-        # xls = xlrd.open_workbook('/Users/audricperrin/Desktop/github/ARTICLE BOBINE FILLE.xls')
+        # xls = xlrd.open_workbook('C:/Users\Castor\Desktop\github\ARTICLE BOBINE FILLE.xls')
+        xls = xlrd.open_workbook('/Users/audricperrin/Desktop/github/ARTICLE BOBINE FILLE.xls')
         sheet = xls.sheet_by_name("Sage")
         max_row = sheet.nrows
         current_row = 0
@@ -121,8 +121,8 @@ class Application(QApplication):
             bobine_fille_store.add_bobine(current_bobine)
 
     def read_xlsm(self):
-        # wb = xlrd.open_workbook('/Users/audricperrin/Desktop/github/Etude stock bobine V5 MASTER 18-02-23.xlsm')
-        wb = xlrd.open_workbook('C:/Users\Castor\Desktop\github\Etude stock bobine V5 MASTER 18-02-23.xlsm')
+        wb = xlrd.open_workbook('/Users/audricperrin/Desktop/github/Etude stock bobine V5 MASTER 18-02-23.xlsm')
+        # wb = xlrd.open_workbook('C:/Users\Castor\Desktop\github\Etude stock bobine V5 MASTER 18-02-23.xlsm')
         # wb = xlrd.open_workbook('C:/Users\dessinateur3\Desktop\github\Etude stock bobine V5 MASTER 18-02-23.xlsm')
         for sheet in wb.sheets():
             # if sheet.name == "Liste bobine":
@@ -155,7 +155,7 @@ class Application(QApplication):
                         break
                     else:
                         code = sheet.cell_value(current_ligne, 3)
-                        color = sheet.cell_value(current_ligne, 1)
+                        color = str(sheet.cell_value(current_ligne, 1)).title()
                         gr = self.get_gr_bobine_mere(gr=sheet.cell_value(current_ligne, 5),
                                                      color=sheet.cell_value(current_ligne, 1))
                         bobine_mere = BobineMere(code=code,
@@ -163,7 +163,7 @@ class Application(QApplication):
                                                  laize=sheet.cell_value(current_ligne, 0),
                                                  gr=gr,
                                                  lenght=sheet.cell_value(current_ligne, 6))
-                        if color == "POLY":
+                        if color == "Poly":
                             bobine_poly_store.add_bobine(bobine_mere)
                         else:
                             bobine_papier_store.add_bobine(bobine_mere)

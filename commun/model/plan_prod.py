@@ -221,7 +221,15 @@ class PlanProd(MondonWidget):
 
     def update_all_current_store(self):
         contrainte = self.get_contrainte()
-        self.current_bobine_papier_store = filter.filter_bobines_papier_for_contrainte(bobines_papier=self.current_bobine_papier_store, contrainte=contrainte)
+        self.current_bobine_papier_store.bobines = \
+            filter.filter_bobines_papier_for_contrainte(bobines_papier=self.current_bobine_papier_store.bobines,
+                                                        contrainte=contrainte)
+        self.current_refente_store.refentes = \
+            filter.filter_refentes_for_contrainte(refentes=self.current_refente_store.refentes,
+                                                  contrainte=contrainte)
+        self.current_bobine_fille_store.bobines = \
+            filter.filter_bobines_fille_for_contrainte(bobines_fille=self.current_bobine_fille_store.bobines,
+                                                       contrainte=contrainte)
 
     def get_contrainte(self):
         bobine_poly = None
@@ -393,37 +401,37 @@ class PlanProd(MondonWidget):
     #             return True
     #     return False
     #
-    # def get_new_item_selected_from_store(self):
-    #     if len(self.current_bobine_poly_store.bobines) == 1:
-    #         self.bobine_poly_selected = self.current_bobine_poly_store.bobines[0]
-    #     if len(self.current_perfo_store.perfos) == 1:
-    #         self.perfo_selected = self.current_perfo_store.perfos[0]
-    #     if self.refente_selected:
-    #         for perfo in perfo_store.perfos:
-    #             if perfo.code == self.refente_selected.code_perfo:
-    #                 self.perfo_selected = perfo
-    #     if len(self.current_bobine_papier_store.bobines) == 1:
-    #         self.bobine_papier_selected = self.current_bobine_papier_store.bobines[0]
-    #     if len(self.current_refente_store.refentes) == 1:
-    #         self.refente_selected = self.current_refente_store.refentes[0]
-    #     if self.refente_selected:
-    #         new_refente = self.refente_selected
-    #         for bobine in self.bobines_filles_selected:
-    #             new_refente = self.get_new_refente_with_bobine(new_refente, bobine)
-    #         for laize in new_refente.laizes:
-    #             count_bobine_compatible_with_laize = 0
-    #             bobine_compatible_with_laize = None
-    #             for bobine in self.current_bobine_fille_store.bobines:
-    #                 if bobine.laize == laize:
-    #                     count_bobine_compatible_with_laize += 1
-    #                     bobine_compatible_with_laize = bobine
-    #                 if count_bobine_compatible_with_laize > 1:
-    #                     bobine_compatible_with_laize = None
-    #                     break
-    #             if bobine_compatible_with_laize:
-    #                 self.bobines_filles_selected.append(bobine_compatible_with_laize)
-    #                 self.update_current_bobine_fille_store()
-    #     self.ON_CHANGED_SIGNAL.emit()
+    def get_new_item_selected_from_store(self):
+        if len(self.current_bobine_poly_store.bobines) == 1:
+            self.bobine_poly_selected = self.current_bobine_poly_store.bobines[0]
+        if len(self.current_perfo_store.perfos) == 1:
+            self.perfo_selected = self.current_perfo_store.perfos[0]
+        if self.refente_selected:
+            for perfo in perfo_store.perfos:
+                if perfo.code == self.refente_selected.code_perfo:
+                    self.perfo_selected = perfo
+        if len(self.current_bobine_papier_store.bobines) == 1:
+            self.bobine_papier_selected = self.current_bobine_papier_store.bobines[0]
+        if len(self.current_refente_store.refentes) == 1:
+            self.refente_selected = self.current_refente_store.refentes[0]
+        if self.refente_selected:
+            new_refente = self.refente_selected
+            for bobine in self.bobines_filles_selected:
+                new_refente = self.get_new_refente_with_bobine(new_refente, bobine)
+            for laize in new_refente.laizes:
+                count_bobine_compatible_with_laize = 0
+                bobine_compatible_with_laize = None
+                for bobine in self.current_bobine_fille_store.bobines:
+                    if bobine.laize == laize:
+                        count_bobine_compatible_with_laize += 1
+                        bobine_compatible_with_laize = bobine
+                    if count_bobine_compatible_with_laize > 1:
+                        bobine_compatible_with_laize = None
+                        break
+                if bobine_compatible_with_laize:
+                    self.bobines_filles_selected.append(bobine_compatible_with_laize)
+                    self.update_current_bobine_fille_store()
+        self.ON_CHANGED_SIGNAL.emit()
     #
     #
     # def definied_plan_prod_param(self):
