@@ -1,6 +1,6 @@
 # Database location
-# DATABASE_LOCATION = 'I:\data_prod_bob/mondon.db'
-DATABASE_LOCATION = '../mondon.db'
+DATABASE_LOCATION = 'I:\data_prod_bob/mondon.db'
+# DATABASE_LOCATION = '../mondon.db'
 
 # Mot de passe
 USER = {"Opérateur": None, "Superviseur": "dunesa"}
@@ -55,7 +55,7 @@ values = ["Calandre",
           "Cadre guidage"]
 DROPDOWN_CASSE = {"titre": "Casse", "placeholder": "Sélectionner une casse...", "values": values}
 
-values = ["Bord flottant", "Choc sur bobine"]
+values = ["Bord flottant", "Choc sur bobine", "Raccord fournisseur"]
 DROPDOWN_QUALITE_BM = {"titre": "Problème qualité bobine mère",
                        "placeholder": "Sélectionner la qualité défectueuse...",
                        "values": values}
@@ -94,4 +94,5 @@ LIST_CHOIX_ENTRETIEN = [
     ("label", "Barre axe carton"),
     ("label", "Lame coupe"),
     ("label", "Bague perfo"),
+    ("label", "Bras d'appuis"),
     ("text_edit", TEXT_EDIT_AUTRE)]

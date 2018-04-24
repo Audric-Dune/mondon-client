@@ -356,3 +356,39 @@ def bobine_fille_is_neutre(bobine_fille):
         if pose == 0:
             return True
         return False
+
+
+# FILTRE BOBINE POLY
+
+
+def filter_bobines_poly_for_bobines_papier(bobines_poly, bobines_papier):
+    new_bobine_poly = []
+    for bobine_poly in bobines_poly:
+        if is_valid_bobine_poly_for_bobines_papier(bobine_poly, bobines_papier):
+            new_bobine_poly.append(bobine_poly)
+    return new_bobine_poly
+
+
+def is_valid_bobine_poly_for_bobines_papier(bobine_poly, bobines_papier):
+    for bobine_papier in bobines_papier:
+        if bobine_poly.laize == bobine_papier.laize:
+            return True
+    return False
+
+
+# FILTRE PERFO
+
+
+def filter_perfos_for_refentes(perfos, refentes):
+    new_perfos = []
+    for perfo in perfos:
+        if is_valid_perfo_for_refentes(perfo, refentes):
+            new_perfos.append(perfo)
+    return new_perfos
+
+
+def is_valid_perfo_for_refentes(perfo, refentes):
+    for refente in refentes:
+        if perfo.code == refente.code_perfo:
+            return True
+    return False

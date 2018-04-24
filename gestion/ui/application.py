@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5.QtWidgets import QApplication
-from random import randint
+# from random import randint
 
 from gestion.ui.window.main_window import MainWindow
 from commun.lib. base_de_donnee import Database
@@ -77,9 +77,9 @@ class Application(QApplication):
         self.get_bobine_fille_from_xls()
 
     def get_bobine_fille_from_xls(self):
-        # xls = xlrd.open_workbook('C:/Users\dessinateur3\Desktop\github\ARTICLE BOBINE FILLE.xls')
+        xls = xlrd.open_workbook('C:/Users\dessinateur3\Desktop\github\ARTICLE BOBINE FILLE.xls')
         # xls = xlrd.open_workbook('C:/Users\Castor\Desktop\github\ARTICLE BOBINE FILLE.xls')
-        xls = xlrd.open_workbook('/Users/audricperrin/Desktop/github/ARTICLE BOBINE FILLE.xls')
+        # xls = xlrd.open_workbook('/Users/audricperrin/Desktop/github/ARTICLE BOBINE FILLE.xls')
         sheet = xls.sheet_by_name("Sage")
         max_row = sheet.nrows
         current_row = 0
@@ -121,9 +121,9 @@ class Application(QApplication):
             bobine_fille_store.add_bobine(current_bobine)
 
     def read_xlsm(self):
-        wb = xlrd.open_workbook('/Users/audricperrin/Desktop/github/Etude stock bobine V5 MASTER 18-02-23.xlsm')
+        # wb = xlrd.open_workbook('/Users/audricperrin/Desktop/github/Etude stock bobine V5 MASTER 18-02-23.xlsm')
         # wb = xlrd.open_workbook('C:/Users\Castor\Desktop\github\Etude stock bobine V5 MASTER 18-02-23.xlsm')
-        # wb = xlrd.open_workbook('C:/Users\dessinateur3\Desktop\github\Etude stock bobine V5 MASTER 18-02-23.xlsm')
+        wb = xlrd.open_workbook('C:/Users\dessinateur3\Desktop\github\Etude stock bobine V5 MASTER 18-02-23.xlsm')
         for sheet in wb.sheets():
             # if sheet.name == "Liste bobine":
             #     start_ligne = 20

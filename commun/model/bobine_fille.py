@@ -25,7 +25,7 @@ class BobineFille(MondonWidget):
         super(BobineFille, self).__init__(parent=parent)
         self.name = name
         self.code = code
-        self.laize = int(laize)
+        self.laize = float(laize)
         self.lenght = int(lenght)
         self.color = color
         self.cliche_id_1 = cliche_id_1
