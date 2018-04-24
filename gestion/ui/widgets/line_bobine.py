@@ -5,10 +5,11 @@ from PyQt5.QtWidgets import QHBoxLayout, QLabel, QWidget
 from PyQt5.QtCore import pyqtSignal
 from commun.ui.public.mondon_widget import MondonWidget
 from commun.constants.colors import color_blanc, color_rouge
+from commun.model.bobine_fille import BobineFille
 
 
 class LineBobine(MondonWidget):
-    ON_DBCLICK_SIGNAL = pyqtSignal(QWidget)
+    ON_DBCLICK_SIGNAL = pyqtSignal(BobineFille)
 
     def __init__(self, parent=None, bobine=None):
         super(LineBobine, self).__init__(parent=parent)

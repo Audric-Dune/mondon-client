@@ -238,6 +238,7 @@ def is_valid_refente_for_bobines_fille(refente, bobines_fille, bobines_fille_sel
                                                       bobines_fille=bobines_fille,
                                                       bobines_fille_selected=new_bobines_fille_selected):
                     return True
+    return False
 
 
 def is_full_refente_with_bobines_fille_selected(refente):

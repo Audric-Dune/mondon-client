@@ -1,13 +1,10 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from commun.ui.public.mondon_widget import MondonWidget
 
+class BobineMere:
 
-class BobineMere(MondonWidget):
-
-    def __init__(self, parent=None, code=0, laize=0, lenght=0, color="", gr="0g"):
-        super(BobineMere, self).__init__(parent=parent)
+    def __init__(self, code=0, laize=0, lenght=0, color="", gr="0g"):
         self.code = code
         self.laize = int(laize)
         self.lenght = int(lenght)

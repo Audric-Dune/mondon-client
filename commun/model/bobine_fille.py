@@ -1,15 +1,13 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from commun.ui.public.mondon_widget import MondonWidget
 
+class BobineFille:
 
-class BobineFille(MondonWidget):
-
-    def __init__(self, parent=None,
+    def __init__(self,
                  code=0,
                  name="",
-                 laize=0,
+                 laize=0.,
                  lenght=0,
                  color="",
                  alerte=False,
@@ -22,7 +20,6 @@ class BobineFille(MondonWidget):
                  poses=None,
                  pose=None,
                  sommeil=False):
-        super(BobineFille, self).__init__(parent=parent)
         self.name = name
         self.code = code
         self.laize = float(laize)
@@ -55,8 +52,7 @@ class BobineFille(MondonWidget):
         return 0
 
     def __copy__(self):
-        return BobineFille(None,
-                           self.code,
+        return BobineFille(self.code,
                            self.name,
                            self.laize,
                            self.lenght,

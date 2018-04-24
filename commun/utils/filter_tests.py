@@ -10,23 +10,28 @@ from commun.model.bobine_mere import BobineMere
 from commun.model.contraintes import Contrainte
 
 
-AVAILABLE_LAIZE = [80, 140, 150, 180, 210]
-AVAILABLE_LENGTH = [500, 600, 700]
-AVAILABLE_COLOR = ['ORANGE', 'BLANC', 'IVOIRE', 'JAUNE', 'ECRU', 'NOIR', 'PRUNE', 'ROUGE', 'VERT', 'MARRON']
-AVAILABLE_GRAMMAGE = ['1g', '2g', '3g' , '4g'] # Aucune idée des valeurs possible ¯\_(ツ)_/¯
+AVAILABLE_LAIZE = [130, 140, 150, 160, 173, 180, 190, 210, 240, 300, 320]
+AVAILABLE_LENGTH = [500, 700]
+AVAILABLE_COLOR = ['Orange', 'Blanc', 'Ivoire', 'Jaune', 'Ecru', 'Noir',
+                   'Prune', 'Rouge', 'Vert', 'Marron', 'Ecru Enduit']
+AVAILABLE_GRAMMAGE = [30, 32, 35, 40, 48]
 
 
 def random_code(length=10):
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
 
+
 def random_laize():
     return random.choice(AVAILABLE_LAIZE)
+
 
 def random_length():
     return random.choice(AVAILABLE_LENGTH)
 
+
 def random_color():
     return random.choice(AVAILABLE_COLOR)
+
 
 def random_grammage():
     return random.choice(AVAILABLE_GRAMMAGE)
@@ -53,7 +58,7 @@ class TestFilter(TestCase):
         bobines = [fake_bobine_mere(), fake_bobine_mere(), fake_bobine_mere(), fake_bobine_mere()]
         contrainte = Contrainte()
         filtered_bobines = filter_bobines_papier_for_contrainte(bobines, contrainte)
-        self.assertEqual(filtered_bobines, bobines)
+        self.assertEqual(filtered_bobines, [])
 
     def test_filter_bobines_papier_for_contrainte__bobine_papier_contrainte(self):
         bobine_mere_1 = fake_bobine_mere()
