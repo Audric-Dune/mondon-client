@@ -267,17 +267,17 @@ def filter_bobines_fille_for_bobines_papier(bobines_fille, bobines_papier):
     return new_bobines_fille
 
 
-def filter_bobines_fille_for_refentes(bobines_fille, refentes):
+def filter_bobines_fille_for_refentes(bobines_fille, refentes, bobines_fille_selected):
     new_bobines_fille = []
     for bobine_fille in bobines_fille:
-        if is_valid_bobine_fille_for_refentes(bobine_fille, refentes):
+        if is_valid_bobine_fille_for_refentes(bobine_fille, refentes, bobines_fille_selected):
             new_bobines_fille.append(bobine_fille)
     return new_bobines_fille
 
 
-def is_valid_bobine_fille_for_refentes(bobine_fille, refentes):
+def is_valid_bobine_fille_for_refentes(bobine_fille, refentes, bobines_fille_selected):
     for refente in refentes:
-        if is_valid_bobine_fille_for_refente(bobine_fille, refente):
+        if is_valid_bobine_fille_for_refente(bobine_fille, refente, bobines_fille_selected):
             return True
     return False
 
@@ -292,7 +292,9 @@ def is_valid_bobine_fille_for_bobines_papier(bobine_fille, bobines_papier):
 def is_valid_bobine_fille_for_contrainte(bobine_fille, contrainte):
     if not is_valid_bobine_fille_for_bobine_papier(bobine_fille, bobine_papier=contrainte.bobine_papier):
         return False
-    if not is_valid_bobine_fille_for_refente(bobine_fille, refente=contrainte.refente):
+    if not is_valid_bobine_fille_for_refente(bobine_fille,
+                                             refente=contrainte.refente,
+                                             bobines_fille_selected=contrainte.bobines_fille):
         return False
     if not is_valid_bobine_fille_for_bobines_fille(bobine_fille, bobines_fille=contrainte.bobines_fille):
         return False
@@ -309,11 +311,12 @@ def is_valid_bobine_fille_for_bobine_papier(bobine_fille, bobine_papier):
     return True
 
 
-def is_valid_bobine_fille_for_refente(bobine_fille, refente):
+def is_valid_bobine_fille_for_refente(bobine_fille, refente, bobines_fille_selected):
     if not refente:
         return True
+    new_refente = get_new_refente_with_bobines_fille(refente, bobines_fille=bobines_fille_selected)
     count_pose = 0
-    for laize in refente.laizes:
+    for laize in new_refente.laizes:
         if bobine_fille.laize == laize:
             count_pose += 1
             for pose in bobine_fille.poses:

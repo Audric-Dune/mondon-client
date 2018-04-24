@@ -247,7 +247,8 @@ class PlanProd(MondonWidget):
                                                            bobines_papier=self.current_bobine_papier_store.bobines)
         self.current_bobine_fille_store.bobines = \
             filter.filter_bobines_fille_for_refentes(bobines_fille=self.current_bobine_fille_store.bobines,
-                                                     refentes=self.current_refente_store.refentes)
+                                                     refentes=self.current_refente_store.refentes,
+                                                     bobines_fille_selected=contrainte.bobines_fille)
         self.current_refente_store.refentes = \
             filter.filter_refentes_for_bobines_papier(refentes=self.current_refente_store.refentes,
                                                       bobines_papier=self.current_bobine_papier_store.bobines)

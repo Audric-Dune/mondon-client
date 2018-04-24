@@ -16,24 +16,24 @@ from commun.constants.colors import \
 
 def get_color_bobine(bobine_color):
     color = color_bleu_gris
-    if bobine_color == "BLANC":
+    if bobine_color == "Blanc":
         color = bob_blanc
-    if bobine_color == "NOIR":
+    if bobine_color == "Noir":
         color = bob_noir
-    if bobine_color == "ROUGE":
+    if bobine_color == "Rouge":
         color = bob_rouge
-    if bobine_color == "VERT":
+    if bobine_color == "Vert":
         color = bob_vert
-    if bobine_color == "MARRON":
+    if bobine_color == "Marron":
         color = bob_marron
-    if bobine_color == "ORANGE":
+    if bobine_color == "Orange":
         color = bob_orange
-    if bobine_color == "PRUNE":
+    if bobine_color == "Prune":
         color = bob_prune
-    if bobine_color == "ECRU":
+    if bobine_color == "Ecru" or bobine_color == "Ecru Enduit":
         color = bob_ecru
-    if bobine_color == "JAUNE":
+    if bobine_color == "Jaune":
         color = bob_jaune
-    if bobine_color == "IVOIRE":
+    if bobine_color == "Ivoire":
         color = bob_ivoire
     return color
