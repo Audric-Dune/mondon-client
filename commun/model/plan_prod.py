@@ -159,6 +159,7 @@ class PlanProd(MondonWidget):
 
     def add_bobine_selected(self, bobine):
         self.bobines_filles_selected.append(bobine)
+        bobine.pose = 0
         self.update_all_current_store()
         self.ON_CHANGED_SIGNAL.emit()
 
@@ -230,6 +231,39 @@ class PlanProd(MondonWidget):
         self.current_bobine_fille_store.bobines = \
             filter.filter_bobines_fille_for_contrainte(bobines_fille=self.current_bobine_fille_store.bobines,
                                                        contrainte=contrainte)
+        self.filter_all_store(contrainte)
+        self.ON_CHANGED_SIGNAL.emit()
+
+    def filter_all_store(self, contrainte):
+        lenght_bobines_papier = len(self.current_bobine_papier_store.bobines)
+        lenght_bobines_fille = len(self.current_bobine_fille_store.bobines)
+        lenght_refentes = len(self.current_refente_store.refentes)
+        self.current_bobine_papier_store.bobines = \
+            filter.filter_bobines_papier_for_refentes(bobines_papier=self.current_bobine_papier_store.bobines,
+                                                      refentes=self.current_refente_store.refentes)
+        self.current_bobine_papier_store.bobines = \
+            filter.filter_bobines_papier_for_bobines_fille(bobines_papier=self.current_bobine_papier_store.bobines,
+                                                           bobines_fille=self.current_bobine_fille_store.bobines)
+        self.current_bobine_fille_store.bobines = \
+            filter.filter_bobines_fille_for_bobines_papier(bobines_fille=self.current_bobine_fille_store.bobines,
+                                                           bobines_papier=self.current_bobine_papier_store.bobines)
+        self.current_bobine_fille_store.bobines = \
+            filter.filter_bobines_fille_for_refentes(bobines_fille=self.current_bobine_fille_store.bobines,
+                                                     refentes=self.current_refente_store.refentes)
+        self.current_refente_store.refentes = \
+            filter.filter_refentes_for_bobines_papier(refentes=self.current_refente_store.refentes,
+                                                      bobines_papier=self.current_bobine_papier_store.bobines)
+        self.current_refente_store.refentes = \
+            filter.filter_refentes_for_bobines_fille(refentes=self.current_refente_store.refentes,
+                                                     bobines_fille=self.current_bobine_fille_store.bobines,
+                                                     bobines_fille_selected=contrainte.bobines_fille)
+        new_lenght_bobines_papier = len(self.current_bobine_papier_store.bobines)
+        new_lenght_bobines_fille = len(self.current_bobine_fille_store.bobines)
+        new_lenght_refentes = len(self.current_refente_store.refentes)
+        if new_lenght_bobines_fille != lenght_bobines_fille\
+                or new_lenght_bobines_papier != lenght_bobines_papier\
+                or new_lenght_refentes != lenght_refentes:
+            self.filter_all_store(contrainte)
 
     def get_contrainte(self):
         bobine_poly = None

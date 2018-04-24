@@ -12,11 +12,11 @@ from gestion.ui.widgets.line_perfo import LinePerfo
 from gestion.ui.widgets.line_refente import LineRefente
 from gestion.ui.widgets.line_bobine_papier import LineBobinePapier
 from gestion.ui.widgets.line_bobine_poly import LineBobinePoly
+from gestion.stores.settings_store import settings_store_gestion
 
 
 class BlocSelected(MondonWidget):
     ON_CLICK_SIGNAL = pyqtSignal(str)
-    ECH = 1
 
     def __init__(self, data_type, parent=None):
         super(BlocSelected, self).__init__(parent=parent)
@@ -75,7 +75,7 @@ class BlocSelected(MondonWidget):
             line_refente = LineRefente(parent=self,
                                        refente=self.parent.plan_prod.refente_selected,
                                        bobines=self.parent.plan_prod.bobines_filles_selected,
-                                       ech=self.ECH)
+                                       ech=settings_store_gestion.ech)
             layout.addWidget(line_refente)
         else:
             label = QLabel("Refente")
@@ -85,7 +85,9 @@ class BlocSelected(MondonWidget):
 
     def init_ui_perfo(self, layout):
         if self.parent.plan_prod.perfo_selected:
-            line_perfo = LinePerfo(parent=self, perfo=self.parent.plan_prod.perfo_selected, ech=self.ECH)
+            line_perfo = LinePerfo(parent=self,
+                                   perfo=self.parent.plan_prod.perfo_selected,
+                                   ech=settings_store_gestion.ech)
             layout.addWidget(line_perfo)
         else:
             label = QLabel("Campagne de perforation")

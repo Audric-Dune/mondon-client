@@ -33,7 +33,6 @@ class EventStore(QObject):
                 from commun.model.event import Event
                 event = Event(type=event[1], start=event[2], end=event[3], info=event[4])
                 self.events.append(event)
-        print(self.events)
 
     def add_defaut_stop_prod(self):
         day_ago = settings_store_gestion.day_ago

@@ -17,6 +17,7 @@ class SettingsStore(QObject):
         super(SettingsStore, self).__init__()
         self.day_ago = 0
         self.plan_prod = None
+        self.ech = 0.5
 
     def set(self, day_ago=None, plan_prod=None):
         if day_ago or day_ago == 0:

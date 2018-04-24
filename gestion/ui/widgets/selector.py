@@ -12,10 +12,10 @@ from gestion.ui.widgets.line_refente import LineRefente
 from gestion.ui.widgets.line_perfo import LinePerfo
 from gestion.ui.widgets.line_bobine_papier import LineBobinePapier
 from gestion.ui.widgets.line_bobine_poly import LineBobinePoly
+from gestion.stores.settings_store import settings_store_gestion
 
 
 class Selector(MondonWidget):
-    ECH = 0.75
 
     def __init__(self, plan_prod, parent=None):
         super(Selector, self).__init__(parent=parent)
@@ -65,13 +65,13 @@ class Selector(MondonWidget):
         if self.current_focus == "refente":
             self.titre.setText("SELECTION REFENTE")
             for refente in self.plan_prod.current_refente_store.refentes:
-                line_refente = LineRefente(parent=self, refente=refente, ech=self.ECH)
+                line_refente = LineRefente(parent=self, refente=refente, ech=settings_store_gestion.ech)
                 line_refente.ON_DBCLICK_SIGNAL.connect(self.handle_selected_refente)
                 self.vbox.addWidget(line_refente)
         if self.current_focus == "perfo":
             self.titre.setText("SELECTION PERFO")
             for perfo in self.plan_prod.current_perfo_store.perfos:
-                line_perfo = LinePerfo(parent=self, perfo=perfo, ech=self.ECH)
+                line_perfo = LinePerfo(parent=self, perfo=perfo, ech=settings_store_gestion.ech)
                 line_perfo.ON_DBCLICK_SIGNAL.connect(self.handle_selected_perfo)
                 self.vbox.addWidget(line_perfo)
         if self.current_focus == "papier":
