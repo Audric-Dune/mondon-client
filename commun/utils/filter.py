@@ -1,6 +1,9 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import copy
+
+
 # FILTRE BOBINES PAPIER
 
 
@@ -200,14 +203,56 @@ def is_valid_refente_for_bobine_fille_selected(refente, bobine_fille_selected):
     return False
 
 
+# def is_valid_refente_for_bobines_fille(refente, bobines_fille, bobines_fille_selected):
+#     if not bobines_fille:
+#         return True
+#     new_refente = get_new_refente_with_bobines_fille(refente, bobines_fille=bobines_fille_selected)
+#     for laize in new_refente.laizes:
+#         if not is_valid_laize_for_bobines_fille(laize, bobines_fille):
+#             return False
+#     return True
+
 def is_valid_refente_for_bobines_fille(refente, bobines_fille, bobines_fille_selected):
     if not bobines_fille:
+            return True
+    refente_with_bobines_fille_selected = get_new_refente_with_bobines_fille(refente,
+                                                                             bobines_fille=bobines_fille_selected)
+    if is_full_refente_with_bobines_fille_selected(refente=refente_with_bobines_fille_selected):
         return True
-    new_refente = get_new_refente_with_bobines_fille(refente, bobines_fille=bobines_fille_selected)
-    for laize in new_refente.laizes:
-        if not is_valid_laize_for_bobines_fille(laize, bobines_fille):
+    for bobine in bobines_fille:
+        for pose in bobine.poses:
+            new_bobine_fille = copy.copy(bobine)
+            new_bobine_fille.pose = pose
+            if not is_valid_bobine_fille_and_pose_for_bobines_fille(bobine,
+                                                                    pose,
+                                                                    bobines_fille=bobines_fille_selected):
+                continue
+            elif not is_valid_bobine_fille_for_refente(bobine_fille=new_bobine_fille,
+                                                       refente=refente,
+                                                       bobines_fille_selected=bobines_fille_selected):
+                continue
+            else:
+                new_bobines_fille_selected = bobines_fille_selected.copy()
+                new_bobines_fille_selected.append(new_bobine_fille)
+                if is_valid_refente_for_bobines_fille(refente=refente,
+                                                      bobines_fille=bobines_fille,
+                                                      bobines_fille_selected=new_bobines_fille_selected):
+                    return True
+
+
+def is_full_refente_with_bobines_fille_selected(refente):
+    for laize in refente.laizes:
+        if laize:
             return False
     return True
+
+
+def is_valid_bobine_fille_and_pose_for_bobines_fille(bobine_to_validate, pose, bobines_fille):
+    if pose == 0:
+        return True
+    for bobine in bobines_fille:
+        if bobine_to_validate.code == bobine.code and pose == bobine.pose:
+            return False
 
 
 def get_new_refente_with_bobines_fille(refente, bobines_fille):

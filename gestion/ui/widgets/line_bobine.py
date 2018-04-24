@@ -16,7 +16,7 @@ class LineBobine(MondonWidget):
         self.state = None
         self.installEventFilter(self)
         self.bobine = bobine
-        self.background_color = color_rouge if self.bobine.alert else color_blanc
+        self.background_color = color_blanc
         self.init_widget()
 
     def init_widget(self):

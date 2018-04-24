@@ -54,6 +54,23 @@ class BobineFille(MondonWidget):
             return self.pose
         return 0
 
+    def __copy__(self):
+        return BobineFille(None,
+                           self.code,
+                           self.name,
+                           self.laize,
+                           self.lenght,
+                           self.color,
+                           self.cliche_id_1,
+                           self.cliche_id_2,
+                           self.stock,
+                           self.stock_therme,
+                           self.creation_time,
+                           self.gr,
+                           self.poses,
+                           self.pose,
+                           self.sommeil)
+
     def __str__(self):
         return "B{}({}, {}, {}m, {} poses, {}, {}, {})".format(self.code,
                                                                self.color.capitalize(),
