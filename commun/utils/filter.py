@@ -180,41 +180,15 @@ def is_valid_refente_for_refente(refente, refente_contrainte):
 def is_valid_refente_for_bobines_fille_selected(refente, bobines_fille_selected):
     if not bobines_fille_selected:
         return True
+    new_refente = refente
     for bobine in bobines_fille_selected:
-        if not is_valid_refente_for_bobine_fille_selected(refente, bobine_fille_selected=bobine):
+        new_refente = get_new_refente_with_bobine_fille(refente=new_refente, bobine_fille=bobine)
+        if not new_refente:
             return False
     return True
 
 
-def is_valid_refente_for_bobine_fille_selected(refente, bobine_fille_selected):
-    if not bobine_fille_selected:
-        return True
-    count_pose = 0
-    bobine_pose = bobine_fille_selected.pose if bobine_fille_selected.pose != 0 else 1
-    for laize in refente.laizes:
-        if laize == bobine_fille_selected.laize:
-            count_pose += 1
-            if count_pose == bobine_pose:
-                return True
-            else:
-                continue
-        else:
-            count_pose = 0
-    return False
-
-
-# def is_valid_refente_for_bobines_fille(refente, bobines_fille, bobines_fille_selected):
-#     if not bobines_fille:
-#         return True
-#     new_refente = get_new_refente_with_bobines_fille(refente, bobines_fille=bobines_fille_selected)
-#     for laize in new_refente.laizes:
-#         if not is_valid_laize_for_bobines_fille(laize, bobines_fille):
-#             return False
-#     return True
-
 def is_valid_refente_for_bobines_fille(refente, bobines_fille, bobines_fille_selected):
-    if not bobines_fille:
-            return True
     refente_with_bobines_fille_selected = get_new_refente_with_bobines_fille(refente,
                                                                              bobines_fille=bobines_fille_selected)
     if is_full_refente_with_bobines_fille_selected(refente=refente_with_bobines_fille_selected):
@@ -267,14 +241,18 @@ def get_new_refente_with_bobine_fille(refente, bobine_fille):
     start_index = 0
     counter_pose = 0
     bobine_pose = bobine_fille.pose if bobine_fille.pose != 0 else 1
+    is_valid_bobine = False
     for laize_refente in refente.laizes:
         if laize_refente and laize_refente == bobine_fille.laize:
             counter_pose += 1
             if counter_pose >= bobine_pose:
+                is_valid_bobine = True
                 break
         else:
             counter_pose = 0
             start_index += 1
+    if not is_valid_bobine:
+        return False
     from commun.model.refente import Refente
     new_refente = Refente()
     index_refente = 0
