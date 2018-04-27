@@ -10,27 +10,23 @@ class BobineFille:
                  laize=0.,
                  lenght=0,
                  color="",
-                 alerte=False,
-                 cliche_id_1=None,
-                 cliche_id_2=None,
                  stock=0,
                  stock_therme=0,
-                 creation_time="",
+                 creation_time=0,
+                 code_cliche=None,
                  gr=0,
                  poses=None,
                  pose=None,
                  sommeil=False):
         self.name = name
         self.code = code
+        self.code_cliche = code_cliche
         self.laize = float(laize)
         self.lenght = int(lenght)
         self.color = color
-        self.cliche_id_1 = cliche_id_1
-        self.cliche_id_2 = cliche_id_2
         self.stock = stock
         self.stock_therme = stock_therme
         self.creation_time = creation_time
-        self.alert = alerte
         self.gr = gr
         self.poses = poses if poses else [0]
         self.pose = pose
@@ -45,8 +41,6 @@ class BobineFille:
             return self.lenght
         if value_name == "color":
             return self.color
-        if value_name == "alert":
-            return self.alert
         if value_name == "pose":
             return self.pose
         return 0
@@ -57,8 +51,6 @@ class BobineFille:
                            self.laize,
                            self.lenght,
                            self.color,
-                           self.cliche_id_1,
-                           self.cliche_id_2,
                            self.stock,
                            self.stock_therme,
                            self.creation_time,

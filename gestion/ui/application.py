@@ -7,11 +7,13 @@ from PyQt5.QtWidgets import QApplication
 from gestion.ui.window.main_window import MainWindow
 from commun.lib. base_de_donnee import Database
 from commun.stores.bobine_fille_store import bobine_fille_store
-from commun.model.bobine_fille import BobineFille
 from commun.stores.bobine_poly_store import bobine_poly_store
 from commun.stores.bobine_papier_store import bobine_papier_store
 from commun.stores.refente_store import refente_store
 from commun.stores.perfo_store import perfo_store
+from commun.stores.cliche_store import cliche_store
+from commun.model.bobine_fille import BobineFille
+from commun.model.cliche import Cliche
 from commun.model.bobine_mere import BobineMere
 from commun.model.refente import Refente
 from commun.model.perfo import Perfo
@@ -74,12 +76,24 @@ class Application(QApplication):
             perfo_store.add_perfo(new_perfo)
 
     def read_xls(self):
+        self.get_cliche_from_xls()
         self.get_bobine_fille_from_xls()
 
+    def get_cliche_from_xls(self):
+        xls = xlrd.open_workbook('C:/Users\dessinateur3\Desktop\github\ARTICLE CLICHE.xls')
+        # xls = xlrd.open_workbook('C:/Users\Castor\Desktop\github\ARTICLE CLICHE.xls')
+        # xls = xlrd.open_workbook('/Users/audricperrin/Desktop/github/ARTICLE CLICHE.xls')
+        sheet = xls.sheet_by_name("Sage")
+        max_row = sheet.nrows
+        current_row = 0
+        while current_row < max_row:
+            self.extract_cliche_from_line(sheet, current_row)
+            current_row += 1
+
     def get_bobine_fille_from_xls(self):
-        # xls = xlrd.open_workbook('C:/Users\dessinateur3\Desktop\github\ARTICLE BOBINE FILLE.xls')
+        xls = xlrd.open_workbook('C:/Users\dessinateur3\Desktop\github\ARTICLE BOBINE FILLE.xls')
         # xls = xlrd.open_workbook('C:/Users\Castor\Desktop\github\ARTICLE BOBINE FILLE.xls')
-        xls = xlrd.open_workbook('/Users/audricperrin/Desktop/github/ARTICLE BOBINE FILLE.xls')
+        # xls = xlrd.open_workbook('/Users/audricperrin/Desktop/github/ARTICLE BOBINE FILLE.xls')
         sheet = xls.sheet_by_name("Sage")
         max_row = sheet.nrows
         current_row = 0
@@ -88,6 +102,37 @@ class Application(QApplication):
             self.extract_bobine_from_line(sheet, current_row, last_bobine_id)
             last_bobine_id = sheet.cell_value(current_row, 1)
             current_row += 1
+
+    @staticmethod
+    def extract_cliche_from_line(sheet, current_row):
+        current_id = sheet.cell_value(current_row, 0)
+        current_name = sheet.cell_value(current_row, 1)
+        current_poses = []
+        if sheet.cell_value(current_row, 2):
+            current_poses.append(sheet.cell_value(current_row, 2))
+        else:
+            return
+        if sheet.cell_value(current_row, 3):
+            current_poses.append(sheet.cell_value(current_row, 3))
+        if sheet.cell_value(current_row, 4):
+            current_poses.append(sheet.cell_value(current_row, 4))
+        if sheet.cell_value(current_row, 5):
+            current_poses.append(sheet.cell_value(current_row, 5))
+        current_colors = []
+        if sheet.cell_value(current_row, 6):
+            current_colors.append(sheet.cell_value(current_row, 6))
+        if sheet.cell_value(current_row, 7):
+            current_colors.append(sheet.cell_value(current_row, 7))
+        if sheet.cell_value(current_row, 8):
+            current_colors.append(sheet.cell_value(current_row, 8))
+        current_sommeil = sheet.cell_value(current_row, 9)
+        current_cliche = Cliche(code=current_id,
+                                name=current_name,
+                                poses=current_poses,
+                                colors=current_colors,
+                                sommeil=current_sommeil)
+        cliche_store.add_cliche(current_cliche)
+        print(current_cliche)
 
     @staticmethod
     def extract_bobine_from_line(sheet, current_row, last_bobine_id):
@@ -100,8 +145,11 @@ class Application(QApplication):
             current_lenght = sheet.cell_value(current_row, 4) if sheet.cell_value(current_row, 4) != "" else 0
             current_color = sheet.cell_value(current_row, 5).title()
             current_gr = sheet.cell_value(current_row, 6) if sheet.cell_value(current_row, 6) != "" else 0
-            current_cliche_id_1 = sheet.cell_value(current_row, 7)
-            current_cliche_id_2 = sheet.cell_value(current_row, 8)
+            current_code_cliche = []
+            if sheet.cell_value(current_row, 7):
+                current_code_cliche.append(sheet.cell_value(current_row, 7))
+            if sheet.cell_value(current_row, 8):
+                current_code_cliche.append(sheet.cell_value(current_row, 8))
             current_stock = sheet.cell_value(current_row, 9)
             current_stock_therme = sheet.cell_value(current_row, 10)
             current_creation_time = sheet.cell_value(current_row, 11)
@@ -112,8 +160,7 @@ class Application(QApplication):
                                          laize=current_laize,
                                          gr=current_gr,
                                          lenght=current_lenght,
-                                         cliche_id_1=current_cliche_id_1,
-                                         cliche_id_2=current_cliche_id_2,
+                                         code_cliche=current_code_cliche,
                                          stock=current_stock,
                                          stock_therme=current_stock_therme,
                                          creation_time=current_creation_time,
@@ -121,32 +168,10 @@ class Application(QApplication):
             bobine_fille_store.add_bobine(current_bobine)
 
     def read_xlsm(self):
-        wb = xlrd.open_workbook('/Users/audricperrin/Desktop/github/Etude stock bobine V5 MASTER 18-02-23.xlsm')
+        # wb = xlrd.open_workbook('/Users/audricperrin/Desktop/github/Etude stock bobine V5 MASTER 18-02-23.xlsm')
         # wb = xlrd.open_workbook('C:/Users\Castor\Desktop\github\Etude stock bobine V5 MASTER 18-02-23.xlsm')
-        # wb = xlrd.open_workbook('C:/Users\dessinateur3\Desktop\github\Etude stock bobine V5 MASTER 18-02-23.xlsm')
+        wb = xlrd.open_workbook('C:/Users\dessinateur3\Desktop\github\Etude stock bobine V5 MASTER 18-02-23.xlsm')
         for sheet in wb.sheets():
-            # if sheet.name == "Liste bobine":
-            #     start_ligne = 20
-            #     current_ligne = start_ligne
-            #     while current_ligne < sheet.nrows:
-            #         if sheet.cell_value(current_ligne, 1) == "":
-            #             break
-            #         else:
-            #             color = self.get_color(sheet.cell_value(current_ligne, 8))
-            #             gr = self.get_gr(sheet.cell_value(current_ligne, 8))
-            #             alerte = self.is_alerte(wb, sheet.cell_value(current_ligne, 3),
-            #                                     sheet.cell_value(current_ligne, 6))
-            #             sommeil = self.is_sommeil(sheet.cell_value(current_ligne, 2))
-            #             bobine_fille = BobineFille(code=sheet.cell_value(current_ligne, 0),
-            #                                        color=color,
-            #                                        laize=sheet.cell_value(current_ligne, 9),
-            #                                        gr=gr,
-            #                                        lenght=sheet.cell_value(current_ligne, 26),
-            #                                        pose=randint(0, 1),
-            #                                        alerte=alerte,
-            #                                        sommeil=sommeil)
-            #             bobine_fille_store.add_bobine(bobine_fille)
-            #         current_ligne += 1
             if sheet.name == "TYPE BOBINE MERE":
                 start_ligne = 1
                 current_ligne = start_ligne
