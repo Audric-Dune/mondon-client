@@ -1,13 +1,10 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from commun.ui.public.mondon_widget import MondonWidget
 
-
-class Perfo(MondonWidget):
+class Perfo:
 
     def __init__(self,
-                 parent=None,
                  code=0,
                  dec_init=0,
                  cale1=0,
@@ -24,7 +21,6 @@ class Perfo(MondonWidget):
                  bague6=0,
                  cale7=0,
                  bague7=0):
-        super(Perfo, self).__init__(parent=parent)
         self.code = code
         self.dec_init = dec_init
         self.cale1 = cale1

@@ -10,6 +10,7 @@ from commun.stores.bobine_papier_store import bobine_papier_store
 from commun.stores.refente_store import refente_store
 from commun.stores.bobine_fille_store import bobine_fille_store
 from commun.model.plan_prod import PlanProd
+from commun.model.bobine_fille_selected import BobineFilleSelected
 
 from gestion.stores.settings_store import settings_store_gestion
 
@@ -55,9 +56,20 @@ class PlanProdStore(QObject):
 
     def add_bobine_to_plan_prod(self, code_bobines_filles, plan_prod):
         code_bobines_filles_split = code_bobines_filles.split("_")
+        bobine_fille = None
+        pose = None
         for string in code_bobines_filles_split:
             if string and string[0] == "B":
-                plan_prod.bobines_filles_selected.append(self.get_bobine_fille(code=string))
+                bobine_fille = self.get_bobine_fille(code=string)
+            try:
+                pose = int(string)
+            except ValueError:
+                pass
+            if bobine_fille and pose is not None:
+                new_bobine_fille = BobineFilleSelected(bobine=bobine_fille, index=None, pose=pose)
+                plan_prod.bobines_filles_selected.append(new_bobine_fille)
+                bobine_fille = None
+                pose = None
 
     @staticmethod
     def get_bobine_fille(code):

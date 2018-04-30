@@ -13,14 +13,15 @@ class BobineFille:
                  stock=0,
                  stock_therme=0,
                  creation_time=0,
-                 code_cliche=None,
+                 codes_cliche=None,
+                 colors_cliche=None,
                  gr=0,
                  poses=None,
-                 pose=None,
                  sommeil=False):
         self.name = name
         self.code = code
-        self.code_cliche = code_cliche
+        self.codes_cliche = codes_cliche
+        self.colors_cliche = colors_cliche
         self.laize = float(laize)
         self.lenght = int(lenght)
         self.color = color
@@ -29,8 +30,26 @@ class BobineFille:
         self.creation_time = creation_time
         self.gr = gr
         self.poses = poses if poses else [0]
-        self.pose = pose
         self.sommeil = sommeil
+        self.update_bobine_from_cliche()
+
+    def update_bobine_from_cliche(self):
+        if self.codes_cliche:
+            for code_cliche in self.codes_cliche:
+                poses_and_colors = self.get_poses_and_colors_from_code_cliche(code_cliche)
+                if poses_and_colors:
+                    self.poses = poses_and_colors[0]
+                    if self.colors_cliche:
+                        self.colors_cliche += poses_and_colors[1]
+                    else:
+                        self.colors_cliche = poses_and_colors[1]
+
+    @staticmethod
+    def get_poses_and_colors_from_code_cliche(code_cliche):
+        from commun.stores.cliche_store import cliche_store
+        for cliche in cliche_store.cliches:
+            if cliche.code == code_cliche:
+                return cliche.poses, cliche.colors
 
     def get_value(self, value_name):
         if value_name == "code":
@@ -41,8 +60,6 @@ class BobineFille:
             return self.lenght
         if value_name == "color":
             return self.color
-        if value_name == "pose":
-            return self.pose
         return 0
 
     def __copy__(self):
@@ -54,17 +71,19 @@ class BobineFille:
                            self.stock,
                            self.stock_therme,
                            self.creation_time,
+                           self.codes_cliche,
+                           self.colors_cliche,
                            self.gr,
                            self.poses,
-                           self.pose,
                            self.sommeil)
 
     def __str__(self):
-        return "B{}({}, {}, {}m, {} poses, {}, {}, {})".format(self.code,
-                                                               self.color.capitalize(),
-                                                               self.laize,
-                                                               self.lenght,
-                                                               self.pose,
-                                                               self.gr,
-                                                               self.alert,
-                                                               self.sommeil)
+        return "B{} ({}, {}, {}m, {} poses, {}, {}), {}g, {}".format(self.code,
+                                                                         self.color,
+                                                                         self.laize,
+                                                                         self.lenght,
+                                                                         self.poses,
+                                                                         self.codes_cliche,
+                                                                         self.colors_cliche,
+                                                                         self.gr,
+                                                                         self.sommeil)

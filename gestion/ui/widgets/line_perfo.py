@@ -1,17 +1,18 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtWidgets import QHBoxLayout, QLabel, QWidget
+from PyQt5.QtWidgets import QHBoxLayout, QLabel
 from PyQt5.QtCore import pyqtSignal
 
 from commun.ui.public.mondon_widget import MondonWidget
+from commun.model.perfo import Perfo
 from commun.ui.public.bague_perfo import BaguePerfo
 from commun.ui.public.entretoise_perfo import EntretoisePerfo
 from commun.constants.colors import color_blanc
 
 
 class LinePerfo(MondonWidget):
-    ON_DBCLICK_SIGNAL = pyqtSignal(QWidget)
+    ON_DBCLICK_SIGNAL = pyqtSignal(Perfo)
 
     def __init__(self, parent=None, perfo=None, ech=1):
         super(LinePerfo, self).__init__(parent=parent)

@@ -1,14 +1,11 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from commun.ui.public.mondon_widget import MondonWidget
 
+class Refente:
 
-class Refente(MondonWidget):
-
-    def __init__(self, parent=None, code=0, code_perfo=0, dec=0,
+    def __init__(self, code=0, code_perfo=0, dec=0,
                  laize1=None, laize2=None, laize3=None, laize4=None, laize5=None, laize6=None, laize7=None):
-        super(Refente, self).__init__(parent=parent)
         self.code = code
         self.code_perfo = code_perfo
         self.dec = dec

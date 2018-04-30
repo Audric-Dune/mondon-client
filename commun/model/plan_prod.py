@@ -1,7 +1,8 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtCore import pyqtSignal
+import copy
+from PyQt5.QtCore import pyqtSignal, QObject
 
 from commun.constants.param import FIN_PROD_SOIR, PERCENT_PROD_THEROIQUE_MAXI
 from commun.utils.timestamp import get_hour_in_timestamp, timestamp_at_time
@@ -13,7 +14,6 @@ from commun.stores.perfo_store import PerfoStore
 from commun.stores.bobine_fille_store import BobineFilleStore
 from commun.stores.bobine_papier_store import BobinePapierStore
 from commun.stores.bobine_poly_store import BobinePolyStore
-from commun.ui.public.mondon_widget import MondonWidget
 from commun.stores.bobine_papier_store import bobine_papier_store
 from commun.stores.bobine_fille_store import bobine_fille_store
 from commun.stores.perfo_store import perfo_store
@@ -21,7 +21,7 @@ from commun.stores.refente_store import refente_store
 from commun.stores.bobine_poly_store import bobine_poly_store
 
 
-class PlanProd(MondonWidget):
+class PlanProd(QObject):
     ON_CHANGED_SIGNAL = pyqtSignal()
     ON_TOURS_CHANGED = pyqtSignal()
 
@@ -32,7 +32,6 @@ class PlanProd(MondonWidget):
         self.end = start
         self.tours = 12
         self.longueur = None
-        self.get_end()
         self.init_current_store()
         self.refente_selected = None
         self.perfo_selected = None
@@ -146,8 +145,9 @@ class PlanProd(MondonWidget):
             self.current_bobine_poly_store.add_bobine(bobine)
 
     def add_bobine_selected(self, bobine):
-        self.bobines_filles_selected.append(bobine)
-        bobine.pose = 0
+        copy_bobine = copy.copy(bobine)
+        self.bobines_filles_selected.append(copy_bobine)
+        copy_bobine.pose = int(copy_bobine.poses[0])
         self.update_all_current_store()
         self.ON_CHANGED_SIGNAL.emit()
 
@@ -198,6 +198,7 @@ class PlanProd(MondonWidget):
         self.longueur = None
         if self.bobines_filles_selected:
             self.longueur = self.bobines_filles_selected[0].lenght
+        self.get_end()
 
     def init_current_store(self):
         self.current_refente_store = RefenteStore()
@@ -213,6 +214,7 @@ class PlanProd(MondonWidget):
 
     def update_all_current_store(self):
         self.init_current_store()
+        self.definied_longueur()
         contrainte = self.get_contrainte()
         self.current_bobine_papier_store.bobines = \
             filter.filter_bobines_papier_for_contrainte(bobines_papier=self.current_bobine_papier_store.bobines,
@@ -307,15 +309,6 @@ class PlanProd(MondonWidget):
             self.bobine_papier_selected = self.current_bobine_papier_store.bobines[0]
         if len(self.current_refente_store.refentes) == 1:
             self.refente_selected = self.current_refente_store.refentes[0]
-        if self.refente_selected:
-            for bobine_fille in self.current_bobine_fille_store.bobines:
-                new_bobine_fille_store = self.remove_bobine_in_bobines_fille_store(bobine_fille,
-                                                                                   self.current_bobine_fille_store)
-                if not filter.is_valid_refente_for_bobines_fille(self.refente_selected,
-                                                                 new_bobine_fille_store.bobines,
-                                                                 self.bobines_filles_selected):
-                    self.bobines_filles_selected.append(bobine_fille)
-
         self.ON_CHANGED_SIGNAL.emit()
 
     @staticmethod

@@ -357,7 +357,7 @@ def is_valid_bobine_fille_for_bobines_fille(bobine_fille, bobines_fille):
     # Bobine_fille:
     # poses = [listes des poses disponible]; exemple: [1,2,4]
     # pose = pose sélectionnée dans la list des poses; exemple: 2
-    poses = bobine_fille.poses
+    poses = bobine_fille.poses.copy()
     for bobine_fille_contrainte in bobines_fille:
         if not is_valid_bobine_fille_for_bobine_fille(bobine_fille, bobine_fille_contrainte):
             return False

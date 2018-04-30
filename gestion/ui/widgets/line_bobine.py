@@ -1,10 +1,10 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtWidgets import QHBoxLayout, QLabel, QWidget
+from PyQt5.QtWidgets import QHBoxLayout, QLabel
 from PyQt5.QtCore import pyqtSignal
 from commun.ui.public.mondon_widget import MondonWidget
-from commun.constants.colors import color_blanc, color_rouge
+from commun.constants.colors import color_blanc
 from commun.model.bobine_fille import BobineFille
 
 
@@ -35,7 +35,7 @@ class LineBobine(MondonWidget):
         hbox.addWidget(gr)
         color = QLabel(str(self.bobine.color))
         hbox.addWidget(color)
-        code_cliche = QLabel(str(self.bobine.code_cliche))
+        code_cliche = QLabel(str(self.bobine.codes_cliche))
         hbox.addWidget(code_cliche)
         poses = QLabel(str(self.bobine.poses))
         hbox.addWidget(poses)

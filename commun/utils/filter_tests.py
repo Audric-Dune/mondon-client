@@ -58,7 +58,7 @@ class TestFilter(TestCase):
         bobines = [fake_bobine_mere(), fake_bobine_mere(), fake_bobine_mere(), fake_bobine_mere()]
         contrainte = Contrainte()
         filtered_bobines = filter_bobines_papier_for_contrainte(bobines, contrainte)
-        self.assertEqual(filtered_bobines, [])
+        self.assertEqual(filtered_bobines, bobines)
 
     def test_filter_bobines_papier_for_contrainte__bobine_papier_contrainte(self):
         bobine_mere_1 = fake_bobine_mere()
