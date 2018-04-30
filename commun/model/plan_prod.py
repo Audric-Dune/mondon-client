@@ -307,12 +307,21 @@ class PlanProd(MondonWidget):
             self.bobine_papier_selected = self.current_bobine_papier_store.bobines[0]
         if len(self.current_refente_store.refentes) == 1:
             self.refente_selected = self.current_refente_store.refentes[0]
+        if self.refente_selected:
+            for bobine_fille in self.current_bobine_fille_store.bobines:
+                new_bobine_fille_store = self.remove_bobine_in_bobines_fille_store(bobine_fille,
+                                                                                   self.current_bobine_fille_store)
+                if not filter.is_valid_refente_for_bobines_fille(self.refente_selected,
+                                                                 new_bobine_fille_store.bobines,
+                                                                 self.bobines_filles_selected):
+                    self.bobines_filles_selected.append(bobine_fille)
+
         self.ON_CHANGED_SIGNAL.emit()
 
     @staticmethod
     def remove_bobine_in_bobines_fille_store(bobine_to_remove, bobine_store):
         new_bobine_fille_store = BobineFilleStore()
-        for bobine in bobine_store:
+        for bobine in bobine_store.bobines:
             if bobine.code != bobine_to_remove.code:
                 new_bobine_fille_store.add_bobine(bobine)
         return new_bobine_fille_store
