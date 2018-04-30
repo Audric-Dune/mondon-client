@@ -4,7 +4,8 @@
 
 class BobineFilleSelected:
 
-    def __init__(self, bobine, index, pose):
+    def __init__(self, bobine, pose, index=None):
+        self.bobine = bobine
         self.name = bobine.name
         self.code = bobine.code
         self.codes_cliche = bobine.codes_cliche

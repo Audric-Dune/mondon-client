@@ -195,19 +195,19 @@ def is_valid_refente_for_bobines_fille(refente, bobines_fille, bobines_fille_sel
         return True
     for bobine in bobines_fille:
         for pose in bobine.poses:
-            new_bobine_fille = copy.copy(bobine)
-            new_bobine_fille.pose = pose
-            if not is_valid_bobine_fille_and_pose_for_bobines_fille(bobine,
+            from commun.model.bobine_fille_selected import BobineFilleSelected
+            bobine_fille_selected = BobineFilleSelected(bobine=bobine, pose=pose)
+            if not is_valid_bobine_fille_and_pose_for_bobines_fille(bobine_fille_selected,
                                                                     pose,
                                                                     bobines_fille=bobines_fille_selected):
                 continue
-            elif not is_valid_bobine_fille_for_refente(bobine_fille=new_bobine_fille,
+            elif not is_valid_bobine_fille_for_refente(bobine_fille=bobine_fille_selected,
                                                        refente=refente,
                                                        bobines_fille_selected=bobines_fille_selected):
                 continue
             else:
                 new_bobines_fille_selected = bobines_fille_selected.copy()
-                new_bobines_fille_selected.append(new_bobine_fille)
+                new_bobines_fille_selected.append(bobine_fille_selected)
                 if is_valid_refente_for_bobines_fille(refente=refente,
                                                       bobines_fille=bobines_fille,
                                                       bobines_fille_selected=new_bobines_fille_selected):
