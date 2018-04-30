@@ -1,16 +1,17 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtWidgets import QHBoxLayout, QLabel, QWidget
+from PyQt5.QtWidgets import QHBoxLayout, QLabel
 from PyQt5.QtCore import pyqtSignal
 
 from commun.ui.public.mondon_widget import MondonWidget
+from commun.model.refente import Refente
 from commun.ui.public.bobine_fille_ui import BobineFille
 from commun.constants.colors import color_blanc
 
 
 class LineRefente(MondonWidget):
-    ON_DBCLICK_SIGNAL = pyqtSignal(QWidget)
+    ON_DBCLICK_SIGNAL = pyqtSignal(Refente)
 
     def __init__(self, parent=None, refente=None, ech=1, bobines=None):
         super(LineRefente, self).__init__(parent=parent)

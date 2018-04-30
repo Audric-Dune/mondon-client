@@ -13,6 +13,7 @@ from gestion.ui.widgets.line_perfo import LinePerfo
 from gestion.ui.widgets.line_bobine_papier import LineBobinePapier
 from gestion.ui.widgets.line_bobine_poly import LineBobinePoly
 from gestion.stores.settings_store import settings_store_gestion
+from commun.stores.bobine_fille_store import bobine_fille_store
 
 
 class Selector(MondonWidget):
@@ -55,6 +56,7 @@ class Selector(MondonWidget):
         self.sort_bobine()
         self.current_focus = self.parent.bloc_focus
         clear_layout(self.vbox)
+        # MODE NORMAL
         if self.current_focus == "bobine" or not self.current_focus:
             self.titre.setText("SELECTION BOBINE FILLE")
             for bobine in self.plan_prod.current_bobine_fille_store.bobines:
@@ -62,6 +64,18 @@ class Selector(MondonWidget):
                 line_bobine.ON_DBCLICK_SIGNAL.connect(self.handle_selected_bobine)
                 line_bobine.setFixedHeight(20)
                 self.vbox.addWidget(line_bobine)
+        # # MODE DEBUG
+        # if self.current_focus == "bobine" or not self.current_focus:
+        #     self.titre.setText("SELECTION BOBINE FILLE MODE DEBUG")
+        #     for bobine in bobine_fille_store.bobines:
+        #         if bobine in self.plan_prod.current_bobine_fille_store.bobines:
+        #             disabled = False
+        #         else:
+        #             disabled = True
+        #         line_bobine = LineBobine(parent=self, bobine=bobine, disabled=disabled)
+        #         line_bobine.ON_DBCLICK_SIGNAL.connect(self.handle_selected_bobine)
+        #         line_bobine.setFixedHeight(20)
+        #         self.vbox.addWidget(line_bobine)
         if self.current_focus == "refente":
             self.titre.setText("SELECTION REFENTE")
             for refente in self.plan_prod.current_refente_store.refentes:

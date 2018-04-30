@@ -4,20 +4,22 @@
 from PyQt5.QtWidgets import QHBoxLayout, QLabel
 from PyQt5.QtCore import pyqtSignal
 from commun.ui.public.mondon_widget import MondonWidget
-from commun.constants.colors import color_blanc
+from commun.constants.colors import color_blanc, color_orange
 from commun.model.bobine_fille import BobineFille
 
 
 class LineBobine(MondonWidget):
     ON_DBCLICK_SIGNAL = pyqtSignal(BobineFille)
 
-    def __init__(self, parent=None, bobine=None):
+    def __init__(self, parent=None, bobine=None, disabled=False):
         super(LineBobine, self).__init__(parent=parent)
-        self.set_background_color(color_blanc)
+        if disabled:
+            self.set_background_color(color_orange)
+        else:
+            self.set_background_color(color_blanc)
         self.state = None
         self.installEventFilter(self)
         self.bobine = bobine
-        self.background_color = color_blanc
         self.init_widget()
 
     def init_widget(self):
