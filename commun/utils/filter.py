@@ -1,8 +1,6 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import copy
-
 
 # FILTRE BOBINES PAPIER
 
@@ -191,6 +189,7 @@ def is_valid_refente_for_bobines_fille_selected(refente, bobines_fille_selected)
 def is_valid_refente_for_bobines_fille(refente, bobines_fille, bobines_fille_selected):
     refente_with_bobines_fille_selected = get_new_refente_with_bobines_fille(refente,
                                                                              bobines_fille=bobines_fille_selected)
+    print(refente_with_bobines_fille_selected)
     if is_full_refente_with_bobines_fille_selected(refente=refente_with_bobines_fille_selected):
         return True
     for bobine in bobines_fille:
@@ -202,6 +201,7 @@ def is_valid_refente_for_bobines_fille(refente, bobines_fille, bobines_fille_sel
                                                                     bobines_fille=bobines_fille_selected):
                 continue
             elif not is_valid_bobine_fille_and_pose_for_refente(bobine_fille=bobine_fille_selected,
+                                                                pose=bobine_fille_selected.pose,
                                                                 refente=refente,
                                                                 bobines_fille_selected=bobines_fille_selected):
                 continue
@@ -344,20 +344,15 @@ def is_valid_bobine_fille_for_bobine_papier(bobine_fille, bobine_papier):
 def is_valid_bobine_fille_for_refente(bobine_fille, refente, bobines_fille_selected):
     if not refente:
         return True
-    new_refente = get_new_refente_with_bobines_fille(refente, bobines_fille=bobines_fille_selected)
-    count_pose = 0
-    for laize in new_refente.laizes:
-        if bobine_fille.laize == laize:
-            count_pose += 1
-            for pose in bobine_fille.poses:
-                if pose == 0:
-                    return True
-                if pose == count_pose:
-                    return True
+    for pose in bobine_fille.poses:
+        if not is_valid_bobine_fille_and_pose_for_refente(bobine_fille, pose, refente, bobines_fille_selected):
+            bobine_fille.poses.remove(pose)
+    if bobine_fille.poses:
+        return True
     return False
 
 
-def is_valid_bobine_fille_and_pose_for_refente(bobine_fille, refente, bobines_fille_selected):
+def is_valid_bobine_fille_and_pose_for_refente(bobine_fille, pose, refente, bobines_fille_selected):
     if not refente:
         return True
     new_refente = get_new_refente_with_bobines_fille(refente, bobines_fille=bobines_fille_selected)
@@ -365,9 +360,9 @@ def is_valid_bobine_fille_and_pose_for_refente(bobine_fille, refente, bobines_fi
     for laize in new_refente.laizes:
         if bobine_fille.laize == laize:
             count_pose += 1
-            if bobine_fille.pose == 0:
+            if pose == 0:
                 return True
-            if bobine_fille.pose == count_pose:
+            if pose == count_pose:
                 return True
     return False
 
@@ -375,15 +370,15 @@ def is_valid_bobine_fille_and_pose_for_refente(bobine_fille, refente, bobines_fi
 def is_valid_bobine_fille_for_bobines_fille(bobine_fille, bobines_fille):
     if not bobines_fille:
         return True
-    # Bobine_fille:
-    # poses = [listes des poses disponible]; exemple: [1,2,4]
-    # pose = pose sélectionnée dans la list des poses; exemple: 2
-    poses = bobine_fille.poses.copy()
+    poses = bobine_fille.poses
     for bobine_fille_contrainte in bobines_fille:
         if not is_valid_bobine_fille_for_bobine_fille(bobine_fille, bobine_fille_contrainte):
             return False
         if bobine_fille.code == bobine_fille_contrainte.code and not bobine_fille_is_neutre(bobine_fille):
-            poses.remove(bobine_fille_contrainte.pose)
+            try:
+                poses.remove(bobine_fille_contrainte.pose)
+            except ValueError:
+                pass
     if poses:
         return True
     return False

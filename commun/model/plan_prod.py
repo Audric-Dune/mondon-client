@@ -126,7 +126,8 @@ class PlanProd(QObject):
 
     def init_bobine_fille_store(self):
         for bobine in bobine_fille_store.bobines:
-            self.current_bobine_fille_store.add_bobine(bobine)
+            new_bobine = copy.copy(bobine)
+            self.current_bobine_fille_store.add_bobine(new_bobine)
 
     def init_refente_store(self):
         for refente in refente_store.refentes:
@@ -144,10 +145,10 @@ class PlanProd(QObject):
         for bobine in bobine_poly_store.bobines:
             self.current_bobine_poly_store.add_bobine(bobine)
 
-    def add_bobine_selected(self, bobine):
-        copy_bobine = copy.copy(bobine)
-        self.bobines_filles_selected.append(copy_bobine)
-        copy_bobine.pose = int(copy_bobine.poses[0])
+    def add_bobine_selected(self, bobine, pose):
+        from commun.model.bobine_fille_selected import BobineFilleSelected
+        new_bobine = BobineFilleSelected(bobine, pose=pose)
+        self.bobines_filles_selected.append(new_bobine)
         self.update_all_current_store()
         self.ON_CHANGED_SIGNAL.emit()
 

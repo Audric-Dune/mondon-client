@@ -12,8 +12,8 @@ from gestion.ui.widgets.line_refente import LineRefente
 from gestion.ui.widgets.line_perfo import LinePerfo
 from gestion.ui.widgets.line_bobine_papier import LineBobinePapier
 from gestion.ui.widgets.line_bobine_poly import LineBobinePoly
+from gestion.ui.widgets.selector_pose import SelectorPose
 from gestion.stores.settings_store import settings_store_gestion
-from commun.stores.bobine_fille_store import bobine_fille_store
 
 
 class Selector(MondonWidget):
@@ -29,6 +29,7 @@ class Selector(MondonWidget):
         self.master_vbox = QVBoxLayout()
         self.master_vbox.setContentsMargins(0, 0, 0, 0)
         self.master_vbox.setSpacing(0)
+        self.selector_pose = None
         self.vbox = QVBoxLayout()
         self.titre = QLabel()
         self.scroll_bar = QScrollArea(parent=self)
@@ -105,8 +106,14 @@ class Selector(MondonWidget):
         self.vbox.addStretch(0)
         self.update()
 
-    def handle_selected_bobine(self, bobine):
-        self.plan_prod.add_bobine_selected(bobine)
+    def handle_selected_bobine(self, bobine, pose=None):
+        if pose:
+            self.plan_prod.add_bobine_selected(bobine, pose)
+        elif len(bobine.poses) == 1:
+            self.plan_prod.add_bobine_selected(bobine, bobine.poses[0])
+        else:
+            self.selector_pose = SelectorPose(self.handle_selected_bobine, bobine)
+            self.selector_pose.show()
 
     def handle_selected_refente(self, refente):
         self.plan_prod.add_refente_selected(refente)

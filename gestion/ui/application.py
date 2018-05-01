@@ -164,6 +164,7 @@ class Application(QApplication):
                                          stock_therme=current_stock_therme,
                                          creation_time=current_creation_time,
                                          sommeil=current_sommeil)
+            current_bobine.update_bobine_from_cliche()
             bobine_fille_store.add_bobine(current_bobine)
 
     def read_xlsm(self):

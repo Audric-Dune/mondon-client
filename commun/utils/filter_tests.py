@@ -2,7 +2,9 @@ import random
 import string
 from unittest import TestCase
 
-from commun.utils.filter import (filter_bobines_papier_for_contrainte, is_valid_refente_for_bobines_fille)
+from commun.utils.filter import filter_bobines_papier_for_contrainte,\
+    is_valid_refente_for_bobines_fille,\
+    is_valid_bobine_fille_for_bobines_fille
 
 from commun.model.bobine_mere import BobineMere
 from commun.model.refente import Refente
@@ -73,6 +75,13 @@ class TestFilter(TestCase):
         contrainte = Contrainte(bobine_papier=bobine_mere_1)
         filtered_bobines = filter_bobines_papier_for_contrainte(bobines, contrainte)
         self.assertEqual(filtered_bobines, [bobine_mere_1])
+
+    def test_is_valid_bobine_fille_for_bobines_fille__remove_pose_in_poses(self):
+        bobine_0 = fake_bobine_fille(laize=150, poses=[2, 1])
+        bobine_selected = BobineFilleSelected(bobine=bobine_0, pose=2)
+        bobines = [bobine_selected]
+        is_valid_bobine_fille_for_bobines_fille(bobine_fille=bobine_selected, bobines_fille=bobines)
+        self.assertEqual(bobine_0.poses, [1])
 
     def test_is_valid_refente_for_bobines_fille__multi_the_same_pose_compatible(self):
         bobine_0 = fake_bobine_fille(laize=150, poses=[2])

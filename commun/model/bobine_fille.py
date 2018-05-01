@@ -31,7 +31,6 @@ class BobineFille:
         self.gr = gr
         self.poses = poses if poses else [0]
         self.sommeil = sommeil
-        self.update_bobine_from_cliche()
 
     def update_bobine_from_cliche(self):
         if self.codes_cliche:
