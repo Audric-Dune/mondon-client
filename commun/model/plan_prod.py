@@ -238,6 +238,9 @@ class PlanProd(QObject):
         self.current_perfo_store.perfos = \
             filter.filter_perfos_for_refentes(perfos=self.current_perfo_store.perfos,
                                               refentes=self.current_refente_store.refentes)
+        filter.filter_poses_in_bobines_fille_for_refentes(self.current_bobine_fille_store.bobines,
+                                                          self.current_refente_store.refentes,
+                                                          self.bobines_filles_selected)
         self.ON_CHANGED_SIGNAL.emit()
 
     def filter_bobine_papier_bobine_fille_refente_store(self, contrainte):

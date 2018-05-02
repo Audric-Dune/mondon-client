@@ -346,7 +346,7 @@ def is_valid_bobine_fille_for_bobine_papier(bobine_fille, bobine_papier):
 def is_valid_bobine_fille_for_refente(bobine_fille, refente, bobines_fille_selected):
     if not refente:
         return True
-    poses = bobine_fille.poses
+    poses = bobine_fille.poses.copy()
     for pose in poses:
         if not is_valid_bobine_fille_and_pose_for_refente(bobine_fille, pose, refente, bobines_fille_selected):
             poses.remove(pose)
@@ -438,3 +438,29 @@ def is_valid_perfo_for_refentes(perfo, refentes):
         if perfo.code == refente.code_perfo:
             return True
     return False
+
+
+# FILTRE POSE
+
+
+def filter_poses_in_bobines_fille_for_refentes(bobines_fille, refentes, bobines_fille_selected):
+    for bobines_fille in bobines_fille:
+        filter_poses_in_bobine_fille_for_refentes(bobines_fille, refentes, bobines_fille_selected)
+
+
+def filter_poses_in_bobine_fille_for_refentes(bobine_fille, refentes, bobines_fille_selected):
+    list_poses = []
+    for refente in refentes:
+        new_poses = []
+        for pose in bobine_fille.poses:
+            if is_valid_bobine_fille_and_pose_for_refente(bobine_fille, pose, refente, bobines_fille_selected):
+                new_poses.append(pose)
+        list_poses.append(new_poses)
+    for pose in bobine_fille.poses:
+        pose_in_list_poses = False
+        for poses in list_poses:
+            if pose in poses:
+                pose_in_list_poses = True
+                break
+        if not pose_in_list_poses:
+            bobine_fille.poses.remove(pose)
