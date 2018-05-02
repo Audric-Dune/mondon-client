@@ -32,6 +32,11 @@ class PlanProd(QObject):
         self.end = start
         self.tours = 12
         self.longueur = None
+        self.current_refente_store = RefenteStore()
+        self.current_perfo_store = PerfoStore()
+        self.current_bobine_fille_store = BobineFilleStore()
+        self.current_bobine_papier_store = BobinePapierStore()
+        self.current_bobine_poly_store = BobinePolyStore()
         self.init_current_store()
         self.refente_selected = None
         self.perfo_selected = None
@@ -126,7 +131,7 @@ class PlanProd(QObject):
 
     def init_bobine_fille_store(self):
         for bobine in bobine_fille_store.bobines:
-            new_bobine = copy.copy(bobine)
+            new_bobine = copy.deepcopy(bobine)
             self.current_bobine_fille_store.add_bobine(new_bobine)
 
     def init_refente_store(self):

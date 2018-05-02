@@ -61,21 +61,6 @@ class BobineFille:
             return self.color
         return 0
 
-    def __copy__(self):
-        return BobineFille(self.code,
-                           self.name,
-                           self.laize,
-                           self.lenght,
-                           self.color,
-                           self.stock,
-                           self.stock_therme,
-                           self.creation_time,
-                           self.codes_cliche,
-                           self.colors_cliche,
-                           self.gr,
-                           self.poses,
-                           self.sommeil)
-
     def __str__(self):
         return "B{} ({}, {}, {}m, {} poses, {}, {}), {}g, {}".format(self.code,
                                                                          self.color,
