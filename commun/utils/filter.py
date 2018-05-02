@@ -367,6 +367,8 @@ def is_valid_bobine_fille_and_pose_for_refente(bobine_fille, pose, refente, bobi
                 return True
             if pose == count_pose:
                 return True
+        else:
+            count_pose = 0
     return False
 
 
