@@ -343,17 +343,6 @@ def is_valid_bobine_fille_for_bobine_papier(bobine_fille, bobine_papier):
     return True
 
 
-# def is_valid_bobine_fille_for_refente(bobine_fille, refente, bobines_fille_selected):
-#     if not refente:
-#         return True
-#     for pose in bobine_fille.poses:
-#         if not is_valid_bobine_fille_and_pose_for_refente(bobine_fille, pose, refente, bobines_fille_selected):
-#             bobine_fille.poses.remove(pose)
-#     if bobine_fille.poses:
-#         return True
-#     return False
-
-
 def is_valid_bobine_fille_for_refente(bobine_fille, refente, bobines_fille_selected):
     if not refente:
         return True
