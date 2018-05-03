@@ -333,7 +333,10 @@ def is_valid_bobine_fille_and_bobine_papier(bobine_fille,
         for pose in bobine_fille.poses:
             if not is_valid_bobine_fille_and_pose_for_refente(bobine_fille, pose, refente, bobines_fille_selected):
                 continue
-            new_bobines_fille_selected = bobines_fille_selected.copy()
+            if bobines_fille_selected:
+                    new_bobines_fille_selected = bobines_fille_selected.copy()
+            else:
+                new_bobines_fille_selected = []
             from commun.model.bobine_fille_selected import BobineFilleSelected
             new_bobine_fille_selected = BobineFilleSelected(bobine=bobine_fille, pose=pose)
             new_bobines_fille_selected.append(new_bobine_fille_selected)
