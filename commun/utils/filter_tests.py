@@ -5,7 +5,8 @@ from unittest import TestCase
 from commun.utils.filter import filter_bobines_papier_for_contrainte,\
     is_valid_refente_for_bobines_fille,\
     is_valid_bobine_fille_for_bobines_fille,\
-    filter_bobines_fille
+    filter_bobines_fille,\
+    get_new_refente_with_bobines_fille
 
 from commun.model.bobine_mere import BobineMere
 from commun.model.refente import Refente
@@ -153,3 +154,23 @@ class TestFilter(TestCase):
                                                 bobines_papier=bobines_papier)
         self.assertEqual(filtered_bobines, [bobine_1, bobine_2, bobine_3])
 
+    def test_get_new_refente_with_bobines_fille__neutre_full_complete(self):
+        bobine_0 = fake_bobine_fille(laize=150, color="Jaune")
+        bobines_selected = [BobineFilleSelected(bobine=bobine_0, pose=0)]
+        refente_0 = Refente(laize1=150, laize2=150, laize3=150, laize4=130)
+        new_refente = get_new_refente_with_bobines_fille(refente_0, bobines_selected, full_complete=True)
+        self.assertEqual(new_refente.laizes, [None, None, None, 130, None, None, None])
+
+    def test_get_new_refente_with_bobines_fille__neutre_no_full_complete(self):
+        bobine_0 = fake_bobine_fille(laize=150, color="Jaune")
+        bobines_selected = [BobineFilleSelected(bobine=bobine_0, pose=0)]
+        refente_0 = Refente(laize1=150, laize2=150, laize3=150, laize4=150)
+        new_refente = get_new_refente_with_bobines_fille(refente_0, bobines_selected, full_complete=False)
+        self.assertEqual(new_refente.laizes, [None, 150, 150, 150, None, None, None])
+
+    def test_get_new_refente_with_bobines_fille__no_neutre_full_complete(self):
+        bobine_0 = fake_bobine_fille(laize=150, color="Jaune", poses=[1])
+        bobines_selected = [BobineFilleSelected(bobine=bobine_0, pose=1)]
+        refente_0 = Refente(laize1=150, laize2=150, laize3=150, laize4=150)
+        new_refente = get_new_refente_with_bobines_fille(refente_0, bobines_selected, full_complete=True)
+        self.assertEqual(new_refente.laizes, [None, 150, 150, 150, None, None, None])
