@@ -78,10 +78,11 @@ class Application(QApplication):
     def read_xls(self):
         self.get_cliche_from_xls()
         self.get_bobine_fille_from_xls()
+        self.get_vente_annuelle_from_xls()
 
     def get_cliche_from_xls(self):
-        # xls = xlrd.open_workbook('C:/Users\dessinateur3\Desktop\github\ARTICLE CLICHE.xls')
-        xls = xlrd.open_workbook('C:/Users\Castor\Desktop\github\ARTICLE CLICHE.xls')
+        xls = xlrd.open_workbook('C:/Users\dessinateur3\Desktop\github\ARTICLE CLICHE.xls')
+        # xls = xlrd.open_workbook('C:/Users\Castor\Desktop\github\ARTICLE CLICHE.xls')
         # xls = xlrd.open_workbook('/Users/audricperrin/Desktop/github/ARTICLE CLICHE.xls')
         sheet = xls.sheet_by_name("Sage")
         max_row = sheet.nrows
@@ -91,8 +92,8 @@ class Application(QApplication):
             current_row += 1
 
     def get_bobine_fille_from_xls(self):
-        # xls = xlrd.open_workbook('C:/Users\dessinateur3\Desktop\github\ARTICLE BOBINE FILLE.xls')
-        xls = xlrd.open_workbook('C:/Users\Castor\Desktop\github\ARTICLE BOBINE FILLE.xls')
+        xls = xlrd.open_workbook('C:/Users\dessinateur3\Desktop\github\ARTICLE BOBINE FILLE.xls')
+        # xls = xlrd.open_workbook('C:/Users\Castor\Desktop\github\ARTICLE BOBINE FILLE.xls')
         # xls = xlrd.open_workbook('/Users/audricperrin/Desktop/github/ARTICLE BOBINE FILLE.xls')
         sheet = xls.sheet_by_name("Sage")
         max_row = sheet.nrows
@@ -102,6 +103,32 @@ class Application(QApplication):
             self.extract_bobine_from_line(sheet, current_row, last_bobine_id)
             last_bobine_id = sheet.cell_value(current_row, 1)
             current_row += 1
+
+    def get_vente_annuelle_from_xls(self):
+        xls = xlrd.open_workbook('C:/Users\dessinateur3\Desktop\github\VENTE BOBINE.xls')
+        # xls = xlrd.open_workbook('C:/Users\Castor\Desktop\github\VENTE BOBINE.xls')
+        # xls = xlrd.open_workbook('/Users/audricperrin/Desktop/github/VENTE BOBINE.xls')
+        sheet = xls.sheet_by_name("Sage")
+        max_row = sheet.nrows
+        current_row = 0
+        while current_row < max_row:
+            self.extract_vente_from_line(sheet, current_row)
+            current_row += 1
+
+    def extract_vente_from_line(self, sheet, current_row):
+        current_id = sheet.cell_value(current_row, 0)
+        current_vente_annuelle = sheet.cell_value(current_row, 7)
+        if current_id[0] == "B":
+            bobine = self.get_bobine_from_id(current_id)
+            if bobine:
+                bobine.vente_annuelle = current_vente_annuelle
+
+    @staticmethod
+    def get_bobine_from_id(code):
+        for bobine in bobine_fille_store.bobines:
+            if bobine.code == code:
+                return bobine
+        return False
 
     @staticmethod
     def extract_cliche_from_line(sheet, current_row):
@@ -168,8 +195,8 @@ class Application(QApplication):
             bobine_fille_store.add_bobine(current_bobine)
 
     def read_xlsm(self):
-        # wb = xlrd.open_workbook('C:/Users\dessinateur3\Desktop\github\Etude stock bobine V5 MASTER 18-02-23.xlsm')
-        wb = xlrd.open_workbook('C:/Users\Castor\Desktop\github\Etude stock bobine V5 MASTER 18-02-23.xlsm')
+        wb = xlrd.open_workbook('C:/Users\dessinateur3\Desktop\github\Etude stock bobine V5 MASTER 18-02-23.xlsm')
+        # wb = xlrd.open_workbook('C:/Users\Castor\Desktop\github\Etude stock bobine V5 MASTER 18-02-23.xlsm')
         # wb = xlrd.open_workbook('/Users/audricperrin/Desktop/github/Etude stock bobine V5 MASTER 18-02-23.xlsm')
         for sheet in wb.sheets():
             if sheet.name == "TYPE BOBINE MERE":
