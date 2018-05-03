@@ -301,22 +301,6 @@ def filter_bobines_fille_for_contrainte(bobines_fille, contrainte):
     return new_bobines_fille
 
 
-# def filter_bobines_fille_for_bobines_papier(bobines_fille, bobines_papier):
-#     new_bobines_fille = []
-#     for bobine_fille in bobines_fille:
-#         if is_valid_bobine_fille_for_bobines_papier(bobine_fille, bobines_papier):
-#             new_bobines_fille.append(bobine_fille)
-#     return new_bobines_fille
-#
-#
-# def filter_bobines_fille_for_refentes(bobines_fille, refentes, bobines_fille_selected):
-#     new_bobines_fille = []
-#     for bobine_fille in bobines_fille:
-#         if is_valid_bobine_fille_for_refentes(bobine_fille, refentes, bobines_fille_selected):
-#             new_bobines_fille.append(bobine_fille)
-#     return new_bobines_fille
-
-
 def filter_bobines_fille(bobines_fille, bobines_papier, refentes, bobines_fille_selected):
     new_bobines_fille = []
     for bobine_fille in bobines_fille:
@@ -355,20 +339,6 @@ def is_valid_bobine_fille_and_bobine_papier(bobine_fille,
             new_bobines_fille_selected.append(new_bobine_fille_selected)
             if is_valid_refente_for_bobines_fille(refente, bobines_fille, new_bobines_fille_selected):
                 return True
-    return False
-
-
-def is_valid_bobine_fille_for_refentes(bobine_fille, refentes, bobines_fille_selected):
-    for refente in refentes:
-        if is_valid_bobine_fille_for_refente(bobine_fille, refente, bobines_fille_selected):
-            return True
-    return False
-
-
-def is_valid_bobine_fille_for_bobines_papier(bobine_fille, bobines_papier):
-    for bobine_papier in bobines_papier:
-        if is_valid_bobine_fille_for_bobine_papier(bobine_fille, bobine_papier):
-            return True
     return False
 
 
