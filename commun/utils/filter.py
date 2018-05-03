@@ -191,7 +191,7 @@ def is_valid_refente_for_bobines_fille(refente, bobines_fille, bobines_fille_sel
     if bobines_fille_selected:
         refente_with_bobines_fille_selected = get_new_refente_with_bobines_fille(refente,
                                                                                  bobines_fille=bobines_fille_selected,
-                                                                                 full_complete=False)
+                                                                                 full_complete=True)
     else:
         refente_with_bobines_fille_selected = refente
     for laize in refente_with_bobines_fille_selected.laizes:
@@ -272,7 +272,7 @@ def get_new_refente_with_bobine_fille(refente, bobine_fille, full_complete=False
         else:
             counter_pose = 0
             start_index += 1
-    if not is_valid_bobine:
+    if not is_valid_bobine and not full_complete:
         return False
     from commun.model.refente import Refente
     new_refente = Refente()
