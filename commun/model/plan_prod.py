@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import copy
+import time
 from PyQt5.QtCore import pyqtSignal, QObject
 
 from commun.constants.param import FIN_PROD_SOIR, PERCENT_PROD_THEROIQUE_MAXI
@@ -219,6 +220,7 @@ class PlanProd(QObject):
         self.init_bobine_poly_store()
 
     def update_all_current_store(self):
+        t0 = time.time()
         self.init_current_store()
         self.definied_longueur()
         contrainte = self.get_contrainte()
@@ -241,6 +243,8 @@ class PlanProd(QObject):
         filter.filter_poses_in_bobines_fille_for_refentes(self.current_bobine_fille_store.bobines,
                                                           self.current_refente_store.refentes,
                                                           self.bobines_filles_selected)
+        t1 = time.time()
+        print(t1-t0)
         self.ON_CHANGED_SIGNAL.emit()
 
     def filter_bobine_papier_bobine_fille_refente_store(self, contrainte):
@@ -253,13 +257,6 @@ class PlanProd(QObject):
         self.current_bobine_papier_store.bobines = \
             filter.filter_bobines_papier_for_bobines_fille(bobines_papier=self.current_bobine_papier_store.bobines,
                                                            bobines_fille=self.current_bobine_fille_store.bobines)
-        # self.current_bobine_fille_store.bobines = \
-        #     filter.filter_bobines_fille_for_bobines_papier(bobines_fille=self.current_bobine_fille_store.bobines,
-        #                                                    bobines_papier=self.current_bobine_papier_store.bobines)
-        # self.current_bobine_fille_store.bobines = \
-        #     filter.filter_bobines_fille_for_refentes(bobines_fille=self.current_bobine_fille_store.bobines,
-        #                                              refentes=self.current_refente_store.refentes,
-        #                                              bobines_fille_selected=contrainte.bobines_fille)
         self.current_refente_store.refentes = \
             filter.filter_refentes_for_bobines_papier(refentes=self.current_refente_store.refentes,
                                                       bobines_papier=self.current_bobine_papier_store.bobines)

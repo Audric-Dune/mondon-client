@@ -1,6 +1,7 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import copy
 
 # FILTRE BOBINES PAPIER
 
@@ -190,7 +191,7 @@ def is_valid_refente_for_bobines_fille(refente, bobines_fille, bobines_fille_sel
     if bobines_fille_selected:
         refente_with_bobines_fille_selected = get_new_refente_with_bobines_fille(refente,
                                                                                  bobines_fille=bobines_fille_selected,
-                                                                                 full_complete=True)
+                                                                                 full_complete=False)
     else:
         refente_with_bobines_fille_selected = refente
     for laize in refente_with_bobines_fille_selected.laizes:
@@ -213,7 +214,8 @@ def is_valid_refente_for_bobines_fille(refente, bobines_fille, bobines_fille_sel
             elif not is_valid_bobine_fille_and_pose_for_refente(bobine_fille=bobine_fille_selected,
                                                                 pose=bobine_fille_selected.pose,
                                                                 refente=refente_with_bobines_fille_selected,
-                                                                bobines_fille_selected=bobines_fille_selected):
+                                                                bobines_fille_selected=bobines_fille_selected,
+                                                                get_new_refente=False):
                 continue
             else:
                 if bobines_fille_selected:
@@ -260,14 +262,18 @@ def get_new_refente_with_bobine_fille(refente, bobine_fille, full_complete=False
     start_index = 0
     counter_pose = 0
     bobine_pose = bobine_fille.pose if bobine_fille.pose != 0 else 1
+    is_valid_bobine = False
     for laize_refente in refente.laizes:
         if laize_refente and laize_refente == bobine_fille.laize:
             counter_pose += 1
             if counter_pose >= bobine_pose:
+                is_valid_bobine = True
                 break
         else:
             counter_pose = 0
             start_index += 1
+    if not is_valid_bobine:
+        return False
     from commun.model.refente import Refente
     new_refente = Refente()
     index_refente = 0
@@ -379,10 +385,14 @@ def is_valid_bobine_fille_for_refente(bobine_fille, refente, bobines_fille_selec
     return False
 
 
-def is_valid_bobine_fille_and_pose_for_refente(bobine_fille, pose, refente, bobines_fille_selected):
+def is_valid_bobine_fille_and_pose_for_refente(bobine_fille,
+                                               pose,
+                                               refente,
+                                               bobines_fille_selected,
+                                               get_new_refente=True):
     if not refente:
         return True
-    if bobines_fille_selected:
+    if bobines_fille_selected and get_new_refente:
         new_refente = get_new_refente_with_bobines_fille(refente, bobines_fille=bobines_fille_selected)
     else:
         new_refente = refente
