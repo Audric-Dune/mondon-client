@@ -51,14 +51,17 @@ def fake_bobine_mere(code=None, laize=None, length=None, color=None, gr=None):
         color = random_color()
     if gr is None:
         gr = random_grammage()
-
     return BobineMere(code=code, laize=laize, lenght=length, color=color, gr=gr)
 
 
-def fake_bobine_fille(code=None, laize=None, poses=None):
+def fake_bobine_fille(code=None, laize=None, poses=None, color=None):
     if code is None:
         code = random_code()
-    return BobineFille(code=code, laize=laize, poses=poses)
+    if poses is None:
+        poses = [0]
+    if color is None:
+        color = random_color()
+    return BobineFille(code=code, laize=laize, poses=poses, color=color)
 
 
 class TestFilter(TestCase):
@@ -103,4 +106,16 @@ class TestFilter(TestCase):
         is_valid = is_valid_refente_for_bobines_fille(refente=refente,
                                                       bobines_fille=bobines,
                                                       bobines_fille_selected=bobines_selected)
+        self.assertEqual(is_valid, False)
+
+    def test_is_valid_refente_for_bobines_fille__different_color(self):
+        bobine_0 = fake_bobine_fille(laize=150, color="Jaune")
+        bobine_1 = fake_bobine_fille(laize=140, color="Noir")
+        bobine_2 = fake_bobine_fille(laize=130, color="Jaune")
+        bobine_3 = fake_bobine_fille(laize=180, color="Jaune")
+        bobines = [bobine_0, bobine_1, bobine_2, bobine_3]
+        refente = Refente(laize1=150, laize2=140, laize3=130, laize4=180)
+        is_valid = is_valid_refente_for_bobines_fille(refente=refente,
+                                                      bobines_fille=bobines,
+                                                      bobines_fille_selected=None)
         self.assertEqual(is_valid, False)

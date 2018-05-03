@@ -14,11 +14,11 @@ class LineBobine(MondonWidget):
     def __init__(self, parent=None, bobine=None):
         super(LineBobine, self).__init__(parent=parent)
         self.set_background_color(color_blanc)
-        # if self.bobine.vente_annuelle and self.bobine.stock_therme and self.bobine.vente_annuelle/12 > self.bobine.stock_therme:
-        self.set_background_color(color_orange)
+        self.bobine = bobine
+        if self.bobine.vente_annuelle and self.bobine.stock_therme and self.bobine.vente_annuelle/12 > self.bobine.stock_therme:
+            self.set_background_color(color_orange)
         self.state = None
         self.installEventFilter(self)
-        self.bobine = bobine
         self.init_widget()
 
     def init_widget(self):

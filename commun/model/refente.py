@@ -27,7 +27,6 @@ class Refente:
                 laize_refente += laize
         return round((laize_refente/10))*10
 
-
     def __str__(self):
         return "REFENTE{} / PERFO{} : DEC{}, {}, {}, {}, {}, {}, {}, {}".format(self.code,
                                                                                 self.code_perfo,

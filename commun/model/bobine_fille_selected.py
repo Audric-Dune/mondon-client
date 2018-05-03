@@ -21,3 +21,4 @@ class BobineFilleSelected:
         self.sommeil = bobine.sommeil
         self.index = index
         self.pose = pose
+        self.vente_annuelle = bobine.vente_annuelle
