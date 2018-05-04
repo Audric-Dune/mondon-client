@@ -12,8 +12,8 @@ class SelectorManager(MondonWidget):
     def __init__(self, plan_prod, parent=None):
         super(SelectorManager, self).__init__(parent=parent)
         self.set_background_color(color_vert_fonce)
-        self.selector = Selector(parent=self, plan_prod=plan_prod)
         self.bloc_focus = "bobine"
+        self.selector = Selector(parent=self, plan_prod=plan_prod)
         self.init_widget()
 
     def init_widget(self):

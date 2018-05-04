@@ -24,6 +24,7 @@ class PlanProdCreator(MondonWidget):
         super(PlanProdCreator, self).__init__(parent=parent)
         self.set_background_color(color=color_blanc)
         self.plan_prod = plan_prod
+        self.bloc_focus = "bobine"
         self.plan_prod.ON_CHANGED_SIGNAL.connect(self.handle_plan_prod_changed)
         self.plan_prod.ON_TOURS_CHANGED.connect(self.handle_tours_plan_prod_changed)
         self.selector_manager = SelectorManager(parent=self, plan_prod=self.plan_prod)
@@ -88,16 +89,16 @@ class PlanProdCreator(MondonWidget):
         self.bloc_info.update_widget()
 
     def handle_click_on_bloc_selected(self, name_bloc):
-        if self.selector_manager.bloc_focus == name_bloc:
-            self.selector_manager.bloc_focus = "bobine"
+        if self.bloc_focus == name_bloc:
+            self.bloc_focus = "bobine"
         else:
-            self.selector_manager.bloc_focus = name_bloc
+            self.bloc_focus = name_bloc
         self.update_bloc_selected()
         self.update_selector()
         self.bloc_info.update_widget()
 
     def keyPressEvent(self, e):
         if e.key() == Qt.Key_Delete:
-            self.plan_prod.del_item_selected(self.selector_manager.bloc_focus)
+            self.plan_prod.del_item_selected(self.bloc_focus)
         if e.key() == Qt.Key_Enter:
             self.plan_prod.get_new_item_selected_from_store()
