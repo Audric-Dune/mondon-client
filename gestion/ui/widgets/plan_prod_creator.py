@@ -12,7 +12,7 @@ from commun.ui.public.mondon_widget import MondonWidget
 from commun.constants.colors import color_blanc
 from commun.constants.stylesheets import white_12_bold_label_stylesheet
 
-from gestion.ui.widgets.selector import Selector
+from gestion.ui.widgets.selector_manager import SelectorManager
 from gestion.ui.widgets.bloc_param_prod import BlocParamProd
 from gestion.ui.widgets.bloc_selected import BlocSelected
 from gestion.ui.widgets.bloc_information import BlocInformation
@@ -27,7 +27,7 @@ class PlanProdCreator(MondonWidget):
         self.plan_prod.ON_CHANGED_SIGNAL.connect(self.handle_plan_prod_changed)
         self.plan_prod.ON_TOURS_CHANGED.connect(self.handle_tours_plan_prod_changed)
         self.bloc_focus = "bobine"
-        self.selector = Selector(parent=self, plan_prod=self.plan_prod)
+        self.selector_manager = SelectorManager(parent=self, plan_prod=self.plan_prod)
         self.bloc_param_prod = BlocParamProd(plan_prod=self.plan_prod, parent=self)
         self.titre_prod = QLabel("NOUVELLE PRODUCTION")
         self.bloc_poly_selected = BlocSelected(data_type="poly", parent=self)
@@ -48,7 +48,7 @@ class PlanProdCreator(MondonWidget):
         master_vbox.setContentsMargins(0, 0, 0, 0)
 
         hbox = QHBoxLayout()
-        hbox.addWidget(self.selector)
+        hbox.addWidget(self.selector_manager)
         vbox = QVBoxLayout()
         self.titre_prod.setFixedHeight(30)
         self.titre_prod.setStyleSheet(white_12_bold_label_stylesheet)

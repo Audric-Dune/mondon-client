@@ -30,28 +30,28 @@ class LineBobine(MondonWidget):
         hbox.addWidget(code)
         laize = QLabel(str(int(self.bobine.laize)))
         hbox.addWidget(laize)
-        lenght = QLabel("{}m".format(self.bobine.lenght))
-        hbox.addWidget(lenght)
-        gr = QLabel("{}g".format(self.bobine.gr))
-        hbox.addWidget(gr)
-        color = QLabel(str(self.bobine.color))
-        hbox.addWidget(color)
-        # code_cliche = QLabel(str(self.bobine.codes_cliche))
-        # hbox.addWidget(code_cliche)
-        poses = QLabel(str(self.bobine.poses))
-        hbox.addWidget(poses)
-        if self.bobine.vente_annuelle:
-            vente_annuelle = str(int(self.bobine.vente_annuelle))
-        else:
-            vente_annuelle = "-"
-        vente_annuelle_label = QLabel(vente_annuelle)
-        hbox.addWidget(vente_annuelle_label)
-        if self.bobine.stock_therme:
-            stock_therme = str(int(self.bobine.stock_therme))
-        else:
-            stock_therme = "-"
-        stock_therme_label = QLabel(stock_therme)
-        hbox.addWidget(stock_therme_label)
+        # lenght = QLabel("{}m".format(self.bobine.lenght))
+        # hbox.addWidget(lenght)
+        # gr = QLabel("{}g".format(self.bobine.gr))
+        # hbox.addWidget(gr)
+        # color = QLabel(str(self.bobine.color))
+        # hbox.addWidget(color)
+        # # code_cliche = QLabel(str(self.bobine.codes_cliche))
+        # # hbox.addWidget(code_cliche)
+        # poses = QLabel(str(self.bobine.poses))
+        # hbox.addWidget(poses)
+        # if self.bobine.vente_annuelle:
+        #     vente_annuelle = str(int(self.bobine.vente_annuelle))
+        # else:
+        #     vente_annuelle = "-"
+        # vente_annuelle_label = QLabel(vente_annuelle)
+        # hbox.addWidget(vente_annuelle_label)
+        # if self.bobine.stock_therme:
+        #     stock_therme = str(int(self.bobine.stock_therme))
+        # else:
+        #     stock_therme = "-"
+        # stock_therme_label = QLabel(stock_therme)
+        # hbox.addWidget(stock_therme_label)
 
     def mouseDoubleClickEvent(self, e):
         self.ON_DBCLICK_SIGNAL.emit(self.bobine)
