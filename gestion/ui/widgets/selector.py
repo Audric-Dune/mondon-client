@@ -18,11 +18,10 @@ from gestion.stores.settings_store import settings_store_gestion
 
 class Selector(MondonWidget):
 
-    def __init__(self, plan_prod, parent, height_line):
+    def __init__(self, plan_prod, parent):
         super(Selector, self).__init__(parent=parent)
         self.plan_prod = plan_prod
         self.parent = parent
-        self.height_line = height_line
         self.sort_name = "code"
         self.sort_asc = True
         self.current_focus = "perfo"
@@ -58,7 +57,7 @@ class Selector(MondonWidget):
         clear_layout(self.vbox)
         if self.current_focus == "bobine" or not self.current_focus:
             for bobine in self.plan_prod.current_bobine_fille_store.bobines:
-                line_bobine = LineBobine(parent=self, bobine=bobine, height=self.height_line)
+                line_bobine = LineBobine(parent=self, bobine=bobine)
                 line_bobine.ON_DBCLICK_SIGNAL.connect(self.handle_selected_bobine)
                 line_bobine.setFixedHeight(20)
                 self.vbox.addWidget(line_bobine)

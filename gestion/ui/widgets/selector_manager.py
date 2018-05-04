@@ -9,7 +9,6 @@ from gestion.ui.widgets.selector_filter import SelectorFilter
 
 
 class SelectorManager(MondonWidget):
-    HEIGHT_LINE = 30
 
     def __init__(self, plan_prod, parent):
         super(SelectorManager, self).__init__(parent=parent)
@@ -23,7 +22,7 @@ class SelectorManager(MondonWidget):
         vbox = QVBoxLayout()
         vbox.setSpacing(0)
         vbox.addWidget(self.selector_filter)
-        vbox.addWidget(self.selector, self.HEIGHT_LINE)
+        vbox.addWidget(self.selector)
         self.setLayout(vbox)
 
     def update_widget(self, bloc_focus):
