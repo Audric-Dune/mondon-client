@@ -18,10 +18,11 @@ from gestion.stores.settings_store import settings_store_gestion
 
 class Selector(MondonWidget):
 
-    def __init__(self, plan_prod, parent=None):
+    def __init__(self, plan_prod, parent, height_line):
         super(Selector, self).__init__(parent=parent)
         self.plan_prod = plan_prod
         self.parent = parent
+        self.height_line = height_line
         self.sort_name = "code"
         self.sort_asc = True
         self.current_focus = "perfo"
@@ -31,21 +32,19 @@ class Selector(MondonWidget):
         self.master_vbox.setSpacing(0)
         self.selector_pose = None
         self.vbox = QVBoxLayout()
-        self.titre = QLabel()
         self.scroll_bar = QScrollArea(parent=self)
         self.content_scrollbar = QWidget(parent=self.scroll_bar)
         self.init_widget()
         self.update_widget()
 
     def init_widget(self):
+        self.vbox.setContentsMargins(0,0,0,0)
+        self.vbox.setSpacing(5)
         self.content_scrollbar.setLayout(self.vbox)
+        self.content_scrollbar.setContentsMargins(0, 0, 0, 0)
         self.scroll_bar.setWidget(self.content_scrollbar)
         self.scroll_bar.setStyleSheet(scroll_bar_stylesheet)
         self.scroll_bar.setWidgetResizable(True)
-        self.titre.setFixedHeight(30)
-        self.titre.setStyleSheet(white_12_bold_label_stylesheet)
-        self.titre.setContentsMargins(5, 0, 0, 0)
-        self.master_vbox.addWidget(self.titre, Qt.AlignVCenter)
         self.master_vbox.addWidget(self.scroll_bar)
         self.setLayout(self.master_vbox)
 
@@ -57,47 +56,31 @@ class Selector(MondonWidget):
         self.sort_bobine()
         self.current_focus = self.parent.bloc_focus
         clear_layout(self.vbox)
-        # MODE NORMAL
         if self.current_focus == "bobine" or not self.current_focus:
-            self.titre.setText("SELECTION BOBINE FILLE")
             for bobine in self.plan_prod.current_bobine_fille_store.bobines:
-                line_bobine = LineBobine(parent=self, bobine=bobine)
+                line_bobine = LineBobine(parent=self, bobine=bobine, height=self.height_line)
                 line_bobine.ON_DBCLICK_SIGNAL.connect(self.handle_selected_bobine)
                 line_bobine.setFixedHeight(20)
                 self.vbox.addWidget(line_bobine)
-        # # MODE DEBUG
-        # if self.current_focus == "bobine" or not self.current_focus:
-        #     self.titre.setText("SELECTION BOBINE FILLE MODE DEBUG")
-        #     for bobine in bobine_fille_store.bobines:
-        #         if bobine in self.plan_prod.current_bobine_fille_store.bobines:
-        #             disabled = False
-        #         else:
-        #             disabled = True
-        #         line_bobine = LineBobine(parent=self, bobine=bobine, disabled=disabled)
-        #         line_bobine.ON_DBCLICK_SIGNAL.connect(self.handle_selected_bobine)
-        #         line_bobine.setFixedHeight(20)
-        #         self.vbox.addWidget(line_bobine)
         if self.current_focus == "refente":
-            self.titre.setText("SELECTION REFENTE")
             for refente in self.plan_prod.current_refente_store.refentes:
                 line_refente = LineRefente(parent=self, refente=refente, ech=settings_store_gestion.ech)
                 line_refente.ON_DBCLICK_SIGNAL.connect(self.handle_selected_refente)
                 self.vbox.addWidget(line_refente)
         if self.current_focus == "perfo":
-            self.titre.setText("SELECTION PERFO")
             for perfo in self.plan_prod.current_perfo_store.perfos:
                 line_perfo = LinePerfo(parent=self, perfo=perfo, ech=settings_store_gestion.ech)
                 line_perfo.ON_DBCLICK_SIGNAL.connect(self.handle_selected_perfo)
                 self.vbox.addWidget(line_perfo)
         if self.current_focus == "papier":
-            self.titre.setText("SELECTION BOBINE PAPIER")
+
             for bobine in self.plan_prod.current_bobine_papier_store.bobines:
                 line_bobine_papier = LineBobinePapier(parent=self, bobine=bobine)
                 line_bobine_papier.ON_DBCLICK_SIGNAL.connect(self.handle_selected_bobine_papier)
                 line_bobine_papier.setFixedHeight(20)
                 self.vbox.addWidget(line_bobine_papier)
         if self.current_focus == "poly":
-            self.titre.setText("SELECTION BOBINE POLYPRO")
+
             for bobine in self.plan_prod.current_bobine_poly_store.bobines:
                 line_bobine_poly = LineBobinePoly(parent=self, bobine=bobine)
                 line_bobine_poly.ON_DBCLICK_SIGNAL.connect(self.handle_selected_bobine_poly)

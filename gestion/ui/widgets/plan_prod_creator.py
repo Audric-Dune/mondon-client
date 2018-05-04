@@ -75,8 +75,8 @@ class PlanProdCreator(MondonWidget):
         self.bloc_perfo_selected.update_widget()
         self.bloc_papier_selected.update_widget()
 
-    def update_selector(self):
-        self.selector.update_widget()
+    def update_selector_manager(self):
+        self.selector_manager.update_widget(self.bloc_focus)
 
     def handle_plan_prod_changed(self):
         self.update_bloc_selected()
@@ -94,7 +94,7 @@ class PlanProdCreator(MondonWidget):
         else:
             self.bloc_focus = name_bloc
         self.update_bloc_selected()
-        self.update_selector()
+        self.update_selector_manager()
         self.bloc_info.update_widget()
 
     def keyPressEvent(self, e):

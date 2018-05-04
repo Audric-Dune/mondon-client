@@ -135,6 +135,8 @@ black_12_label_stylesheet = create_qlabel_stylesheet(color=color_noir,
                                                      font_size="12px")
 black_16_label_stylesheet = create_qlabel_stylesheet(color=color_noir,
                                                      font_size="16px")
+black_14_label_stylesheet = create_qlabel_stylesheet(color=color_noir,
+                                                     font_size="14px")
 black_20_label_stylesheet = create_qlabel_stylesheet(color=color_noir, font_size="20px")
 white_24_label_stylesheet = create_qlabel_stylesheet(color=color_blanc,
                                                      font_size="24px")

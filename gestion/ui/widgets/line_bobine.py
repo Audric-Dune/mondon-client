@@ -5,16 +5,18 @@ from PyQt5.QtWidgets import QHBoxLayout, QLabel
 from PyQt5.QtCore import pyqtSignal
 from commun.ui.public.mondon_widget import MondonWidget
 from commun.constants.colors import color_blanc, color_orange
+from commun.constants.stylesheets import black_14_label_stylesheet
 from commun.model.bobine_fille import BobineFille
 
 
 class LineBobine(MondonWidget):
     ON_DBCLICK_SIGNAL = pyqtSignal(BobineFille)
 
-    def __init__(self, parent=None, bobine=None):
+    def __init__(self, parent=None, bobine=None, height=None):
         super(LineBobine, self).__init__(parent=parent)
         self.set_background_color(color_blanc)
         self.bobine = bobine
+        self.height = height
         if self.bobine.vente_annuelle and self.bobine.stock_therme and self.bobine.vente_annuelle/12 > self.bobine.stock_therme:
             self.set_background_color(color_orange)
         self.state = None
@@ -26,9 +28,12 @@ class LineBobine(MondonWidget):
         hbox.setContentsMargins(5, 0, 0, 0)
         self.setLayout(hbox)
         code = QLabel(str(self.bobine.code))
-        code.setFixedWidth(150)
+        code.setFixedHeight(self.height)
+        code.setStyleSheet(black_14_label_stylesheet)
+        code.setFixedWidth(300)
         hbox.addWidget(code)
         laize = QLabel(str(int(self.bobine.laize)))
+        laize.setStyleSheet(black_14_label_stylesheet)
         hbox.addWidget(laize)
         # lenght = QLabel("{}m".format(self.bobine.lenght))
         # hbox.addWidget(lenght)
