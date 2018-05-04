@@ -13,6 +13,7 @@ class SelectorManager(MondonWidget):
         super(SelectorManager, self).__init__(parent=parent)
         self.set_background_color(color_vert_fonce)
         self.selector = Selector(parent=self, plan_prod=plan_prod)
+        self.bloc_focus = "bobine"
         self.init_widget()
 
     def init_widget(self):
