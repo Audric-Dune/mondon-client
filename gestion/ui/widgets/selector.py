@@ -22,6 +22,7 @@ class Selector(MondonWidget):
         super(Selector, self).__init__(parent=parent)
         self.plan_prod = plan_prod
         self.parent = parent
+        self.list_bobines = []
         self.sort_name = "code"
         self.sort_asc = True
         self.current_focus = "perfo"
@@ -34,6 +35,7 @@ class Selector(MondonWidget):
         self.scroll_bar = QScrollArea(parent=self)
         self.content_scrollbar = QWidget(parent=self.scroll_bar)
         self.init_widget()
+        self.update_list()
         self.update_widget()
 
     def init_widget(self):
@@ -51,12 +53,22 @@ class Selector(MondonWidget):
         self.plan_prod.current_bobine_fille_store.sort_bobines("code", True)
         self.plan_prod.current_bobine_fille_store.sort_bobines(self.sort_name, self.sort_asc)
 
+    def update_list(self, search_code=None):
+        self.list_bobines = []
+        for bobine in self.plan_prod.current_bobine_fille_store.bobines:
+            if search_code:
+                if search_code in bobine.code:
+                    self.list_bobines.append(bobine)
+            else:
+                self.list_bobines.append(bobine)
+        self.update_widget()
+
     def update_widget(self):
         self.sort_bobine()
         self.current_focus = self.parent.bloc_focus
         clear_layout(self.vbox)
         if self.current_focus == "bobine" or not self.current_focus:
-            for bobine in self.plan_prod.current_bobine_fille_store.bobines:
+            for bobine in self.list_bobines:
                 line_bobine = LineBobine(parent=self, bobine=bobine)
                 line_bobine.ON_DBCLICK_SIGNAL.connect(self.handle_selected_bobine)
                 line_bobine.setFixedHeight(20)
