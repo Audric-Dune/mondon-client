@@ -60,10 +60,13 @@ class SelectorCollumFilter(MondonWidget):
                                             width=self.width(),
                                             set_filter_callback=self.set_filter_callback)
             self.filter_modal.ON_CLOSE_SIGNAL.connect(self.on_close_modal)
+            self.filter_modal.ON_FOCUS_OUT_SIGNAL.connect(lambda: self.on_close_modal(kill=False))
 
-    def on_close_modal(self):
-        self.filter_modal.close()
-        self.filter_modal = None
+    def on_close_modal(self, kill=True):
+        if self.filter_modal:
+            self.filter_modal.close()
+            if kill:
+                self.filter_modal = None
 
     def eventFilter(self, o, e):
         if e.type() == QEvent.MouseButtonRelease:
@@ -73,13 +76,15 @@ class SelectorCollumFilter(MondonWidget):
 
 
 class FilterModal(QWidget):
-    ON_CLOSE_SIGNAL = pyqtSignal()
+    ON_CLOSE_SIGNAL = pyqtSignal
+    ON_FOCUS_OUT_SIGNAL = pyqtSignal
 
     def __init__(self, pos, width, set_filter_callback, parent=None):
         super(FilterModal, self).__init__(parent=parent)
+        self.setFocusPolicy(Qt.ClickFocus)
         self.set_filter_callback = set_filter_callback
         self.list_fiter = [(130, True), (140, True), (150, False)]
-        self.setWindowFlags(Qt.Popup)
+        self.setWindowFlags(Qt.SplashScreen)
         self.setFixedWidth(width)
         self.move(pos)
         self.init_widget()
@@ -88,7 +93,7 @@ class FilterModal(QWidget):
     def init_widget(self):
         vbox = QVBoxLayout()
         vbox.setSpacing(5)
-        vbox.setContentsMargins(0, 5, 0, 5)
+        vbox.setContentsMargins(1, 5, 1, 5)
         bt_sorted_asc = QPushButton("Trier A -> Z")
         bt_sorted_asc.setStyleSheet(button_no_radius_stylesheet)
         bt_sorted_asc.clicked.connect(self.on_click_bt_sorted_asc)
@@ -111,7 +116,7 @@ class FilterModal(QWidget):
         pen.setColor(qcolor_gris)
         p.setPen(pen)
         p.fillRect(0, 0, self.width(), self.height(), qcolor_blanc)
-        p.drawRect(0, 0, self.width(), self.height())
+        p.drawRect(0, 0, self.width()-1, self.height()-1)
 
     def on_click_bt_sorted_asc(self):
         self.set_filter_callback(sort_name="laize", sort_asc=True)
@@ -123,6 +128,11 @@ class FilterModal(QWidget):
 
     def closeEvent(self, e):
         self.ON_CLOSE_SIGNAL.emit()
+        super(FilterModal, self).focusInEvent(e)
+
+    def focusOutEvent(self, e):
+        self.ON_FOCUS_OUT_SIGNAL.emit()
+        super(FilterModal, self).focusOutEvent(e)
 
 
 class LineFilter(MondonWidget):
