@@ -63,6 +63,7 @@ class SelectorCollumFilter(MondonWidget):
             self.filter_modal.ON_FOCUS_OUT_SIGNAL.connect(lambda: self.on_close_modal(kill=False))
 
     def on_close_modal(self, kill=True):
+        print("on_close_modal")
         if self.filter_modal:
             self.filter_modal.close()
             if kill:
@@ -76,8 +77,8 @@ class SelectorCollumFilter(MondonWidget):
 
 
 class FilterModal(QWidget):
-    ON_CLOSE_SIGNAL = pyqtSignal
-    ON_FOCUS_OUT_SIGNAL = pyqtSignal
+    ON_CLOSE_SIGNAL = pyqtSignal()
+    ON_FOCUS_OUT_SIGNAL = pyqtSignal()
 
     def __init__(self, pos, width, set_filter_callback, parent=None):
         super(FilterModal, self).__init__(parent=parent)
@@ -128,7 +129,7 @@ class FilterModal(QWidget):
 
     def closeEvent(self, e):
         self.ON_CLOSE_SIGNAL.emit()
-        super(FilterModal, self).focusInEvent(e)
+        super(FilterModal, self).closeEvent(e)
 
     def focusOutEvent(self, e):
         self.ON_FOCUS_OUT_SIGNAL.emit()
