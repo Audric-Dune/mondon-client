@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5.QtWidgets import QHBoxLayout, QLabel, QWidget, QPushButton, QVBoxLayout
-from PyQt5.Qt import Qt, QPoint, QEvent, pyqtSignal
+from PyQt5.Qt import Qt, QPoint, pyqtSignal
 from PyQt5.QtGui import QPainter, QColor, QPen, QCursor
 
 from commun.ui.public.mondon_widget import MondonWidget

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import copy
-import time
+
 from PyQt5.QtCore import pyqtSignal, QObject
 
 from commun.constants.param import FIN_PROD_SOIR, PERCENT_PROD_THEROIQUE_MAXI
@@ -242,7 +242,6 @@ class PlanProd(QObject):
         filter.filter_poses_in_bobines_fille_for_refentes(self.current_bobine_fille_store.bobines,
                                                           self.current_refente_store.refentes,
                                                           self.bobines_filles_selected)
-        t1 = time.time()
         self.ON_CHANGED_SIGNAL.emit()
 
     def filter_bobine_papier_bobine_fille_refente_store(self, contrainte):
