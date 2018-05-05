@@ -220,7 +220,6 @@ class PlanProd(QObject):
         self.init_bobine_poly_store()
 
     def update_all_current_store(self):
-        t0 = time.time()
         self.init_current_store()
         self.definied_longueur()
         contrainte = self.get_contrainte()
@@ -244,7 +243,6 @@ class PlanProd(QObject):
                                                           self.current_refente_store.refentes,
                                                           self.bobines_filles_selected)
         t1 = time.time()
-        print(t1-t0)
         self.ON_CHANGED_SIGNAL.emit()
 
     def filter_bobine_papier_bobine_fille_refente_store(self, contrainte):

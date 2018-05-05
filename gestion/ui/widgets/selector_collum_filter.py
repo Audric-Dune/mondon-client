@@ -3,7 +3,7 @@
 
 from PyQt5.QtWidgets import QHBoxLayout, QLabel, QWidget, QPushButton, QVBoxLayout
 from PyQt5.Qt import Qt, QPoint, QEvent, pyqtSignal
-from PyQt5.QtGui import QPainter, QColor, QPen
+from PyQt5.QtGui import QPainter, QColor, QPen, QCursor
 
 from commun.ui.public.mondon_widget import MondonWidget
 from commun.ui.public.pixmap_button import PixmapButton
@@ -19,7 +19,7 @@ class SelectorCollumFilter(MondonWidget):
 
     def __init__(self, parent, set_filter_callback):
         super(SelectorCollumFilter, self).__init__(parent)
-        self.installEventFilter(self)
+        self.setFocusPolicy(Qt.ClickFocus)
         self.setFixedHeight(21)
         self.set_background_color(color_blanc)
         self.set_filter_callback = set_filter_callback
@@ -60,29 +60,34 @@ class SelectorCollumFilter(MondonWidget):
                                             width=self.width(),
                                             set_filter_callback=self.set_filter_callback)
             self.filter_modal.ON_CLOSE_SIGNAL.connect(self.on_close_modal)
-            self.filter_modal.ON_FOCUS_OUT_SIGNAL.connect(lambda: self.on_close_modal(kill=False))
 
-    def on_close_modal(self, kill=True):
+    def on_close_modal(self):
         print("on_close_modal")
         if self.filter_modal:
             self.filter_modal.close()
-            if kill:
-                self.filter_modal = None
+            self.filter_modal = None
 
-    def eventFilter(self, o, e):
-        if e.type() == QEvent.MouseButtonRelease:
-            self.bt_open_filter.click()
-            return True
-        return False
+    def focusInEvent(self, e):
+        cursor = QCursor()
+        pos_cursor_from_widget = self.mapFromGlobal(cursor.pos())
+        if self.childrenRect().contains(pos_cursor_from_widget):
+            pass
+        else:
+            self.on_close_modal()
+        super(SelectorCollumFilter, self).focusInEvent(e)
+
+    def mouseReleaseEvent(self, e):
+        self.bt_open_filter.click()
+        super(SelectorCollumFilter, self).mouseReleaseEvent(e)
 
 
 class FilterModal(QWidget):
     ON_CLOSE_SIGNAL = pyqtSignal()
-    ON_FOCUS_OUT_SIGNAL = pyqtSignal()
 
     def __init__(self, pos, width, set_filter_callback, parent=None):
         super(FilterModal, self).__init__(parent=parent)
         self.setFocusPolicy(Qt.ClickFocus)
+        self.setFocus()
         self.set_filter_callback = set_filter_callback
         self.list_fiter = [(130, True), (140, True), (150, False)]
         self.setWindowFlags(Qt.SplashScreen)
@@ -127,14 +132,6 @@ class FilterModal(QWidget):
         self.set_filter_callback(sort_name="laize", sort_asc=False)
         self.ON_CLOSE_SIGNAL.emit()
 
-    def closeEvent(self, e):
-        self.ON_CLOSE_SIGNAL.emit()
-        super(FilterModal, self).closeEvent(e)
-
-    def focusOutEvent(self, e):
-        self.ON_FOCUS_OUT_SIGNAL.emit()
-        super(FilterModal, self).focusOutEvent(e)
-
 
 class LineFilter(MondonWidget):
 
@@ -158,15 +155,14 @@ class LineFilter(MondonWidget):
         hbox.addWidget(self.check_icon)
         self.setLayout(hbox)
 
-    def eventFilter(self, o, e):
-        if e.type() == QEvent.Enter:
-            self.set_background_color(color_vert_moyen)
-            self.check_icon.add_image("commun/assets/images/white_check.png")
-            self.label.setStyleSheet(green_14_label_stylesheet)
-            return True
-        if e.type() == QEvent.Leave:
-            self.set_background_color(color_blanc)
-            self.check_icon.add_image("commun/assets/images/green_check.png")
-            self.label.setStyleSheet(black_14_label_stylesheet)
-            return True
-        return False
+    def enterEvent(self, e):
+        self.set_background_color(color_vert_moyen)
+        self.check_icon.add_image("commun/assets/images/white_check.png")
+        self.label.setStyleSheet(green_14_label_stylesheet)
+        super(LineFilter, self).enterEvent(e)
+
+    def leaveEvent(self, e):
+        self.set_background_color(color_blanc)
+        self.check_icon.add_image("commun/assets/images/green_check.png")
+        self.label.setStyleSheet(black_14_label_stylesheet)
+        super(LineFilter, self).leaveEvent(e)
