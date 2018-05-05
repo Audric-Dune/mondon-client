@@ -198,6 +198,48 @@ button_stylesheet = """
     color_gris_moyen=color_gris_moyen.hex_string,
     color_rouge=color_rouge.hex_string,)
 
+button_no_radius_stylesheet = """
+    QPushButton {{
+        background-color: none;
+        border: none;
+        color: {color_noir};
+        font-size: 14px;
+    }}
+    QPushButton:hover {{
+        background-color: {color_vert_moyen};
+        color: {color_blanc};
+
+    }}
+    QPushButton:pressed {{
+        border-style: solid;
+        border-width: 1px;
+        border-color: {color_gris_moyen}
+    }}
+""".format(
+    color_noir=color_noir.hex_string,
+    color_blanc=color_blanc.hex_string,
+    color_vert_fonce=color_vert_fonce.hex_string,
+    color_vert_moyen=color_vert_moyen.hex_string,
+    color_vert=color_vert.hex_string,
+    color_gris_moyen=color_gris_moyen.hex_string,
+    color_rouge=color_rouge.hex_string,)
+
+button_no_radius_no_hover_stylesheet= """
+    QPushButton {{
+        background-color: none;
+        border: none;
+        color: {color_noir};
+        font-size: 14px;
+    }}
+""".format(
+    color_noir=color_noir.hex_string,
+    color_blanc=color_blanc.hex_string,
+    color_vert_fonce=color_vert_fonce.hex_string,
+    color_vert_moyen=color_vert_moyen.hex_string,
+    color_vert=color_vert.hex_string,
+    color_gris_moyen=color_gris_moyen.hex_string,
+    color_rouge=color_rouge.hex_string,)
+
 button_red_stylesheet = """
     QPushButton {{
         background-color: {color_rouge};

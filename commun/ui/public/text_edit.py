@@ -3,7 +3,7 @@
 
 from PyQt5.Qt import QIntValidator
 from PyQt5.QtWidgets import QLineEdit
-from PyQt5.QtCore import QEvent, pyqtSignal
+from PyQt5.QtCore import QEvent
 
 
 class TextEdit(QLineEdit):

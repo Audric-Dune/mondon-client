@@ -1,10 +1,9 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtWidgets import QScrollArea, QVBoxLayout, QWidget, QLabel
-from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QScrollArea, QVBoxLayout, QWidget
 from commun.constants.colors import color_bleu_gris
-from commun.constants.stylesheets import scroll_bar_stylesheet, white_12_bold_label_stylesheet
+from commun.constants.stylesheets import scroll_bar_stylesheet
 from commun.ui.public.mondon_widget import MondonWidget
 from commun.utils.layout import clear_layout
 from gestion.ui.widgets.line_bobine import LineBobine
@@ -50,8 +49,12 @@ class Selector(MondonWidget):
         self.setLayout(self.master_vbox)
 
     def sort_bobine(self):
-        self.plan_prod.current_bobine_fille_store.sort_bobines("code", True)
-        self.plan_prod.current_bobine_fille_store.sort_bobines(self.sort_name, self.sort_asc)
+        self.list_bobines = self.sort_bobines(self.list_bobines, "code", True)
+        self.list_bobines = self.sort_bobines(self.list_bobines, self.sort_name, self.sort_asc)
+
+    def sort_bobines(self, bobines, sort_name, sort_asc):
+        bobines = sorted(bobines, key=lambda b: b.get_value(sort_name), reverse= not sort_asc)
+        return bobines
 
     def update_list(self, search_code=None):
         self.list_bobines = []
@@ -84,14 +87,12 @@ class Selector(MondonWidget):
                 line_perfo.ON_DBCLICK_SIGNAL.connect(self.handle_selected_perfo)
                 self.vbox.addWidget(line_perfo)
         if self.current_focus == "papier":
-
             for bobine in self.plan_prod.current_bobine_papier_store.bobines:
                 line_bobine_papier = LineBobinePapier(parent=self, bobine=bobine)
                 line_bobine_papier.ON_DBCLICK_SIGNAL.connect(self.handle_selected_bobine_papier)
                 line_bobine_papier.setFixedHeight(20)
                 self.vbox.addWidget(line_bobine_papier)
         if self.current_focus == "poly":
-
             for bobine in self.plan_prod.current_bobine_poly_store.bobines:
                 line_bobine_poly = LineBobinePoly(parent=self, bobine=bobine)
                 line_bobine_poly.ON_DBCLICK_SIGNAL.connect(self.handle_selected_bobine_poly)

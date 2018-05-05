@@ -29,7 +29,11 @@ class SelectorManager(MondonWidget):
     def update_widget(self, bloc_focus):
         self.bloc_focus = bloc_focus
 
-    def set_filter(self, search_code=None):
+    def set_filter(self, search_code=None, sort_name=None, sort_asc=None):
         if search_code is not None:
             self.search_code = search_code
+        if sort_name is not None:
+            self.selector.sort_name = sort_name
+        if sort_asc is not None:
+            self.selector.sort_asc = sort_asc
         self.selector.update_list(search_code)

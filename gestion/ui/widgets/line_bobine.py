@@ -25,6 +25,7 @@ class LineBobine(MondonWidget):
     def init_widget(self):
         hbox = QHBoxLayout()
         hbox.setContentsMargins(5, 0, 0, 0)
+        hbox.setSpacing(10)
         self.setLayout(hbox)
         code = QLabel(str(self.bobine.code))
         code.setStyleSheet(black_14_label_stylesheet)
