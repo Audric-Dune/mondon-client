@@ -2,11 +2,13 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5.QtWidgets import QHBoxLayout, QLabel, QWidget, QPushButton, QVBoxLayout
-from PyQt5.Qt import Qt, QPoint, QEvent
+from PyQt5.Qt import Qt, QPoint, QEvent, pyqtSignal
+from PyQt5.QtGui import QBrush, QPainter, QColor
 
 from commun.ui.public.mondon_widget import MondonWidget
 from commun.ui.public.pixmap_button import PixmapButton
-from commun.constants.colors import color_blanc
+from commun.ui.public.image import Image
+from commun.constants.colors import Color, color_blanc, color_gris_moyen
 from commun.constants.stylesheets import black_14_label_stylesheet,\
     button_no_radius_no_hover_stylesheet,\
     button_no_radius_stylesheet
@@ -47,11 +49,20 @@ class SelectorCollumFilter(MondonWidget):
         return label
 
     def on_click_bt_open_filter(self):
-        pos = self.mapToGlobal(QPoint(0, self.height()))
-        self.filter_modal = FilterModal(parent=self,
-                                        pos=pos,
-                                        width=self.width(),
-                                        set_filter_callback=self.set_filter_callback)
+        if self.filter_modal:
+            self.filter_modal.close()
+            self.filter_modal = None
+        else:
+            pos = self.mapToGlobal(QPoint(0, self.height()))
+            self.filter_modal = FilterModal(parent=self,
+                                            pos=pos,
+                                            width=self.width(),
+                                            set_filter_callback=self.set_filter_callback)
+            self.filter_modal.ON_CLOSE_SIGNAL.connect(self.on_close_modal)
+
+    def on_close_modal(self):
+        self.filter_modal.close()
+        self.filter_modal = None
 
     def eventFilter(self, o, e):
         if e.type() == QEvent.MouseButtonRelease:
@@ -61,12 +72,14 @@ class SelectorCollumFilter(MondonWidget):
 
 
 class FilterModal(QWidget):
+    ON_CLOSE_SIGNAL = pyqtSignal()
 
     def __init__(self, pos, width, set_filter_callback, parent=None):
         super(FilterModal, self).__init__(parent=parent)
         self.set_filter_callback = set_filter_callback
-        self.setWindowFlags(Qt.FramelessWindowHint | Qt.Popup)
-        self.setStyleSheet("background-color:{};".format(color_blanc.hex_string))
+        self.list_fiter = [(130, True), (140, True), (150, False)]
+        self.setWindowFlags(Qt.Popup)
+        # self.setStyleSheet("background-color:{};".format(color_blanc.hex_string))
         self.setFixedWidth(width)
         self.move(pos)
         self.init_widget()
@@ -84,12 +97,32 @@ class FilterModal(QWidget):
         bt_sorted_dsc.clicked.connect(self.on_click_bt_sorted_dsc)
         vbox.addWidget(bt_sorted_asc)
         vbox.addWidget(bt_sorted_dsc)
+        for value in self.list_fiter:
+            vbox.addLayout(self.create_line_filter(value[0], value[1]))
         self.setLayout(vbox)
+
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        color = Color(color_gris_moyen).rgb_components
+        # b = QBrush(QColor(color[0], color[1], color[2]))
+        painter.fillRect(0, 0, self.width(), self.height(), color)
+
+    def create_line_filter(self, value, selected):
+        hbox = QHBoxLayout()
+        hbox.setContentsMargins(5, 0, 5, 0)
+        label = QLabel(str(value))
+        label.setStyleSheet(black_14_label_stylesheet)
+        hbox.addWidget(label)
+        hbox.addStretch()
+        if selected:
+            check_icon = Image(parent=self, img="commun/assets/images/green_check.png", size=14)
+            hbox.addWidget(check_icon)
+        return hbox
 
     def on_click_bt_sorted_asc(self):
         self.set_filter_callback(sort_name="laize", sort_asc=True)
-        self.close()
+        self.ON_CLOSE_SIGNAL.emit()
 
     def on_click_bt_sorted_dsc(self):
         self.set_filter_callback(sort_name="laize", sort_asc=False)
-        self.close()
+        self.ON_CLOSE_SIGNAL.emit()
