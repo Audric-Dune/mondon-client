@@ -29,5 +29,9 @@ class Image(QWidget):
         self.content.setPixmap(pixmap)
         self.content.setScaledContents(True)
 
+    def add_image(self, img):
+        self.img = img
+        self._set_image()
+
     def setContentsMargins(self, margin=0):
         self.vbox.setContentsMargins(margin, margin, margin, margin)

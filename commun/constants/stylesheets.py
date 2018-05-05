@@ -95,7 +95,7 @@ green_12_label_stylesheet = create_qlabel_stylesheet(color=color_blanc,
                                                      background_color=color_vert_fonce,
                                                      font_size="12px")
 green_14_label_stylesheet = create_qlabel_stylesheet(color=color_blanc,
-                                                     background_color=color_vert_fonce,
+                                                     background_color=color_vert_moyen,
                                                      font_size="14px")
 gray_title_label_stylesheet = create_qlabel_stylesheet(color=color_noir,
                                                        background_color=color_gris_moyen,

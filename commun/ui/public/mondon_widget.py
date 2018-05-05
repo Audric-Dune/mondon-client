@@ -87,6 +87,7 @@ class MondonWidget(QWidget):
 
     def set_background_color(self, color):
         self.background_color = color
+        self.update()
 
     def set_border(self, color, size=1, left=True, top=True, right=True, bottom=True):
         self.border_color = color

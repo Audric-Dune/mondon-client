@@ -3,15 +3,16 @@
 
 from PyQt5.QtWidgets import QHBoxLayout, QLabel, QWidget, QPushButton, QVBoxLayout
 from PyQt5.Qt import Qt, QPoint, QEvent, pyqtSignal
-from PyQt5.QtGui import QBrush, QPainter, QColor
+from PyQt5.QtGui import QPainter, QColor, QPen
 
 from commun.ui.public.mondon_widget import MondonWidget
 from commun.ui.public.pixmap_button import PixmapButton
 from commun.ui.public.image import Image
-from commun.constants.colors import Color, color_blanc, color_gris_moyen
+from commun.constants.colors import color_blanc, color_vert_moyen, color_gris_moyen
 from commun.constants.stylesheets import black_14_label_stylesheet,\
     button_no_radius_no_hover_stylesheet,\
-    button_no_radius_stylesheet
+    button_no_radius_stylesheet,\
+    green_14_label_stylesheet
 
 
 class SelectorCollumFilter(MondonWidget):
@@ -79,7 +80,6 @@ class FilterModal(QWidget):
         self.set_filter_callback = set_filter_callback
         self.list_fiter = [(130, True), (140, True), (150, False)]
         self.setWindowFlags(Qt.Popup)
-        # self.setStyleSheet("background-color:{};".format(color_blanc.hex_string))
         self.setFixedWidth(width)
         self.move(pos)
         self.init_widget()
@@ -98,26 +98,20 @@ class FilterModal(QWidget):
         vbox.addWidget(bt_sorted_asc)
         vbox.addWidget(bt_sorted_dsc)
         for value in self.list_fiter:
-            vbox.addLayout(self.create_line_filter(value[0], value[1]))
+            vbox.addWidget(LineFilter(parent=None, value=value[0], selected=value[1]))
         self.setLayout(vbox)
 
     def paintEvent(self, event):
-        painter = QPainter(self)
-        color = Color(color_gris_moyen).rgb_components
-        # b = QBrush(QColor(color[0], color[1], color[2]))
-        painter.fillRect(0, 0, self.width(), self.height(), color)
-
-    def create_line_filter(self, value, selected):
-        hbox = QHBoxLayout()
-        hbox.setContentsMargins(5, 0, 5, 0)
-        label = QLabel(str(value))
-        label.setStyleSheet(black_14_label_stylesheet)
-        hbox.addWidget(label)
-        hbox.addStretch()
-        if selected:
-            check_icon = Image(parent=self, img="commun/assets/images/green_check.png", size=14)
-            hbox.addWidget(check_icon)
-        return hbox
+        p = QPainter(self)
+        color = color_blanc.rgb_components
+        qcolor_blanc = QColor(color[0], color[1], color[2])
+        color = color_gris_moyen.rgb_components
+        qcolor_gris = QColor(color[0], color[1], color[2])
+        pen = QPen()
+        pen.setColor(qcolor_gris)
+        p.setPen(pen)
+        p.fillRect(0, 0, self.width(), self.height(), qcolor_blanc)
+        p.drawRect(0, 0, self.width(), self.height())
 
     def on_click_bt_sorted_asc(self):
         self.set_filter_callback(sort_name="laize", sort_asc=True)
@@ -126,3 +120,42 @@ class FilterModal(QWidget):
     def on_click_bt_sorted_dsc(self):
         self.set_filter_callback(sort_name="laize", sort_asc=False)
         self.ON_CLOSE_SIGNAL.emit()
+
+    def closeEvent(self, e):
+        self.ON_CLOSE_SIGNAL.emit()
+
+
+class LineFilter(MondonWidget):
+
+    def __init__(self, parent, value, selected):
+        super(LineFilter, self).__init__(parent=parent)
+        self.set_background_color(color_blanc)
+        self.installEventFilter(self)
+        self.label = QLabel(str(value))
+        self.check_icon = Image(parent=self, img="commun/assets/images/green_check.png", size=14)
+        if not selected:
+            self.check_icon.hide()
+        self.selected = selected
+        self.init_widget()
+
+    def init_widget(self):
+        hbox = QHBoxLayout()
+        hbox.setContentsMargins(5, 0, 5, 0)
+        self.label.setStyleSheet(black_14_label_stylesheet)
+        hbox.addWidget(self.label)
+        hbox.addStretch()
+        hbox.addWidget(self.check_icon)
+        self.setLayout(hbox)
+
+    def eventFilter(self, o, e):
+        if e.type() == QEvent.Enter:
+            self.set_background_color(color_vert_moyen)
+            self.check_icon.add_image("commun/assets/images/white_check.png")
+            self.label.setStyleSheet(green_14_label_stylesheet)
+            return True
+        if e.type() == QEvent.Leave:
+            self.set_background_color(color_blanc)
+            self.check_icon.add_image("commun/assets/images/green_check.png")
+            self.label.setStyleSheet(black_14_label_stylesheet)
+            return True
+        return False
