@@ -50,7 +50,6 @@ class Selector(MondonWidget):
 
     def on_filter_changed(self):
         self.update_list()
-        print("on_filter_changed")
 
     def sort_bobine(self):
         self.list_bobines = self.sort_bobines(self.list_bobines, "code", True)
@@ -58,7 +57,7 @@ class Selector(MondonWidget):
 
     @staticmethod
     def sort_bobines(bobines, sort_name, sort_asc):
-        bobines = sorted(bobines, key=lambda b: b.get_value(sort_name), reverse= not sort_asc)
+        bobines = sorted(bobines, key=lambda b: b.get_value(sort_name), reverse=not sort_asc)
         return bobines
 
     def update_list(self, search_code=None):
@@ -71,7 +70,7 @@ class Selector(MondonWidget):
     @staticmethod
     def is_valid_bobine_from_filter(bobine):
         from gestion.stores.filter_store import filter_store
-        dict_laizes = filter_store.dict_filter["Laize"]
+        dict_laizes = filter_store.dict_filter["laize"]
         for key in dict_laizes.keys():
             if key == bobine.laize and dict_laizes[key]:
                 return True

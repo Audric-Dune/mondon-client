@@ -19,13 +19,14 @@ from gestion.stores.filter_store import filter_store
 
 class SelectorCollumFilter(MondonWidget):
 
-    def __init__(self, parent, set_filter_callback):
+    def __init__(self, parent, title, name_filter, set_filter_callback):
         super(SelectorCollumFilter, self).__init__(parent)
         self.setFocusPolicy(Qt.ClickFocus)
         self.setFixedHeight(21)
         self.set_background_color(color_blanc)
         self.set_filter_callback = set_filter_callback
-        self.title = "Laize"
+        self.title = title
+        self.name_filter = name_filter
         self.filter_modal = None
         self.bt_open_filter = PixmapButton(parent=self)
         self.bt_open_filter.clicked.connect(self.on_click_bt_open_filter)
@@ -38,6 +39,13 @@ class SelectorCollumFilter(MondonWidget):
         hbox.addWidget(self.get_label(self.title))
         hbox.addWidget(self.bt_open_filter)
         self.setLayout(hbox)
+
+    def on_filter_changed(self):
+        if filter_store.is_filtered(self.name_filter):
+            self.bt_open_filter.addImage("commun/assets/images/icon_filter_orange.png")
+        else:
+            self.bt_open_filter.addImage("commun/assets/images/arrow_down_vert_fonce.png")
+        self.filter_modal.update_widget()
 
     def init_bt(self, bt):
         bt.addImage("commun/assets/images/arrow_down_vert_fonce.png")
@@ -58,13 +66,13 @@ class SelectorCollumFilter(MondonWidget):
             pos = self.mapToGlobal(QPoint(0, self.height()))
             self.filter_modal = FilterModal(parent=self,
                                             title=self.title,
+                                            name_filter=self.name_filter,
                                             pos=pos,
                                             width=self.width(),
                                             set_filter_callback=self.set_filter_callback)
             self.filter_modal.ON_CLOSE_SIGNAL.connect(self.on_close_modal)
 
     def on_close_modal(self):
-        print("on_close_modal")
         if self.filter_modal:
             self.filter_modal.close()
             self.filter_modal = None
@@ -86,11 +94,13 @@ class SelectorCollumFilter(MondonWidget):
 class FilterModal(QWidget):
     ON_CLOSE_SIGNAL = pyqtSignal()
 
-    def __init__(self, pos, width, set_filter_callback, title, parent=None):
+    def __init__(self, pos, width, set_filter_callback, title, name_filter, parent=None):
         super(FilterModal, self).__init__(parent=parent)
         self.setFocusPolicy(Qt.ClickFocus)
         self.setFocus()
+        self.vbox = QVBoxLayout()
         self.title = title
+        self.name_filter = name_filter
         self.set_filter_callback = set_filter_callback
         self.list_fiter = filter_store.dict_filter[self.title]
         self.setWindowFlags(Qt.SplashScreen)
@@ -100,27 +110,36 @@ class FilterModal(QWidget):
         self.show()
 
     def init_widget(self):
-        vbox = QVBoxLayout()
-        vbox.setSpacing(5)
-        vbox.setContentsMargins(1, 5, 1, 5)
+        self.vbox.setSpacing(5)
+        self.vbox.setContentsMargins(1, 5, 1, 5)
         bt_sorted_asc = QPushButton("Trier A -> Z")
         bt_sorted_asc.setStyleSheet(button_no_radius_stylesheet)
         bt_sorted_asc.clicked.connect(self.on_click_bt_sorted_asc)
         bt_sorted_dsc = QPushButton("Trier Z -> A")
         bt_sorted_dsc.setStyleSheet(button_no_radius_stylesheet)
         bt_sorted_dsc.clicked.connect(self.on_click_bt_sorted_dsc)
-        vbox.addWidget(bt_sorted_asc)
-        vbox.addWidget(bt_sorted_dsc)
+        self.vbox.addWidget(bt_sorted_asc)
+        self.vbox.addWidget(bt_sorted_dsc)
+        hbar = MondonWidget()
+        hbar.setFixedHeight(2)
+        hbar.set_background_color(color_gris_moyen)
+        self.vbox.addWidget(hbar)
         for value in self.list_fiter.keys():
-            vbox.addWidget(LineFilter(parent=None, value=value, title=self.title))
+            self.vbox.addWidget(LineFilter(parent=None, value=value, name_filter=self.name_filter))
         bt_ok = QPushButton("OK")
         bt_ok.setFixedWidth(40)
         bt_ok.setStyleSheet(button_14_stylesheet)
         bt_ok.clicked.connect(self.on_click_bt_ok)
         hbox = QHBoxLayout()
         hbox.addWidget(bt_ok)
-        vbox.addLayout(hbox)
-        self.setLayout(vbox)
+        self.vbox.addLayout(hbox)
+        self.setLayout(self.vbox)
+
+    def update_widget(self):
+        items = (self.vbox.itemAt(i) for i in range(self.vbox.count()))
+        for item in items:
+            if item.widget().objectName() == "LineFilter":
+                item.widget().update_widget()
 
     def paintEvent(self, event):
         p = QPainter(self)
@@ -138,28 +157,29 @@ class FilterModal(QWidget):
         self.ON_CLOSE_SIGNAL.emit()
 
     def on_click_bt_sorted_asc(self):
-        self.set_filter_callback(sort_name="laize", sort_asc=True)
+        self.set_filter_callback(sort_name=self.name_filter, sort_asc=True)
         self.ON_CLOSE_SIGNAL.emit()
 
     def on_click_bt_sorted_dsc(self):
-        self.set_filter_callback(sort_name="laize", sort_asc=False)
+        self.set_filter_callback(sort_name=self.name_filter, sort_asc=False)
         self.ON_CLOSE_SIGNAL.emit()
 
 
 class LineFilter(MondonWidget):
 
-    def __init__(self, parent, title, value):
+    def __init__(self, parent, name_filter, value):
         super(LineFilter, self).__init__(parent=parent)
         self.set_background_color(color_blanc)
-        self.title = title
-        self.value = value
-        self.label = QLabel(str(int(value)))
+        self.setObjectName("LineFilter")
+        self.name_filter = name_filter
+        self.value = int(value) if isinstance(value, float) else value
+        self.label = QLabel(str(self.value))
         self.check_icon = Image(parent=self, img="commun/assets/images/green_check.png", size=14)
         self.update_widget()
         self.init_widget()
 
     def update_widget(self):
-        if filter_store.get_is_selected(self.title, self.value):
+        if filter_store.get_is_selected(self.name_filter, self.value):
             self.check_icon.show()
         else:
             self.check_icon.hide()
@@ -169,12 +189,11 @@ class LineFilter(MondonWidget):
         hbox.setContentsMargins(5, 0, 5, 0)
         self.label.setStyleSheet(black_14_label_stylesheet)
         hbox.addWidget(self.label)
-        hbox.addStretch()
         hbox.addWidget(self.check_icon)
         self.setLayout(hbox)
 
     def mouseReleaseEvent(self, e):
-        filter_store.set_is_selected(self.title, self.value)
+        filter_store.set_is_selected(self.name_filter, self.value)
         self.update_widget()
         super(LineFilter, self).mouseReleaseEvent(e)
 

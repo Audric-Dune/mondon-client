@@ -26,7 +26,14 @@ class SelectorFilter(MondonWidget):
         hbox = QHBoxLayout()
         hbox.setSpacing(10)
         hbox.addLayout(self.get_search_bar())
-        hbox.addWidget(SelectorCollumFilter(parent=self, set_filter_callback=self.set_filter_callback))
+        hbox.addWidget(SelectorCollumFilter(parent=self,
+                                            set_filter_callback=self.set_filter_callback,
+                                            title="Laize",
+                                            name_filter="laize"))
+        hbox.addWidget(SelectorCollumFilter(parent=self,
+                                            set_filter_callback=self.set_filter_callback,
+                                            title="Couleur",
+                                            name_filter="color"))
         self.setLayout(hbox)
 
     @staticmethod
