@@ -12,7 +12,9 @@ from commun.constants.colors import color_blanc, color_vert_moyen, color_gris_mo
 from commun.constants.stylesheets import black_14_label_stylesheet,\
     button_no_radius_no_hover_stylesheet,\
     button_no_radius_stylesheet,\
-    green_14_label_stylesheet
+    green_14_label_stylesheet,\
+    button_14_stylesheet
+from gestion.stores.filter_store import filter_store
 
 
 class SelectorCollumFilter(MondonWidget):
@@ -24,7 +26,6 @@ class SelectorCollumFilter(MondonWidget):
         self.set_background_color(color_blanc)
         self.set_filter_callback = set_filter_callback
         self.title = "Laize"
-        self.filter_list = [150, 140]
         self.filter_modal = None
         self.bt_open_filter = PixmapButton(parent=self)
         self.bt_open_filter.clicked.connect(self.on_click_bt_open_filter)
@@ -56,6 +57,7 @@ class SelectorCollumFilter(MondonWidget):
         else:
             pos = self.mapToGlobal(QPoint(0, self.height()))
             self.filter_modal = FilterModal(parent=self,
+                                            title = self.title,
                                             pos=pos,
                                             width=self.width(),
                                             set_filter_callback=self.set_filter_callback)
@@ -84,12 +86,13 @@ class SelectorCollumFilter(MondonWidget):
 class FilterModal(QWidget):
     ON_CLOSE_SIGNAL = pyqtSignal()
 
-    def __init__(self, pos, width, set_filter_callback, parent=None):
+    def __init__(self, pos, width, set_filter_callback, title, parent=None):
         super(FilterModal, self).__init__(parent=parent)
         self.setFocusPolicy(Qt.ClickFocus)
         self.setFocus()
+        self.title = title
         self.set_filter_callback = set_filter_callback
-        self.list_fiter = [(130, True), (140, True), (150, False)]
+        self.list_fiter = filter_store.dict_filter[self.title]
         self.setWindowFlags(Qt.SplashScreen)
         self.setFixedWidth(width)
         self.move(pos)
@@ -110,6 +113,13 @@ class FilterModal(QWidget):
         vbox.addWidget(bt_sorted_dsc)
         for value in self.list_fiter:
             vbox.addWidget(LineFilter(parent=None, value=value[0], selected=value[1]))
+        bt_ok = QPushButton("OK")
+        bt_ok.setFixedWidth(40)
+        bt_ok.setStyleSheet(button_14_stylesheet)
+        bt_ok.clicked.connect(self.on_click_bt_ok)
+        hbox = QHBoxLayout()
+        hbox.addWidget(bt_ok)
+        vbox.addLayout(hbox)
         self.setLayout(vbox)
 
     def paintEvent(self, event):
@@ -124,6 +134,9 @@ class FilterModal(QWidget):
         p.fillRect(0, 0, self.width(), self.height(), qcolor_blanc)
         p.drawRect(0, 0, self.width()-1, self.height()-1)
 
+    def on_click_bt_ok(self):
+        self.ON_CLOSE_SIGNAL.emit()
+
     def on_click_bt_sorted_asc(self):
         self.set_filter_callback(sort_name="laize", sort_asc=True)
         self.ON_CLOSE_SIGNAL.emit()
@@ -135,16 +148,20 @@ class FilterModal(QWidget):
 
 class LineFilter(MondonWidget):
 
-    def __init__(self, parent, value, selected):
+    def __init__(self, parent, title, value):
         super(LineFilter, self).__init__(parent=parent)
         self.set_background_color(color_blanc)
-        self.installEventFilter(self)
+        self.title = title
         self.label = QLabel(str(value))
         self.check_icon = Image(parent=self, img="commun/assets/images/green_check.png", size=14)
-        if not selected:
-            self.check_icon.hide()
-        self.selected = selected
+        self.update_widget()
         self.init_widget()
+
+    def update_widget(self):
+        if filter_store.dict_filter.get_is_selected(self.title, self.value):
+            self.check_icon.show()
+        else:
+            self.check_icon.hide()
 
     def init_widget(self):
         hbox = QHBoxLayout()
@@ -154,6 +171,11 @@ class LineFilter(MondonWidget):
         hbox.addStretch()
         hbox.addWidget(self.check_icon)
         self.setLayout(hbox)
+
+    def mouseReleaseEvent(self, e):
+        self.selected = False if self.selected else True
+        self.update_widget()
+        super(LineFilter, self).mouseReleaseEvent(e)
 
     def enterEvent(self, e):
         self.set_background_color(color_vert_moyen)
