@@ -16,6 +16,7 @@ class SelectorFilter(MondonWidget):
     def __init__(self, parent, set_filter_callback):
         super(SelectorFilter, self).__init__(parent=parent)
         self.set_background_color(color_rouge_clair)
+        self.search_code = TextEdit(upper_mode=True)
         self.set_filter_callback = set_filter_callback
         self.setFixedHeight(50)
         self.init_widget()
@@ -34,10 +35,9 @@ class SelectorFilter(MondonWidget):
         return label
 
     def get_search_bar(self):
-        search_code = TextEdit(upper_mode=True)
-        search_code.setStyleSheet(line_edit_stylesheet)
-        search_code.textChanged.connect(self.handle_search_code_changed)
-        search_code.setFixedWidth(300-21)
+        self.search_code.setStyleSheet(line_edit_stylesheet)
+        self.search_code.textChanged.connect(self.handle_search_code_changed)
+        self.search_code.setFixedWidth(300-21)
         icone_search = Image(parent=self,
                              img="commun/assets/images/icon_search.png",
                              size=21,
@@ -45,7 +45,7 @@ class SelectorFilter(MondonWidget):
         layout_search_bar = QHBoxLayout()
         layout_search_bar.setSpacing(0)
         layout_search_bar.setContentsMargins(0, 0, 0, 0)
-        layout_search_bar.addWidget(search_code)
+        layout_search_bar.addWidget(self.search_code)
         layout_search_bar.addWidget(icone_search)
         return layout_search_bar
 

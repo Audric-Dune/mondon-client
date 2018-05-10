@@ -57,7 +57,7 @@ class SelectorCollumFilter(MondonWidget):
         else:
             pos = self.mapToGlobal(QPoint(0, self.height()))
             self.filter_modal = FilterModal(parent=self,
-                                            title = self.title,
+                                            title=self.title,
                                             pos=pos,
                                             width=self.width(),
                                             set_filter_callback=self.set_filter_callback)
@@ -111,8 +111,8 @@ class FilterModal(QWidget):
         bt_sorted_dsc.clicked.connect(self.on_click_bt_sorted_dsc)
         vbox.addWidget(bt_sorted_asc)
         vbox.addWidget(bt_sorted_dsc)
-        for value in self.list_fiter:
-            vbox.addWidget(LineFilter(parent=None, value=value[0], selected=value[1]))
+        for value in self.list_fiter.keys():
+            vbox.addWidget(LineFilter(parent=None, value=value, title=self.title))
         bt_ok = QPushButton("OK")
         bt_ok.setFixedWidth(40)
         bt_ok.setStyleSheet(button_14_stylesheet)
@@ -152,13 +152,14 @@ class LineFilter(MondonWidget):
         super(LineFilter, self).__init__(parent=parent)
         self.set_background_color(color_blanc)
         self.title = title
-        self.label = QLabel(str(value))
+        self.value = value
+        self.label = QLabel(str(int(value)))
         self.check_icon = Image(parent=self, img="commun/assets/images/green_check.png", size=14)
         self.update_widget()
         self.init_widget()
 
     def update_widget(self):
-        if filter_store.dict_filter.get_is_selected(self.title, self.value):
+        if filter_store.get_is_selected(self.title, self.value):
             self.check_icon.show()
         else:
             self.check_icon.hide()
@@ -173,7 +174,7 @@ class LineFilter(MondonWidget):
         self.setLayout(hbox)
 
     def mouseReleaseEvent(self, e):
-        self.selected = False if self.selected else True
+        filter_store.set_is_selected(self.title, self.value)
         self.update_widget()
         super(LineFilter, self).mouseReleaseEvent(e)
 

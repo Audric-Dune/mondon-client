@@ -24,6 +24,8 @@ class SettingsStore(QObject):
             self.day_ago = day_ago
         if plan_prod:
             self.plan_prod = plan_prod
+            from gestion.stores.filter_store import filter_store
+            filter_store.set_plan_plan(plan_prod)
         self.SETTINGS_CHANGED_SIGNAL.emit()
 
     def create_new_plan(self):

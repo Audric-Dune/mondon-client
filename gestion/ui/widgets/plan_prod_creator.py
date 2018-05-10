@@ -80,7 +80,7 @@ class PlanProdCreator(MondonWidget):
 
     def handle_plan_prod_changed(self):
         self.update_bloc_selected()
-        self.update_selector()
+        self.update_selector_manager()
         self.bloc_param_prod.update_label()
         self.bloc_info.update_widget()
 

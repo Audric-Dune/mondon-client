@@ -28,6 +28,7 @@ class SelectorManager(MondonWidget):
 
     def update_widget(self, bloc_focus):
         self.bloc_focus = bloc_focus
+        self.selector.update_widget()
 
     def set_filter(self, search_code=None, sort_name=None, sort_asc=None):
         if search_code is not None:
