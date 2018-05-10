@@ -7,6 +7,7 @@ from production.stores.data_store_manager import data_store_manager
 from production.stores.settings_stat_store import settings_stat_store
 from production.stores.settings_store import settings_store
 from gestion.stores.settings_store import settings_store_gestion
+from gestion.stores.filter_store import filter_store
 from production.stores.stat_store import stat_store
 from production.stores.user_store import user_store
 from production.stores.settings_team_gestion_store import settings_team_gestion_store
@@ -32,6 +33,7 @@ class MondonWidget(QWidget):
         settings_team_gestion_store.SETTINGS_TEAM_GESTION_CHANGED_SIGNAL.connect(self._handle_settings_team_gestion_changed)
         stat_store.ON_DATA_STAT_CHANGED_SIGNAL.connect(self._handle_data_stat_changed)
         user_store.ON_USER_CHANGED_SIGNAL.connect(self._handle_user_changed)
+        filter_store.ON_CHANGED_SIGNAL.connect(self._handle_filter_changed)
         app.RESIZED_SIGNAL.connect(self._handle_size_main_window_changed)
 
     def on_data_changed(self):
@@ -59,6 +61,9 @@ class MondonWidget(QWidget):
         pass
 
     def on_settings_gestion_changed(self):
+        pass
+
+    def on_filter_changed(self):
         pass
 
     def on_loading(self, layout, gif_name="loader_white_green", set_text=True, size=40):
@@ -151,6 +156,12 @@ class MondonWidget(QWidget):
             self.on_settings_gestion_changed()
         except Exception as e:
             logger.log(type(self), "Erreur pendant l'exécution de `on_settings_gestion_changed`: {}".format(e))
+
+    def _handle_filter_changed(self):
+        try:
+            self.on_filter_changed()
+        except Exception as e:
+            logger.log(type(self), "Erreur pendant l'exécution de `on_filter_changed`: {}".format(e))
 
     def _draw_fond(self, p):
         """

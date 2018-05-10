@@ -24,7 +24,7 @@ class Selector(MondonWidget):
         self.list_bobines = []
         self.sort_name = "code"
         self.sort_asc = True
-        self.current_focus = "perfo"
+        self.current_focus = None
         self.background_color = color_bleu_gris
         self.master_vbox = QVBoxLayout()
         self.master_vbox.setContentsMargins(0, 0, 0, 0)
@@ -38,7 +38,7 @@ class Selector(MondonWidget):
         self.update_widget()
 
     def init_widget(self):
-        self.vbox.setContentsMargins(0,0,0,0)
+        self.vbox.setContentsMargins(0, 0, 0, 0)
         self.vbox.setSpacing(5)
         self.content_scrollbar.setLayout(self.vbox)
         self.content_scrollbar.setContentsMargins(0, 0, 0, 0)
@@ -48,23 +48,34 @@ class Selector(MondonWidget):
         self.master_vbox.addWidget(self.scroll_bar)
         self.setLayout(self.master_vbox)
 
+    def on_filter_changed(self):
+        self.update_list()
+        print("on_filter_changed")
+
     def sort_bobine(self):
         self.list_bobines = self.sort_bobines(self.list_bobines, "code", True)
         self.list_bobines = self.sort_bobines(self.list_bobines, self.sort_name, self.sort_asc)
 
-    def sort_bobines(self, bobines, sort_name, sort_asc):
+    @staticmethod
+    def sort_bobines(bobines, sort_name, sort_asc):
         bobines = sorted(bobines, key=lambda b: b.get_value(sort_name), reverse= not sort_asc)
         return bobines
 
     def update_list(self, search_code=None):
         self.list_bobines = []
         for bobine in self.plan_prod.current_bobine_fille_store.bobines:
-            if search_code:
-                if search_code in bobine.code:
-                    self.list_bobines.append(bobine)
-            else:
+            if self.is_valid_bobine_from_filter(bobine):
                 self.list_bobines.append(bobine)
         self.update_widget()
+
+    @staticmethod
+    def is_valid_bobine_from_filter(bobine):
+        from gestion.stores.filter_store import filter_store
+        dict_laizes = filter_store.dict_filter["Laize"]
+        for key in dict_laizes.keys():
+            if key == bobine.laize and dict_laizes[key]:
+                return True
+        return False
 
     def update_widget(self):
         self.sort_bobine()

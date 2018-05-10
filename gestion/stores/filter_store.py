@@ -2,15 +2,17 @@
 # -*- coding: utf-8 -*-
 
 
-from PyQt5.QtCore import QObject
+from PyQt5.QtCore import QObject, pyqtSignal
 
 
 class FilterStore(QObject):
+    ON_CHANGED_SIGNAL = pyqtSignal()
 
     def __init__(self):
         super(FilterStore, self).__init__()
         self.plan_prod = None
         self.dict_filter = {"Laize": {}}
+        self.search_code = None
 
     def init_dict_filter(self):
         self.dict_filter = {"Laize": {}}
@@ -39,5 +41,7 @@ class FilterStore(QObject):
         for key in values.keys():
             if key == value:
                 values[key] = False if values[key] else True
+        self.ON_CHANGED_SIGNAL.emit()
+
 
 filter_store = FilterStore()
