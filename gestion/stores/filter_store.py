@@ -12,10 +12,10 @@ class FilterStore(QObject):
         super(FilterStore, self).__init__()
         self.plan_prod = None
         self.dicts_filter = {}
-        self.list_filter = ["laize", "color", "gr", "lenght", "poses"]
-        self.title_filter = ["Laize", "Couleur", "Grammage", "Longueur", "Pose(s)"]
-        self.filter_mode = [True, True, True, True, True]
-        self.sort_mode = [True, True, True, True, False]
+        self.list_filter = ["laize", "color", "gr", "lenght", "poses", "vente_mensuelle", "stock", "stock_therme", "etat"]
+        self.title_filter = ["Laize", "Couleur", "Grammage", "Longueur", "Pose(s)", "Vente mensuelle", "Stock", "Stock à therme", "Etat"]
+        self.filter_mode = [True, True, True, True, True, False, False, False, True]
+        self.sort_mode = [True, True, True, True, False, True, True, True, False]
         self.search_code = None
 
     def init_dicts_filter(self):

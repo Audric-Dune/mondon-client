@@ -16,8 +16,6 @@ class LineBobine(MondonWidget):
         super(LineBobine, self).__init__(parent=parent)
         self.set_background_color(color_blanc)
         self.bobine = bobine
-        if self.bobine.vente_annuelle/12 > self.bobine.stock_therme:
-            self.set_background_color(color_orange)
         self.state = None
         self.installEventFilter(self)
         self.init_widget()

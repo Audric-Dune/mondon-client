@@ -73,15 +73,23 @@ class BobineFille:
             return self.lenght
         if value_name == "color":
             return self.color
+        if value_name == "gr":
+            return self.gr
+        if value_name == "stock":
+            return self.stock
+        if value_name == "stock_therme":
+            return self.stock_therme
+        if value_name == "vente_mensuelle":
+            return self.vente_mensuelle
         return 0
 
     def __str__(self):
         return "B{} ({}, {}, {}m, {} poses, {}, {}), {}g, {}".format(self.code,
-                                                                         self.color,
-                                                                         self.laize,
-                                                                         self.lenght,
-                                                                         self.poses,
-                                                                         self.codes_cliche,
-                                                                         self.colors_cliche,
-                                                                         self.gr,
-                                                                         self.sommeil)
+                                                                     self.color,
+                                                                     self.laize,
+                                                                     self.lenght,
+                                                                     self.poses,
+                                                                     self.codes_cliche,
+                                                                     self.colors_cliche,
+                                                                     self.gr,
+                                                                     self.sommeil)

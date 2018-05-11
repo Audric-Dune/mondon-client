@@ -46,9 +46,6 @@ class PlanProdCreator(MondonWidget):
     def init_ui(self):
         master_vbox = QVBoxLayout()
         master_vbox.setContentsMargins(0, 0, 0, 0)
-
-        hbox = QHBoxLayout()
-        hbox.addWidget(self.selector_manager)
         vbox = QVBoxLayout()
         self.titre_prod.setFixedHeight(30)
         self.titre_prod.setStyleSheet(white_12_bold_label_stylesheet)
@@ -59,12 +56,11 @@ class PlanProdCreator(MondonWidget):
         vbox.addWidget(self.bloc_perfo_selected)
         vbox.addWidget(self.bloc_papier_selected)
         vbox.addWidget(self.bloc_refente_selected)
-        hbox.addLayout(vbox)
-
-        master_vbox.addWidget(self.bloc_param_prod)
-        master_vbox.addLayout(hbox)
-        master_vbox.addWidget(self.bloc_bobines_selected)
         master_vbox.addWidget(self.bloc_info)
+        master_vbox.addWidget(self.bloc_param_prod)
+        master_vbox.addWidget(self.selector_manager)
+        master_vbox.addLayout(vbox)
+        master_vbox.addWidget(self.bloc_bobines_selected)
 
         self.setLayout(master_vbox)
 

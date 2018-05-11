@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5.QtWidgets import QHBoxLayout, QLabel
-from PyQt5.QtCore import pyqtSignal
 
 from commun.constants.colors import color_rouge_clair, color_blanc
 from commun.constants.stylesheets import black_14_label_stylesheet, line_edit_stylesheet
