@@ -10,6 +10,7 @@ from commun.ui.public.mondon_widget import MondonWidget
 from commun.ui.public.text_edit import TextEdit
 from commun.ui.public.image import Image
 from gestion.ui.widgets.selector_collum_filter import SelectorCollumFilter
+from gestion.stores.filter_store import filter_store
 
 
 class SelectorFilter(MondonWidget):
@@ -26,14 +27,11 @@ class SelectorFilter(MondonWidget):
         hbox = QHBoxLayout()
         hbox.setSpacing(10)
         hbox.addLayout(self.get_search_bar())
-        hbox.addWidget(SelectorCollumFilter(parent=self,
-                                            set_filter_callback=self.set_filter_callback,
-                                            title="Laize",
-                                            name_filter="laize"))
-        hbox.addWidget(SelectorCollumFilter(parent=self,
-                                            set_filter_callback=self.set_filter_callback,
-                                            title="Couleur",
-                                            name_filter="color"))
+        for index in range(len(filter_store.list_filter)):
+            hbox.addWidget(SelectorCollumFilter(parent=self,
+                                                set_filter_callback=self.set_filter_callback,
+                                                title=filter_store.title_filter[index],
+                                                name_filter=filter_store.list_filter[index]))
         self.setLayout(hbox)
 
     @staticmethod

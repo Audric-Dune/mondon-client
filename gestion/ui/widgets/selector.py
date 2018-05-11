@@ -63,16 +63,23 @@ class Selector(MondonWidget):
     def update_list(self, search_code=None):
         self.list_bobines = []
         for bobine in self.plan_prod.current_bobine_fille_store.bobines:
-            if self.is_valid_bobine_from_filter(bobine):
+            if self.is_valid_bobine_from_filters(bobine):
                 self.list_bobines.append(bobine)
         self.update_widget()
 
-    @staticmethod
-    def is_valid_bobine_from_filter(bobine):
+    def is_valid_bobine_from_filters(self, bobine):
         from gestion.stores.filter_store import filter_store
-        dict_laizes = filter_store.dict_filter["laize"]
-        for key in dict_laizes.keys():
-            if key == bobine.laize and dict_laizes[key]:
+        for name in filter_store.list_filter:
+            if not self.is_valid_bobine_from_filter(bobine, name):
+                return False
+        return True
+
+    @staticmethod
+    def is_valid_bobine_from_filter(bobine, name):
+        from gestion.stores.filter_store import filter_store
+        dict = filter_store.dicts_filter[name]
+        for key in dict.keys():
+            if key == getattr(bobine, name) and dict[key]:
                 return True
         return False
 

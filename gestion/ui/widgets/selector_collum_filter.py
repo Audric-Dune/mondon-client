@@ -102,7 +102,7 @@ class FilterModal(QWidget):
         self.title = title
         self.name_filter = name_filter
         self.set_filter_callback = set_filter_callback
-        self.list_fiter = filter_store.dict_filter[self.name_filter]
+        self.list_fiter = filter_store.dicts_filter[self.name_filter]
         self.setWindowFlags(Qt.SplashScreen)
         self.setFixedWidth(width)
         self.move(pos)

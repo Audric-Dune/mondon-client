@@ -11,33 +11,40 @@ class FilterStore(QObject):
     def __init__(self):
         super(FilterStore, self).__init__()
         self.plan_prod = None
-        self.dict_filter = None
+        self.dicts_filter = {}
+        self.list_filter = ["laize", "color", "gr", "lenght", "poses"]
+        self.title_filter = ["Laize", "Couleur", "Grammage", "Longueur", "Pose(s)"]
         self.search_code = None
 
-    def init_dict_filter(self):
-        self.dict_filter = {"laize": {"Tout": True}, "color": {"Tout": True}}
+    def init_dicts_filter(self):
+        for name in self.list_filter:
+            self.dicts_filter[name] = {"Tout": True}
 
-    def update_dict_filter(self):
-        self.init_dict_filter()
-        dict_laizes = self.dict_filter["laize"]
+    def update_dicts_filter(self):
+        self.init_dicts_filter()
+        for name_filter in self.list_filter:
+            self.update_dict_filter(name_filter)
+
+    def update_dict_filter(self, name_filter):
+        dict = self.dicts_filter[name_filter]
         for bobine in self.plan_prod.current_bobine_fille_store.bobines:
-            laize = bobine.laize
-            if dict_laizes.get(laize) is None:
-                dict_laizes[laize] = True
+            value = getattr(bobine, name_filter)
+            if dict.get(value) is None:
+                dict[value] = True
 
     def set_plan_prod(self, plan_prod):
         self.plan_prod = plan_prod
-        self.update_dict_filter()
-        self.plan_prod.ON_CHANGED_SIGNAL.connect(self.update_dict_filter)
+        self.update_dicts_filter()
+        self.plan_prod.ON_CHANGED_SIGNAL.connect(self.update_dicts_filter)
 
     def get_is_selected(self, title, value):
-        values = self.dict_filter[title]
+        values = self.dicts_filter[title]
         for key in values.keys():
             if key == value:
                 return values.get(key)
 
     def set_is_selected(self, title, value):
-        values = self.dict_filter[title]
+        values = self.dicts_filter[title]
         if value == "Tout":
             set_selected = False if values["Tout"] else True
             for key in values.keys():
@@ -52,7 +59,7 @@ class FilterStore(QObject):
         self.ON_CHANGED_SIGNAL.emit()
 
     def is_filtered(self, title):
-        values = self.dict_filter[title]
+        values = self.dicts_filter[title]
         for key in values.keys():
             if not values.get(key):
                 return True
