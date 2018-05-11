@@ -150,8 +150,8 @@ class Application(QApplication):
         current_vente_annuelle = sheet.cell_value(current_row, 7)
         if current_id[0] == "B":
             bobine = self.get_bobine_from_id(current_id)
-            if bobine:
-                bobine.vente_annuelle = current_vente_annuelle
+            if isinstance(current_vente_annuelle, float) and bobine:
+                bobine.set_vente_annuelle(current_vente_annuelle)
 
     @staticmethod
     def get_bobine_from_id(code):

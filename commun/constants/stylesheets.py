@@ -158,6 +158,8 @@ green_maj_label_stylesheet = create_qlabel_stylesheet(color=color_blanc,
                                                       padding="0px 20px 0px 20px",
                                                       bold="bold")
 red_16_bold_label_stylesheet = create_qlabel_stylesheet(color=color_rouge, font_size="16px", bold="bold")
+red_14_bold_label_stylesheet = create_qlabel_stylesheet(color=color_rouge, font_size="14px", bold="bold")
+black_14_bold_label_stylesheet = create_qlabel_stylesheet(color=color_noir, font_size="14px", bold="bold")
 red_12_bold_label_stylesheet = create_qlabel_stylesheet(color=color_rouge, font_size="12px", bold="bold")
 green_16_bold_label_stylesheet = create_qlabel_stylesheet(color=color_vert_fonce, font_size="16px", bold="bold")
 red_16_no_background_label_stylesheet = create_qlabel_stylesheet(color=color_rouge, font_size="16px")

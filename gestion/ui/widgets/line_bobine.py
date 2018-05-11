@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import QHBoxLayout, QLabel
 from PyQt5.QtCore import pyqtSignal
 from commun.ui.public.mondon_widget import MondonWidget
 from commun.constants.colors import color_blanc, color_orange
-from commun.constants.stylesheets import black_14_label_stylesheet
+from commun.constants.stylesheets import black_14_label_stylesheet, red_14_bold_label_stylesheet, black_14_bold_label_stylesheet
 from commun.model.bobine_fille import BobineFille
 
 
@@ -16,7 +16,7 @@ class LineBobine(MondonWidget):
         super(LineBobine, self).__init__(parent=parent)
         self.set_background_color(color_blanc)
         self.bobine = bobine
-        if self.bobine.vente_annuelle and self.bobine.stock_therme and self.bobine.vente_annuelle/12 > self.bobine.stock_therme:
+        if self.bobine.vente_annuelle/12 > self.bobine.stock_therme:
             self.set_background_color(color_orange)
         self.state = None
         self.installEventFilter(self)
@@ -46,15 +46,29 @@ class LineBobine(MondonWidget):
         poses = QLabel(str(self.bobine.poses))
         poses.setStyleSheet(black_14_label_stylesheet)
         hbox.addWidget(poses)
-        vente_annuelle = str(int(self.bobine.vente_annuelle))
-        vente_annuelle_label = QLabel(vente_annuelle)
-        hbox.addWidget(vente_annuelle_label)
-        if self.bobine.stock_therme:
-            stock_therme = str(int(self.bobine.stock_therme))
-        else:
-            stock_therme = "-"
+        vente_mensuelle = 1 if 0 < self.bobine.vente_mensuelle < 1 else self.bobine.vente_mensuelle
+        vente_mensuelle = str(int(vente_mensuelle))
+        vente_mensuelle_label = QLabel(vente_mensuelle)
+        vente_mensuelle_label.setStyleSheet(black_14_label_stylesheet)
+        hbox.addWidget(vente_mensuelle_label)
+        stock = str(int(self.bobine.stock))
+        stock_label = QLabel(stock)
+        stock_label.setStyleSheet(black_14_label_stylesheet)
+        hbox.addWidget(stock_label)
+        stock_therme = str(int(self.bobine.stock_therme))
         stock_therme_label = QLabel(stock_therme)
+        stock_therme_label.setStyleSheet(black_14_label_stylesheet)
         hbox.addWidget(stock_therme_label)
+        etat = self.bobine.etat
+        etat_label = QLabel(etat)
+        if etat == "RUPTURE":
+            etat_label_stylesheet = black_14_bold_label_stylesheet
+        elif etat == "SURSTOCK":
+            etat_label_stylesheet = red_14_bold_label_stylesheet
+        else:
+            etat_label_stylesheet = black_14_label_stylesheet
+        etat_label.setStyleSheet(etat_label_stylesheet)
+        hbox.addWidget(etat_label)
 
     def mouseDoubleClickEvent(self, e):
         self.ON_DBCLICK_SIGNAL.emit(self.bobine)

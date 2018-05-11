@@ -33,6 +33,7 @@ class BobineFille:
         self.sommeil = sommeil
         self.vente_annuelle = 0
         self.vente_mensuelle = 0
+        self.etat = ""
 
     def update_bobine_from_cliche(self):
         if self.codes_cliche:
@@ -44,6 +45,17 @@ class BobineFille:
                         self.colors_cliche += poses_and_colors[1]
                     else:
                         self.colors_cliche = poses_and_colors[1]
+
+    def set_vente_annuelle(self, current_vente_annuelle):
+        self.vente_annuelle = current_vente_annuelle
+        self.vente_mensuelle = round(current_vente_annuelle/12, 1)
+        self.get_etat()
+
+    def get_etat(self):
+        if self.vente_mensuelle > self.stock_therme:
+            self.etat = "RUPTURE"
+        elif self.vente_annuelle < self.stock_therme:
+            self.etat = "SURSTOCK"
 
     @staticmethod
     def get_poses_and_colors_from_code_cliche(code_cliche):
