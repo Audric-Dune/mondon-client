@@ -16,7 +16,7 @@ class SelectorManager(MondonWidget):
         self.search_code = None
         self.bloc_focus = "bobine"
         self.selector = Selector(parent=self, plan_prod=plan_prod)
-        self.selector_filter = SelectorFilter(parent=self, set_filter_callback=self.set_filter)
+        self.selector_filter = SelectorFilter(parent=self)
         self.init_widget()
 
     def init_widget(self):
@@ -29,12 +29,3 @@ class SelectorManager(MondonWidget):
     def update_widget(self, bloc_focus):
         self.bloc_focus = bloc_focus
         self.selector.update_list()
-
-    def set_filter(self, search_code=None, sort_name=None, sort_asc=None):
-        if search_code is not None:
-            self.search_code = search_code
-        if sort_name is not None:
-            self.selector.sort_name = sort_name
-        if sort_asc is not None:
-            self.selector.sort_asc = sort_asc
-        self.selector.update_list(search_code)

@@ -19,12 +19,11 @@ from gestion.stores.filter_store import filter_store
 
 class SelectorCollumFilter(MondonWidget):
 
-    def __init__(self, parent, title, name_filter, sort_mode, filter_mode, set_filter_callback):
+    def __init__(self, parent, title, name_filter, sort_mode, filter_mode):
         super(SelectorCollumFilter, self).__init__(parent)
         self.setFocusPolicy(Qt.ClickFocus)
         self.setFixedHeight(21)
         self.set_background_color(color_blanc)
-        self.set_filter_callback = set_filter_callback
         self.sort_mode = sort_mode
         self.filter_mode = filter_mode
         self.title = title
@@ -72,8 +71,7 @@ class SelectorCollumFilter(MondonWidget):
                                             pos=pos,
                                             sort_mode=self.sort_mode,
                                             filter_mode=self.filter_mode,
-                                            width=self.width(),
-                                            set_filter_callback=self.set_filter_callback)
+                                            width=self.width())
             self.filter_modal.ON_CLOSE_SIGNAL.connect(self.on_close_modal)
 
     def on_close_modal(self):
@@ -98,7 +96,7 @@ class SelectorCollumFilter(MondonWidget):
 class FilterModal(QWidget):
     ON_CLOSE_SIGNAL = pyqtSignal()
 
-    def __init__(self, pos, width, set_filter_callback, title, sort_mode, filter_mode, name_filter, parent=None):
+    def __init__(self, pos, width, title, sort_mode, filter_mode, name_filter, parent=None):
         super(FilterModal, self).__init__(parent=parent)
         self.setFocusPolicy(Qt.ClickFocus)
         self.setFocus()
@@ -107,7 +105,6 @@ class FilterModal(QWidget):
         self.name_filter = name_filter
         self.sort_mode = sort_mode
         self.filter_mode = filter_mode
-        self.set_filter_callback = set_filter_callback
         self.list_fiter = filter_store.dicts_filter[self.name_filter]
         self.setWindowFlags(Qt.SplashScreen)
         self.setFixedWidth(width)
@@ -147,7 +144,7 @@ class FilterModal(QWidget):
     def update_widget(self):
         items = (self.vbox.itemAt(i) for i in range(self.vbox.count()))
         for item in items:
-            if item.widget().objectName() == "LineFilter":
+            if item.widget() and item.widget().objectName() == "LineFilter":
                 item.widget().update_widget()
 
     def paintEvent(self, event):
@@ -166,11 +163,11 @@ class FilterModal(QWidget):
         self.ON_CLOSE_SIGNAL.emit()
 
     def on_click_bt_sorted_asc(self):
-        self.set_filter_callback(sort_name=self.name_filter, sort_asc=True)
+        filter_store.set_sort_param(sort_name=self.name_filter, sort_asc=True)
         self.ON_CLOSE_SIGNAL.emit()
 
     def on_click_bt_sorted_dsc(self):
-        self.set_filter_callback(sort_name=self.name_filter, sort_asc=False)
+        filter_store.set_sort_param(sort_name=self.name_filter, sort_asc=False)
         self.ON_CLOSE_SIGNAL.emit()
 
 

@@ -12,10 +12,14 @@ class FilterStore(QObject):
         super(FilterStore, self).__init__()
         self.plan_prod = None
         self.dicts_filter = {}
-        self.list_filter = ["laize", "color", "gr", "lenght", "poses", "vente_mensuelle", "stock", "stock_therme", "etat"]
-        self.title_filter = ["Laize", "Couleur", "Grammage", "Longueur", "Pose(s)", "Vente mensuelle", "Stock", "Stock à therme", "Etat"]
+        self.list_filter = ["laize", "color", "gr", "lenght", "poses",
+                            "vente_mensuelle", "stock", "stock_therme", "etat"]
+        self.title_filter = ["Laize", "Couleur", "Grammage", "Longueur", "Pose(s)",
+                             "Vente mensuelle", "Stock", "Stock à therme", "Etat"]
         self.filter_mode = [True, True, True, True, True, False, False, False, True]
         self.sort_mode = [True, True, True, True, False, True, True, True, False]
+        self.sort_name = "code"
+        self.sort_asc = True
         self.search_code = None
 
     def init_dicts_filter(self):
@@ -63,6 +67,15 @@ class FilterStore(QObject):
                     values[key] = False if values[key] else True
                 if not values[key]:
                     values["Tout"] = False
+        self.ON_CHANGED_SIGNAL.emit()
+
+    def set_sort_param(self, sort_name, sort_asc):
+        self.sort_name = sort_name
+        self.sort_asc = sort_asc
+        self.ON_CHANGED_SIGNAL.emit()
+
+    def set_search_code(self, search_code):
+        self.search_code = search_code
         self.ON_CHANGED_SIGNAL.emit()
 
     def is_filtered(self, title):

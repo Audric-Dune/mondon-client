@@ -14,11 +14,10 @@ from gestion.stores.filter_store import filter_store
 
 class SelectorFilter(MondonWidget):
 
-    def __init__(self, parent, set_filter_callback):
+    def __init__(self, parent):
         super(SelectorFilter, self).__init__(parent=parent)
         self.set_background_color(color_rouge_clair)
         self.search_code = TextEdit(upper_mode=True)
-        self.set_filter_callback = set_filter_callback
         self.setFixedHeight(50)
         self.init_widget()
 
@@ -28,7 +27,6 @@ class SelectorFilter(MondonWidget):
         hbox.addLayout(self.get_search_bar())
         for index in range(len(filter_store.list_filter)):
             hbox.addWidget(SelectorCollumFilter(parent=self,
-                                                set_filter_callback=self.set_filter_callback,
                                                 title=filter_store.title_filter[index],
                                                 name_filter=filter_store.list_filter[index],
                                                 sort_mode=filter_store.sort_mode[index],
@@ -57,4 +55,4 @@ class SelectorFilter(MondonWidget):
         return layout_search_bar
 
     def handle_search_code_changed(self):
-        self.set_filter_callback(search_code=self.search_code.text())
+        filter_store.set_search_code(search_code=self.search_code.text())

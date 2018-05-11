@@ -7,7 +7,6 @@ from PyQt5.QtWidgets import QScrollArea, QVBoxLayout, QWidget
 from commun.constants.colors import color_bleu_gris
 from commun.constants.stylesheets import scroll_bar_stylesheet
 from commun.ui.public.mondon_widget import MondonWidget
-from commun.utils.layout import clear_layout
 from gestion.ui.widgets.line_bobine import LineBobine
 from gestion.ui.widgets.line_refente import LineRefente
 from gestion.ui.widgets.line_perfo import LinePerfo
@@ -15,6 +14,7 @@ from gestion.ui.widgets.line_bobine_papier import LineBobinePapier
 from gestion.ui.widgets.line_bobine_poly import LineBobinePoly
 from gestion.ui.widgets.selector_pose import SelectorPose
 from gestion.stores.settings_store import settings_store_gestion
+from gestion.stores.filter_store import filter_store
 
 
 class Selector(MondonWidget):
@@ -25,8 +25,6 @@ class Selector(MondonWidget):
         self.parent = parent
         self.list_bobines = []
         self.lines_bobine = []
-        self.sort_name = "code"
-        self.sort_asc = True
         self.current_focus = None
         self.background_color = color_bleu_gris
         self.master_vbox = QVBoxLayout()
@@ -42,15 +40,12 @@ class Selector(MondonWidget):
         self.update_widget()
 
     def init_list_lines_bobine(self):
-        t0 = time.time()
         for bobine in self.list_bobines:
             line_bobine = LineBobine(parent=self, bobine=bobine)
             line_bobine.ON_DBCLICK_SIGNAL.connect(self.handle_selected_bobine)
             line_bobine.setFixedHeight(20)
             line_bobine.hide()
             self.lines_bobine.append(line_bobine)
-        t1 = time.time()
-        print("init_list_line_bobine ", t1-t0)
 
     def init_widget(self):
         self.vbox.setContentsMargins(0, 0, 0, 0)
@@ -65,22 +60,31 @@ class Selector(MondonWidget):
 
     def on_filter_changed(self):
         self.update_list()
+        self.update_widget()
 
     def sort_bobine(self):
         self.list_bobines = self.sort_bobines(self.list_bobines, "code", True)
-        self.list_bobines = self.sort_bobines(self.list_bobines, self.sort_name, self.sort_asc)
+        self.list_bobines = self.sort_bobines(self.list_bobines, filter_store.sort_name, filter_store.sort_asc)
 
     @staticmethod
     def sort_bobines(bobines, sort_name, sort_asc):
         bobines = sorted(bobines, key=lambda b: b.get_value(sort_name), reverse=not sort_asc)
         return bobines
 
-    def update_list(self, search_code=None):
+    def update_list(self):
         self.list_bobines = []
         for bobine in self.plan_prod.current_bobine_fille_store.bobines:
-            if self.is_valid_bobine_from_filters(bobine):
+            if self.is_valid_bobine_from_filters(bobine) and self.is_valid_from_search_code(bobine):
                 self.list_bobines.append(bobine)
-        self.update_widget()
+    
+    @staticmethod
+    def is_valid_from_search_code(bobine):
+        if not filter_store.search_code:
+            return True
+        elif filter_store.search_code in bobine.code:
+            return True
+        else:
+            return False
 
     def is_valid_bobine_from_filters(self, bobine):
         from gestion.stores.filter_store import filter_store
@@ -106,16 +110,12 @@ class Selector(MondonWidget):
             return False
 
     def update_widget(self):
-        t0 = time.time()
-        print("start update")
         self.sort_bobine()
         self.current_focus = self.parent.bloc_focus
-        clear_layout(self.vbox)
         self.hide_lines_bobine()
         if self.current_focus == "bobine" or not self.current_focus:
             for bobine in self.list_bobines:
                 line_bobine = self.get_line_bobine(bobine)
-                print(line_bobine)
                 line_bobine.show()
                 self.vbox.addWidget(line_bobine)
         if self.current_focus == "refente":
@@ -141,11 +141,7 @@ class Selector(MondonWidget):
                 line_bobine_poly.setFixedHeight(20)
                 self.vbox.addWidget(line_bobine_poly)
         self.vbox.addStretch(0)
-        t1 = time.time()
-        print("update_widget ", t1-t0)
         self.update()
-        t2 = time.time()
-        print("update ", t2-t1)
 
     def hide_lines_bobine(self):
         for line_bobine in self.lines_bobine:
