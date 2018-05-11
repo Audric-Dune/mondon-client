@@ -19,12 +19,14 @@ from gestion.stores.filter_store import filter_store
 
 class SelectorCollumFilter(MondonWidget):
 
-    def __init__(self, parent, title, name_filter, set_filter_callback):
+    def __init__(self, parent, title, name_filter, sort_mode, filter_mode, set_filter_callback):
         super(SelectorCollumFilter, self).__init__(parent)
         self.setFocusPolicy(Qt.ClickFocus)
         self.setFixedHeight(21)
         self.set_background_color(color_blanc)
         self.set_filter_callback = set_filter_callback
+        self.sort_mode = sort_mode
+        self.filter_mode = filter_mode
         self.title = title
         self.name_filter = name_filter
         self.filter_modal = None
@@ -68,6 +70,8 @@ class SelectorCollumFilter(MondonWidget):
                                             title=self.title,
                                             name_filter=self.name_filter,
                                             pos=pos,
+                                            sort_mode=self.sort_mode,
+                                            filter_mode=self.filter_mode,
                                             width=self.width(),
                                             set_filter_callback=self.set_filter_callback)
             self.filter_modal.ON_CLOSE_SIGNAL.connect(self.on_close_modal)
@@ -94,13 +98,15 @@ class SelectorCollumFilter(MondonWidget):
 class FilterModal(QWidget):
     ON_CLOSE_SIGNAL = pyqtSignal()
 
-    def __init__(self, pos, width, set_filter_callback, title, name_filter, parent=None):
+    def __init__(self, pos, width, set_filter_callback, title, sort_mode, filter_mode, name_filter, parent=None):
         super(FilterModal, self).__init__(parent=parent)
         self.setFocusPolicy(Qt.ClickFocus)
         self.setFocus()
         self.vbox = QVBoxLayout()
         self.title = title
         self.name_filter = name_filter
+        self.sort_mode = sort_mode
+        self.filter_mode = filter_mode
         self.set_filter_callback = set_filter_callback
         self.list_fiter = filter_store.dicts_filter[self.name_filter]
         self.setWindowFlags(Qt.SplashScreen)
@@ -112,27 +118,30 @@ class FilterModal(QWidget):
     def init_widget(self):
         self.vbox.setSpacing(5)
         self.vbox.setContentsMargins(1, 5, 1, 5)
-        bt_sorted_asc = QPushButton("Trier A -> Z")
-        bt_sorted_asc.setStyleSheet(button_no_radius_stylesheet)
-        bt_sorted_asc.clicked.connect(self.on_click_bt_sorted_asc)
-        bt_sorted_dsc = QPushButton("Trier Z -> A")
-        bt_sorted_dsc.setStyleSheet(button_no_radius_stylesheet)
-        bt_sorted_dsc.clicked.connect(self.on_click_bt_sorted_dsc)
-        self.vbox.addWidget(bt_sorted_asc)
-        self.vbox.addWidget(bt_sorted_dsc)
-        hbar = MondonWidget()
-        hbar.setFixedHeight(2)
-        hbar.set_background_color(color_gris_moyen)
-        self.vbox.addWidget(hbar)
-        for value in self.list_fiter.keys():
-            self.vbox.addWidget(LineFilter(parent=None, value=value, name_filter=self.name_filter))
-        bt_ok = QPushButton("OK")
-        bt_ok.setFixedWidth(40)
-        bt_ok.setStyleSheet(button_14_stylesheet)
-        bt_ok.clicked.connect(self.on_click_bt_ok)
-        hbox = QHBoxLayout()
-        hbox.addWidget(bt_ok)
-        self.vbox.addLayout(hbox)
+        if self.sort_mode:
+            bt_sorted_asc = QPushButton("Trier A -> Z")
+            bt_sorted_asc.setStyleSheet(button_no_radius_stylesheet)
+            bt_sorted_asc.clicked.connect(self.on_click_bt_sorted_asc)
+            bt_sorted_dsc = QPushButton("Trier Z -> A")
+            bt_sorted_dsc.setStyleSheet(button_no_radius_stylesheet)
+            bt_sorted_dsc.clicked.connect(self.on_click_bt_sorted_dsc)
+            self.vbox.addWidget(bt_sorted_asc)
+            self.vbox.addWidget(bt_sorted_dsc)
+        if self.sort_mode and self.filter_mode:
+            hbar = MondonWidget()
+            hbar.setFixedHeight(2)
+            hbar.set_background_color(color_gris_moyen)
+            self.vbox.addWidget(hbar)
+        if self.filter_mode:
+            for value in self.list_fiter.keys():
+                self.vbox.addWidget(LineFilter(parent=None, value=value, name_filter=self.name_filter))
+            bt_ok = QPushButton("OK")
+            bt_ok.setFixedWidth(40)
+            bt_ok.setStyleSheet(button_14_stylesheet)
+            bt_ok.clicked.connect(self.on_click_bt_ok)
+            hbox = QHBoxLayout()
+            hbox.addWidget(bt_ok)
+            self.vbox.addLayout(hbox)
         self.setLayout(self.vbox)
 
     def update_widget(self):

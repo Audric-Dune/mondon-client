@@ -31,7 +31,9 @@ class SelectorFilter(MondonWidget):
             hbox.addWidget(SelectorCollumFilter(parent=self,
                                                 set_filter_callback=self.set_filter_callback,
                                                 title=filter_store.title_filter[index],
-                                                name_filter=filter_store.list_filter[index]))
+                                                name_filter=filter_store.list_filter[index],
+                                                sort_mode=filter_store.sort_mode[index],
+                                                filter_mode=filter_store.filter_mode[index]))
         self.setLayout(hbox)
 
     @staticmethod

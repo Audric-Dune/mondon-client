@@ -43,23 +43,18 @@ class LineBobine(MondonWidget):
         lenght = QLabel("{}m".format(self.bobine.lenght))
         lenght.setStyleSheet(black_14_label_stylesheet)
         hbox.addWidget(lenght)
-        # # code_cliche = QLabel(str(self.bobine.codes_cliche))
-        # # hbox.addWidget(code_cliche)
         poses = QLabel(str(self.bobine.poses))
         poses.setStyleSheet(black_14_label_stylesheet)
         hbox.addWidget(poses)
-        # if self.bobine.vente_annuelle:
-        #     vente_annuelle = str(int(self.bobine.vente_annuelle))
-        # else:
-        #     vente_annuelle = "-"
-        # vente_annuelle_label = QLabel(vente_annuelle)
-        # hbox.addWidget(vente_annuelle_label)
-        # if self.bobine.stock_therme:
-        #     stock_therme = str(int(self.bobine.stock_therme))
-        # else:
-        #     stock_therme = "-"
-        # stock_therme_label = QLabel(stock_therme)
-        # hbox.addWidget(stock_therme_label)
+        vente_annuelle = str(int(self.bobine.vente_annuelle))
+        vente_annuelle_label = QLabel(vente_annuelle)
+        hbox.addWidget(vente_annuelle_label)
+        if self.bobine.stock_therme:
+            stock_therme = str(int(self.bobine.stock_therme))
+        else:
+            stock_therme = "-"
+        stock_therme_label = QLabel(stock_therme)
+        hbox.addWidget(stock_therme_label)
 
     def mouseDoubleClickEvent(self, e):
         self.ON_DBCLICK_SIGNAL.emit(self.bobine)
