@@ -24,6 +24,7 @@ class Selector(MondonWidget):
         self.plan_prod = plan_prod
         self.parent = parent
         self.list_bobines = []
+        self.lines_bobine = []
         self.sort_name = "code"
         self.sort_asc = True
         self.current_focus = None
@@ -35,9 +36,21 @@ class Selector(MondonWidget):
         self.vbox = QVBoxLayout()
         self.scroll_bar = QScrollArea(parent=self)
         self.content_scrollbar = QWidget(parent=self.scroll_bar)
-        self.init_widget()
         self.update_list()
+        self.init_list_lines_bobine()
+        self.init_widget()
         self.update_widget()
+
+    def init_list_lines_bobine(self):
+        t0 = time.time()
+        for bobine in self.list_bobines:
+            line_bobine = LineBobine(parent=self, bobine=bobine)
+            line_bobine.ON_DBCLICK_SIGNAL.connect(self.handle_selected_bobine)
+            line_bobine.setFixedHeight(20)
+            line_bobine.hide()
+            self.lines_bobine.append(line_bobine)
+        t1 = time.time()
+        print("init_list_line_bobine ", t1-t0)
 
     def init_widget(self):
         self.vbox.setContentsMargins(0, 0, 0, 0)
@@ -98,12 +111,12 @@ class Selector(MondonWidget):
         self.sort_bobine()
         self.current_focus = self.parent.bloc_focus
         clear_layout(self.vbox)
-        self.vbox.setEnabled(False)
+        self.hide_lines_bobine()
         if self.current_focus == "bobine" or not self.current_focus:
             for bobine in self.list_bobines:
-                line_bobine = LineBobine(parent=self, bobine=bobine)
-                line_bobine.ON_DBCLICK_SIGNAL.connect(self.handle_selected_bobine)
-                line_bobine.setFixedHeight(20)
+                line_bobine = self.get_line_bobine(bobine)
+                print(line_bobine)
+                line_bobine.show()
                 self.vbox.addWidget(line_bobine)
         if self.current_focus == "refente":
             for refente in self.plan_prod.current_refente_store.refentes:
@@ -127,13 +140,21 @@ class Selector(MondonWidget):
                 line_bobine_poly.ON_DBCLICK_SIGNAL.connect(self.handle_selected_bobine_poly)
                 line_bobine_poly.setFixedHeight(20)
                 self.vbox.addWidget(line_bobine_poly)
-        self.vbox.setEnabled(True)
         self.vbox.addStretch(0)
         t1 = time.time()
         print("update_widget ", t1-t0)
         self.update()
         t2 = time.time()
         print("update ", t2-t1)
+
+    def hide_lines_bobine(self):
+        for line_bobine in self.lines_bobine:
+            line_bobine.hide()
+
+    def get_line_bobine(self, bobine):
+        for line_bobine in self.lines_bobine:
+            if line_bobine.objectName() == bobine.code:
+                return line_bobine
 
     def handle_selected_bobine(self, bobine, pose=None):
         if pose:

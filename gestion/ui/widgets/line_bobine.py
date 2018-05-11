@@ -27,7 +27,6 @@ class LineBobine(MondonWidget):
         hbox = QHBoxLayout()
         hbox.setContentsMargins(5, 0, 0, 0)
         hbox.setSpacing(10)
-        hbox.setEnabled(False)
         code = QLabel(str(self.bobine.code))
         code.setStyleSheet(black_14_label_stylesheet)
         code.setFixedWidth(300)
@@ -70,7 +69,6 @@ class LineBobine(MondonWidget):
             etat_label_stylesheet = black_14_label_stylesheet
         etat_label.setStyleSheet(etat_label_stylesheet)
         hbox.addWidget(etat_label)
-        hbox.setEnabled(True)
         self.setLayout(hbox)
 
     def mouseDoubleClickEvent(self, e):
