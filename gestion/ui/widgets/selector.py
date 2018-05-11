@@ -78,10 +78,17 @@ class Selector(MondonWidget):
     def is_valid_bobine_from_filter(bobine, name):
         from gestion.stores.filter_store import filter_store
         dict = filter_store.dicts_filter[name]
-        for key in dict.keys():
-            if key == getattr(bobine, name) and dict[key]:
-                return True
-        return False
+        if name == "poses":
+            for key in dict.keys():
+                for pose in bobine.poses:
+                    if key == pose and dict[key]:
+                        return True
+            return False
+        else:
+            for key in dict.keys():
+                if key == getattr(bobine, name) and dict[key]:
+                    return True
+            return False
 
     def update_widget(self):
         self.sort_bobine()

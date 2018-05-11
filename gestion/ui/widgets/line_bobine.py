@@ -45,8 +45,9 @@ class LineBobine(MondonWidget):
         hbox.addWidget(lenght)
         # # code_cliche = QLabel(str(self.bobine.codes_cliche))
         # # hbox.addWidget(code_cliche)
-        # poses = QLabel(str(self.bobine.poses))
-        # hbox.addWidget(poses)
+        poses = QLabel(str(self.bobine.poses))
+        poses.setStyleSheet(black_14_label_stylesheet)
+        hbox.addWidget(poses)
         # if self.bobine.vente_annuelle:
         #     vente_annuelle = str(int(self.bobine.vente_annuelle))
         # else:

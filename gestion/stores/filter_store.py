@@ -29,8 +29,13 @@ class FilterStore(QObject):
         dict = self.dicts_filter[name_filter]
         for bobine in self.plan_prod.current_bobine_fille_store.bobines:
             value = getattr(bobine, name_filter)
-            if dict.get(value) is None:
-                dict[value] = True
+            if name_filter == "poses":
+                for pose in value:
+                    if dict.get(pose) is None:
+                        dict[pose] = True
+            else:
+                if dict.get(value) is None:
+                    dict[value] = True
 
     def set_plan_prod(self, plan_prod):
         self.plan_prod = plan_prod
