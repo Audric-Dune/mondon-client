@@ -3,6 +3,7 @@
 
 from PyQt5.QtWidgets import QHBoxLayout, QLabel
 from PyQt5.QtCore import pyqtSignal, Qt
+from PyQt5.QtGui import QFocusEvent
 from commun.ui.public.mondon_widget import MondonWidget
 from commun.constants.colors import color_blanc, color_vert_fonce
 from commun.constants.stylesheets import black_14_label_stylesheet,\
@@ -18,6 +19,7 @@ class LineBobine(MondonWidget):
         super(LineBobine, self).__init__(parent=parent)
         self.setObjectName(bobine.code)
         self.setFocusPolicy(Qt.ClickFocus)
+        self.memo_button_press = 0
         self.setFocus()
         self.set_background_color(color_blanc)
         self.bobine = bobine
@@ -77,7 +79,14 @@ class LineBobine(MondonWidget):
         self.ON_DBCLICK_SIGNAL.emit(self.bobine)
         super(LineBobine, self).mouseDoubleClickEvent(e)
 
+    def mousePressEvent(self, e):
+        self.memo_button_press += 1
+        if self.memo_button_press > 1:
+            focus_out_event = QFocusEvent()
+            self.focusOutEvent(focus_out_event)
+
     def focusInEvent(self, e):
+        self.memo_button_press = 0
         self.set_border(color=color_vert_fonce, size=1)
         super(LineBobine, self).focusInEvent(e)
 

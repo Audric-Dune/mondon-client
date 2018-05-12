@@ -3,6 +3,7 @@
 
 from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import QWidget
+from PyQt5.QtCore import Qt
 from production.stores.data_store_manager import data_store_manager
 from production.stores.settings_stat_store import settings_stat_store
 from production.stores.settings_store import settings_store
@@ -20,6 +21,7 @@ from production.ui.application import app
 class MondonWidget(QWidget):
     def __init__(self, parent=None):
         super(QWidget, self).__init__(parent=parent)
+        self.setFocusPolicy(Qt.ClickFocus)
         self.background_color = None
         self.border_color = None
         self.border_size = None
