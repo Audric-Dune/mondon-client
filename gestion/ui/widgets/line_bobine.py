@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5.QtWidgets import QHBoxLayout, QLabel
-from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import pyqtSignal, Qt
 from commun.ui.public.mondon_widget import MondonWidget
 from commun.constants.colors import color_blanc
 from commun.constants.stylesheets import black_14_label_stylesheet,\
@@ -29,36 +29,36 @@ class LineBobine(MondonWidget):
         hbox.setSpacing(10)
         code = QLabel(str(self.bobine.code))
         code.setStyleSheet(black_14_label_stylesheet)
-        code.setFixedWidth(300)
+        code.setFixedWidth(250)
         hbox.addWidget(code)
         laize = QLabel(str(int(self.bobine.laize)))
         laize.setStyleSheet(black_14_label_stylesheet)
-        hbox.addWidget(laize)
+        hbox.addWidget(laize, alignment=Qt.AlignCenter)
         color = QLabel(str(self.bobine.color))
         color.setStyleSheet(black_14_label_stylesheet)
-        hbox.addWidget(color)
+        hbox.addWidget(color, alignment=Qt.AlignCenter)
         gr = QLabel("{}g".format(self.bobine.gr))
         gr.setStyleSheet(black_14_label_stylesheet)
-        hbox.addWidget(gr)
+        hbox.addWidget(gr, alignment=Qt.AlignCenter)
         lenght = QLabel("{}m".format(self.bobine.lenght))
         lenght.setStyleSheet(black_14_label_stylesheet)
-        hbox.addWidget(lenght)
+        hbox.addWidget(lenght, alignment=Qt.AlignCenter)
         poses = QLabel(str(self.bobine.poses))
         poses.setStyleSheet(black_14_label_stylesheet)
-        hbox.addWidget(poses)
+        hbox.addWidget(poses, alignment=Qt.AlignCenter)
         vente_mensuelle = 1 if 0 < self.bobine.vente_mensuelle < 1 else self.bobine.vente_mensuelle
         vente_mensuelle = str(int(vente_mensuelle))
         vente_mensuelle_label = QLabel(vente_mensuelle)
         vente_mensuelle_label.setStyleSheet(black_14_label_stylesheet)
-        hbox.addWidget(vente_mensuelle_label)
+        hbox.addWidget(vente_mensuelle_label, alignment=Qt.AlignCenter)
         stock = str(int(self.bobine.stock))
         stock_label = QLabel(stock)
         stock_label.setStyleSheet(black_14_label_stylesheet)
-        hbox.addWidget(stock_label)
+        hbox.addWidget(stock_label, alignment=Qt.AlignCenter)
         stock_therme = str(int(self.bobine.stock_therme))
         stock_therme_label = QLabel(stock_therme)
         stock_therme_label.setStyleSheet(black_14_label_stylesheet)
-        hbox.addWidget(stock_therme_label)
+        hbox.addWidget(stock_therme_label, alignment=Qt.AlignCenter)
         etat = self.bobine.etat
         etat_label = QLabel(etat)
         if etat == "RUPTURE":
@@ -68,7 +68,7 @@ class LineBobine(MondonWidget):
         else:
             etat_label_stylesheet = black_14_label_stylesheet
         etat_label.setStyleSheet(etat_label_stylesheet)
-        hbox.addWidget(etat_label)
+        hbox.addWidget(etat_label, alignment=Qt.AlignCenter)
         self.setLayout(hbox)
 
     def mouseDoubleClickEvent(self, e):

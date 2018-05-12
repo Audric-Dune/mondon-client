@@ -39,6 +39,20 @@ class FilterStore(QObject):
         for name_filter in self.list_filter:
             new_dict_filter = self.get_new_dict_filter(name_filter)
             self.update_dict_filter(name_filter, new_dict_filter)
+            self.sort_dict(name_filter)
+
+    def sort_dict(self, name_filter):
+        current_dict = self.dicts_filter[name_filter]
+        new_dict_filter = {"Tout": True}
+        list_key = []
+        for key in current_dict.keys():
+            if key != "Tout":
+                list_key.append(key)
+        list_key.sort()
+        for key in list_key:
+            value = current_dict.get(key)
+            new_dict_filter[key] = value
+        self.dicts_filter[name_filter] = new_dict_filter
 
     def get_new_dict_filter(self, name_filter):
         new_dict_filter = {"Tout": True}

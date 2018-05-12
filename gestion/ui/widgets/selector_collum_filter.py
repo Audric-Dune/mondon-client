@@ -32,7 +32,7 @@ class SelectorCollumFilter(MondonWidget):
         self.filter_modal = None
         self.icon_sorted = PixmapButton(parent=self)
         self.bt_open_filter = PixmapButton(parent=self)
-        self.bt_open_filter.clicked.connect(self.on_click_bt_open_filter)
+        # self.bt_open_filter.clicked.connect(self.on_click_bt_open_filter)
         self.init_bt(self.bt_open_filter)
         self.init_bt(self.icon_sorted)
         self.init_widget()
@@ -76,7 +76,7 @@ class SelectorCollumFilter(MondonWidget):
         label.setStyleSheet(black_14_label_stylesheet)
         return label
 
-    def on_click_bt_open_filter(self):
+    def open_modal(self):
         if self.filter_modal:
             self.filter_modal.close()
             self.filter_modal = None
@@ -106,7 +106,7 @@ class SelectorCollumFilter(MondonWidget):
         super(SelectorCollumFilter, self).focusInEvent(e)
 
     def mouseReleaseEvent(self, e):
-        self.bt_open_filter.click()
+        self.open_modal()
         super(SelectorCollumFilter, self).mouseReleaseEvent(e)
 
 

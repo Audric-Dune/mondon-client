@@ -42,7 +42,7 @@ class SelectorFilter(MondonWidget):
     def get_search_bar(self):
         self.search_code.setStyleSheet(line_edit_stylesheet)
         self.search_code.textChanged.connect(self.handle_search_code_changed)
-        self.search_code.setFixedWidth(300-21)
+        self.search_code.setFixedWidth(250-21)
         icone_search = Image(parent=self,
                              img="commun/assets/images/icon_search.png",
                              size=21,
