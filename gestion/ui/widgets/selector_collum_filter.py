@@ -2,15 +2,13 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5.QtWidgets import QHBoxLayout, QLabel, QWidget, QPushButton, QVBoxLayout
-from PyQt5.Qt import Qt, QPoint, pyqtSignal
-from PyQt5.QtGui import QPainter, QColor, QPen, QCursor
+from PyQt5.Qt import Qt, QPoint, pyqtSignal, QPixmap
+from PyQt5.QtGui import QPainter, QColor, QPen
 
 from commun.ui.public.mondon_widget import MondonWidget
-from commun.ui.public.pixmap_button import PixmapButton
 from commun.ui.public.image import Image
 from commun.constants.colors import color_blanc, color_vert_moyen, color_gris_moyen
 from commun.constants.stylesheets import black_14_label_stylesheet,\
-    button_no_radius_no_hover_stylesheet,\
     button_no_radius_stylesheet,\
     button_no_radius_orange_stylesheet,\
     green_14_label_stylesheet,\
@@ -31,33 +29,33 @@ class SelectorCollumFilter(MondonWidget):
         self.name_filter = name_filter
         self.filter_modal = None
         self.memo_filter_modal = False
-        self.icon_sorted = PixmapButton(parent=self)
-        self.icon_sorted.setFocusPolicy(Qt.ClickFocus)
-        self.bt_open_filter = PixmapButton(parent=self)
-        self.bt_open_filter.clicked.connect(self.open_modal)
-        self.init_bt(self.bt_open_filter)
-        self.init_bt(self.icon_sorted)
+        self.icon_sorted = QLabel()
+        self.open_filter = QLabel()
+        self.icon_sorted.setScaledContents(True)
+        self.open_filter.setScaledContents(True)
+        self.icon_sorted.setFixedSize(14, 14)
+        self.open_filter.setFixedSize(14, 14)
         self.init_widget()
         self.update_widget()
 
     def init_widget(self):
         hbox = QHBoxLayout()
-        hbox.setContentsMargins(0, 0, 0, 0)
+        hbox.setContentsMargins(0, 2, 5, 0)
         hbox.setSpacing(0)
         hbox.addWidget(self.get_label(self.title))
         hbox.addWidget(self.icon_sorted)
-        hbox.addWidget(self.bt_open_filter)
+        hbox.addWidget(self.open_filter)
         self.setLayout(hbox)
 
     def update_widget(self):
         if filter_store.is_filtered(self.name_filter):
-            self.bt_open_filter.addImage("commun/assets/images/icon_filter_orange.png")
+            self.open_filter.setPixmap(QPixmap("commun/assets/images/icon_filter_orange.png"))
         else:
-            self.bt_open_filter.addImage("commun/assets/images/arrow_down_vert_fonce.png")
+            self.open_filter.setPixmap(QPixmap("commun/assets/images/arrow_down_vert_fonce.png"))
         if filter_store.sort_name == self.name_filter:
             name_image = "icon_sort_asc_orange" if filter_store.sort_asc else "icon_sort_dsc_orange"
             image = "commun/assets/images/{}.png".format(name_image)
-            self.icon_sorted.addImage(image)
+            self.icon_sorted.setPixmap(QPixmap(image))
             self.icon_sorted.show()
         else:
             self.icon_sorted.hide()
@@ -66,11 +64,6 @@ class SelectorCollumFilter(MondonWidget):
 
     def on_filter_changed(self):
         self.update_widget()
-
-    def init_bt(self, bt):
-        bt.setStyleSheet(button_no_radius_no_hover_stylesheet)
-        bt.setFixedSize(self.height(), self.height())
-        bt.setContentsMargins(3)
 
     @staticmethod
     def get_label(text):
@@ -103,6 +96,7 @@ class SelectorCollumFilter(MondonWidget):
         self.memo_filter_modal = False
 
     def mouseReleaseEvent(self, e):
+        print("mouseReleaseEvent")
         if self.memo_filter_modal:
             self.memo_filter_modal = False
         else:
@@ -206,6 +200,7 @@ class LineFilter(MondonWidget):
         super(LineFilter, self).__init__(parent=parent)
         self.set_background_color(color_blanc)
         self.setObjectName("LineFilter")
+        self.setFocusPolicy(Qt.NoFocus)
         self.name_filter = name_filter
         self.value = int(value) if isinstance(value, float) else value
         self.label = QLabel(str(self.value))
