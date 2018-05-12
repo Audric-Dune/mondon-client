@@ -80,18 +80,20 @@ class SelectorCollumFilter(MondonWidget):
 
     def open_modal(self):
         pos = self.mapToGlobal(QPoint(0, self.height()))
-        self.filter_modal = FilterModal(parent=self,
-                                        title=self.title,
-                                        name_filter=self.name_filter,
-                                        pos=pos,
-                                        sort_mode=self.sort_mode,
-                                        filter_mode=self.filter_mode,
-                                        width=self.width())
-        self.filter_modal.WANT_TO_CLOSE_SIGNAL.connect(self.close_modal)
+        if self.filter_modal is None:
+            self.filter_modal = FilterModal(parent=self,
+                                            title=self.title,
+                                            name_filter=self.name_filter,
+                                            pos=pos,
+                                            sort_mode=self.sort_mode,
+                                            filter_mode=self.filter_mode,
+                                            width=self.width())
+            self.filter_modal.WANT_TO_CLOSE_SIGNAL.connect(self.close_modal)
 
     def close_modal(self):
-        self.filter_modal.close()
-        self.filter_modal = None
+        if self.filter_modal:
+            self.filter_modal.close()
+            self.filter_modal = None
 
     def enterEvent(self, e):
         if self.filter_modal:
