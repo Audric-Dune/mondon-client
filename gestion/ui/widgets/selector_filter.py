@@ -3,7 +3,7 @@
 
 from PyQt5.QtWidgets import QHBoxLayout, QLabel
 
-from commun.constants.colors import color_rouge_clair, color_blanc
+from commun.constants.colors import color_bleu_gris, color_blanc
 from commun.constants.stylesheets import black_14_label_stylesheet, line_edit_stylesheet
 from commun.ui.public.mondon_widget import MondonWidget
 from commun.ui.public.text_edit import TextEdit
@@ -16,9 +16,8 @@ class SelectorFilter(MondonWidget):
 
     def __init__(self, parent):
         super(SelectorFilter, self).__init__(parent=parent)
-        self.set_background_color(color_rouge_clair)
+        self.set_background_color(color_bleu_gris)
         self.search_code = TextEdit(upper_mode=True)
-        self.setFixedHeight(50)
         self.init_widget()
 
     def init_widget(self):

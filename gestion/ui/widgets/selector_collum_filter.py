@@ -42,7 +42,7 @@ class SelectorCollumFilter(MondonWidget):
         hbox = QHBoxLayout()
         hbox.setContentsMargins(0, 2, 5, 0)
         hbox.setSpacing(0)
-        hbox.addWidget(self.get_label(self.title))
+        hbox.addWidget(self.get_label(self.title), alignment=Qt.AlignCenter | Qt.AlignVCenter)
         hbox.addWidget(self.icon_sorted)
         hbox.addWidget(self.open_filter)
         self.setLayout(hbox)
