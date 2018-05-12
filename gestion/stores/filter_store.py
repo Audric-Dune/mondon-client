@@ -13,11 +13,11 @@ class FilterStore(QObject):
         self.plan_prod = None
         self.dicts_filter = {}
         self.list_filter = ["laize", "color", "gr", "lenght", "poses",
-                            "vente_mensuelle", "stock", "stock_therme", "etat"]
+                            "vente_mensuelle", "stock", "stock_therme", "etat", "sommeil"]
         self.title_filter = ["Laize", "Couleur", "Grammage", "Longueur", "Pose(s)",
-                             "Vente mensuelle", "Stock", "Stock à therme", "Etat"]
-        self.filter_mode = [True, True, True, True, True, False, False, False, True]
-        self.sort_mode = [True, True, True, True, False, True, True, True, False]
+                             "Vente mensuelle", "Stock", "Stock à therme", "Etat", "Sommeil"]
+        self.filter_mode = [True, True, True, True, True, False, False, False, True, True]
+        self.sort_mode = [True, True, True, True, False, True, True, True, False, False]
         self.sort_name = "code"
         self.sort_asc = True
         self.search_code = None

@@ -30,7 +30,7 @@ class BobineFille:
         self.creation_time = creation_time
         self.gr = gr
         self.poses = poses if poses else [0]
-        self.sommeil = sommeil
+        self.sommeil = "Sommeil" if sommeil else ""
         self.vente_annuelle = 0
         self.vente_mensuelle = 0
         self.etat = ""

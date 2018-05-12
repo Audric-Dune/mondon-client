@@ -3,9 +3,8 @@
 
 from PyQt5.QtWidgets import QHBoxLayout, QLabel
 from PyQt5.QtCore import pyqtSignal, Qt
-from PyQt5.QtGui import QFocusEvent
 from commun.ui.public.mondon_widget import MondonWidget
-from commun.constants.colors import color_blanc, color_vert_fonce
+from commun.constants.colors import color_blanc, color_vert_fonce, color_gris_fonce
 from commun.constants.stylesheets import black_14_label_stylesheet,\
     red_14_bold_label_stylesheet,\
     black_14_bold_label_stylesheet
@@ -19,9 +18,12 @@ class LineBobine(MondonWidget):
         super(LineBobine, self).__init__(parent=parent)
         self.setObjectName(bobine.code)
         self.setFocusPolicy(Qt.ClickFocus)
+        if bobine.sommeil:
+            self.set_background_color(color_gris_fonce)
+        else:
+            self.set_background_color(color_blanc)
         self.memo_button_press = 0
         self.setFocus()
-        self.set_background_color(color_blanc)
         self.bobine = bobine
         self.state = None
         self.installEventFilter(self)
@@ -73,6 +75,10 @@ class LineBobine(MondonWidget):
             etat_label_stylesheet = black_14_label_stylesheet
         etat_label.setStyleSheet(etat_label_stylesheet)
         hbox.addWidget(etat_label, alignment=Qt.AlignCenter)
+        sommeil = self.bobine.sommeil
+        sommeil_label = QLabel(sommeil)
+        sommeil_label.setStyleSheet(black_14_label_stylesheet)
+        hbox.addWidget(sommeil_label, alignment=Qt.AlignCenter)
         self.setLayout(hbox)
 
     def mouseDoubleClickEvent(self, e):
