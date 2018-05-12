@@ -18,7 +18,7 @@ class SelectorManager(QWidget):
         self.search_code = None
         self.selector = Selector(parent=self, plan_prod=plan_prod)
         self.selector_filter = SelectorFilter(parent=self)
-        filter_store.ON_CHANGED_SIGNAL.conect(self.on_filter_changed)
+        filter_store.ON_CHANGED_SIGNAL.connect(self.on_filter_changed)
         self.init_widget()
 
     def init_widget(self):

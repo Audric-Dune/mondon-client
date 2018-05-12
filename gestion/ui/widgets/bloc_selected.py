@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5.QtWidgets import QVBoxLayout, QLabel
-from PyQt5.QtCore import pyqtSignal
 
 from commun.constants.colors import color_vert_moyen, color_blanc
 from commun.ui.public.mondon_widget import MondonWidget
@@ -109,5 +108,5 @@ class BlocSelected(MondonWidget):
         self.update()
 
     def mouseDoubleClickEvent(self, e):
-        filter_store.set_data_type()
-        self.callback(self.data_type)
+        filter_store.set_data_type(self.data_type)
+        self.callback()
