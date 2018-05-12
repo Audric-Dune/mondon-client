@@ -82,8 +82,8 @@ class LineBobine(MondonWidget):
     def mousePressEvent(self, e):
         self.memo_button_press += 1
         if self.memo_button_press > 1:
-            focus_out_event = QFocusEvent()
-            self.focusOutEvent(focus_out_event)
+            self.clearFocus()
+        super(LineBobine, self).mousePressEvent(e)
 
     def focusInEvent(self, e):
         self.memo_button_press = 0

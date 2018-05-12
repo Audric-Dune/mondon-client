@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout
 
 class Image(QWidget):
 
-    def __init__(self, img, size, background_color=None, parent=None):
+    def __init__(self, size, img=None, background_color=None, parent=None):
         super(Image, self).__init__(parent)
         if background_color:
             self.setStyleSheet("background-color:{};".format(background_color.hex_string))

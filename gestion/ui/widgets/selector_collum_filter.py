@@ -30,11 +30,10 @@ class SelectorCollumFilter(MondonWidget):
         self.title = title
         self.name_filter = name_filter
         self.filter_modal = None
-        self.icon_sorted = PixmapButton(parent=self)
-        self.bt_open_filter = PixmapButton(parent=self)
-        # self.bt_open_filter.clicked.connect(self.on_click_bt_open_filter)
-        self.init_bt(self.bt_open_filter)
-        self.init_bt(self.icon_sorted)
+        self.icon_sorted = Image(parent=self, size=21)
+        self.bt_open_filter = Image(parent=self, size=21)
+        # self.init_bt(self.bt_open_filter)
+        # self.init_bt(self.icon_sorted)
         self.init_widget()
         self.update_widget()
 
