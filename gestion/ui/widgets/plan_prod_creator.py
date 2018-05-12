@@ -25,17 +25,17 @@ class PlanProdCreator(MondonWidget):
         super(PlanProdCreator, self).__init__(parent=parent)
         self.set_background_color(color=color_blanc)
         self.plan_prod = plan_prod
-        self.bloc_focus = "bobine"
         self.plan_prod.ON_CHANGED_SIGNAL.connect(self.handle_plan_prod_changed)
         self.plan_prod.ON_TOURS_CHANGED.connect(self.handle_tours_plan_prod_changed)
         self.selector_manager = SelectorManager(parent=self, plan_prod=self.plan_prod)
+        self.selector_manager.hide()
         self.bloc_param_prod = BlocParamProd(plan_prod=self.plan_prod, parent=self)
         self.titre_prod = QLabel("NOUVELLE PRODUCTION")
-        self.bloc_poly_selected = BlocSelected(data_type="poly", parent=self)
-        self.bloc_papier_selected = BlocSelected(data_type="papier", parent=self)
-        self.bloc_perfo_selected = BlocSelected(data_type="perfo", parent=self)
-        self.bloc_refente_selected = BlocSelected(data_type="refente", parent=self)
-        self.bloc_bobines_selected = BlocSelected(data_type="bobine", parent=self)
+        self.bloc_poly_selected = BlocSelected(data_type="poly", parent=self, callback=self.show_selector)
+        self.bloc_papier_selected = BlocSelected(data_type="papier", parent=self, callback=self.show_selector)
+        self.bloc_perfo_selected = BlocSelected(data_type="perfo", parent=self, callback=self.show_selector)
+        self.bloc_refente_selected = BlocSelected(data_type="refente", parent=self, callback=self.show_selector)
+        self.bloc_bobines_selected = BlocSelected(data_type="bobine", parent=self, callback=self.show_selector)
         self.bloc_info = BlocInformation(parent=self, plan_prod=plan_prod)
         self.init_ui()
 
@@ -54,7 +54,6 @@ class PlanProdCreator(MondonWidget):
         vbox.addWidget(self.bloc_refente_selected)
         master_vbox.addWidget(self.bloc_info)
         master_vbox.addWidget(self.bloc_param_prod)
-        master_vbox.addWidget(self.selector_manager)
         master_vbox.addLayout(vbox)
         master_vbox.addWidget(self.bloc_bobines_selected)
         self.setLayout(master_vbox)
@@ -76,8 +75,5 @@ class PlanProdCreator(MondonWidget):
         self.bloc_param_prod.update_label()
         self.bloc_info.update_widget()
 
-    def keyPressEvent(self, e):
-        if e.key() == Qt.Key_Delete:
-            self.plan_prod.del_item_selected(filter_store.bloc_focus)
-        if e.key() == Qt.Key_Enter:
-            self.plan_prod.get_new_item_selected_from_store()
+    def show_selector(self):
+        self.selector_manager.show()

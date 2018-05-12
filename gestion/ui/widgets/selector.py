@@ -161,30 +161,30 @@ class Selector(MondonWidget):
     def update_widget(self):
         self.update_list()
         self.sort_bobine()
-        current_focus = filter_store.bloc_focus
+        current_data_type = filter_store.data_type
         self.hide_lines()
         self.vbox.takeAt(self.vbox.count()-1)
-        if current_focus == "bobine" or not current_focus:
+        if current_data_type == "bobine" or not current_data_type:
             for bobine in self.list_bobines:
                 line_bobine = self.get_line_bobine(bobine)
                 line_bobine.show()
                 self.vbox.addWidget(line_bobine)
-        if current_focus == "refente":
+        if current_data_type == "refente":
             for refente in self.plan_prod.current_refente_store.refentes:
                 line_refente = self.get_line_refente(refente)
                 line_refente.show()
                 self.vbox.addWidget(line_refente)
-        if current_focus == "perfo":
+        if current_data_type == "perfo":
             for perfo in self.plan_prod.current_perfo_store.perfos:
                 line_perfo = self.get_line_perfo(perfo)
                 line_perfo.show()
                 self.vbox.addWidget(line_perfo)
-        if current_focus == "papier":
+        if current_data_type == "papier":
             for bobine in self.plan_prod.current_bobine_papier_store.bobines:
                 line_bobine_papier = self.get_line_papier(bobine)
                 line_bobine_papier.show()
                 self.vbox.addWidget(line_bobine_papier)
-        if current_focus == "poly":
+        if current_data_type == "poly":
             for bobine in self.plan_prod.current_bobine_poly_store.bobines:
                 line_bobine_poly = self.get_line_poly(bobine)
                 line_bobine_poly.show()

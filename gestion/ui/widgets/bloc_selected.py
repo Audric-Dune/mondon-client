@@ -18,11 +18,12 @@ from gestion.stores.filter_store import filter_store
 
 class BlocSelected(MondonWidget):
 
-    def __init__(self, data_type, parent=None):
+    def __init__(self, data_type, callback,  parent=None):
         super(BlocSelected, self).__init__(parent=parent)
         self.background_color = color_blanc
         self.data_type = data_type
         self.parent = parent
+        self.callback = callback
         self.master_hbox = QVBoxLayout()
         self.update_widget()
 
@@ -99,7 +100,7 @@ class BlocSelected(MondonWidget):
         self.update_widget()
 
     def update_widget(self):
-        if filter_store.bloc_focus == self.data_type:
+        if filter_store.data_type == self.data_type:
             self.set_border(color=color_vert_moyen, size=2)
         else:
             self.set_border(color=color_blanc)
@@ -107,5 +108,6 @@ class BlocSelected(MondonWidget):
         self.init_ui()
         self.update()
 
-    def mouseReleaseEvent(self, e):
-        filter_store.set_bloc_focus(bloc_focus=self.data_type)
+    def mouseDoubleClickEvent(self, e):
+        filter_store.set_data_type()
+        self.callback(self.data_type)

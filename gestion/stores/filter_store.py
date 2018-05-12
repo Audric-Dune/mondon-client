@@ -21,14 +21,14 @@ class FilterStore(QObject):
         self.sort_name = "code"
         self.sort_asc = True
         self.search_code = None
-        self.bloc_focus = None
+        self.data_type = None
         self.init_dicts_filter()
 
     def reset_hard(self):
         self.sort_name = "code"
         self.sort_asc = True
         self.search_code = None
-        self.bloc_focus = None
+        self.data_type = None
         self.init_dicts_filter()
 
     def init_dicts_filter(self):
@@ -119,11 +119,11 @@ class FilterStore(QObject):
         self.search_code = search_code
         self.ON_CHANGED_SIGNAL.emit()
 
-    def set_bloc_focus(self, bloc_focus):
-        if self.bloc_focus == bloc_focus:
-            self.bloc_focus = None
+    def set_data_type(self, data_type):
+        if self.data_type == data_type:
+            self.data_type = None
         else:
-            self.bloc_focus = bloc_focus
+            self.data_type = data_type
         self.ON_CHANGED_SIGNAL.emit()
 
     def is_filtered(self, title):
