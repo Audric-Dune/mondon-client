@@ -12,6 +12,7 @@ from commun.constants.colors import color_blanc, color_vert_moyen, color_gris_mo
 from commun.constants.stylesheets import black_14_label_stylesheet,\
     button_no_radius_no_hover_stylesheet,\
     button_no_radius_stylesheet,\
+    button_no_radius_orange_stylesheet,\
     green_14_label_stylesheet,\
     button_14_stylesheet
 from gestion.stores.filter_store import filter_store
@@ -29,16 +30,20 @@ class SelectorCollumFilter(MondonWidget):
         self.title = title
         self.name_filter = name_filter
         self.filter_modal = None
+        self.icon_sorted = PixmapButton(parent=self)
         self.bt_open_filter = PixmapButton(parent=self)
         self.bt_open_filter.clicked.connect(self.on_click_bt_open_filter)
         self.init_bt(self.bt_open_filter)
+        self.init_bt(self.icon_sorted)
         self.init_widget()
         self.update_widget()
 
     def init_widget(self):
         hbox = QHBoxLayout()
         hbox.setContentsMargins(0, 0, 0, 0)
+        hbox.setSpacing(0)
         hbox.addWidget(self.get_label(self.title))
+        hbox.addWidget(self.icon_sorted)
         hbox.addWidget(self.bt_open_filter)
         self.setLayout(hbox)
 
@@ -47,6 +52,13 @@ class SelectorCollumFilter(MondonWidget):
             self.bt_open_filter.addImage("commun/assets/images/icon_filter_orange.png")
         else:
             self.bt_open_filter.addImage("commun/assets/images/arrow_down_vert_fonce.png")
+        if filter_store.sort_name == self.name_filter:
+            name_image = "icon_sort_asc_orange" if filter_store.sort_asc else "icon_sort_dsc_orange"
+            image = "commun/assets/images/{}.png".format(name_image)
+            self.icon_sorted.addImage(image)
+            self.icon_sorted.show()
+        else:
+            self.icon_sorted.hide()
         if self.filter_modal:
             self.filter_modal.update_widget()
 
@@ -54,9 +66,9 @@ class SelectorCollumFilter(MondonWidget):
         self.update_widget()
 
     def init_bt(self, bt):
-        bt.addImage("commun/assets/images/arrow_down_vert_fonce.png")
         bt.setStyleSheet(button_no_radius_no_hover_stylesheet)
         bt.setFixedSize(self.height(), self.height())
+        bt.setContentsMargins(3)
 
     @staticmethod
     def get_label(text):
@@ -106,6 +118,8 @@ class FilterModal(QWidget):
         self.setFocusPolicy(Qt.ClickFocus)
         self.setFocus()
         self.vbox = QVBoxLayout()
+        self.bt_sorted_asc = QPushButton("Trier A -> Z")
+        self.bt_sorted_dsc = QPushButton("Trier Z -> A")
         self.title = title
         self.name_filter = name_filter
         self.sort_mode = sort_mode
@@ -121,14 +135,20 @@ class FilterModal(QWidget):
         self.vbox.setSpacing(5)
         self.vbox.setContentsMargins(1, 5, 1, 5)
         if self.sort_mode:
-            bt_sorted_asc = QPushButton("Trier A -> Z")
-            bt_sorted_asc.setStyleSheet(button_no_radius_stylesheet)
-            bt_sorted_asc.clicked.connect(self.on_click_bt_sorted_asc)
-            bt_sorted_dsc = QPushButton("Trier Z -> A")
-            bt_sorted_dsc.setStyleSheet(button_no_radius_stylesheet)
-            bt_sorted_dsc.clicked.connect(self.on_click_bt_sorted_dsc)
-            self.vbox.addWidget(bt_sorted_asc)
-            self.vbox.addWidget(bt_sorted_dsc)
+            if filter_store.sort_name == self.name_filter:
+                if filter_store.sort_asc:
+                    self.bt_sorted_asc.setStyleSheet(button_no_radius_orange_stylesheet)
+                    self.bt_sorted_dsc.setStyleSheet(button_no_radius_stylesheet)
+                else:
+                    self.bt_sorted_asc.setStyleSheet(button_no_radius_stylesheet)
+                    self.bt_sorted_dsc.setStyleSheet(button_no_radius_orange_stylesheet)
+            else:
+                self.bt_sorted_asc.setStyleSheet(button_no_radius_stylesheet)
+                self.bt_sorted_dsc.setStyleSheet(button_no_radius_stylesheet)
+            self.bt_sorted_asc.clicked.connect(self.on_click_bt_sorted_asc)
+            self.bt_sorted_dsc.clicked.connect(self.on_click_bt_sorted_dsc)
+            self.vbox.addWidget(self.bt_sorted_asc)
+            self.vbox.addWidget(self.bt_sorted_dsc)
         if self.sort_mode and self.filter_mode:
             hbar = MondonWidget()
             hbar.setFixedHeight(2)

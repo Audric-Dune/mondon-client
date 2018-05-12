@@ -24,12 +24,18 @@ class FilterStore(QObject):
         self.bloc_focus = None
         self.init_dicts_filter()
 
+    def reset_hard(self):
+        self.sort_name = "code"
+        self.sort_asc = True
+        self.search_code = None
+        self.bloc_focus = None
+        self.init_dicts_filter()
+
     def init_dicts_filter(self):
         for name in self.list_filter:
             self.dicts_filter[name] = {"Tout": True}
 
     def update_dicts_filter(self):
-        # self.init_dicts_filter()
         for name_filter in self.list_filter:
             new_dict_filter = self.get_new_dict_filter(name_filter)
             self.update_dict_filter(name_filter, new_dict_filter)
@@ -60,6 +66,7 @@ class FilterStore(QObject):
             del current_dict[key]
 
     def set_plan_prod(self, plan_prod):
+        self.reset_hard()
         self.plan_prod = plan_prod
         self.update_dicts_filter()
         self.plan_prod.ON_CHANGED_SIGNAL.connect(self.update_dicts_filter)
@@ -86,8 +93,12 @@ class FilterStore(QObject):
         self.ON_CHANGED_SIGNAL.emit()
 
     def set_sort_param(self, sort_name, sort_asc):
-        self.sort_name = sort_name
-        self.sort_asc = sort_asc
+        if self.sort_name == sort_name and self.sort_asc == sort_asc:
+            self.sort_name = "code"
+            self.sort_asc = True
+        else:
+            self.sort_name = sort_name
+            self.sort_asc = sort_asc
         self.ON_CHANGED_SIGNAL.emit()
 
     def set_search_code(self, search_code):
