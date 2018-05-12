@@ -30,10 +30,13 @@ class SelectorCollumFilter(MondonWidget):
         self.title = title
         self.name_filter = name_filter
         self.filter_modal = None
-        self.icon_sorted = Image(parent=self, size=21)
-        self.bt_open_filter = Image(parent=self, size=21)
-        # self.init_bt(self.bt_open_filter)
-        # self.init_bt(self.icon_sorted)
+        self.memo_filter_modal = False
+        self.icon_sorted = PixmapButton(parent=self)
+        self.icon_sorted.setFocusPolicy(Qt.ClickFocus)
+        self.bt_open_filter = PixmapButton(parent=self)
+        self.bt_open_filter.clicked.connect(self.open_modal)
+        self.init_bt(self.bt_open_filter)
+        self.init_bt(self.icon_sorted)
         self.init_widget()
         self.update_widget()
 
@@ -76,41 +79,38 @@ class SelectorCollumFilter(MondonWidget):
         return label
 
     def open_modal(self):
-        if self.filter_modal:
-            self.filter_modal.close()
-            self.filter_modal = None
-        else:
-            pos = self.mapToGlobal(QPoint(0, self.height()))
-            self.filter_modal = FilterModal(parent=self,
-                                            title=self.title,
-                                            name_filter=self.name_filter,
-                                            pos=pos,
-                                            sort_mode=self.sort_mode,
-                                            filter_mode=self.filter_mode,
-                                            width=self.width())
-            self.filter_modal.ON_CLOSE_SIGNAL.connect(self.on_close_modal)
+        pos = self.mapToGlobal(QPoint(0, self.height()))
+        self.filter_modal = FilterModal(parent=self,
+                                        title=self.title,
+                                        name_filter=self.name_filter,
+                                        pos=pos,
+                                        sort_mode=self.sort_mode,
+                                        filter_mode=self.filter_mode,
+                                        width=self.width())
+        self.filter_modal.WANT_TO_CLOSE_SIGNAL.connect(self.close_modal)
 
-    def on_close_modal(self):
-        if self.filter_modal:
-            self.filter_modal.close()
-            self.filter_modal = None
+    def close_modal(self):
+        self.filter_modal.close()
+        self.filter_modal = None
 
-    def focusInEvent(self, e):
-        cursor = QCursor()
-        pos_cursor_from_widget = self.mapFromGlobal(cursor.pos())
-        if self.childrenRect().contains(pos_cursor_from_widget):
-            pass
-        else:
-            self.on_close_modal()
-        super(SelectorCollumFilter, self).focusInEvent(e)
+    def enterEvent(self, e):
+        if self.filter_modal:
+            self.memo_filter_modal = True
+
+    def leaveEvent(self, e):
+        self.memo_filter_modal = False
 
     def mouseReleaseEvent(self, e):
-        self.open_modal()
+        if self.memo_filter_modal:
+            self.memo_filter_modal = False
+        else:
+            self.open_modal()
+            self.memo_filter_modal = True
         super(SelectorCollumFilter, self).mouseReleaseEvent(e)
 
 
 class FilterModal(QWidget):
-    ON_CLOSE_SIGNAL = pyqtSignal()
+    WANT_TO_CLOSE_SIGNAL = pyqtSignal()
 
     def __init__(self, pos, width, title, sort_mode, filter_mode, name_filter, parent=None):
         super(FilterModal, self).__init__(parent=parent)
@@ -184,15 +184,18 @@ class FilterModal(QWidget):
         p.drawRect(0, 0, self.width()-1, self.height()-1)
 
     def on_click_bt_ok(self):
-        self.ON_CLOSE_SIGNAL.emit()
+        self.WANT_TO_CLOSE_SIGNAL.emit()
 
     def on_click_bt_sorted_asc(self):
         filter_store.set_sort_param(sort_name=self.name_filter, sort_asc=True)
-        self.ON_CLOSE_SIGNAL.emit()
+        self.WANT_TO_CLOSE_SIGNAL.emit()
 
     def on_click_bt_sorted_dsc(self):
         filter_store.set_sort_param(sort_name=self.name_filter, sort_asc=False)
-        self.ON_CLOSE_SIGNAL.emit()
+        self.WANT_TO_CLOSE_SIGNAL.emit()
+
+    def focusOutEvent(self, e):
+        self.WANT_TO_CLOSE_SIGNAL.emit()
 
 
 class LineFilter(MondonWidget):
