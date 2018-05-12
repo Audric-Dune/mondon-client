@@ -21,27 +21,43 @@ class FilterStore(QObject):
         self.sort_name = "code"
         self.sort_asc = True
         self.search_code = None
+        self.bloc_focus = None
+        self.init_dicts_filter()
 
     def init_dicts_filter(self):
         for name in self.list_filter:
             self.dicts_filter[name] = {"Tout": True}
 
     def update_dicts_filter(self):
-        self.init_dicts_filter()
+        # self.init_dicts_filter()
         for name_filter in self.list_filter:
-            self.update_dict_filter(name_filter)
+            new_dict_filter = self.get_new_dict_filter(name_filter)
+            self.update_dict_filter(name_filter, new_dict_filter)
 
-    def update_dict_filter(self, name_filter):
-        dict = self.dicts_filter[name_filter]
+    def get_new_dict_filter(self, name_filter):
+        new_dict_filter = {"Tout": True}
         for bobine in self.plan_prod.current_bobine_fille_store.bobines:
             value = getattr(bobine, name_filter)
             if name_filter == "poses":
                 for pose in value:
-                    if dict.get(pose) is None:
-                        dict[pose] = True
+                    if new_dict_filter.get(pose) is None:
+                        new_dict_filter[pose] = True
             else:
-                if dict.get(value) is None:
-                    dict[value] = True
+                if new_dict_filter.get(value) is None:
+                    new_dict_filter[value] = True
+        return new_dict_filter
+
+    def update_dict_filter(self, name_filter, new_dict_filter):
+        current_dict = self.dicts_filter[name_filter]
+        for new_key in new_dict_filter.keys():
+            if current_dict.get(new_key) is None:
+                current_dict[new_key] = current_dict["Tout"]
+        delete_key = []
+        for current_key in current_dict.keys():
+            if new_dict_filter.get(current_key) is None:
+                delete_key.append(current_key)
+        for key in delete_key:
+            del current_dict[key]
 
     def set_plan_prod(self, plan_prod):
         self.plan_prod = plan_prod
@@ -76,6 +92,13 @@ class FilterStore(QObject):
 
     def set_search_code(self, search_code):
         self.search_code = search_code
+        self.ON_CHANGED_SIGNAL.emit()
+
+    def set_bloc_focus(self, bloc_focus):
+        if self.bloc_focus == bloc_focus:
+            self.bloc_focus = None
+        else:
+            self.bloc_focus = bloc_focus
         self.ON_CHANGED_SIGNAL.emit()
 
     def is_filtered(self, title):

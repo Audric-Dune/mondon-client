@@ -17,6 +17,7 @@ class LinePerfo(MondonWidget):
     def __init__(self, parent=None, perfo=None, ech=1):
         super(LinePerfo, self).__init__(parent=parent)
         self.set_background_color(color_blanc)
+        self.setObjectName(str(perfo.code))
         self.ech = ech
         self.perfo = perfo
         self.hbox = QHBoxLayout()

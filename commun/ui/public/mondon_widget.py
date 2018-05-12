@@ -158,10 +158,10 @@ class MondonWidget(QWidget):
             logger.log(type(self), "Erreur pendant l'exécution de `on_settings_gestion_changed`: {}".format(e))
 
     def _handle_filter_changed(self):
-        try:
+        # try:
             self.on_filter_changed()
-        except Exception as e:
-            logger.log(type(self), "Erreur pendant l'exécution de `on_filter_changed`: {}".format(e))
+        # except Exception as e:
+        #     logger.log(type(self), "Erreur pendant l'exécution de `on_filter_changed`: {}".format(e))
 
     def _draw_fond(self, p):
         """

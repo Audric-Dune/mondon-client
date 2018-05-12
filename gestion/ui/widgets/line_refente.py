@@ -16,6 +16,7 @@ class LineRefente(MondonWidget):
     def __init__(self, parent=None, refente=None, ech=1, bobines=None):
         super(LineRefente, self).__init__(parent=parent)
         self.set_background_color(color_blanc)
+        self.setObjectName(str(refente.code))
         self.bobines = bobines
         self.ech = ech
         self.refente = refente

@@ -13,10 +13,10 @@ from gestion.ui.widgets.line_refente import LineRefente
 from gestion.ui.widgets.line_bobine_papier import LineBobinePapier
 from gestion.ui.widgets.line_bobine_poly import LineBobinePoly
 from gestion.stores.settings_store import settings_store_gestion
+from gestion.stores.filter_store import filter_store
 
 
 class BlocSelected(MondonWidget):
-    ON_CLICK_SIGNAL = pyqtSignal(str)
 
     def __init__(self, data_type, parent=None):
         super(BlocSelected, self).__init__(parent=parent)
@@ -95,8 +95,11 @@ class BlocSelected(MondonWidget):
             layout.addWidget(label)
         self.setLayout(layout)
 
+    def on_filter_changed(self):
+        self.update_widget()
+
     def update_widget(self):
-        if self.parent.bloc_focus == self.data_type:
+        if filter_store.bloc_focus == self.data_type:
             self.set_border(color=color_vert_moyen, size=2)
         else:
             self.set_border(color=color_blanc)
@@ -105,4 +108,4 @@ class BlocSelected(MondonWidget):
         self.update()
 
     def mouseReleaseEvent(self, e):
-        self.ON_CLICK_SIGNAL.emit(self.data_type)
+        filter_store.set_bloc_focus(bloc_focus=self.data_type)

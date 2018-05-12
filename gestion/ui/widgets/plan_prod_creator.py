@@ -5,7 +5,7 @@
 # -*- coding: utf-8 -*-
 
 
-from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QLabel
+from PyQt5.QtWidgets import QVBoxLayout, QLabel
 from PyQt5.QtCore import Qt
 
 from commun.ui.public.mondon_widget import MondonWidget
@@ -16,6 +16,7 @@ from gestion.ui.widgets.selector_manager import SelectorManager
 from gestion.ui.widgets.bloc_param_prod import BlocParamProd
 from gestion.ui.widgets.bloc_selected import BlocSelected
 from gestion.ui.widgets.bloc_information import BlocInformation
+from gestion.stores.filter_store import filter_store
 
 
 class PlanProdCreator(MondonWidget):
@@ -31,15 +32,10 @@ class PlanProdCreator(MondonWidget):
         self.bloc_param_prod = BlocParamProd(plan_prod=self.plan_prod, parent=self)
         self.titre_prod = QLabel("NOUVELLE PRODUCTION")
         self.bloc_poly_selected = BlocSelected(data_type="poly", parent=self)
-        self.bloc_poly_selected.ON_CLICK_SIGNAL.connect(self.handle_click_on_bloc_selected)
         self.bloc_papier_selected = BlocSelected(data_type="papier", parent=self)
-        self.bloc_papier_selected.ON_CLICK_SIGNAL.connect(self.handle_click_on_bloc_selected)
         self.bloc_perfo_selected = BlocSelected(data_type="perfo", parent=self)
-        self.bloc_perfo_selected.ON_CLICK_SIGNAL.connect(self.handle_click_on_bloc_selected)
         self.bloc_refente_selected = BlocSelected(data_type="refente", parent=self)
-        self.bloc_refente_selected.ON_CLICK_SIGNAL.connect(self.handle_click_on_bloc_selected)
         self.bloc_bobines_selected = BlocSelected(data_type="bobine", parent=self)
-        self.bloc_bobines_selected.ON_CLICK_SIGNAL.connect(self.handle_click_on_bloc_selected)
         self.bloc_info = BlocInformation(parent=self, plan_prod=plan_prod)
         self.init_ui()
 
@@ -61,7 +57,6 @@ class PlanProdCreator(MondonWidget):
         master_vbox.addWidget(self.selector_manager)
         master_vbox.addLayout(vbox)
         master_vbox.addWidget(self.bloc_bobines_selected)
-
         self.setLayout(master_vbox)
 
     def update_bloc_selected(self):
@@ -71,12 +66,9 @@ class PlanProdCreator(MondonWidget):
         self.bloc_perfo_selected.update_widget()
         self.bloc_papier_selected.update_widget()
 
-    def update_selector_manager(self):
-        self.selector_manager.update_widget(self.bloc_focus)
-
     def handle_plan_prod_changed(self):
         self.update_bloc_selected()
-        self.update_selector_manager()
+        self.selector_manager.selector.update_widget()
         self.bloc_param_prod.update_label()
         self.bloc_info.update_widget()
 
@@ -84,17 +76,8 @@ class PlanProdCreator(MondonWidget):
         self.bloc_param_prod.update_label()
         self.bloc_info.update_widget()
 
-    def handle_click_on_bloc_selected(self, name_bloc):
-        if self.bloc_focus == name_bloc:
-            self.bloc_focus = "bobine"
-        else:
-            self.bloc_focus = name_bloc
-        self.update_bloc_selected()
-        self.update_selector_manager()
-        self.bloc_info.update_widget()
-
     def keyPressEvent(self, e):
         if e.key() == Qt.Key_Delete:
-            self.plan_prod.del_item_selected(self.bloc_focus)
+            self.plan_prod.del_item_selected(filter_store.bloc_focus)
         if e.key() == Qt.Key_Enter:
             self.plan_prod.get_new_item_selected_from_store()

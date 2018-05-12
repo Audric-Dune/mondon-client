@@ -1,9 +1,8 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import time
-
 from PyQt5.QtWidgets import QScrollArea, QVBoxLayout, QWidget
+
 from commun.constants.colors import color_bleu_gris
 from commun.constants.stylesheets import scroll_bar_stylesheet
 from commun.ui.public.mondon_widget import MondonWidget
@@ -25,7 +24,10 @@ class Selector(MondonWidget):
         self.parent = parent
         self.list_bobines = []
         self.lines_bobine = []
-        self.current_focus = None
+        self.lines_refente = []
+        self.lines_papier = []
+        self.lines_poly = []
+        self.lines_perfo = []
         self.background_color = color_bleu_gris
         self.master_vbox = QVBoxLayout()
         self.master_vbox.setContentsMargins(0, 0, 0, 0)
@@ -35,9 +37,16 @@ class Selector(MondonWidget):
         self.scroll_bar = QScrollArea(parent=self)
         self.content_scrollbar = QWidget(parent=self.scroll_bar)
         self.update_list()
-        self.init_list_lines_bobine()
+        self.init_lists_lines()
         self.init_widget()
         self.update_widget()
+
+    def init_lists_lines(self):
+        self.init_list_lines_bobine()
+        self.init_list_lines_refente()
+        self.init_list_lines_perfo()
+        self.init_list_lines_papier()
+        self.init_list_lines_poly()
 
     def init_list_lines_bobine(self):
         for bobine in self.list_bobines:
@@ -47,9 +56,50 @@ class Selector(MondonWidget):
             line_bobine.hide()
             self.lines_bobine.append(line_bobine)
 
+    def init_list_lines_refente(self):
+        for refente in self.plan_prod.current_refente_store.refentes:
+            line_refente = LineRefente(parent=self, refente=refente, ech=settings_store_gestion.ech)
+            line_refente.ON_DBCLICK_SIGNAL.connect(self.handle_selected_refente)
+            line_refente.hide()
+            self.lines_refente.append(line_refente)
+
+    def init_list_lines_perfo(self):
+        for perfo in self.plan_prod.current_perfo_store.perfos:
+            line_perfo = LinePerfo(parent=self, perfo=perfo, ech=settings_store_gestion.ech)
+            line_perfo.ON_DBCLICK_SIGNAL.connect(self.handle_selected_perfo)
+            line_perfo.hide()
+            self.lines_perfo.append(line_perfo)
+
+    def init_list_lines_papier(self):
+        for bobine in self.plan_prod.current_bobine_papier_store.bobines:
+            line_bobine_papier = LineBobinePapier(parent=self, bobine=bobine)
+            line_bobine_papier.ON_DBCLICK_SIGNAL.connect(self.handle_selected_bobine_papier)
+            line_bobine_papier.setFixedHeight(20)
+            line_bobine_papier.hide()
+            self.lines_papier.append(line_bobine_papier)
+
+    def init_list_lines_poly(self):
+        for bobine in self.plan_prod.current_bobine_poly_store.bobines:
+            line_bobine_poly = LineBobinePoly(parent=self, bobine=bobine)
+            line_bobine_poly.ON_DBCLICK_SIGNAL.connect(self.handle_selected_bobine_poly)
+            line_bobine_poly.setFixedHeight(20)
+            line_bobine_poly.hide()
+            self.lines_poly.append(line_bobine_poly)
+
     def init_widget(self):
         self.vbox.setContentsMargins(0, 0, 0, 0)
         self.vbox.setSpacing(5)
+        for line_bobine in self.lines_bobine:
+            self.vbox.addWidget(line_bobine)
+        for line_refente in self.lines_refente:
+            self.vbox.addWidget(line_refente)
+        for line_papier in self.lines_papier:
+            self.vbox.addWidget(line_papier)
+        for line_poly in self.lines_poly:
+            self.vbox.addWidget(line_poly)
+        for line_perfo in self.lines_perfo:
+            self.vbox.addWidget(line_perfo)
+        self.vbox.addStretch()
         self.content_scrollbar.setLayout(self.vbox)
         self.content_scrollbar.setContentsMargins(0, 0, 0, 0)
         self.scroll_bar.setWidget(self.content_scrollbar)
@@ -59,7 +109,6 @@ class Selector(MondonWidget):
         self.setLayout(self.master_vbox)
 
     def on_filter_changed(self):
-        self.update_list()
         self.update_widget()
 
     def sort_bobine(self):
@@ -76,7 +125,7 @@ class Selector(MondonWidget):
         for bobine in self.plan_prod.current_bobine_fille_store.bobines:
             if self.is_valid_bobine_from_filters(bobine) and self.is_valid_from_search_code(bobine):
                 self.list_bobines.append(bobine)
-    
+
     @staticmethod
     def is_valid_from_search_code(bobine):
         if not filter_store.search_code:
@@ -110,47 +159,75 @@ class Selector(MondonWidget):
             return False
 
     def update_widget(self):
+        self.update_list()
         self.sort_bobine()
-        self.current_focus = self.parent.bloc_focus
-        self.hide_lines_bobine()
-        if self.current_focus == "bobine" or not self.current_focus:
+        current_focus = filter_store.bloc_focus
+        self.hide_lines()
+        self.vbox.takeAt(self.vbox.count()-1)
+        if current_focus == "bobine" or not current_focus:
             for bobine in self.list_bobines:
                 line_bobine = self.get_line_bobine(bobine)
                 line_bobine.show()
                 self.vbox.addWidget(line_bobine)
-        if self.current_focus == "refente":
+        if current_focus == "refente":
             for refente in self.plan_prod.current_refente_store.refentes:
-                line_refente = LineRefente(parent=self, refente=refente, ech=settings_store_gestion.ech)
-                line_refente.ON_DBCLICK_SIGNAL.connect(self.handle_selected_refente)
+                line_refente = self.get_line_refente(refente)
+                line_refente.show()
                 self.vbox.addWidget(line_refente)
-        if self.current_focus == "perfo":
+        if current_focus == "perfo":
             for perfo in self.plan_prod.current_perfo_store.perfos:
-                line_perfo = LinePerfo(parent=self, perfo=perfo, ech=settings_store_gestion.ech)
-                line_perfo.ON_DBCLICK_SIGNAL.connect(self.handle_selected_perfo)
+                line_perfo = self.get_line_perfo(perfo)
+                line_perfo.show()
                 self.vbox.addWidget(line_perfo)
-        if self.current_focus == "papier":
+        if current_focus == "papier":
             for bobine in self.plan_prod.current_bobine_papier_store.bobines:
-                line_bobine_papier = LineBobinePapier(parent=self, bobine=bobine)
-                line_bobine_papier.ON_DBCLICK_SIGNAL.connect(self.handle_selected_bobine_papier)
-                line_bobine_papier.setFixedHeight(20)
+                line_bobine_papier = self.get_line_papier(bobine)
+                line_bobine_papier.show()
                 self.vbox.addWidget(line_bobine_papier)
-        if self.current_focus == "poly":
+        if current_focus == "poly":
             for bobine in self.plan_prod.current_bobine_poly_store.bobines:
-                line_bobine_poly = LineBobinePoly(parent=self, bobine=bobine)
-                line_bobine_poly.ON_DBCLICK_SIGNAL.connect(self.handle_selected_bobine_poly)
-                line_bobine_poly.setFixedHeight(20)
+                line_bobine_poly = self.get_line_poly(bobine)
+                line_bobine_poly.show()
                 self.vbox.addWidget(line_bobine_poly)
-        self.vbox.addStretch(0)
         self.update()
+        self.vbox.addStretch()
 
-    def hide_lines_bobine(self):
+    def hide_lines(self):
         for line_bobine in self.lines_bobine:
             line_bobine.hide()
+        for line_refente in self.lines_refente:
+            line_refente.hide()
+        for line_papier in self.lines_papier:
+            line_papier.hide()
+        for line_poly in self.lines_poly:
+            line_poly.hide()
+        for line_perfo in self.lines_perfo:
+            line_perfo.hide()
 
     def get_line_bobine(self, bobine):
         for line_bobine in self.lines_bobine:
             if line_bobine.objectName() == bobine.code:
                 return line_bobine
+
+    def get_line_refente(self, refente):
+        for line_refente in self.lines_refente:
+            if int(line_refente.objectName()) == refente.code:
+                return line_refente
+
+    def get_line_perfo(self, perfo):
+        for line_perfo in self.lines_perfo:
+            if int(line_perfo.objectName()) == perfo.code:
+                return line_perfo
+
+    def get_line_papier(self, bobine):
+        for line_papier in self.lines_papier:
+            if line_papier.objectName() == bobine.code:
+                return line_papier
+
+    def get_line_poly(self, bobine):
+        for line_poly in self.lines_poly:
+            if line_poly.objectName() == bobine.code:
+                return line_poly
 
     def handle_selected_bobine(self, bobine, pose=None):
         if pose:

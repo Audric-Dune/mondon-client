@@ -33,6 +33,7 @@ class SelectorCollumFilter(MondonWidget):
         self.bt_open_filter.clicked.connect(self.on_click_bt_open_filter)
         self.init_bt(self.bt_open_filter)
         self.init_widget()
+        self.update_widget()
 
     def init_widget(self):
         hbox = QHBoxLayout()
@@ -41,12 +42,16 @@ class SelectorCollumFilter(MondonWidget):
         hbox.addWidget(self.bt_open_filter)
         self.setLayout(hbox)
 
-    def on_filter_changed(self):
+    def update_widget(self):
         if filter_store.is_filtered(self.name_filter):
             self.bt_open_filter.addImage("commun/assets/images/icon_filter_orange.png")
         else:
             self.bt_open_filter.addImage("commun/assets/images/arrow_down_vert_fonce.png")
-        self.filter_modal.update_widget()
+        if self.filter_modal:
+            self.filter_modal.update_widget()
+
+    def on_filter_changed(self):
+        self.update_widget()
 
     def init_bt(self, bt):
         bt.addImage("commun/assets/images/arrow_down_vert_fonce.png")

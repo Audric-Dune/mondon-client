@@ -14,6 +14,7 @@ class LineBobinePapier(MondonWidget):
     def __init__(self, parent=None, bobine=None):
         super(LineBobinePapier, self).__init__(parent=parent)
         self.set_background_color(color_blanc)
+        self.setObjectName(bobine.code)
         self.state = None
         self.installEventFilter(self)
         self.bobine = bobine
