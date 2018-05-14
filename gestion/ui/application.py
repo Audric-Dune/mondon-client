@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5.QtWidgets import QApplication
-# from random import randint
 
 from gestion.ui.window.main_window import MainWindow
 from commun.lib. base_de_donnee import Database

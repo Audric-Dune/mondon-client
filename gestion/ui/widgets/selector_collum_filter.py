@@ -8,6 +8,7 @@ from PyQt5.QtGui import QPainter, QColor, QPen
 from commun.ui.public.mondon_widget import MondonWidget
 from commun.ui.public.image import Image
 from commun.constants.colors import color_blanc, color_vert_moyen, color_gris_moyen
+from commun.constants.dimensions import dict_with_selector_bobine
 from commun.constants.stylesheets import black_14_label_stylesheet,\
     button_no_radius_stylesheet,\
     button_no_radius_orange_stylesheet,\
@@ -22,6 +23,8 @@ class SelectorCollumFilter(MondonWidget):
         super(SelectorCollumFilter, self).__init__(parent)
         self.setFocusPolicy(Qt.ClickFocus)
         self.setFixedHeight(21)
+        width = dict_with_selector_bobine[name_filter]
+        self.setMinimumWidth(width)
         self.set_background_color(color_blanc)
         self.sort_mode = sort_mode
         self.filter_mode = filter_mode
