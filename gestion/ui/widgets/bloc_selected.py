@@ -35,6 +35,7 @@ class BlocSelected(MondonWidget):
         self.setLayout(self.master_hbox)
 
     def update_widget(self):
+        print("update")
         clear_layout(self.master_hbox)
         self.master_hbox.addLayout(self.get_content())
         self.update()
@@ -43,20 +44,36 @@ class BlocSelected(MondonWidget):
         content_layout = QVBoxLayout()
         content_layout.setContentsMargins(0, 0, 0, 0)
         if self.data_type == "perfo":
-            if self.parent.plan_prod.bobines_filles_selected:
-                content_ui = QLabel("UI perfo sélectionnée")
+            if self.parent.plan_prod.perfo_selected:
+                content_ui = LinePerfo(perfo=self.parent.plan_prod.perfo_selected)
                 content_layout.addWidget(content_ui)
                 return content_layout
             else:
                 content_layout.addLayout(self.get_ui_select(text="une campagne de perforation"))
                 return content_layout
         if self.data_type == "papier":
-            if self.parent.plan_prod.bobines_filles_selected:
-                content_ui = QLabel("UI bobine papier sélectionnée")
+            if self.parent.plan_prod.bobine_papier_selected:
+                content_ui = LineBobinePapier(bobine=self.parent.plan_prod.bobine_papier_selected)
                 content_layout.addWidget(content_ui)
                 return content_layout
             else:
                 content_layout.addLayout(self.get_ui_select(text="une bobine mère papier"))
+                return content_layout
+        if self.data_type == "poly":
+            if self.parent.plan_prod.bobine_poly_selected:
+                content_ui = LineBobinePoly(bobine=self.parent.plan_prod.bobine_poly_selected)
+                content_layout.addWidget(content_ui)
+                return content_layout
+            else:
+                content_layout.addLayout(self.get_ui_select(text="une bobine mère polypro"))
+                return content_layout
+        if self.data_type == "refente":
+            if self.parent.plan_prod.refente_selected:
+                content_ui = LineRefente(refente=self.parent.plan_prod.refente_selected)
+                content_layout.addWidget(content_ui)
+                return content_layout
+            else:
+                content_layout.addLayout(self.get_ui_select(text="une refente"))
                 return content_layout
         content_layout.addLayout(self.get_ui_select(text="En cours"))
         return content_layout
@@ -78,6 +95,7 @@ class BlocSelected(MondonWidget):
         hbox.addWidget(label, alignment=Qt.AlignCenter)
         return hbox
 
-    def on_click_bp_add(self):
+    def mouseDoubleClickEvent(self, e):
         filter_store.set_data_type(self.data_type)
         self.callback()
+        super(BlocSelected, self).mouseDoubleClickEvent(e)
