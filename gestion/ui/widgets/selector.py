@@ -105,6 +105,8 @@ class Selector(MondonWidget):
         self.scroll_bar.setWidget(self.content_scrollbar)
         self.scroll_bar.setStyleSheet(scroll_bar_stylesheet)
         self.scroll_bar.setWidgetResizable(True)
+        self.scroll_bar.setMinimumWidth(1200)
+        self.scroll_bar.setMinimumHeight(500)
         self.master_vbox.addWidget(self.scroll_bar)
         self.setLayout(self.master_vbox)
 

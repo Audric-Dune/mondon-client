@@ -8,7 +8,7 @@ from commun.constants.colors import color_gris, color_noir
 
 
 class BobineFille(MondonWidget):
-    BOBINE_HEIGHT = 200
+    BOBINE_HEIGHT = 150
 
     def __init__(self, parent=None, laize=0, number=0, ech=1, bobine=None):
         super(BobineFille, self).__init__(parent=parent)

@@ -21,7 +21,6 @@ from production.ui.application import app
 class MondonWidget(QWidget):
     def __init__(self, parent=None):
         super(QWidget, self).__init__(parent=parent)
-        self.setFocusPolicy(Qt.ClickFocus)
         self.background_color = None
         self.border_color = None
         self.border_size = None

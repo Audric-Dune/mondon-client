@@ -13,6 +13,7 @@ class SelectorManager(QWidget):
     def __init__(self, plan_prod, parent):
         super(SelectorManager, self).__init__(parent=parent)
         self.setWindowFlags(Qt.Window)
+        self.keyboardGrabber()
         self.search_code = None
         self.selector = Selector(parent=self, plan_prod=plan_prod)
         self.selector_filter = SelectorFilter(parent=self)
@@ -39,6 +40,11 @@ class SelectorManager(QWidget):
 
     def update_widget(self):
         self.selector.update_widget()
+
+    def keyPressEvent(self, e):
+        super(SelectorManager, self).keyPressEvent(e)
+        if e.key() == Qt.Key_Escape:
+            self.close()
 
     def closeEvent(self, e):
         self.hide()

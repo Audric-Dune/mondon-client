@@ -120,10 +120,7 @@ class FilterStore(QObject):
         self.ON_CHANGED_SIGNAL.emit()
 
     def set_data_type(self, data_type):
-        if self.data_type == data_type:
-            self.data_type = None
-        else:
-            self.data_type = data_type
+        self.data_type = data_type
         self.ON_CHANGED_SIGNAL.emit()
 
     def is_filtered(self, title):

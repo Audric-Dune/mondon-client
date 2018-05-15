@@ -68,6 +68,8 @@ class PlanProdCreator(MondonWidget):
     def handle_plan_prod_changed(self):
         self.update_bloc_selected()
         self.selector_manager.selector.update_widget()
+        if filter_store.data_type != "bobine":
+            self.selector_manager.hide()
         self.bloc_param_prod.update_label()
         self.bloc_info.update_widget()
 
