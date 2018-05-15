@@ -38,6 +38,7 @@ color_gris = Color('#f2f2f2')
 color_gris_moyen = Color('#BDC3C7')
 color_gris_clair = Color('#ECF0F1')
 color_gris_fonce = Color('#95A5A6')
+color_gris_noir = Color("#595959")
 
 # Gestion des couleurs bobines
 bob_orange = Color("#e67e22")

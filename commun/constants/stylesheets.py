@@ -13,7 +13,8 @@ from commun.constants.colors import (
     color_noir,
     color_bleu,
     color_bleu_dune,
-    color_jaune_dune)
+    color_jaune_dune,
+    color_gris_noir)
 
 # ____________LABEL STYLESHEET____________
 
@@ -135,6 +136,8 @@ black_12_label_stylesheet = create_qlabel_stylesheet(color=color_noir,
                                                      font_size="12px")
 black_16_label_stylesheet = create_qlabel_stylesheet(color=color_noir,
                                                      font_size="16px")
+gray_18_label_stylesheet = create_qlabel_stylesheet(color=color_gris_noir,
+                                                    font_size="18px")
 black_14_label_stylesheet = create_qlabel_stylesheet(color=color_noir,
                                                      font_size="14px")
 black_20_label_stylesheet = create_qlabel_stylesheet(color=color_noir, font_size="20px")

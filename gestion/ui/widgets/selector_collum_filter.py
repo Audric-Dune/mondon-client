@@ -99,7 +99,6 @@ class SelectorCollumFilter(MondonWidget):
         self.memo_filter_modal = False
 
     def mouseReleaseEvent(self, e):
-        print("mouseReleaseEvent")
         if self.memo_filter_modal:
             self.memo_filter_modal = False
         else:

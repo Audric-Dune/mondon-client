@@ -1,10 +1,14 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtWidgets import QVBoxLayout, QLabel
+from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel
+from PyQt5.Qt import Qt
+from PyQt5.QtGui import QColor, QPainter, QPen
 
-from commun.constants.colors import color_vert_moyen, color_blanc
+from commun.constants.colors import color_vert_moyen, color_blanc, color_gris_noir
 from commun.ui.public.mondon_widget import MondonWidget
+from commun.ui.public.pixmap_button import PixmapButton
+from commun.constants.stylesheets import button_stylesheet, gray_18_label_stylesheet
 from commun.utils.layout import clear_layout
 from gestion.ui.widgets.line_bobine import LineBobine
 from gestion.ui.widgets.line_perfo import LinePerfo
@@ -24,89 +28,56 @@ class BlocSelected(MondonWidget):
         self.parent = parent
         self.callback = callback
         self.master_hbox = QVBoxLayout()
-        self.update_widget()
+        self.init_ui()
 
     def init_ui(self):
-        clear_layout(self.master_hbox)
-        if self.data_type == "bobine":
-            self.init_ui_bobine_fille(self.master_hbox)
-        if self.data_type == "poly":
-            self.init_ui_bobine_poly(self.master_hbox)
-        if self.data_type == "papier":
-            self.init_ui_bobine_papier(self.master_hbox)
-        if self.data_type == "perfo":
-            self.init_ui_perfo(self.master_hbox)
-        if self.data_type == "refente":
-            self.init_ui_refente(self.master_hbox)
+        self.master_hbox.addLayout(self.get_content())
         self.setLayout(self.master_hbox)
 
-    def init_ui_bobine_fille(self, layout):
-        if self.parent.plan_prod.bobines_filles_selected:
-            for bobine in self.parent.plan_prod.bobines_filles_selected:
-                line_bobine = LineBobine(parent=self, bobine=bobine)
-                layout.addWidget(line_bobine)
-        else:
-            label = QLabel("Bobines filles")
-            label.setFixedHeight(30)
-            layout.addWidget(label)
-
-    def init_ui_bobine_papier(self, layout):
-        if self.parent.plan_prod.bobine_papier_selected:
-            line_bobine_papier = LineBobinePapier(parent=self, bobine=self.parent.plan_prod.bobine_papier_selected)
-            layout.addWidget(line_bobine_papier)
-        else:
-            label = QLabel("Bobine mère papier")
-            label.setFixedHeight(30)
-            layout.addWidget(label)
-        self.setLayout(layout)
-
-    def init_ui_bobine_poly(self, layout):
-        if self.parent.plan_prod.bobine_poly_selected:
-            line_bobine_poly = LineBobinePoly(parent=self, bobine=self.parent.plan_prod.bobine_poly_selected)
-            layout.addWidget(line_bobine_poly)
-        else:
-            label = QLabel("Bobine mère poly")
-            label.setFixedHeight(30)
-            layout.addWidget(label)
-        self.setLayout(layout)
-
-    def init_ui_refente(self, layout):
-        if self.parent.plan_prod.refente_selected:
-            line_refente = LineRefente(parent=self,
-                                       refente=self.parent.plan_prod.refente_selected,
-                                       bobines=self.parent.plan_prod.bobines_filles_selected,
-                                       ech=settings_store_gestion.ech)
-            layout.addWidget(line_refente)
-        else:
-            label = QLabel("Refente")
-            label.setFixedHeight(30)
-            layout.addWidget(label)
-        self.setLayout(layout)
-
-    def init_ui_perfo(self, layout):
-        if self.parent.plan_prod.perfo_selected:
-            line_perfo = LinePerfo(parent=self,
-                                   perfo=self.parent.plan_prod.perfo_selected,
-                                   ech=settings_store_gestion.ech)
-            layout.addWidget(line_perfo)
-        else:
-            label = QLabel("Campagne de perforation")
-            label.setFixedHeight(30)
-            layout.addWidget(label)
-        self.setLayout(layout)
-
-    def on_filter_changed(self):
-        self.update_widget()
-
     def update_widget(self):
-        if filter_store.data_type == self.data_type:
-            self.set_border(color=color_vert_moyen, size=2)
-        else:
-            self.set_border(color=color_blanc)
-
-        self.init_ui()
+        clear_layout(self.master_hbox)
+        self.master_hbox.addLayout(self.get_content())
         self.update()
 
-    def mouseDoubleClickEvent(self, e):
+    def get_content(self):
+        content_layout = QVBoxLayout()
+        content_layout.setContentsMargins(0, 0, 0, 0)
+        if self.data_type == "perfo":
+            if self.parent.plan_prod.bobines_filles_selected:
+                content_ui = QLabel("UI perfo sélectionnée")
+                content_layout.addWidget(content_ui)
+                return content_layout
+            else:
+                content_layout.addLayout(self.get_ui_select(text="une campagne de perforation"))
+                return content_layout
+        if self.data_type == "papier":
+            if self.parent.plan_prod.bobines_filles_selected:
+                content_ui = QLabel("UI bobine papier sélectionnée")
+                content_layout.addWidget(content_ui)
+                return content_layout
+            else:
+                content_layout.addLayout(self.get_ui_select(text="une bobine mère papier"))
+                return content_layout
+        content_layout.addLayout(self.get_ui_select(text="En cours"))
+        return content_layout
+
+    def paintEvent(self, e):
+        p = QPainter(self)
+        color = color_gris_noir.rgb_components
+        qcolor_gris_noir = QColor(color[0], color[1], color[2])
+        pen = QPen()
+        pen.setColor(qcolor_gris_noir)
+        p.setPen(pen)
+        p.drawRect(0, 0, self.width()-1, self.height()-1)
+
+    @staticmethod
+    def get_ui_select(text):
+        hbox = QHBoxLayout()
+        label = QLabel("Double click pour sélectionner {}".format(text))
+        label.setStyleSheet(gray_18_label_stylesheet)
+        hbox.addWidget(label, alignment=Qt.AlignCenter)
+        return hbox
+
+    def on_click_bp_add(self):
         filter_store.set_data_type(self.data_type)
         self.callback()
