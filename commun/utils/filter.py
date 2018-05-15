@@ -1,7 +1,7 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import copy
+import time
 
 # FILTRE BOBINES PAPIER
 
@@ -188,6 +188,15 @@ def is_valid_refente_for_bobines_fille_selected(refente, bobines_fille_selected)
 
 
 def is_valid_refente_for_bobines_fille(refente, bobines_fille, bobines_fille_selected):
+    t0 = time.time()
+    result = rec_is_valid_refente_for_bobines_fille(refente, bobines_fille, bobines_fille_selected)
+    t1 = time.time()
+    if t1-t0 > 0.1:
+        print("is_valid_refente_for_bobines_fille, ", "lg bobines : ", len(bobines_fille), refente, " time: ", t1-t0)
+    return result
+
+
+def rec_is_valid_refente_for_bobines_fille(refente, bobines_fille, bobines_fille_selected):
     if bobines_fille_selected:
         refente_with_bobines_fille_selected = get_new_refente_with_bobines_fille(refente,
                                                                                  bobines_fille=bobines_fille_selected,
@@ -219,14 +228,16 @@ def is_valid_refente_for_bobines_fille(refente, bobines_fille, bobines_fille_sel
                 continue
             else:
                 if bobines_fille_selected:
-                    new_bobines_fille_selected = bobines_fille_selected.copy()
+                    # new_bobines_fille_selected = bobines_fille_selected.copy()
+                    new_bobines_fille_selected = bobines_fille_selected
                 else:
                     new_bobines_fille_selected = []
                 new_bobines_fille_selected.append(bobine_fille_selected)
-                if is_valid_refente_for_bobines_fille(refente=refente_with_bobines_fille_selected,
-                                                      bobines_fille=bobines_fille,
-                                                      bobines_fille_selected=new_bobines_fille_selected):
+                if rec_is_valid_refente_for_bobines_fille(refente=refente_with_bobines_fille_selected,
+                                                           bobines_fille=bobines_fille,
+                                                           bobines_fille_selected=new_bobines_fille_selected):
                     return True
+                new_bobines_fille_selected.pop()
     return False
 
 
