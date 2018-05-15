@@ -35,7 +35,6 @@ class BlocSelected(MondonWidget):
         self.setLayout(self.master_hbox)
 
     def update_widget(self):
-        print("update")
         clear_layout(self.master_hbox)
         self.master_hbox.addLayout(self.get_content())
         self.update()

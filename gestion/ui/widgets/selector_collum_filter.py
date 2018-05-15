@@ -112,6 +112,7 @@ class FilterModal(QWidget):
 
     def __init__(self, pos, width, title, sort_mode, filter_mode, name_filter, parent=None):
         super(FilterModal, self).__init__(parent=parent)
+        self.setWindowFlags(Qt.SplashScreen)
         self.setFocusPolicy(Qt.ClickFocus)
         self.setFocus()
         self.vbox = QVBoxLayout()
@@ -122,7 +123,6 @@ class FilterModal(QWidget):
         self.sort_mode = sort_mode
         self.filter_mode = filter_mode
         self.list_fiter = filter_store.dicts_filter[self.name_filter]
-        self.setWindowFlags(Qt.SplashScreen)
         self.setFixedWidth(width)
         self.move(pos)
         self.init_widget()

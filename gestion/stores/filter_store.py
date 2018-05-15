@@ -33,7 +33,7 @@ class FilterStore(QObject):
 
     def init_dicts_filter(self):
         for name in self.list_filter:
-            self.dicts_filter[name] = {"Tout": True}
+            self.dicts_filter[name] = {"Tous": True}
 
     def update_dicts_filter(self):
         for name_filter in self.list_filter:
@@ -43,10 +43,10 @@ class FilterStore(QObject):
 
     def sort_dict(self, name_filter):
         current_dict = self.dicts_filter[name_filter]
-        new_dict_filter = {"Tout": True}
+        new_dict_filter = {"Tous": True}
         list_key = []
         for key in current_dict.keys():
-            if key != "Tout":
+            if key != "Tous":
                 list_key.append(key)
         list_key.sort()
         for key in list_key:
@@ -55,7 +55,7 @@ class FilterStore(QObject):
         self.dicts_filter[name_filter] = new_dict_filter
 
     def get_new_dict_filter(self, name_filter):
-        new_dict_filter = {"Tout": True}
+        new_dict_filter = {"Tous": True}
         for bobine in self.plan_prod.current_bobine_fille_store.bobines:
             value = getattr(bobine, name_filter)
             if name_filter == "poses":
@@ -71,7 +71,7 @@ class FilterStore(QObject):
         current_dict = self.dicts_filter[name_filter]
         for new_key in new_dict_filter.keys():
             if current_dict.get(new_key) is None:
-                current_dict[new_key] = current_dict["Tout"]
+                current_dict[new_key] = current_dict["Tous"]
         delete_key = []
         for current_key in current_dict.keys():
             if new_dict_filter.get(current_key) is None:
@@ -93,17 +93,17 @@ class FilterStore(QObject):
 
     def set_is_selected(self, title, value):
         values = self.dicts_filter[title]
-        if value == "Tout":
-            set_selected = False if values["Tout"] else True
+        if value == "Tous":
+            set_selected = False if values["Tous"] else True
             for key in values.keys():
                 values[key] = set_selected
         else:
-            values["Tout"] = True
+            values["Tous"] = True
             for key in values.keys():
                 if key == value:
                     values[key] = False if values[key] else True
                 if not values[key]:
-                    values["Tout"] = False
+                    values["Tous"] = False
         self.ON_CHANGED_SIGNAL.emit()
 
     def set_sort_param(self, sort_name, sort_asc):
