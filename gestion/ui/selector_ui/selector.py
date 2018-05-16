@@ -206,7 +206,6 @@ class Selector(MondonWidget):
     @staticmethod
     def is_valid_refente_from_filter(refente, name):
         dict_filter = filter_store.dicts_filter[name]
-        print(dict_filter)
         if name == "laize_fille":
             for key in dict_filter.keys():
                 for laize in refente.laizes:

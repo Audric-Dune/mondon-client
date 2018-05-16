@@ -48,10 +48,6 @@ class Application(QApplication):
         self.read_xlsm()
         self.init_refente_store()
         self.init_perfo_store()
-
-        perform_test()
-        exit()
-
         self.init_ui()
 
     def init_ui(self):
