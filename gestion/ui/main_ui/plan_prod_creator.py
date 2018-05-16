@@ -6,17 +6,15 @@
 
 
 from PyQt5.QtWidgets import QVBoxLayout, QLabel
-from PyQt5.QtCore import Qt
+from gestion.ui.plan_prod_creator_widget.bloc_information import BlocInformation
+from gestion.ui.plan_prod_creator_widget.bloc_selected import BlocSelected
+from gestion.ui.selector_ui.selector_manager import SelectorManager
 
-from commun.ui.public.mondon_widget import MondonWidget
 from commun.constants.colors import color_blanc
 from commun.constants.stylesheets import white_12_bold_label_stylesheet
-
-from gestion.ui.widgets.selector_manager import SelectorManager
-from gestion.ui.widgets.bloc_param_prod import BlocParamProd
-from gestion.ui.widgets.bloc_selected import BlocSelected
-from gestion.ui.widgets.bloc_information import BlocInformation
+from commun.ui.public.mondon_widget import MondonWidget
 from gestion.stores.filter_store import filter_store
+from gestion.ui.plan_prod_creator_widget.bloc_param_prod import BlocParamProd
 
 
 class PlanProdCreator(MondonWidget):

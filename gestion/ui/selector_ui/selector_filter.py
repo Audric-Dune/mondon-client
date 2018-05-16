@@ -5,11 +5,11 @@ from PyQt5.QtWidgets import QHBoxLayout, QLabel
 
 from commun.constants.colors import color_bleu_gris, color_blanc
 from commun.constants.stylesheets import black_14_label_stylesheet, line_edit_stylesheet
+from commun.ui.public.image import Image
 from commun.ui.public.mondon_widget import MondonWidget
 from commun.ui.public.text_edit import TextEdit
-from commun.ui.public.image import Image
-from gestion.ui.widgets.selector_collum_filter import SelectorCollumFilter
 from gestion.stores.filter_store import filter_store
+from gestion.ui.selector_ui.selector_collum_filter import SelectorCollumFilter
 
 
 class SelectorFilter(MondonWidget):

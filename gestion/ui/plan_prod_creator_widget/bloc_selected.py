@@ -1,22 +1,19 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel
 from PyQt5.Qt import Qt
 from PyQt5.QtGui import QColor, QPainter, QPen
+from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel
+from gestion.ui.line_in_selector.line_bobine_poly import LineBobinePoly
+from gestion.ui.line_in_selector.line_perfo import LinePerfo
+from gestion.ui.line_in_selector.line_refente import LineRefente
 
-from commun.constants.colors import color_vert_moyen, color_blanc, color_gris_noir
+from commun.constants.colors import color_blanc, color_gris_noir
+from commun.constants.stylesheets import gray_18_label_stylesheet
 from commun.ui.public.mondon_widget import MondonWidget
-from commun.ui.public.pixmap_button import PixmapButton
-from commun.constants.stylesheets import button_stylesheet, gray_18_label_stylesheet
 from commun.utils.layout import clear_layout
-from gestion.ui.widgets.line_bobine import LineBobine
-from gestion.ui.widgets.line_perfo import LinePerfo
-from gestion.ui.widgets.line_refente import LineRefente
-from gestion.ui.widgets.line_bobine_papier import LineBobinePapier
-from gestion.ui.widgets.line_bobine_poly import LineBobinePoly
-from gestion.stores.settings_store import settings_store_gestion
 from gestion.stores.filter_store import filter_store
+from gestion.ui.line_in_selector.line_bobine_papier import LineBobinePapier
 
 
 class BlocSelected(MondonWidget):

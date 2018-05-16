@@ -36,7 +36,7 @@ width_col_raison = 600 - width_col_num - width_col_hour - width_col_time - width
 window_arret_width = 500
 window_arret_height_init = 135
 padding_arret = 5
-# Width selector bobine
+# Width selector_ui bobine
 width_search_bar = 250
 dict_with_selector_bobine = {"laize": 100, "color": 120, "gr": 100, "lenght": 100, "poses": 100,
                              "vente_mensuelle": 150, "stock": 100, "stock_therme": 150, "etat": 120, "sommeil": 100}

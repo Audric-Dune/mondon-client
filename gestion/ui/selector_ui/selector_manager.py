@@ -1,11 +1,12 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtWidgets import QVBoxLayout, QWidget, QDesktopWidget
 from PyQt5.QtCore import Qt
-from gestion.ui.widgets.selector import Selector
-from gestion.ui.widgets.selector_filter import SelectorFilter
+from PyQt5.QtWidgets import QVBoxLayout, QWidget, QDesktopWidget
+from gestion.ui.selector_ui.selector import Selector
+
 from gestion.stores.filter_store import filter_store
+from gestion.ui.selector_ui.selector_filter import SelectorFilter
 
 
 class SelectorManager(QWidget):

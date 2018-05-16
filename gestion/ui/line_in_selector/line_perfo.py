@@ -1,15 +1,14 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtWidgets import QHBoxLayout, QLabel
 from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtWidgets import QHBoxLayout, QLabel
 
-from commun.model.perfo import Perfo
-from commun.ui.public.perfo_ui import PerfoUi
 from commun.constants.colors import color_blanc
 from commun.constants.stylesheets import black_14_label_stylesheet
-
-from gestion.ui.widgets.line_selector import LineSelector
+from commun.model.perfo import Perfo
+from commun.ui.public.perfo_ui import PerfoUi
+from gestion.ui.line_in_selector.line_selector import LineSelector
 
 
 class LinePerfo(LineSelector):

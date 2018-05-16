@@ -2,18 +2,18 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5.QtWidgets import QScrollArea, QVBoxLayout, QWidget
+from gestion.ui.line_in_selector.line_bobine import LineBobine
+from gestion.ui.line_in_selector.line_bobine_poly import LineBobinePoly
+from gestion.ui.line_in_selector.line_perfo import LinePerfo
+from gestion.ui.line_in_selector.line_refente import LineRefente
+from gestion.ui.selector_ui.selector_pose import SelectorPose
 
 from commun.constants.colors import color_bleu_gris
 from commun.constants.stylesheets import scroll_bar_stylesheet
 from commun.ui.public.mondon_widget import MondonWidget
-from gestion.ui.widgets.line_bobine import LineBobine
-from gestion.ui.widgets.line_refente import LineRefente
-from gestion.ui.widgets.line_perfo import LinePerfo
-from gestion.ui.widgets.line_bobine_papier import LineBobinePapier
-from gestion.ui.widgets.line_bobine_poly import LineBobinePoly
-from gestion.ui.widgets.selector_pose import SelectorPose
-from gestion.stores.settings_store import settings_store_gestion
 from gestion.stores.filter_store import filter_store
+from gestion.stores.settings_store import settings_store_gestion
+from gestion.ui.line_in_selector.line_bobine_papier import LineBobinePapier
 
 
 class Selector(MondonWidget):
@@ -239,15 +239,20 @@ class Selector(MondonWidget):
         else:
             self.selector_pose = SelectorPose(self.handle_selected_bobine, bobine)
             self.selector_pose.show()
+        settings_store_gestion.plan_prod.get_new_item_selected_from_store()
 
     def handle_selected_refente(self, refente):
         self.plan_prod.add_refente_selected(refente)
+        settings_store_gestion.plan_prod.get_new_item_selected_from_store()
 
     def handle_selected_perfo(self, perfo):
         self.plan_prod.add_perfo_selected(perfo)
+        settings_store_gestion.plan_prod.get_new_item_selected_from_store()
 
     def handle_selected_bobine_papier(self, bobine):
         self.plan_prod.add_bobine_papier_selected(bobine)
+        settings_store_gestion.plan_prod.get_new_item_selected_from_store()
 
     def handle_selected_bobine_poly(self, bobine):
         self.plan_prod.add_bobine_poly_selected(bobine)
+        settings_store_gestion.plan_prod.get_new_item_selected_from_store()

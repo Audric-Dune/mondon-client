@@ -2,19 +2,18 @@
 # -*- coding: utf-8 -*-
 
 
-from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout
 from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout
+from gestion.ui.main_ui.day_menu import DayMenu
+from gestion.ui.main_ui.plan_prod_creator import PlanProdCreator
 
-from commun.utils.layout import clear_layout
 from commun.constants.dimensions import chart_menu_height
+from commun.utils.layout import clear_layout
 from commun.utils.timestamp import timestamp_at_day_ago, is_vendredi
-
-from gestion.ui.widgets.plan_prod_creator import PlanProdCreator
-from gestion.ui.widgets.chart_production import ChartProd
-from gestion.ui.widgets.day_menu import DayMenu
-from gestion.stores.settings_store import settings_store_gestion
-from gestion.stores.plan_prod_store import plan_prod_store
 from gestion.stores.event_store import event_store
+from gestion.stores.plan_prod_store import plan_prod_store
+from gestion.stores.settings_store import settings_store_gestion
+from gestion.ui.main_ui.chart_production import ChartProd
 
 
 class MainWindow(QMainWindow):
