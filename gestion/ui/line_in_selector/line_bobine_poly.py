@@ -2,14 +2,15 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5.QtWidgets import QHBoxLayout, QLabel
-from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import pyqtSignal, Qt
 
-from commun.ui.public.mondon_widget import MondonWidget
+from gestion.ui.line_in_selector.line_selector import LineSelector
+from commun.constants.stylesheets import black_14_label_stylesheet
 from commun.model.bobine_mere import BobineMere
 from commun.constants.colors import color_blanc
 
 
-class LineBobinePoly(MondonWidget):
+class LineBobinePoly(LineSelector):
     ON_DBCLICK_SIGNAL = pyqtSignal(BobineMere)
 
     def __init__(self, parent=None, bobine=None):
@@ -26,14 +27,17 @@ class LineBobinePoly(MondonWidget):
         hbox.setContentsMargins(5, 0, 0, 0)
         self.setLayout(hbox)
         code = QLabel(str(self.bobine.code))
-        code.setFixedWidth(150)
+        code.setStyleSheet(black_14_label_stylesheet)
         hbox.addWidget(code)
         laize = QLabel(str(int(self.bobine.laize)))
-        hbox.addWidget(laize)
-        color = QLabel(str(self.bobine.color.capitalize()))
-        hbox.addWidget(color)
+        laize.setStyleSheet(black_14_label_stylesheet)
+        hbox.addWidget(laize, alignment=Qt.AlignCenter)
         lenght = QLabel(str(self.bobine.lenght))
-        hbox.addWidget(lenght)
+        lenght.setStyleSheet(black_14_label_stylesheet)
+        hbox.addWidget(lenght, alignment=Qt.AlignCenter)
+        famille = QLabel("Polypro 20µ")
+        famille.setStyleSheet(black_14_label_stylesheet)
+        hbox.addWidget(famille, alignment=Qt.AlignCenter)
 
     def mouseDoubleClickEvent(self, e):
         self.ON_DBCLICK_SIGNAL.emit(self.bobine)

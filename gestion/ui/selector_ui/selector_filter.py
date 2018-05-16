@@ -16,6 +16,10 @@ class SelectorFilter(MondonWidget):
 
     def __init__(self, parent):
         super(SelectorFilter, self).__init__(parent=parent)
+        self.setObjectName("SelectorFilter")
+        if filter_store.data_type == "perfo":
+            self.setFixedHeight(0)
+            self.setMinimumWidth(1100)
         self.set_background_color(color_bleu_gris)
         self.search_code = TextEdit(upper_mode=True)
         self.init_widget()
@@ -23,13 +27,29 @@ class SelectorFilter(MondonWidget):
     def init_widget(self):
         hbox = QHBoxLayout()
         hbox.setSpacing(10)
-        hbox.addLayout(self.get_search_bar())
-        for index in range(len(filter_store.list_filter)):
-            hbox.addWidget(SelectorCollumFilter(parent=self,
-                                                title=filter_store.title_filter[index],
-                                                name_filter=filter_store.list_filter[index],
-                                                sort_mode=filter_store.sort_mode[index],
-                                                filter_mode=filter_store.filter_mode[index]))
+        if filter_store.data_type == "bobine":
+            hbox.addLayout(self.get_search_bar())
+        if filter_store.data_type == "bobine":
+            for index in range(len(filter_store.list_filter_bobine_fille)):
+                hbox.addWidget(SelectorCollumFilter(parent=self,
+                                                    title=filter_store.title_filter_bobine_fille[index],
+                                                    name_filter=filter_store.list_filter_bobine_fille[index],
+                                                    sort_mode=filter_store.sort_mode_bobine_fille[index],
+                                                    filter_mode=filter_store.filter_mode_bobine_fille[index]))
+        if filter_store.data_type == "poly":
+            for index in range(len(filter_store.list_filter_poly)):
+                hbox.addWidget(SelectorCollumFilter(parent=self,
+                                                    title=filter_store.title_filter_poly[index],
+                                                    name_filter=filter_store.list_filter_poly[index],
+                                                    sort_mode=filter_store.sort_mode_poly[index],
+                                                    filter_mode=filter_store.filter_mode_poly[index]))
+        if filter_store.data_type == "refente":
+            for index in range(len(filter_store.list_filter_refente)):
+                hbox.addWidget(SelectorCollumFilter(parent=self,
+                                                    title=filter_store.title_filter_refente[index],
+                                                    name_filter=filter_store.list_filter_refente[index],
+                                                    sort_mode=filter_store.sort_mode_refente[index],
+                                                    filter_mode=filter_store.filter_mode_refente[index]))
         self.setLayout(hbox)
 
     @staticmethod

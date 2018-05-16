@@ -79,6 +79,8 @@ class BlocSelected(MondonWidget):
         color = color_gris_noir.rgb_components
         qcolor_gris_noir = QColor(color[0], color[1], color[2])
         pen = QPen()
+        pen.setStyle(Qt.CustomDashLine)
+        pen.setDashPattern([10, 3])
         pen.setColor(qcolor_gris_noir)
         p.setPen(pen)
         p.drawRect(0, 0, self.width()-1, self.height()-1)

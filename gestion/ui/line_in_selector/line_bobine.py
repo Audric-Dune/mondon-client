@@ -9,6 +9,7 @@ from commun.constants.stylesheets import black_14_label_stylesheet,\
     red_14_bold_label_stylesheet,\
     black_14_bold_label_stylesheet
 from commun.model.bobine_fille import BobineFille
+from commun.constants.dimensions import dict_width_selector_bobine, width_search_bar
 
 
 class LineBobine(MondonWidget):
@@ -34,51 +35,65 @@ class LineBobine(MondonWidget):
         hbox.setContentsMargins(5, 0, 0, 0)
         hbox.setSpacing(10)
         code = QLabel(str(self.bobine.code))
+        code.setAlignment(Qt.AlignVCenter)
         code.setStyleSheet(black_14_label_stylesheet)
-        code.setFixedWidth(250)
+        code.setFixedWidth(width_search_bar)
         hbox.addWidget(code)
         laize = QLabel(str(int(self.bobine.laize)))
+        laize.setAlignment(Qt.AlignVCenter | Qt.AlignCenter)
         laize.setStyleSheet(black_14_label_stylesheet)
-        hbox.addWidget(laize, alignment=Qt.AlignCenter)
+        hbox.addWidget(laize)
         color = QLabel(str(self.bobine.color))
+        color.setAlignment(Qt.AlignVCenter | Qt.AlignCenter)
         color.setStyleSheet(black_14_label_stylesheet)
-        hbox.addWidget(color, alignment=Qt.AlignCenter)
+        hbox.addWidget(color)
         gr = QLabel("{}g".format(self.bobine.gr))
+        gr.setAlignment(Qt.AlignVCenter | Qt.AlignCenter)
         gr.setStyleSheet(black_14_label_stylesheet)
-        hbox.addWidget(gr, alignment=Qt.AlignCenter)
+        hbox.addWidget(gr)
         lenght = QLabel("{}m".format(self.bobine.lenght))
+        lenght.setAlignment(Qt.AlignVCenter | Qt.AlignCenter)
         lenght.setStyleSheet(black_14_label_stylesheet)
-        hbox.addWidget(lenght, alignment=Qt.AlignCenter)
-        poses = QLabel(str(self.bobine.poses))
+        hbox.addWidget(lenght)
+        poses_value = "Neutre" if self.bobine.poses[0] == 0 else self.bobine.poses
+        poses = QLabel(str(poses_value))
+        poses.setAlignment(Qt.AlignVCenter | Qt.AlignCenter)
         poses.setStyleSheet(black_14_label_stylesheet)
-        hbox.addWidget(poses, alignment=Qt.AlignCenter)
-        vente_mensuelle = 1 if 0 < self.bobine.vente_mensuelle < 1 else self.bobine.vente_mensuelle
-        vente_mensuelle = str(int(vente_mensuelle))
-        vente_mensuelle_label = QLabel(vente_mensuelle)
-        vente_mensuelle_label.setStyleSheet(black_14_label_stylesheet)
-        hbox.addWidget(vente_mensuelle_label, alignment=Qt.AlignCenter)
-        stock = str(int(self.bobine.stock))
-        stock_label = QLabel(stock)
-        stock_label.setStyleSheet(black_14_label_stylesheet)
-        hbox.addWidget(stock_label, alignment=Qt.AlignCenter)
-        stock_therme = str(int(self.bobine.stock_therme))
-        stock_therme_label = QLabel(stock_therme)
-        stock_therme_label.setStyleSheet(black_14_label_stylesheet)
-        hbox.addWidget(stock_therme_label, alignment=Qt.AlignCenter)
-        etat = self.bobine.etat
-        etat_label = QLabel(etat)
-        if etat == "RUPTURE":
+        hbox.addWidget(poses)
+        vente_mensuelle_value = 1 if 0 < self.bobine.vente_mensuelle < 1 else self.bobine.vente_mensuelle
+        vente_mensuelle_value = str(int(vente_mensuelle_value))
+        vente_mensuelle = QLabel(vente_mensuelle_value)
+        vente_mensuelle.setAlignment(Qt.AlignVCenter | Qt.AlignCenter)
+        vente_mensuelle.setStyleSheet(black_14_label_stylesheet)
+        hbox.addWidget(vente_mensuelle)
+        stock_value = str(int(self.bobine.stock))
+        stock = QLabel(stock_value)
+        stock.setAlignment(Qt.AlignVCenter | Qt.AlignCenter)
+        stock.setStyleSheet(black_14_label_stylesheet)
+        hbox.addWidget(stock)
+        stock_therme_value = str(int(self.bobine.stock_therme))
+        stock_therme = QLabel(stock_therme_value)
+        stock_therme.setAlignment(Qt.AlignVCenter | Qt.AlignCenter)
+        stock_therme.setStyleSheet(black_14_label_stylesheet)
+        hbox.addWidget(stock_therme)
+        etat_value = self.bobine.etat
+        etat = QLabel(etat_value)
+        etat.setAlignment(Qt.AlignVCenter | Qt.AlignCenter)
+        if etat_value == "RUPTURE":
             etat_label_stylesheet = black_14_bold_label_stylesheet
-        elif etat == "SURSTOCK":
+        elif etat_value == "SURSTOCK":
             etat_label_stylesheet = red_14_bold_label_stylesheet
         else:
             etat_label_stylesheet = black_14_label_stylesheet
-        etat_label.setStyleSheet(etat_label_stylesheet)
-        hbox.addWidget(etat_label, alignment=Qt.AlignCenter)
-        sommeil = self.bobine.sommeil
-        sommeil_label = QLabel(sommeil)
-        sommeil_label.setStyleSheet(black_14_label_stylesheet)
-        hbox.addWidget(sommeil_label, alignment=Qt.AlignCenter)
+        etat.setStyleSheet(etat_label_stylesheet)
+        hbox.addWidget(etat)
+        sommeil_value = self.bobine.sommeil
+        sommeil = QLabel(sommeil_value)
+        sommeil.setAlignment(Qt.AlignVCenter | Qt.AlignCenter)
+        sommeil.setStyleSheet(black_14_label_stylesheet)
+        hbox.addWidget(sommeil)
+        for key in dict_width_selector_bobine.keys():
+            vars()[key].setMinimumWidth(dict_width_selector_bobine[key])
         self.setLayout(hbox)
 
     def mouseDoubleClickEvent(self, e):

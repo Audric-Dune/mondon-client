@@ -19,11 +19,9 @@ class Label(QLabel):
 
     def eventFilter(self, o, e):
         if e.type() == QEvent.Enter:
-            print("enter")
             self.setStyleSheet(self.hover_style)
             return True
         if e.type() == QEvent.Leave:
-            print("leave")
             self.setStyleSheet(self.style)
             return True
         return False

@@ -15,10 +15,10 @@ class SelectorManager(QWidget):
         super(SelectorManager, self).__init__(parent=parent)
         self.setWindowFlags(Qt.Window)
         self.keyboardGrabber()
+        self.vbox = QVBoxLayout()
         self.search_code = None
         self.selector = Selector(parent=self, plan_prod=plan_prod)
-        self.selector_filter = SelectorFilter(parent=self)
-        filter_store.ON_CHANGED_SIGNAL.connect(self.on_filter_changed)
+        filter_store.ON_DATA_TYPE_CHANGED.connect(self.on_data_type_changed)
         self.init_widget()
 
     def move_on_center(self):
@@ -28,19 +28,24 @@ class SelectorManager(QWidget):
         self.move(window_rect.topLeft())
 
     def init_widget(self):
-        vbox = QVBoxLayout()
-        vbox.setContentsMargins(5, 5, 5, 5)
-        vbox.setSpacing(0)
-        vbox.addWidget(self.selector_filter)
-        vbox.addWidget(self.selector)
-        self.setLayout(vbox)
+        self.vbox.setContentsMargins(5, 5, 5, 5)
+        self.vbox.setSpacing(0)
+        self.setLayout(self.vbox)
+
+    def on_data_type_changed(self):
+        items = (self.vbox.itemAt(i) for i in range(self.vbox.count()))
+        index = 0
+        for item in items:
+            if item and item.widget().objectName() == "SelectorFilter":
+                self.vbox.takeAt(index).widget().deleteLater()
+            index += 1
+        selector_filter = SelectorFilter(parent=self)
+        self.vbox.addWidget(selector_filter)
+        self.vbox.addWidget(self.selector)
 
     def show(self):
         super(SelectorManager, self).show()
         self.move_on_center()
-
-    def update_widget(self):
-        self.selector.update_widget()
 
     def keyPressEvent(self, e):
         super(SelectorManager, self).keyPressEvent(e)
@@ -49,9 +54,3 @@ class SelectorManager(QWidget):
 
     def closeEvent(self, e):
         self.hide()
-
-    def on_filter_changed(self):
-        if filter_store.data_type == "bobine" or not filter_store.data_type:
-            self.selector_filter.show()
-        else:
-            self.selector_filter.hide()

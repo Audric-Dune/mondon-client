@@ -23,6 +23,8 @@ class Selector(MondonWidget):
         self.plan_prod = plan_prod
         self.parent = parent
         self.list_bobines = []
+        self.list_poly = []
+        self.list_refente = []
         self.lines_bobine = []
         self.lines_refente = []
         self.lines_papier = []
@@ -36,7 +38,6 @@ class Selector(MondonWidget):
         self.vbox = QVBoxLayout()
         self.scroll_bar = QScrollArea(parent=self)
         self.content_scrollbar = QWidget(parent=self.scroll_bar)
-        self.update_list()
         self.init_lists_lines()
         self.init_widget()
         self.update_widget()
@@ -49,7 +50,7 @@ class Selector(MondonWidget):
         self.init_list_lines_poly()
 
     def init_list_lines_bobine(self):
-        for bobine in self.list_bobines:
+        for bobine in self.plan_prod.current_bobine_fille_store.bobines:
             line_bobine = LineBobine(parent=self, bobine=bobine)
             line_bobine.ON_DBCLICK_SIGNAL.connect(self.handle_selected_bobine)
             line_bobine.setFixedHeight(20)
@@ -105,8 +106,6 @@ class Selector(MondonWidget):
         self.scroll_bar.setWidget(self.content_scrollbar)
         self.scroll_bar.setStyleSheet(scroll_bar_stylesheet)
         self.scroll_bar.setWidgetResizable(True)
-        self.scroll_bar.setMinimumWidth(1200)
-        self.scroll_bar.setMinimumHeight(500)
         self.master_vbox.addWidget(self.scroll_bar)
         self.setLayout(self.master_vbox)
 
@@ -114,19 +113,37 @@ class Selector(MondonWidget):
         self.update_widget()
 
     def sort_bobine(self):
-        self.list_bobines = self.sort_bobines(self.list_bobines, "code", True)
-        self.list_bobines = self.sort_bobines(self.list_bobines, filter_store.sort_name, filter_store.sort_asc)
+        if filter_store.data_type == "bobine":
+            self.list_bobines = self.sort_item(self.list_bobines, "code", True)
+            self.list_bobines = self.sort_item(self.list_bobines, filter_store.sort_name, filter_store.sort_asc)
+        if filter_store.data_type == "poly":
+            self.list_poly = self.sort_item(self.list_poly, "code", True)
+            self.list_poly = self.sort_item(self.list_poly, filter_store.sort_name, filter_store.sort_asc)
+        if filter_store.data_type == "refente":
+            self.list_refente = self.sort_item(self.list_refente, "laize", True)
+            self.list_refente = self.sort_item(self.list_refente, filter_store.sort_name, filter_store.sort_asc)
 
     @staticmethod
-    def sort_bobines(bobines, sort_name, sort_asc):
-        bobines = sorted(bobines, key=lambda b: b.get_value(sort_name), reverse=not sort_asc)
-        return bobines
+    def sort_item(items, sort_name, sort_asc):
+        items = sorted(items, key=lambda b: b.get_value(sort_name), reverse=not sort_asc)
+        return items
 
     def update_list(self):
-        self.list_bobines = []
-        for bobine in self.plan_prod.current_bobine_fille_store.bobines:
-            if self.is_valid_bobine_from_filters(bobine) and self.is_valid_from_search_code(bobine):
-                self.list_bobines.append(bobine)
+        if filter_store.data_type == "bobine":
+            self.list_bobines = []
+            for bobine in self.plan_prod.current_bobine_fille_store.bobines:
+                if self.is_valid_bobine_from_filters(bobine) and self.is_valid_from_search_code(bobine):
+                    self.list_bobines.append(bobine)
+        if filter_store.data_type == "poly":
+            self.list_poly = []
+            for poly in self.plan_prod.current_bobine_poly_store.bobines:
+                if self.is_valid_poly_from_filters(poly):
+                    self.list_poly.append(poly)
+        if filter_store.data_type == "refente":
+            self.list_refente = []
+            for refente in self.plan_prod.current_refente_store.refentes:
+                if self.is_valid_refente_from_filters(refente):
+                    self.list_refente.append(refente)
 
     @staticmethod
     def is_valid_from_search_code(bobine):
@@ -139,7 +156,7 @@ class Selector(MondonWidget):
 
     def is_valid_bobine_from_filters(self, bobine):
         from gestion.stores.filter_store import filter_store
-        for name in filter_store.list_filter:
+        for name in filter_store.list_filter_bobine_fille:
             if not self.is_valid_bobine_from_filter(bobine, name):
                 return False
         return True
@@ -147,18 +164,60 @@ class Selector(MondonWidget):
     @staticmethod
     def is_valid_bobine_from_filter(bobine, name):
         from gestion.stores.filter_store import filter_store
+        if filter_store.data_type == "bobine":
+            dict_filter = filter_store.dicts_filter[name]
+            if name == "poses":
+                for key in dict_filter.keys():
+                    for pose in bobine.poses:
+                        if key == pose and dict_filter[key]:
+                            return True
+                return False
+            else:
+                for key in dict_filter.keys():
+                    if key == getattr(bobine, name) and dict_filter[key]:
+                        return True
+                return False
+
+    def is_valid_poly_from_filters(self, poly):
+        from gestion.stores.filter_store import filter_store
+        for name in filter_store.list_filter_poly:
+            if not self.is_valid_poly_from_filter(poly, name):
+                return False
+        return True
+
+    @staticmethod
+    def is_valid_poly_from_filter(poly, name):
         dict_filter = filter_store.dicts_filter[name]
-        if name == "poses":
+        if name == "famille":
+            return True
+        else:
             for key in dict_filter.keys():
-                for pose in bobine.poses:
-                    if key == pose and dict_filter[key]:
+                if key == getattr(poly, name) and dict_filter[key]:
+                    return True
+            return False
+
+    def is_valid_refente_from_filters(self, refente):
+        from gestion.stores.filter_store import filter_store
+        for name in filter_store.list_filter_refente:
+            if not self.is_valid_refente_from_filter(refente, name):
+                return False
+        return True
+
+    @staticmethod
+    def is_valid_refente_from_filter(refente, name):
+        dict_filter = filter_store.dicts_filter[name]
+        print(dict_filter)
+        if name == "laize_fille":
+            for key in dict_filter.keys():
+                for laize in refente.laizes:
+                    if key == laize and dict_filter[key]:
                         return True
             return False
         else:
             for key in dict_filter.keys():
-                if key == getattr(bobine, name) and dict_filter[key]:
+                if key == getattr(refente, name) and dict_filter[key]:
                     return True
-            return False
+        return False
 
     def update_widget(self):
         self.update_list()
@@ -172,7 +231,7 @@ class Selector(MondonWidget):
                 line_bobine.show()
                 self.vbox.addWidget(line_bobine)
         if current_data_type == "refente":
-            for refente in self.plan_prod.current_refente_store.refentes:
+            for refente in self.list_refente:
                 line_refente = self.get_line_refente(refente)
                 line_refente.show()
                 self.vbox.addWidget(line_refente)
@@ -187,7 +246,7 @@ class Selector(MondonWidget):
                 line_bobine_papier.show()
                 self.vbox.addWidget(line_bobine_papier)
         if current_data_type == "poly":
-            for bobine in self.plan_prod.current_bobine_poly_store.bobines:
+            for bobine in self.list_poly:
                 line_bobine_poly = self.get_line_poly(bobine)
                 line_bobine_poly.show()
                 self.vbox.addWidget(line_bobine_poly)

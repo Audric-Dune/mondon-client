@@ -34,7 +34,7 @@ class BobineFille(MondonWidget):
         y = -30 * self.ech
         w = self.laize * self.ech
         h = self.BOBINE_HEIGHT * self.ech
-        font_size = 20 * self.ech
+        font_size = 14 * self.ech
         text = "Laize {}".format(self.number)
         draw_text(p, x, y, w, h, color=color_noir, align="C", font_size=font_size, text=text)
 
@@ -43,7 +43,7 @@ class BobineFille(MondonWidget):
         y = 10 * self.ech
         w = self.laize * self.ech
         h = self.BOBINE_HEIGHT * self.ech
-        font_size = 28 * self.ech
+        font_size = 22 * self.ech
         draw_text(p, x, y, w, h, color=color_noir, align="C", font_size=font_size, text=str(self.laize))
 
     def draw_code(self, p):
