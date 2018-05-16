@@ -19,6 +19,24 @@ from commun.model.perfo import Perfo
 import xlrd
 
 
+# List des dossiers où il est possible que les fichiers excels se trouvent.
+DOSSIERS_POTENTIELS = [
+    'C:/Users\\dessinateur3\\Desktop\\github\\',
+    'C:/Users\\Castor\\Desktop\\github\\',
+    '/Users/audricperrin/Desktop/github/',
+    '../', # dossier parent du code/executable
+]
+
+
+def open_xls(file_name):
+    for directory in DOSSIERS_POTENTIELS:
+        try:
+            return xlrd.open_workbook(directory + file_name)
+        except FileNotFoundError:
+            continue
+    return None
+
+
 class Application(QApplication):
 
     def __init__(self, argv=None):
@@ -30,6 +48,10 @@ class Application(QApplication):
         self.read_xlsm()
         self.init_refente_store()
         self.init_perfo_store()
+
+        perform_test()
+        exit()
+
         self.init_ui()
 
     def init_ui(self):
@@ -80,19 +102,7 @@ class Application(QApplication):
         self.get_vente_annuelle_from_xls()
 
     def get_cliche_from_xls(self):
-        xls = None
-        try:
-            xls = xlrd.open_workbook('C:/Users\dessinateur3\Desktop\github\ARTICLE CLICHE.xls')
-        except FileNotFoundError:
-            pass
-        try:
-            xls = xlrd.open_workbook('C:/Users\Castor\Desktop\github\ARTICLE CLICHE.xls')
-        except FileNotFoundError:
-            pass
-        try:
-            xls = xlrd.open_workbook('/Users/audricperrin/Desktop/github/ARTICLE CLICHE.xls')
-        except FileNotFoundError:
-            pass
+        xls = open_xls('ARTICLE CLICHE.xls')
         sheet = xls.sheet_by_name("Sage")
         max_row = sheet.nrows
         current_row = 0
@@ -101,19 +111,7 @@ class Application(QApplication):
             current_row += 1
 
     def get_bobine_fille_from_xls(self):
-        xls = None
-        try:
-            xls = xlrd.open_workbook('C:/Users\dessinateur3\Desktop\github\ARTICLE BOBINE FILLE.xls')
-        except FileNotFoundError:
-            pass
-        try:
-            xls = xlrd.open_workbook('C:/Users\Castor\Desktop\github\ARTICLE BOBINE FILLE.xls')
-        except FileNotFoundError:
-            pass
-        try:
-            xls = xlrd.open_workbook('/Users/audricperrin/Desktop/github/ARTICLE BOBINE FILLE.xls')
-        except FileNotFoundError:
-            pass
+        xls = open_xls('ARTICLE BOBINE FILLE.xls')
         sheet = xls.sheet_by_name("Sage")
         max_row = sheet.nrows
         current_row = 0
@@ -124,19 +122,7 @@ class Application(QApplication):
             current_row += 1
 
     def get_vente_annuelle_from_xls(self):
-        xls = None
-        try:
-            xls = xlrd.open_workbook('C:/Users\dessinateur3\Desktop\github\VENTE BOBINE.xls')
-        except FileNotFoundError:
-            pass
-        try:
-            xls = xlrd.open_workbook('C:/Users\Castor\Desktop\github\VENTE BOBINE.xls')
-        except FileNotFoundError:
-            pass
-        try:
-            xls = xlrd.open_workbook('/Users/audricperrin/Desktop/github/VENTE BOBINE.xls')
-        except FileNotFoundError:
-            pass
+        xls = open_xls('VENTE BOBINE.xls')
         sheet = xls.sheet_by_name("Sage")
         max_row = sheet.nrows
         current_row = 0
@@ -224,20 +210,8 @@ class Application(QApplication):
             bobine_fille_store.add_bobine(current_bobine)
 
     def read_xlsm(self):
-        wb = None
-        try:
-            wb = xlrd.open_workbook('C:/Users\dessinateur3\Desktop\github\Etude stock bobine V5 MASTER 18-02-23.xlsm')
-        except FileNotFoundError:
-            pass
-        try:
-            wb = xlrd.open_workbook('C:/Users\Castor\Desktop\github\Etude stock bobine V5 MASTER 18-02-23.xlsm')
-        except FileNotFoundError:
-            pass
-        try:
-            wb = xlrd.open_workbook('/Users/audricperrin/Desktop/github/Etude stock bobine V5 MASTER 18-02-23.xlsm')
-        except FileNotFoundError:
-            pass
-        for sheet in wb.sheets():
+        xls = open_xls('Etude stock bobine V5 MASTER 18-02-23.xlsm')
+        for sheet in xls.sheets():
             if sheet.name == "TYPE BOBINE MERE":
                 start_ligne = 1
                 current_ligne = start_ligne

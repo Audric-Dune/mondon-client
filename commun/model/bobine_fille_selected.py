@@ -3,7 +3,6 @@
 
 
 class BobineFilleSelected:
-
     def __init__(self, bobine, pose, index=None):
         self.bobine = bobine
         self.name = bobine.name
@@ -24,3 +23,6 @@ class BobineFilleSelected:
         self.vente_annuelle = bobine.vente_annuelle
         self.vente_mensuelle = bobine.vente_mensuelle
         self.etat = bobine.etat
+
+    def __repr__(self):
+        return 'B({}, {}, {}, {}, {}, {})'.format(self.code, self.laize, self.pose, self.color, self.gr, self.lenght)
