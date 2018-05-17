@@ -276,8 +276,11 @@ class Selector(MondonWidget):
                 line_bobine_poly = self.get_line_poly(bobine)
                 line_bobine_poly.show()
                 self.vbox.addWidget(line_bobine_poly)
-        self.update()
         self.vbox.addStretch()
+        self.resize_window()
+
+    def resize_window(self):
+        self.setMinimumHeight(500)
 
     def hide_lines(self):
         for line_bobine in self.lines_bobine:
