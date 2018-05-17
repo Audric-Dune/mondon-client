@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5.QtWidgets import QScrollArea, QVBoxLayout, QWidget
+from PyQt5.Qt import Qt, QSizePolicy
+
 from gestion.ui.line_in_selector.line_bobine import LineBobine
 from gestion.ui.line_in_selector.line_bobine_poly import LineBobinePoly
 from gestion.ui.line_in_selector.line_perfo import LinePerfo
@@ -37,6 +39,7 @@ class Selector(MondonWidget):
         self.selector_pose = None
         self.vbox = QVBoxLayout()
         self.scroll_bar = QScrollArea(parent=self)
+        self.scroll_bar.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.content_scrollbar = QWidget(parent=self.scroll_bar)
         self.init_lists_lines()
         self.init_widget()

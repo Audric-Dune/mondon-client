@@ -29,4 +29,5 @@ class RefenteUi(MondonWidget):
             if laize:
                 self.hbox.addWidget(BobineFille(parent=self, laize=laize, number=number))
             number += 1
+        self.hbox.addStretch()
         self.setLayout(self.hbox)
