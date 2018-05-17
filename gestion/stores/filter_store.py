@@ -27,10 +27,10 @@ class FilterStore(QObject):
         self.filter_mode_poly = [False, False, False, False]
         self.sort_mode_poly = [True, True, True, False]
         # FILTER BOBINE PAPIER
-        self.list_filter_papier = ["code", "laize", "lenght", "famille"]
-        self.title_filter_papier = ["Code", "Laize", "Longueur", "Famille"]
-        self.filter_mode_papier = [False, False, False, False]
-        self.sort_mode_papier = [True, True, True, False]
+        self.list_filter_papier = ["code", "laize", "color", "gr", "lenght"]
+        self.title_filter_papier = ["Code", "Laize", "Couleur", "Grammage", "Longueur"]
+        self.filter_mode_papier = [False, True, True, True, True]
+        self.sort_mode_papier = [True, True, True, True, True]
         # FILTER REFENTE
         self.list_filter_refente = ["code_perfo", "laize_fille", "laize"]
         self.title_filter_refente = ["Code perfo.", "Laize bobine fille", "Laize bobine mère"]
@@ -57,6 +57,9 @@ class FilterStore(QObject):
         if self.data_type == "refente":
             for name in self.list_filter_refente:
                 self.dicts_filter[name] = {"Tous": True}
+        if self.data_type == "papier":
+            for name in self.list_filter_papier:
+                self.dicts_filter[name] = {"Tous": True}
 
     def update_dicts_filter(self):
         if self.data_type == "bobine":
@@ -71,6 +74,11 @@ class FilterStore(QObject):
                 self.sort_dict(name_filter)
         if self.data_type == "refente":
             for name_filter in self.list_filter_refente:
+                new_dict_filter = self.get_new_dict_filter(name_filter)
+                self.update_dict_filter(name_filter, new_dict_filter)
+                self.sort_dict(name_filter)
+        if self.data_type == "papier":
+            for name_filter in self.list_filter_papier:
                 new_dict_filter = self.get_new_dict_filter(name_filter)
                 self.update_dict_filter(name_filter, new_dict_filter)
                 self.sort_dict(name_filter)
@@ -107,6 +115,11 @@ class FilterStore(QObject):
             for bobine in self.plan_prod.current_bobine_poly_store.bobines:
                 if name_filter == "famille":
                     continue
+                value = getattr(bobine, name_filter)
+                if new_dict_filter.get(value) is None:
+                    new_dict_filter[value] = True
+        if self.data_type == "papier":
+            for bobine in self.plan_prod.current_bobine_papier_store.bobines:
                 value = getattr(bobine, name_filter)
                 if new_dict_filter.get(value) is None:
                     new_dict_filter[value] = True

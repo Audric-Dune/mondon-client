@@ -27,6 +27,7 @@ class Selector(MondonWidget):
         self.list_bobines = []
         self.list_poly = []
         self.list_refente = []
+        self.list_papier = []
         self.lines_bobine = []
         self.lines_refente = []
         self.lines_papier = []
@@ -122,6 +123,9 @@ class Selector(MondonWidget):
         if filter_store.data_type == "poly":
             self.list_poly = self.sort_item(self.list_poly, "code", True)
             self.list_poly = self.sort_item(self.list_poly, filter_store.sort_name, filter_store.sort_asc)
+        if filter_store.data_type == "papier":
+            self.list_papier = self.sort_item(self.list_papier, "code", True)
+            self.list_papier = self.sort_item(self.list_papier, filter_store.sort_name, filter_store.sort_asc)
         if filter_store.data_type == "refente":
             self.list_refente = self.sort_item(self.list_refente, "laize", True)
             self.list_refente = self.sort_item(self.list_refente, filter_store.sort_name, filter_store.sort_asc)
@@ -142,6 +146,11 @@ class Selector(MondonWidget):
             for poly in self.plan_prod.current_bobine_poly_store.bobines:
                 if self.is_valid_poly_from_filters(poly):
                     self.list_poly.append(poly)
+        if filter_store.data_type == "papier":
+            self.list_papier = []
+            for papier in self.plan_prod.current_bobine_papier_store.bobines:
+                if self.is_valid_papier_from_filters(papier):
+                    self.list_papier.append(papier)
         if filter_store.data_type == "refente":
             self.list_refente = []
             for refente in self.plan_prod.current_refente_store.refentes:
@@ -199,6 +208,21 @@ class Selector(MondonWidget):
                     return True
             return False
 
+    def is_valid_papier_from_filters(self, papier):
+        from gestion.stores.filter_store import filter_store
+        for name in filter_store.list_filter_papier:
+            if not self.is_valid_papier_from_filter(papier, name):
+                return False
+        return True
+
+    @staticmethod
+    def is_valid_papier_from_filter(papier, name):
+        dict_filter = filter_store.dicts_filter[name]
+        for key in dict_filter.keys():
+            if key == getattr(papier, name) and dict_filter[key]:
+                return True
+        return False
+
     def is_valid_refente_from_filters(self, refente):
         from gestion.stores.filter_store import filter_store
         for name in filter_store.list_filter_refente:
@@ -243,7 +267,7 @@ class Selector(MondonWidget):
                 line_perfo.show()
                 self.vbox.addWidget(line_perfo)
         if current_data_type == "papier":
-            for bobine in self.plan_prod.current_bobine_papier_store.bobines:
+            for bobine in self.list_papier:
                 line_bobine_papier = self.get_line_papier(bobine)
                 line_bobine_papier.show()
                 self.vbox.addWidget(line_bobine_papier)

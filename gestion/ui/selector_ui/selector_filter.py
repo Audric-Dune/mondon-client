@@ -50,6 +50,13 @@ class SelectorFilter(MondonWidget):
                                                     name_filter=filter_store.list_filter_refente[index],
                                                     sort_mode=filter_store.sort_mode_refente[index],
                                                     filter_mode=filter_store.filter_mode_refente[index]))
+        if filter_store.data_type == "papier":
+            for index in range(len(filter_store.list_filter_papier)):
+                hbox.addWidget(SelectorCollumFilter(parent=self,
+                                                    title=filter_store.title_filter_papier[index],
+                                                    name_filter=filter_store.list_filter_papier[index],
+                                                    sort_mode=filter_store.sort_mode_papier[index],
+                                                    filter_mode=filter_store.filter_mode_papier[index]))
         self.setLayout(hbox)
 
     @staticmethod

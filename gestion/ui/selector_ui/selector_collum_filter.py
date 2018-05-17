@@ -10,7 +10,8 @@ from commun.ui.public.image import Image
 from commun.constants.colors import color_blanc, color_vert_moyen, color_gris_moyen
 from commun.constants.dimensions import dict_width_selector_bobine,\
     dict_width_selector_refente,\
-    dict_width_selector_poly
+    dict_width_selector_poly,\
+    dict_width_selector_papier
 from commun.constants.stylesheets import black_14_label_stylesheet,\
     button_no_radius_stylesheet,\
     button_no_radius_orange_stylesheet,\
@@ -51,6 +52,9 @@ class SelectorCollumFilter(MondonWidget):
             self.setMinimumWidth(width)
         if filter_store.data_type == "poly":
             width = dict_width_selector_poly[name_filter]
+            self.setMinimumWidth(width)
+        if filter_store.data_type == "papier":
+            width = dict_width_selector_papier[name_filter]
             self.setMinimumWidth(width)
 
     def init_widget(self):
