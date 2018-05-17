@@ -2,12 +2,13 @@ import random
 import string
 from unittest import TestCase
 
-from commun.utils.filter import filter_bobines_papier_for_contrainte,\
-    is_valid_refente_for_bobines_fille,\
-    is_valid_bobine_fille_for_bobines_fille,\
-    filter_bobines_fille,\
-    get_new_refente_with_bobines_fille
-
+from commun.utils.filter import (
+    filter_bobines_papier_for_contrainte,
+    is_valid_bobine_fille_for_bobines_fille,
+    filter_bobines_fille,
+    get_new_refente_with_bobines_fille,
+)
+from commun.utils.filter_matthis import get_bobine_fille_combinaisons_for_refente
 from commun.model.bobine_mere import BobineMere
 from commun.model.refente import Refente
 from commun.model.bobine_fille import BobineFille
@@ -56,14 +57,18 @@ def fake_bobine_mere(code=None, laize=None, length=None, color=None, gr=None):
     return BobineMere(code=code, laize=laize, lenght=length, color=color, gr=gr)
 
 
-def fake_bobine_fille(code=None, laize=None, poses=None, color=None):
+def fake_bobine_fille(code=None, laize=None, length=None, color=None, gr=None, poses=None):
     if code is None:
         code = random_code()
-    if poses is None:
-        poses = [0]
+    if length is None:
+        length = random_length()
     if color is None:
         color = random_color()
-    return BobineFille(code=code, laize=laize, poses=poses, color=color)
+    if gr is None:
+        gr = random_grammage()
+    if poses is None:
+        poses = [0]
+    return BobineFille(code=code, laize=laize, lenght=length, color=color, gr=gr, poses=poses)
 
 
 class TestFilter(TestCase):
@@ -94,10 +99,10 @@ class TestFilter(TestCase):
         bobine_1 = fake_bobine_fille(laize=150, poses=[1, 1, 4], color="Blanc")
         bobines = [bobine_1]
         refente = Refente(laize1=150, laize2=150, laize3=150, laize4=150)
-        is_valid = is_valid_refente_for_bobines_fille(refente=refente,
-                                                      bobines_fille=bobines,
-                                                      bobines_fille_selected=bobines_selected)
-        self.assertEqual(is_valid, True)
+        res = get_bobine_fille_combinaisons_for_refente(refente=refente,
+                                                        bobines_fille=bobines,
+                                                        bobines_fille_selected=bobines_selected)
+        self.assertEqual(len(res), 1)
 
     def test_is_valid_refente_for_bobines_fille__multi_the_same_pose_not_compatible(self):
         bobine_0 = fake_bobine_fille(laize=150, poses=[1])
@@ -105,10 +110,26 @@ class TestFilter(TestCase):
         bobine_1 = fake_bobine_fille(laize=150, poses=[1, 1, 4])
         bobines = [bobine_1]
         refente = Refente(laize1=150, laize2=150, laize3=150, laize4=150)
-        is_valid = is_valid_refente_for_bobines_fille(refente=refente,
-                                                      bobines_fille=bobines,
-                                                      bobines_fille_selected=bobines_selected)
-        self.assertEqual(is_valid, False)
+        res = get_bobine_fille_combinaisons_for_refente(refente=refente,
+                                                        bobines_fille=bobines,
+                                                        bobines_fille_selected=bobines_selected)
+        self.assertEqual(len(res), 0)
+
+    def test_is_valid_refente_for_bobines_fille__multiple_selected(self):
+        bobine_0 = fake_bobine_fille(laize=150, color="Blanc", length=700, gr=30, poses=[1])
+        bobine_1 = fake_bobine_fille(laize=150, color="Blanc", length=700, gr=30, poses=[1, 2, 4])
+        bobine_2 = fake_bobine_fille(laize=150, color="Blanc", length=700, gr=30, poses=[1])
+        bobine_3 = fake_bobine_fille(laize=150, color="Blanc", length=700, gr=30, poses=[1, 4])
+        bobines_selected = [
+            BobineFilleSelected(bobine=bobine_0, pose=1),
+            BobineFilleSelected(bobine=bobine_1, pose=2),
+        ]
+        bobines = [bobine_2, bobine_3]
+        refente = Refente(laize1=150, laize2=150, laize3=150, laize4=150)
+        res = get_bobine_fille_combinaisons_for_refente(refente=refente,
+                                                        bobines_fille=bobines,
+                                                        bobines_fille_selected=bobines_selected)
+        self.assertEqual(len(res), 0)
 
     def test_is_valid_refente_for_bobines_fille__different_color(self):
         bobine_0 = fake_bobine_fille(laize=150, color="Jaune")
@@ -117,7 +138,7 @@ class TestFilter(TestCase):
         bobine_3 = fake_bobine_fille(laize=180, color="Jaune")
         bobines = [bobine_0, bobine_1, bobine_2, bobine_3]
         refente = Refente(laize1=150, laize2=140, laize3=130, laize4=180)
-        is_valid = is_valid_refente_for_bobines_fille(refente=refente,
+        is_valid = get_bobine_fille_combinaisons_for_refente(refente=refente,
                                                       bobines_fille=bobines,
                                                       bobines_fille_selected=None)
         self.assertEqual(is_valid, False)

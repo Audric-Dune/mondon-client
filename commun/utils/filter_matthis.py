@@ -7,57 +7,103 @@ def get_bobine_fille_combinaisons_for_refente(refente, bobines_fille, bobines_fi
     # Prépare une liste avec les solutions
     combinaisons = []
     # Convertit la refente en RefenteBuffer
-    refente_buffer = RefenteBuffer(refente)
-    # Applique les bobines fille sélectionnées sur la refente
-    for bobine_fille_selected in bobines_fille_selected:
-        refente_buffer.apply(bobine_fille_selected)
+    initial_refente_buffer = RefenteBuffer(refente.laizes)
+    # Récupère toutes les combinaisons possible de refente après avoir appliqué
+    # les bobines filles sélectionnées
+    refentes = initial_refente_buffer.get_combinaisons(bobines_fille_selected)
+    # for bobine_fille_selected in bobines_fille_selected:
+    #     refente_buffer.apply(bobine_fille_selected)
     # Groupe les bobines qui fonctionnent entre elles
     clusters = _group_bobines_fille(bobines_fille, bobines_fille_selected)
-    # Test chacun des groupes
-    for cluster in clusters:
-        # Convertit les BobineFille du groupe en BobineFilleSelected
-        bobines_poses = [
-            bobine_fille_selected
-            for bobine_fille in cluster
-            for bobine_fille_selected in [
-                BobineFilleSelected(bobine_fille, pose)
-                for pose in bobine_fille.poses
+    # Test chacun des groupes et refente
+    for refente in refentes:
+        for cluster in clusters:
+            # Convertit les BobineFille du groupe en BobineFilleSelected
+            bobines_poses = [
+                bobine_fille_selected
+                for bobine_fille in cluster
+                for bobine_fille_selected in [
+                    BobineFilleSelected(bobine_fille, pose)
+                    for pose in bobine_fille.poses
+                ]
             ]
-        ]
-        # Group les BobineFilleSelected par laize
-        bobine_poses_by_laize = {}
-        for bobine_pose in bobines_poses:
-            laize = bobine_pose.laize
-            if not bobine_poses_by_laize.get(laize):
-                bobine_poses_by_laize[laize] = []
-            bobine_poses_by_laize[laize].append(bobine_pose)
-        # Test si il existe une combinaison valid dans ce groupe
-        res = _is_valid_refente_for_bobines_pose(refente_buffer, bobine_poses_by_laize, max_solutions)
-        # Si on trouve des combinaisons, on les ajoute au tableau des solutions
-        # et on s'arrete dès qu'on en a assez.
-        if res:
-            for combi in res:
-                if max_solutions is not None and len(combinaisons) >= max_solutions:
-                    return combinaisons
-                combinaisons.append(combi)
+            # Group les BobineFilleSelected par laize
+            bobine_poses_by_laize = {}
+            for bobine_pose in bobines_poses:
+                laize = bobine_pose.laize
+                if not bobine_poses_by_laize.get(laize):
+                    bobine_poses_by_laize[laize] = []
+                bobine_poses_by_laize[laize].append(bobine_pose)
+            # Test si il existe une combinaison valid dans ce groupe
+            print(refente)
+            res = _is_valid_refente_for_bobines_pose(refente, bobine_poses_by_laize, max_solutions)
+            # Si on trouve des combinaisons, on les ajoute au tableau des solutions
+            # et on s'arrete dès qu'on en a assez.
+            if res:
+                for combi in res:
+                    if max_solutions is not None and len(combinaisons) >= max_solutions:
+                        return combinaisons
+                    combinaisons.append(combi)
     # Retourne toutes les combinaisons qu'on a trouvées
     return combinaisons
 
 
 # Représente une refente sur laquelle on peut appliquer des poses.
 class RefenteBuffer:
-    def __init__(self, refente):
+    def __init__(self, laizes):
         # Copy les laizes de la refente pour pouvoir travailler dessus
-        self.laizes = [laize for laize in refente.laizes if laize is not None]
+        self.laizes = laizes[:]
         # Définit l'index de la première laize non-occupée
-        self.index = 0
+        self.index = self.get_first_free_laize_index()
 
-    # Retourne un tuple (laize, laize_size) définissant la laize courante ainsi que
-    # le nombre de laize de cette taille qui suivent.
-    def get_current_laize(self):
-        current_laize = self.laizes[self.index]
+    # Retourne l'index de la première laize qui n'est pas None.
+    # Démarre à `start_index`.
+    def get_first_free_laize_index(self, start_index=0):
+        if start_index is None:
+            print('Test')
+        for i in range(start_index, len(self.laizes)):
+            if self.laizes[i] is not None:
+                return i
+        return len(self.laizes)
+
+    # Vérifie si une bobine peut être appliquée sur la refente à un certain index
+    def can_apply(self, bobine_selected, index):
+        if self.laizes[index] is None:
+            return False
+        laize, size = self.get_current_laize(index)
+        pose = 1 if bobine_selected.pose == 0 else bobine_selected.pose
+        return laize == bobine_selected.laize and size >= pose
+
+    # Génère toutes les combinaisons de refente en placant les bobine filles
+    # dans les endroits disponible
+    def get_combinaisons(self, bobines_selected):
+        refentes = []
+        bobine_selected = bobines_selected[0]
+        for i in range(len(self.laizes)):
+            r = self.copy()
+            if r.can_apply(bobine_selected, i):
+                for laize_index in range(i, i + bobine_selected.pose):
+                    r.laizes[laize_index] = None
+                if len(bobines_selected) > 1:
+                    for combi in r.get_combinaisons(bobines_selected[1:]):
+                        combi.index = combi.get_first_free_laize_index()
+                        refentes.append(combi)
+                else:
+                    r.index = r.get_first_free_laize_index()
+                    refentes.append(r)
+        return refentes
+
+    # Retourne un tuple (laize, laize_size) définissant la laize courante (ou à partir d'un
+    # certain index) ainsi que le nombre de laize de cette taille qui suivent.
+    def get_current_laize(self, index=None):
+        if index is None:
+            index = self.index
+        index = self.get_first_free_laize_index(index)
+        if index is None:
+            return None, None
+        current_laize = self.laizes[index]
         counter = 1
-        for laize in self.laizes[self.index + 1:]:
+        for laize in self.laizes[index + 1:]:
             if laize != current_laize:
                 break
             counter += 1
@@ -70,15 +116,24 @@ class RefenteBuffer:
 
     # Applique une BobineFilleSelected sur la refente.
     def apply(self, bobine_pose):
-        self.index += RefenteBuffer._get_real_pose(bobine_pose)
+        self.moveIndex(RefenteBuffer._get_real_pose(bobine_pose))
 
     # Enlève une BobineFilleSelected de la refente.
     def restore(self, bobine_pose):
-        self.index -= RefenteBuffer._get_real_pose(bobine_pose)
+        self.moveIndex(RefenteBuffer._get_real_pose(bobine_pose))
+
+    def moveIndex(self, size):
+        self.index = self.get_first_free_laize_index(self.index + size)
 
     # Indique si la refente est complète.
     def is_full(self):
         return self.index == len(self.laizes)
+
+    def copy(self):
+        return RefenteBuffer(self.laizes[:])
+
+    def __repr__(self):
+        return 'RefenteBuffer({})[{}]'.format(', '.join([str(l) for l in self.laizes]), self.index)
 
 
 # Sépare une liste de bobine en groupe de bobines qui ont les mêmes contraintes
