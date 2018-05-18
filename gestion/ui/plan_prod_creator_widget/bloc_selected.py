@@ -11,6 +11,7 @@ from gestion.ui.line_in_selector.line_refente import LineRefente
 from commun.constants.colors import color_blanc, color_gris_noir
 from commun.constants.stylesheets import gray_18_label_stylesheet
 from commun.ui.public.mondon_widget import MondonWidget
+from commun.ui.public.bobine_mere_ui import BobineMere
 from commun.utils.layout import clear_layout
 from gestion.stores.filter_store import filter_store
 from gestion.ui.line_in_selector.line_bobine_papier import LineBobinePapier
@@ -49,7 +50,7 @@ class BlocSelected(MondonWidget):
                 return content_layout
         if self.data_type == "papier":
             if self.parent.plan_prod.bobine_papier_selected:
-                content_ui = LineBobinePapier(bobine=self.parent.plan_prod.bobine_papier_selected)
+                content_ui = BobineMere(bobine=self.parent.plan_prod.bobine_papier_selected)
                 content_layout.addWidget(content_ui)
                 return content_layout
             else:
