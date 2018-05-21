@@ -46,16 +46,16 @@ class SelectorCollumFilter(MondonWidget):
     def init_width(self, name_filter):
         if filter_store.data_type == "bobine":
             width = dict_width_selector_bobine[name_filter]
-            self.setMinimumWidth(width)
+            self.setMinimumWidth(width+1)
         if filter_store.data_type == "refente":
             width = dict_width_selector_refente[name_filter]
-            self.setMinimumWidth(width)
+            self.setMinimumWidth(width+1)
         if filter_store.data_type == "poly":
             width = dict_width_selector_poly[name_filter]
-            self.setMinimumWidth(width)
+            self.setMinimumWidth(width+1)
         if filter_store.data_type == "papier":
             width = dict_width_selector_papier[name_filter]
-            self.setMinimumWidth(width)
+            self.setMinimumWidth(width+1)
 
     def init_widget(self):
         hbox = QHBoxLayout()

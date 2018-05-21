@@ -1,10 +1,12 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtWidgets import QWidget
+from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPen, QPainter, QColor
 
 from commun.constants.colors import color_gris, color_gris_moyen
+from commun.constants.stylesheets import black_16_label_stylesheet
 from commun.utils.color_bobine import get_color_bobine
 
 
@@ -17,6 +19,28 @@ class BobineMere(QWidget):
         self.setFixedHeight(100)
         self.setFixedWidth(self.bobine.laize*ech)
         self.update()
+        self.init_widget()
+
+    def init_widget(self):
+        hbox = QHBoxLayout()
+        hbox.addWidget(self.get_label(self.bobine.code), alignment=Qt.AlignCenter)
+        hbox.addWidget(self.get_label(self.bobine.laize), alignment=Qt.AlignCenter)
+        print(self.bobine.color)
+        if self.bobine.color == "Poly":
+            hbox.addWidget(self.get_label("Polypro 20µ"), alignment=Qt.AlignCenter)
+        else:
+            hbox.addWidget(self.get_label(self.bobine.color), alignment=Qt.AlignCenter)
+            hbox.addWidget(self.get_label(self.bobine.gr, "g"), alignment=Qt.AlignCenter)
+        hbox.addWidget(self.get_label(self.bobine.lenght, "m"), alignment=Qt.AlignCenter)
+        self.setLayout(hbox)
+
+    @staticmethod
+    def get_label(text, suffixe=None):
+        if suffixe:
+            text = "{}{}".format(text, suffixe)
+        label = QLabel(str(text))
+        label.setStyleSheet(black_16_label_stylesheet)
+        return label
 
     def paintEvent(self, e):
         p = QPainter(self)

@@ -19,7 +19,7 @@ class SelectorFilter(MondonWidget):
         self.setObjectName("SelectorFilter")
         if filter_store.data_type == "perfo":
             self.setFixedHeight(0)
-            self.setMinimumWidth(1100)
+            self.setMinimumWidth(1150)
         self.set_background_color(color_bleu_gris)
         self.search_code = TextEdit(upper_mode=True)
         self.init_widget()

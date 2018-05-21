@@ -19,6 +19,7 @@ class PerfoUi(MondonWidget):
         self.set_background_color(color_blanc)
         self.ech = ech
         self.perfo = perfo
+        self.setFixedWidth(980)
         self.hbox = QHBoxLayout()
         self.init_widget(perfo)
 
@@ -67,4 +68,5 @@ class PerfoUi(MondonWidget):
         bague7 = perfo.bague7
         if bague7:
             self.hbox.addWidget(BaguePerfo(parent=self, width_value=bague7, ech=self.ech))
+        self.hbox.addStretch()
         self.setLayout(self.hbox)

@@ -3,7 +3,7 @@
 
 from commun.ui.public.mondon_widget import MondonWidget
 from commun.utils.drawing import draw_rectangle, draw_text, draw_triangle
-from commun.constants.colors import color_gris_fonce, color_noir, color_rouge, color_beige
+from commun.constants.colors import color_noir, color_rouge, color_beige
 
 
 class BaguePerfo(MondonWidget):
