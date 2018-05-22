@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel, QWidget
 from commun.constants.colors import color_blanc, color_gris_noir
 from commun.constants.stylesheets import gray_18_label_stylesheet
 from commun.ui.public.mondon_widget import MondonWidget
-from commun.ui.public.bobine_mere_ui import BobineMere
+from commun.ui.public.bobine_mere_ui import BobineMereUI
 from commun.ui.public.refente_ui import RefenteUi
 from commun.ui.public.perfo_ui import PerfoUi
 from commun.ui.public.dec_bobine_refente import DecBobineRefente
@@ -56,12 +56,12 @@ class BlocSelected(MondonWidget):
                     space = QWidget()
                     space.setFixedWidth(980-refente.laize-refente.dec)
                     content_ui.addWidget(space)
-                    content_ui.addWidget(BobineMere(bobine=self.parent.plan_prod.bobine_papier_selected))
+                    content_ui.addWidget(BobineMereUI(bobine=self.parent.plan_prod.bobine_papier_selected))
                     refente = self.parent.plan_prod.refente_selected
                     content_ui.addWidget(DecBobineRefente(dec=refente.dec))
                     content_layout.addLayout(content_ui)
                 else:
-                    content_ui = BobineMere(bobine=self.parent.plan_prod.bobine_papier_selected)
+                    content_ui = BobineMereUI(bobine=self.parent.plan_prod.bobine_papier_selected)
                     content_layout.addWidget(content_ui)
                 return content_layout
             else:
@@ -77,12 +77,12 @@ class BlocSelected(MondonWidget):
                     space = QWidget()
                     space.setFixedWidth(980-refente.laize-refente.dec)
                     content_ui.addWidget(space)
-                    content_ui.addWidget(BobineMere(bobine=self.parent.plan_prod.bobine_poly_selected))
+                    content_ui.addWidget(BobineMereUI(bobine=self.parent.plan_prod.bobine_poly_selected))
                     refente = self.parent.plan_prod.refente_selected
                     content_ui.addWidget(DecBobineRefente(dec=refente.dec))
                     content_layout.addLayout(content_ui)
                 else:
-                    content_ui = BobineMere(bobine=self.parent.plan_prod.bobine_poly_selected)
+                    content_ui = BobineMereUI(bobine=self.parent.plan_prod.bobine_poly_selected)
                     content_layout.addWidget(content_ui)
                 return content_layout
             else:

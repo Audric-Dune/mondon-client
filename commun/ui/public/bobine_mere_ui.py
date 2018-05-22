@@ -10,10 +10,10 @@ from commun.constants.stylesheets import black_16_label_stylesheet
 from commun.utils.color_bobine import get_color_bobine
 
 
-class BobineMere(QWidget):
+class BobineMereUI(QWidget):
 
     def __init__(self, bobine, ech=1, parent=None):
-        super(BobineMere, self).__init__(parent=parent)
+        super(BobineMereUI, self).__init__(parent=parent)
         self.bobine = bobine
         self.ech = ech
         self.setFixedHeight(100)
@@ -31,7 +31,7 @@ class BobineMere(QWidget):
         else:
             hbox.addWidget(self.get_label(self.bobine.color), alignment=Qt.AlignCenter)
             hbox.addWidget(self.get_label(self.bobine.gr, "g"), alignment=Qt.AlignCenter)
-        hbox.addWidget(self.get_label(self.bobine.lenght, "m"), alignment=Qt.AlignCenter)
+        hbox.addWidget(self.get_label(self.bobine.length, "m"), alignment=Qt.AlignCenter)
         self.setLayout(hbox)
 
     @staticmethod
