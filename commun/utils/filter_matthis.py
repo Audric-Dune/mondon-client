@@ -5,7 +5,7 @@ from commun.model.bobine_fille_selected import BobineFilleSelected
 # S'arrete de chercher après avoir trouvé `max_solutions`.
 def get_bobine_fille_combinaisons_for_refente(refente, bobines_fille, bobines_fille_selected=[], max_solutions=1):
     # Prépare une liste avec les solutions
-    combinaisons = []
+    combinaisons = Combinaisons()
     # Convertit la refente en RefenteBuffer
     initial_refente_buffer = RefenteBuffer(refente.laizes)
     # Récupère toutes les combinaisons possible de refente après avoir appliqué
@@ -35,7 +35,6 @@ def get_bobine_fille_combinaisons_for_refente(refente, bobines_fille, bobines_fi
                     bobine_poses_by_laize[laize] = []
                 bobine_poses_by_laize[laize].append(bobine_pose)
             # Test si il existe une combinaison valid dans ce groupe
-            print(refente)
             res = _is_valid_refente_for_bobines_pose(refente, bobine_poses_by_laize, max_solutions)
             # Si on trouve des combinaisons, on les ajoute au tableau des solutions
             # et on s'arrete dès qu'on en a assez.
@@ -43,9 +42,9 @@ def get_bobine_fille_combinaisons_for_refente(refente, bobines_fille, bobines_fi
                 for combi in res:
                     if max_solutions is not None and len(combinaisons) >= max_solutions:
                         return combinaisons
-                    combinaisons.append(combi)
+                    combinaisons.add(combi)
     # Retourne toutes les combinaisons qu'on a trouvées
-    return combinaisons
+    return combinaisons.all(max_solutions)
 
 
 # Représente une refente sur laquelle on peut appliquer des poses.
@@ -59,12 +58,10 @@ class RefenteBuffer:
     # Retourne l'index de la première laize qui n'est pas None.
     # Démarre à `start_index`.
     def get_first_free_laize_index(self, start_index=0):
-        if start_index is None:
-            print('Test')
         for i in range(start_index, len(self.laizes)):
             if self.laizes[i] is not None:
                 return i
-        return len(self.laizes)
+        return None
 
     # Vérifie si une bobine peut être appliquée sur la refente à un certain index
     def can_apply(self, bobine_selected, index):
@@ -116,24 +113,54 @@ class RefenteBuffer:
 
     # Applique une BobineFilleSelected sur la refente.
     def apply(self, bobine_pose):
-        self.moveIndex(RefenteBuffer._get_real_pose(bobine_pose))
+        self.move_index(RefenteBuffer._get_real_pose(bobine_pose), 1)
 
     # Enlève une BobineFilleSelected de la refente.
     def restore(self, bobine_pose):
-        self.moveIndex(RefenteBuffer._get_real_pose(bobine_pose))
+        self.move_index(RefenteBuffer._get_real_pose(bobine_pose), -1)
 
-    def moveIndex(self, size):
-        self.index = self.get_first_free_laize_index(self.index + size)
+    def move_index(self, size, direction):
+        counter = 0
+        while counter < size:
+            self.index += direction
+            if self.index >= len(self.laizes) and direction > 0:
+                self.index = len(self.laizes)
+                break
+            if self.index <= 0 and direction < 0:
+                self.index = 0
+                break
+            if self.laizes[self.index] is not None:
+                counter += 1
 
     # Indique si la refente est complète.
     def is_full(self):
-        return self.index == len(self.laizes)
+        return self.get_first_free_laize_index(self.index) is None
 
     def copy(self):
         return RefenteBuffer(self.laizes[:])
 
     def __repr__(self):
         return 'RefenteBuffer({})[{}]'.format(', '.join([str(l) for l in self.laizes]), self.index)
+
+
+# Représente une combinaison de BobineFilleSelected
+# Cette classe est majoritairement utilisé pour dé-dupliquer les solutions
+class Combinaisons:
+    def __init__(self):
+        self.list = []
+        self.seen = set()
+
+    def add(self, combi):
+        h = hash(combi)
+        if h in self.seen:
+            return
+        self.seen.add(h)
+        self.list.append(combi)
+
+    def all(self, limit=None):
+        if limit is None:
+            return self.list
+        return self.list[0:limit]
 
 
 # Sépare une liste de bobine en groupe de bobines qui ont les mêmes contraintes
@@ -176,7 +203,7 @@ def _is_valid_refente_for_bobines_pose(refente_buffer, bobines_poses_by_laize, m
     if refente_buffer.is_full():
         return []
     # Prépare une liste avec les solutions
-    combinaisons = []
+    combinaisons = Combinaisons()
     # Récupère la laize courante ainsi que le nombre de place disponible pour cette laize
     laize, laize_size = refente_buffer.get_current_laize()
     # Récupère les bobines-pose avec la bonne laize
@@ -203,13 +230,20 @@ def _is_valid_refente_for_bobines_pose(refente_buffer, bobines_poses_by_laize, m
         # Si on a trouvé des combinaisons, on ajoute la bobine courante à la fin de chacunes.
         if res is not None:
             if len(res) == 0:
-                combinaisons.append([bobine_pose])
+                combinaisons.add((bobine_pose,))
             for combi in res:
-                combinaisons.append(combi + [bobine_pose])
+                new_combi = tuple(sorted(combi + (bobine_pose,)))
+                combinaisons.add(new_combi)
             if max_solutions is not None and len(combinaisons) >= max_solutions:
-                return combinaisons[0:max_solutions]
+                return combinaisons.all(max_solutions)
     # Retourne les combinaisons
-    return None if not combinaisons else combinaisons
+    return None if not combinaisons else combinaisons.all()
+
+
+# # Enlève les duplicats
+# def dedup_combinaisons(combinaisons):
+#
+#     pass
 
 
 # Compare si deux bobines filles sont compatible (copiée de filter.py)
@@ -220,6 +254,6 @@ def is_valid_bobine_fille_for_bobine_fille(bobine_fille, bobine_fille_contrainte
         return False
     if bobine_fille.gr != bobine_fille_contrainte.gr:
         return False
-    if bobine_fille.lenght != bobine_fille_contrainte.lenght:
+    if bobine_fille.length != bobine_fille_contrainte.length:
         return False
     return True

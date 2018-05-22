@@ -64,7 +64,7 @@ class BobineFille(MondonWidget):
         text = self.bobine.code
         draw_text(p, x, y, w, h, color=color_noir, align="C", font_size=font_size, text=text)
 
-    def draw_lenght(self, p):
+    def draw_length(self, p):
         x = 0
         y = -30 * self.ech
         w = self.laize * self.ech
@@ -79,6 +79,6 @@ class BobineFille(MondonWidget):
         if self.bobine:
             self.draw_code(p)
             self.draw_gr(p)
-            self.draw_lenght(p)
+            self.draw_length(p)
         else:
             self.draw_label_number(p)

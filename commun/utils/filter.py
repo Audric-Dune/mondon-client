@@ -446,7 +446,7 @@ def is_valid_bobine_fille_for_bobine_fille(bobine_fille, bobine_fille_contrainte
         return False
     if bobine_fille.gr != bobine_fille_contrainte.gr:
         return False
-    if bobine_fille.lenght != bobine_fille_contrainte.lenght:
+    if bobine_fille.length != bobine_fille_contrainte.length:
         return False
     return True
 

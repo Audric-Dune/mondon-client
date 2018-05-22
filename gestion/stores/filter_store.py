@@ -15,19 +15,19 @@ class FilterStore(QObject):
         self.data_type = None
         self.dicts_filter = {}
         # FILTER BOBINE FILLE
-        self.list_filter_bobine_fille = ["laize", "color", "gr", "lenght", "poses",
+        self.list_filter_bobine_fille = ["laize", "color", "gr", "length", "poses",
                                          "vente_mensuelle", "stock", "stock_therme", "etat", "sommeil"]
         self.title_filter_bobine_fille = ["Laize", "Couleur", "Grammage", "Longueur", "Pose(s)",
                                           "Vente mensuelle", "Stock", "Stock à therme", "Etat", "Sommeil"]
         self.filter_mode_bobine_fille = [True, True, True, True, True, False, False, False, True, True]
         self.sort_mode_bobine_fille = [True, True, True, True, False, True, True, True, False, False]
         # FILTER POLY
-        self.list_filter_poly = ["code", "laize", "lenght", "famille"]
+        self.list_filter_poly = ["code", "laize", "length", "famille"]
         self.title_filter_poly = ["Code", "Laize", "Longueur", "Famille"]
         self.filter_mode_poly = [False, False, False, False]
         self.sort_mode_poly = [True, True, True, False]
         # FILTER BOBINE PAPIER
-        self.list_filter_papier = ["code", "laize", "color", "gr", "lenght"]
+        self.list_filter_papier = ["code", "laize", "color", "gr", "length"]
         self.title_filter_papier = ["Code", "Laize", "Couleur", "Grammage", "Longueur"]
         self.filter_mode_papier = [False, True, True, True, True]
         self.sort_mode_papier = [True, True, True, True, True]

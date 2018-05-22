@@ -8,7 +8,7 @@ class BobineFille:
                  code=0,
                  name="",
                  laize=0.,
-                 lenght=0,
+                 length=0,
                  color="",
                  stock=0,
                  stock_therme=0,
@@ -23,7 +23,7 @@ class BobineFille:
         self.codes_cliche = codes_cliche
         self.colors_cliche = colors_cliche
         self.laize = float(laize)
-        self.lenght = int(lenght)
+        self.length = int(length)
         self.color = color
         self.stock = stock
         self.stock_therme = stock_therme
@@ -69,8 +69,8 @@ class BobineFille:
             return self.code
         if value_name == "laize":
             return self.laize
-        if value_name == "lenght":
-            return self.lenght
+        if value_name == "length":
+            return self.length
         if value_name == "color":
             return self.color
         if value_name == "gr":
@@ -87,7 +87,7 @@ class BobineFille:
         return "B{} ({}, {}, {}m, {} poses, {}, {}), {}g, {}".format(self.code,
                                                                      self.color,
                                                                      self.laize,
-                                                                     self.lenght,
+                                                                     self.length,
                                                                      self.poses,
                                                                      self.codes_cliche,
                                                                      self.colors_cliche,

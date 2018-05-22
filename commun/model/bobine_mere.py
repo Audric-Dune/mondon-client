@@ -4,10 +4,10 @@
 
 class BobineMere:
 
-    def __init__(self, code=0, laize=0, lenght=0, color="", gr="0g"):
+    def __init__(self, code=0, laize=0, length=0, color="", gr="0g"):
         self.code = code
         self.laize = int(laize)
-        self.lenght = int(lenght)
+        self.length = int(length)
         self.color = color
         self.gr = gr
 
@@ -16,8 +16,8 @@ class BobineMere:
             return self.code
         if value_name == "laize":
             return self.laize
-        if value_name == "lenght":
-            return self.lenght
+        if value_name == "length":
+            return self.length
         if value_name == "color":
             return self.color
         if value_name == "gr":
@@ -28,5 +28,5 @@ class BobineMere:
         return "REF {}({}, {}, {}m, {})".format(self.code,
                                                 self.color.capitalize(),
                                                 self.laize,
-                                                self.lenght,
+                                                self.length,
                                                 self.gr)

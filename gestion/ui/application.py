@@ -179,7 +179,7 @@ class Application(QApplication):
             return
         else:
             current_name = sheet.cell_value(current_row, 2)
-            current_lenght = sheet.cell_value(current_row, 4) if sheet.cell_value(current_row, 4) != "" else 0
+            current_length = sheet.cell_value(current_row, 4) if sheet.cell_value(current_row, 4) != "" else 0
             current_color = sheet.cell_value(current_row, 5).title()
             current_gr = sheet.cell_value(current_row, 6) if sheet.cell_value(current_row, 6) != "" else 0
             current_code_cliche = []
@@ -196,7 +196,7 @@ class Application(QApplication):
                                          color=current_color,
                                          laize=current_laize,
                                          gr=current_gr,
-                                         lenght=current_lenght,
+                                         length=current_length,
                                          codes_cliche=current_code_cliche,
                                          stock=current_stock,
                                          stock_therme=current_stock_therme,
@@ -223,7 +223,7 @@ class Application(QApplication):
                                                  color=color,
                                                  laize=sheet.cell_value(current_ligne, 0),
                                                  gr=gr,
-                                                 lenght=sheet.cell_value(current_ligne, 6))
+                                                 length=sheet.cell_value(current_ligne, 6))
                         if color == "Poly":
                             bobine_poly_store.add_bobine(bobine_mere)
                         else:

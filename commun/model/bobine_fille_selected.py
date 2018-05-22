@@ -10,7 +10,7 @@ class BobineFilleSelected:
         self.codes_cliche = bobine.codes_cliche
         self.colors_cliche = bobine.colors_cliche
         self.laize = bobine.laize
-        self.lenght = bobine.lenght
+        self.length = bobine.length
         self.color = bobine.color
         self.stock = bobine.stock
         self.stock_therme = bobine.stock_therme
@@ -25,4 +25,11 @@ class BobineFilleSelected:
         self.etat = bobine.etat
 
     def __repr__(self):
-        return 'B({}, {}, {}, {}, {}, {})'.format(self.code, self.laize, self.pose, self.color, self.gr, self.lenght)
+        return 'B({}, {}, {}, {}, {}, {})'.format(self.code, self.laize, self.pose, self.color, self.gr, self.length)
+
+    def __lt__(self, other):
+        return self.pose < other.pose if self.code == other.code else self.code < other.code
+
+    def __hash__(self):
+        h = hash('{}({})'.format(self.code, self.pose))
+        return h

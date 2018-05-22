@@ -205,7 +205,7 @@ class PlanProd(QObject):
     def definied_longueur(self):
         self.longueur = None
         if self.bobines_filles_selected:
-            self.longueur = self.bobines_filles_selected[0].lenght
+            self.longueur = self.bobines_filles_selected[0].length
         self.get_end()
 
     def init_current_store(self):
@@ -250,9 +250,9 @@ class PlanProd(QObject):
         self.ON_CHANGED_SIGNAL.emit()
 
     def filter_bobine_papier_bobine_fille_refente_store(self, contrainte):
-        lenght_bobines_papier = len(self.current_bobine_papier_store.bobines)
-        lenght_bobines_fille = len(self.current_bobine_fille_store.bobines)
-        lenght_refentes = len(self.current_refente_store.refentes)
+        length_bobines_papier = len(self.current_bobine_papier_store.bobines)
+        length_bobines_fille = len(self.current_bobine_fille_store.bobines)
+        length_refentes = len(self.current_refente_store.refentes)
         self.current_bobine_papier_store.bobines = \
             filter.filter_bobines_papier_for_refentes(bobines_papier=self.current_bobine_papier_store.bobines,
                                                       refentes=self.current_refente_store.refentes)
@@ -271,12 +271,12 @@ class PlanProd(QObject):
                                         refentes=self.current_refente_store.refentes,
                                         bobines_fille_selected=contrainte.bobines_fille,
                                         bobines_papier=self.current_bobine_papier_store.bobines)
-        new_lenght_bobines_papier = len(self.current_bobine_papier_store.bobines)
-        new_lenght_bobines_fille = len(self.current_bobine_fille_store.bobines)
-        new_lenght_refentes = len(self.current_refente_store.refentes)
-        if new_lenght_bobines_fille != lenght_bobines_fille\
-                or new_lenght_bobines_papier != lenght_bobines_papier\
-                or new_lenght_refentes != lenght_refentes:
+        new_length_bobines_papier = len(self.current_bobine_papier_store.bobines)
+        new_length_bobines_fille = len(self.current_bobine_fille_store.bobines)
+        new_length_refentes = len(self.current_refente_store.refentes)
+        if new_length_bobines_fille != length_bobines_fille\
+                or new_length_bobines_papier != length_bobines_papier\
+                or new_length_refentes != length_refentes:
             self.filter_bobine_papier_bobine_fille_refente_store(contrainte)
 
     def get_contrainte(self):

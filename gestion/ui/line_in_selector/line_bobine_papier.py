@@ -45,10 +45,10 @@ class LineBobinePapier(LineSelector):
         gr.setStyleSheet(black_14_label_stylesheet)
         gr.setAlignment(Qt.AlignCenter)
         hbox.addWidget(gr)
-        lenght = QLabel(str(self.bobine.lenght))
-        lenght.setStyleSheet(black_14_label_stylesheet)
-        lenght.setAlignment(Qt.AlignCenter)
-        hbox.addWidget(lenght)
+        length = QLabel(str(self.bobine.length))
+        length.setStyleSheet(black_14_label_stylesheet)
+        length.setAlignment(Qt.AlignCenter)
+        hbox.addWidget(length)
         for key in dict_width_selector_papier.keys():
             vars()[key].setMinimumWidth(dict_width_selector_papier[key])
 

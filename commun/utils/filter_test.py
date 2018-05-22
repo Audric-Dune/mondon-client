@@ -54,7 +54,7 @@ def fake_bobine_mere(code=None, laize=None, length=None, color=None, gr=None):
         color = random_color()
     if gr is None:
         gr = random_grammage()
-    return BobineMere(code=code, laize=laize, lenght=length, color=color, gr=gr)
+    return BobineMere(code=code, laize=laize, length=length, color=color, gr=gr)
 
 
 def fake_bobine_fille(code=None, laize=None, length=None, color=None, gr=None, poses=None):
@@ -68,7 +68,7 @@ def fake_bobine_fille(code=None, laize=None, length=None, color=None, gr=None, p
         gr = random_grammage()
     if poses is None:
         poses = [0]
-    return BobineFille(code=code, laize=laize, lenght=length, color=color, gr=gr, poses=poses)
+    return BobineFille(code=code, laize=laize, length=length, color=color, gr=gr, poses=poses)
 
 
 class TestFilter(TestCase):
