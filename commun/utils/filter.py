@@ -1,7 +1,7 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from commun.utils.filter_matthis import get_bobine_fille_combinaisons_for_refente
+from commun.utils.filter_matthis import is_valid_refente_bobines_fille_bobines_fille_selected
 
 
 UTILISE_MATTHIS = True
@@ -120,7 +120,7 @@ def filter_refentes_for_bobines_fille(refentes, bobines_fille, bobines_fille_sel
     new_refentes = []
     for refente in refentes:
         if UTILISE_MATTHIS:
-            if get_bobine_fille_combinaisons_for_refente(refente, bobines_fille, bobines_fille_selected):
+            if is_valid_refente_bobines_fille_bobines_fille_selected(refente, bobines_fille, bobines_fille_selected):
                 new_refentes.append(refente)
         else:
             if rec_is_valid_refente_for_bobines_fille(refente, bobines_fille, bobines_fille_selected):
@@ -361,7 +361,9 @@ def is_valid_bobine_fille_and_bobine_papier(bobine_fille,
             new_bobines_fille_selected.append(new_bobine_fille_selected)
 
             if UTILISE_MATTHIS:
-                if get_bobine_fille_combinaisons_for_refente(refente, bobines_fille, new_bobines_fille_selected):
+                if is_valid_refente_bobines_fille_bobines_fille_selected(refente,
+                                                                         bobines_fille,
+                                                                         new_bobines_fille_selected):
                     return True
             else:
                 if rec_is_valid_refente_for_bobines_fille(refente, bobines_fille, new_bobines_fille_selected):

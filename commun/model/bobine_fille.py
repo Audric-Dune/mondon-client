@@ -83,7 +83,7 @@ class BobineFille:
             return self.vente_mensuelle
         return 0
 
-    def __str__(self):
+    def __repr__(self):
         return "B{} ({}, {}, {}m, {} poses, {}, {}), {}g, {}".format(self.code,
                                                                      self.color,
                                                                      self.laize,

@@ -1,9 +1,26 @@
 from commun.model.bobine_fille_selected import BobineFilleSelected
 
 
+def is_valid_refente_bobines_fille_bobines_fille_selected(refente, bobines_fille, bobines_fille_selected=None):
+    if bobines_fille_selected is None:
+        bobines_fille_selected = []
+    initial_refente_buffer = RefenteBuffer(refente.laizes)
+    refentes = initial_refente_buffer.get_combinaisons(bobines_fille_selected)
+    if len(refentes) > 0 and refentes[0].is_full():
+        return True
+    return len(get_bobine_fille_combinaisons_for_refente(refente=refente,
+                                                         bobines_fille=bobines_fille,
+                                                         bobines_fille_selected=bobines_fille_selected,
+                                                         max_solutions=1)) > 0
+
+
 # Determine s'il existe des combinaisons valides de bobines pour une refente.
 # S'arrete de chercher après avoir trouvé `max_solutions`.
 def get_bobine_fille_combinaisons_for_refente(refente, bobines_fille, bobines_fille_selected=None, max_solutions=1):
+    print("get_bobine_fille_combinaisons_for_refente")
+    print("Refente: ", refente)
+    print("Bobines_selected: ", bobines_fille_selected)
+    print("Bobines: ", bobines_fille)
     if bobines_fille_selected is None:
         bobines_fille_selected = []
     # Prépare une liste avec les solutions
@@ -43,9 +60,11 @@ def get_bobine_fille_combinaisons_for_refente(refente, bobines_fille, bobines_fi
             if res:
                 for combi in res:
                     if max_solutions is not None and len(combinaisons.all()) >= max_solutions:
-                        return combinaisons
+                        print("Combinaisons: ", combinaisons.all(max_solutions))
+                        return combinaisons.all(max_solutions)
                     combinaisons.add(combi)
     # Retourne toutes les combinaisons qu'on a trouvées
+    print("Combinaisons: ", combinaisons.all(max_solutions))
     return combinaisons.all(max_solutions)
 
 
@@ -70,7 +89,7 @@ class RefenteBuffer:
         if self.laizes[index] is None:
             return False
         laize, size = self.get_current_laize(index)
-        pose = 1 if bobine_selected.pose == 0 else bobine_selected.pose
+        pose = self._get_real_pose(bobine_selected)
         return laize == bobine_selected.laize and size >= pose
 
     # Génère toutes les combinaisons de refente en placant les bobine filles
@@ -83,14 +102,15 @@ class RefenteBuffer:
         for i in range(len(self.laizes)):
             r = self.copy()
             if r.can_apply(bobine_selected, i):
-                for laize_index in range(i, i + bobine_selected.pose):
+                pose = self._get_real_pose(bobine_selected)
+                for laize_index in range(i, i + pose):
                     r.laizes[laize_index] = None
+                r.index = r.get_first_free_laize_index()
                 if len(bobines_selected) > 1:
                     for combi in r.get_combinaisons(bobines_selected[1:]):
                         combi.index = combi.get_first_free_laize_index()
                         refentes.append(combi)
                 else:
-                    r.index = r.get_first_free_laize_index()
                     refentes.append(r)
         return refentes
 
@@ -112,8 +132,8 @@ class RefenteBuffer:
 
     # Retourne la taille réelle d'une pose.
     @staticmethod
-    def _get_real_pose(bobine_pose):
-        return 1 if bobine_pose.pose == 0 else bobine_pose.pose
+    def _get_real_pose(bobine):
+        return 1 if bobine.pose == 0 else bobine.pose
 
     # Applique une BobineFilleSelected sur la refente.
     def apply(self, bobine_pose):
