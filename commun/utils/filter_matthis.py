@@ -3,7 +3,9 @@ from commun.model.bobine_fille_selected import BobineFilleSelected
 
 # Determine s'il existe des combinaisons valides de bobines pour une refente.
 # S'arrete de chercher après avoir trouvé `max_solutions`.
-def get_bobine_fille_combinaisons_for_refente(refente, bobines_fille, bobines_fille_selected=[], max_solutions=1):
+def get_bobine_fille_combinaisons_for_refente(refente, bobines_fille, bobines_fille_selected=None, max_solutions=1):
+    if bobines_fille_selected is None:
+        bobines_fille_selected = []
     # Prépare une liste avec les solutions
     combinaisons = Combinaisons()
     # Convertit la refente en RefenteBuffer
@@ -11,8 +13,6 @@ def get_bobine_fille_combinaisons_for_refente(refente, bobines_fille, bobines_fi
     # Récupère toutes les combinaisons possible de refente après avoir appliqué
     # les bobines filles sélectionnées
     refentes = initial_refente_buffer.get_combinaisons(bobines_fille_selected)
-    # for bobine_fille_selected in bobines_fille_selected:
-    #     refente_buffer.apply(bobine_fille_selected)
     # Groupe les bobines qui fonctionnent entre elles
     clusters = _group_bobines_fille(bobines_fille, bobines_fille_selected)
     # Test chacun des groupes et refente
@@ -40,7 +40,7 @@ def get_bobine_fille_combinaisons_for_refente(refente, bobines_fille, bobines_fi
             # et on s'arrete dès qu'on en a assez.
             if res:
                 for combi in res:
-                    if max_solutions is not None and len(combinaisons) >= max_solutions:
+                    if max_solutions is not None and len(combinaisons.all()) >= max_solutions:
                         return combinaisons
                     combinaisons.add(combi)
     # Retourne toutes les combinaisons qu'on a trouvées
@@ -236,16 +236,10 @@ def _is_valid_refente_for_bobines_pose(refente_buffer, bobines_poses_by_laize, m
             for combi in res:
                 new_combi = tuple(sorted(combi + (bobine_pose,)))
                 combinaisons.add(new_combi)
-            if max_solutions is not None and len(combinaisons) >= max_solutions:
+            if max_solutions is not None and len(combinaisons.all()) >= max_solutions:
                 return combinaisons.all(max_solutions)
     # Retourne les combinaisons
     return None if not combinaisons else combinaisons.all()
-
-
-# # Enlève les duplicats
-# def dedup_combinaisons(combinaisons):
-#
-#     pass
 
 
 # Compare si deux bobines filles sont compatible (copiée de filter.py)
