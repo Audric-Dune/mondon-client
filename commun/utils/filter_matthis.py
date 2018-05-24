@@ -75,6 +75,8 @@ class RefenteBuffer:
         self.laizes = laizes[:]
         # Définit l'index de la première laize non-occupée
         self.index = self.get_first_free_laize_index()
+        # Initialise un encrier de taille 3
+        self.encrier = Encrier(max_size=3)
 
     # Retourne l'index de la première laize qui n'est pas None.
     # Démarre à `start_index`.
@@ -85,12 +87,16 @@ class RefenteBuffer:
         return None
 
     # Vérifie si une bobine peut être appliquée sur la refente à un certain index
-    def can_apply(self, bobine_selected, index):
+    def can_apply(self, bobine_selected, index=None):
+        if index is None:
+            index = self.index
         if self.laizes[index] is None:
             return False
         laize, size = self.get_current_laize(index)
         pose = self._get_real_pose(bobine_selected)
-        return laize == bobine_selected.laize and size >= pose
+        return (laize == bobine_selected.laize and
+                size >= pose and
+                self.encrier.can_add_colors(bobine_selected.colors_cliche))
 
     # Génère toutes les combinaisons de refente en placant les bobine filles
     # dans les endroits disponible
@@ -100,12 +106,13 @@ class RefenteBuffer:
         refentes = []
         bobine_selected = bobines_selected[0]
         for i in range(len(self.laizes)):
-            r = self.copy()
-            if r.can_apply(bobine_selected, i):
+            if self.can_apply(bobine_selected, i):
+                r = self.copy()
                 pose = self._get_real_pose(bobine_selected)
                 for laize_index in range(i, i + pose):
                     r.laizes[laize_index] = None
                 r.index = r.get_first_free_laize_index()
+                r.encrier.add_colors(bobine_selected.colors_cliche)
                 if len(bobines_selected) > 1:
                     for combi in r.get_combinaisons(bobines_selected[1:]):
                         combi.index = combi.get_first_free_laize_index()
@@ -138,10 +145,12 @@ class RefenteBuffer:
     # Applique une BobineFilleSelected sur la refente.
     def apply(self, bobine_pose):
         self.move_index(RefenteBuffer._get_real_pose(bobine_pose), 1)
+        self.encrier.add_colors(bobine_pose.colors_cliche)
 
     # Enlève une BobineFilleSelected de la refente.
     def restore(self, bobine_pose):
         self.move_index(RefenteBuffer._get_real_pose(bobine_pose), -1)
+        self.encrier.remove_colors(bobine_pose.colors_cliche)
 
     def move_index(self, size, direction):
         counter = 0
@@ -165,6 +174,55 @@ class RefenteBuffer:
 
     def __repr__(self):
         return 'RefenteBuffer({})[{}]'.format(', '.join([str(l) for l in self.laizes]), self.index)
+
+
+# Représente une combinaison de couleurs utilisées avec une limite sur le nombre de couleurs
+class Encrier:
+    def __init__(self, max_size):
+        self.max_size = max_size
+        self.colors = {}
+
+    def add_color(self, color):
+        if color in self.colors:
+            self.colors[color] += 1
+        else:
+            if self.is_full():
+                raise Exception('Impossible d\'ajouter la couleur "{}", '
+                                'l\'encrier est plein ({}).'
+                                .format(color, ', '.join(self.colors.keys())))
+            self.colors[color] = 1
+
+    def add_colors(self, colors):
+        if colors is None:
+            return
+        for color in colors:
+            self.add_color(color)
+
+    def remove_color(self, color):
+        if color in self.colors:
+            if self.colors[color] == 1:
+                del(self.colors[color])
+            else:
+                self.colors[color] -= 1
+        else:
+            raise Exception('Impossible d\'enlever la couleur "{}", '
+                            'l\'encrier ne la contient pas ({}).'
+                                .format(color, ', '.join(self.colors.keys())))
+
+    def remove_colors(self, colors):
+        if colors is None:
+            return
+        for color in colors:
+            self.remove_color(color)
+
+    def can_add_colors(self, colors):
+        if colors is None:
+            return True
+        new_colors = set([c for c in colors if c not in self.colors])
+        return len(self.colors) + len(new_colors) <= self.max_size
+
+    def is_full(self):
+        return len(self.colors) == self.max_size
 
 
 # Représente une combinaison de BobineFilleSelected
@@ -237,7 +295,7 @@ def _is_valid_refente_for_bobines_pose(refente_buffer, bobines_poses_by_laize, m
         bobine_pose = bobines_poses[bobine_pose_index]
         pose = bobine_pose.pose
         # Check d'abord si la pose n'est pas trop grande
-        if pose > laize_size:
+        if not refente_buffer.can_apply(bobine_pose):
             continue
         # Applique la BobineFilleSelected sur RefenteBuffer
         refente_buffer.apply(bobine_pose)
