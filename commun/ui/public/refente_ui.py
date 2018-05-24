@@ -2,9 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5.QtWidgets import QHBoxLayout
-from PyQt5.QtCore import pyqtSignal
 
-from commun.model.perfo import Perfo
 from commun.ui.public.bobine_fille_selected_ui import BobineFilleSelected
 from commun.ui.public.bobine_fille_ui import BobineFille
 from commun.ui.public.mondon_widget import MondonWidget
@@ -23,7 +21,6 @@ class RefenteUi(MondonWidget):
         self.init_widget(refente)
 
     def init_widget(self, refente):
-        print("__________ init_widget __________")
         self.hbox.setSpacing(0)
         self.hbox.setContentsMargins(0, 0, 0, 0)
         index = 0

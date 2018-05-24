@@ -29,6 +29,7 @@ class MondonWidget(QWidget):
         data_store_manager.DATA_CHANGED_SIGNAL.connect(self._handle_data_changed)
         settings_store.SETTINGS_CHANGED_SIGNAL.connect(self._handle_settings_changed)
         settings_store_gestion.SETTINGS_CHANGED_SIGNAL.connect(self._handle_settings_gestion_changed)
+        settings_store_gestion.SETTINGS_CHANGED_SIGNAL.connect(self._handle_settings_gestion_changed)
         settings_stat_store.SETTINGS_STAT_CHANGED_SIGNAL.connect(self._handle_settings_stat_changed)
         settings_stat_store.SETTINGS_CHART_CHANGED_SIGNAL.connect(self._handle_settings_chart_changed)
         settings_team_gestion_store.SETTINGS_TEAM_GESTION_CHANGED_SIGNAL.connect(self._handle_settings_team_gestion_changed)

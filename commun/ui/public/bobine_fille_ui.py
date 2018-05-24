@@ -55,32 +55,14 @@ class BobineFille(QWidget):
         w = self.laize * self.ech
         h = self.BOBINE_HEIGHT * self.ech
         font_size = 22 * self.ech
-        draw_text(p, x, y, w, h, color=color_noir, align="C", font_size=font_size, text=str(self.laize))
+        draw_text(p, x, y, w, h, color=color_noir, align="C", font_size=font_size, text=str(int(self.laize)))
 
     def draw_code(self, p):
         x = 0
         y = -30 * self.ech
         w = self.laize * self.ech
         h = self.BOBINE_HEIGHT * self.ech
-        font_size = 12 * self.ech
-        text = self.bobine.code
-        draw_text(p, x, y, w, h, color=color_noir, align="C", font_size=font_size, text=text)
-
-    def draw_gr(self, p):
-        x = 0
-        y = -30 * self.ech
-        w = self.laize * self.ech
-        h = self.BOBINE_HEIGHT * self.ech
-        font_size = 12 * self.ech
-        text = self.bobine.code
-        draw_text(p, x, y, w, h, color=color_noir, align="C", font_size=font_size, text=text)
-
-    def draw_length(self, p):
-        x = 0
-        y = -30 * self.ech
-        w = self.laize * self.ech
-        h = self.BOBINE_HEIGHT * self.ech
-        font_size = 12 * self.ech
+        font_size = 10 * self.ech
         text = self.bobine.code
         draw_text(p, x, y, w, h, color=color_noir, align="C", font_size=font_size, text=text)
 
@@ -89,7 +71,5 @@ class BobineFille(QWidget):
         self.draw_label_laize(p)
         if self.bobine:
             self.draw_code(p)
-            self.draw_gr(p)
-            self.draw_length(p)
         else:
             self.draw_label_number(p)
