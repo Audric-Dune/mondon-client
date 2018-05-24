@@ -1,22 +1,33 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from commun.ui.public.mondon_widget import MondonWidget
+from PyQt5.QtGui import QPen, QPainter, QColor
+
+from commun.ui.public.mondon_widget import QWidget
 from commun.utils.drawing import draw_rectangle, draw_text
 from commun.utils.color_bobine import get_color_bobine
 from commun.constants.colors import color_gris, color_noir
 
 
-class BobineFille(MondonWidget):
+class BobineFille(QWidget):
     BOBINE_HEIGHT = 150
 
     def __init__(self, parent=None, laize=0, number=0, ech=1, bobine=None):
         super(BobineFille, self).__init__(parent=parent)
         self.bobine = bobine
-        self.laize = laize
+        self.laize = laize if laize else bobine.laize
         self.number = number
         self.ech = ech
         self.setFixedSize(self.laize*self.ech, self.BOBINE_HEIGHT*self.ech)
+
+    def paintEvent(self, e):
+        p = QPainter(self)
+        color = color_noir.rgb_components
+        qcolor_gris = QColor(color[0], color[1], color[2])
+        pen = QPen()
+        pen.setColor(qcolor_gris)
+        p.setPen(pen)
+        self.draw(p)
 
     def draw_bobine(self, p):
         x = 0

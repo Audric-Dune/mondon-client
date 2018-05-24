@@ -97,7 +97,8 @@ class BlocSelected(MondonWidget):
                 space = QWidget()
                 space.setFixedWidth(980-refente.laize-refente.dec)
                 content_ui.addWidget(space)
-                content_ui.addWidget(RefenteUi(refente=refente))
+                content_ui.addWidget(RefenteUi(refente=refente,
+                                               bobines_selected=self.parent.plan_prod.bobines_filles_selected))
                 content_ui.addWidget(DecBobineRefente(dec=refente.dec))
                 content_layout.addLayout(content_ui)
                 return content_layout

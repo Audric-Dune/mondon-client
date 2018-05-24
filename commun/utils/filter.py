@@ -1,7 +1,6 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import time
 from commun.utils.filter_matthis import get_bobine_fille_combinaisons_for_refente
 
 # FILTRE BOBINES PAPIER
@@ -190,11 +189,7 @@ def is_valid_refente_for_bobines_fille_selected(refente, bobines_fille_selected)
 
 
 def is_valid_refente_for_bobines_fille_old(refente, bobines_fille, bobines_fille_selected):
-    t0 = time.time()
     result = rec_is_valid_refente_for_bobines_fille(refente, bobines_fille, bobines_fille_selected)
-    t1 = time.time()
-    if t1-t0 > 0.1:
-        print("is_valid_refente_for_bobines_fille, ", "lg bobines : ", len(bobines_fille), refente, " time: ", t1-t0)
     return result
 
 
@@ -235,8 +230,8 @@ def rec_is_valid_refente_for_bobines_fille(refente, bobines_fille, bobines_fille
                     new_bobines_fille_selected = []
                 new_bobines_fille_selected.append(bobine_fille_selected)
                 if rec_is_valid_refente_for_bobines_fille(refente=refente_with_bobines_fille_selected,
-                                                           bobines_fille=bobines_fille,
-                                                           bobines_fille_selected=new_bobines_fille_selected):
+                                                          bobines_fille=bobines_fille,
+                                                          bobines_fille_selected=new_bobines_fille_selected):
                     return True
                 new_bobines_fille_selected.pop()
     return False

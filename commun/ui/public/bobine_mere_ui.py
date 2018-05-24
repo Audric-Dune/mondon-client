@@ -25,7 +25,6 @@ class BobineMereUI(QWidget):
         hbox = QHBoxLayout()
         hbox.addWidget(self.get_label(self.bobine.code), alignment=Qt.AlignCenter)
         hbox.addWidget(self.get_label(self.bobine.laize), alignment=Qt.AlignCenter)
-        print(self.bobine.color)
         if self.bobine.color == "Poly":
             hbox.addWidget(self.get_label("Polypro 20µ"), alignment=Qt.AlignCenter)
         else:
