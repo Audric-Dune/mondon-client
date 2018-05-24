@@ -17,6 +17,8 @@ def get_bobine_fille_combinaisons_for_refente(refente, bobines_fille, bobines_fi
     clusters = _group_bobines_fille(bobines_fille, bobines_fille_selected)
     # Test chacun des groupes et refente
     for refente in refentes:
+        if refente.is_full():
+            continue
         for cluster in clusters:
             # Convertit les BobineFille du groupe en BobineFilleSelected
             bobines_poses = [
@@ -136,7 +138,7 @@ class RefenteBuffer:
 
     # Indique si la refente est complète.
     def is_full(self):
-        return self.get_first_free_laize_index(self.index) is None
+        return self.index is None or self.get_first_free_laize_index(self.index) is None
 
     def copy(self):
         return RefenteBuffer(self.laizes[:])
