@@ -74,6 +74,8 @@ class RefenteBuffer:
     # Génère toutes les combinaisons de refente en placant les bobine filles
     # dans les endroits disponible
     def get_combinaisons(self, bobines_selected):
+        if not bobines_selected:
+            return [self]
         refentes = []
         bobine_selected = bobines_selected[0]
         for i in range(len(self.laizes)):

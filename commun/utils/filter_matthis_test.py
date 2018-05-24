@@ -62,3 +62,14 @@ class TestFilterMatthis(TestCase):
 
         res = get_bobine_fille_combinaisons_for_refente(refente, bobines, selected_bobines, max_solutions=None)
         self.assertEqual(len(res), 11)
+
+    def test_filter_2(self):
+        bobines = build_bobines([
+            (130, [0]),
+            (150, [1, 2]),
+        ])
+        selected_bobines = []
+        refente = build_refente(130, 130, 130, 130, 130, 130, 130)
+
+        res = get_bobine_fille_combinaisons_for_refente(refente, bobines, selected_bobines, max_solutions=None)
+        self.assertEqual(len(res), 1)
