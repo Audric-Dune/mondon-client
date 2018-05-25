@@ -17,10 +17,10 @@ def is_valid_refente_bobines_fille_bobines_fille_selected(refente, bobines_fille
 # Determine s'il existe des combinaisons valides de bobines pour une refente.
 # S'arrete de chercher après avoir trouvé `max_solutions`.
 def get_bobine_fille_combinaisons_for_refente(refente, bobines_fille, bobines_fille_selected=None, max_solutions=1):
-    print("get_bobine_fille_combinaisons_for_refente")
-    print("Refente: ", refente)
-    print("Bobines_selected: ", bobines_fille_selected)
-    print("Bobines: ", bobines_fille)
+    # print("get_bobine_fille_combinaisons_for_refente")
+    # print("Refente: ", refente)
+    # print("Bobines_selected: ", bobines_fille_selected)
+    # print("Bobines: ", bobines_fille)
     if bobines_fille_selected is None:
         bobines_fille_selected = []
     # Prépare une liste avec les solutions
@@ -64,7 +64,7 @@ def get_bobine_fille_combinaisons_for_refente(refente, bobines_fille, bobines_fi
                         return combinaisons.all(max_solutions)
                     combinaisons.add(combi)
     # Retourne toutes les combinaisons qu'on a trouvées
-    print("Combinaisons: ", combinaisons.all(max_solutions))
+    # print("Combinaisons: ", combinaisons.all(max_solutions))
     return combinaisons.all(max_solutions)
 
 
