@@ -36,15 +36,38 @@ class BobineFille:
         self.etat = ""
 
     def update_bobine_from_cliche(self):
+        """
+        Met à jour la bobine (poses et couleur de poses) en fonction des codes clichés
+        """
+        # Test si on a des clichés associés à la bobine
         if self.codes_cliche:
+            # Parcour les clichés associés à la bobine
             for code_cliche in self.codes_cliche:
+                # Récupère les poses et couleurs associés au cliché
                 poses_and_colors = self.get_poses_and_colors_from_code_cliche(code_cliche)
                 if poses_and_colors:
-                    self.poses = poses_and_colors[0]
-                    if self.colors_cliche:
-                        self.colors_cliche += poses_and_colors[1]
+                    poses_cliche = poses_and_colors[0]
+                    colors_cliche = poses_and_colors[1]
+                    # Si la bobine ne contient pas encore de poses (self.poses = [0])
+                    # on initialise les poses et couleurs avec le cliché courant
+                    if self.poses[0] == 0:
+                        self.poses = poses_cliche
+                        self.colors_cliche = colors_cliche
+                    # Si la bobine contient des poses
                     else:
-                        self.colors_cliche = poses_and_colors[1]
+                        # On ajoute les nouvelles couleurs
+                        for color_cliche in colors_cliche:
+                            if color_cliche in self.colors_cliche:
+                                continue
+                            else:
+                                self.colors_cliche.append(color_cliche)
+                        # On vérifie que les poses sont compatible avec les nouvelles poses cliché
+                        for pose in self.poses:
+                            if pose in poses_cliche:
+                                continue
+                            # On retire la pose si incompatible avec la nouvelles pose cliché
+                            else:
+                                poses_cliche.remove(pose)
 
     def set_vente_annuelle(self, current_vente_annuelle):
         self.vente_annuelle = current_vente_annuelle
