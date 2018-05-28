@@ -60,11 +60,11 @@ class LineBobine(MondonWidget):
         poses.setAlignment(Qt.AlignVCenter | Qt.AlignCenter)
         poses.setStyleSheet(black_14_label_stylesheet)
         hbox.addWidget(poses)
-        colors_cliche_value = self.bobine.colors_cliche if self.bobine.colors_cliche else "-"
-        colors_cliche = QLabel(str(colors_cliche_value))
-        colors_cliche.setAlignment(Qt.AlignVCenter | Qt.AlignCenter)
-        colors_cliche.setStyleSheet(black_14_label_stylesheet)
-        hbox.addWidget(colors_cliche)
+        # colors_cliche_value = self.bobine.colors_cliche if self.bobine.colors_cliche else "-"
+        # colors_cliche = QLabel(str(colors_cliche_value))
+        # colors_cliche.setAlignment(Qt.AlignVCenter | Qt.AlignCenter)
+        # colors_cliche.setStyleSheet(black_14_label_stylesheet)
+        # hbox.addWidget(colors_cliche)
         vente_mensuelle_value = 1 if 0 < self.bobine.vente_mensuelle < 1 else self.bobine.vente_mensuelle
         vente_mensuelle_value = str(int(vente_mensuelle_value))
         vente_mensuelle = QLabel(vente_mensuelle_value)

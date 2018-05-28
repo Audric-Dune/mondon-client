@@ -8,7 +8,6 @@ from commun.ui.public.mondon_widget import MondonWidget
 from commun.constants.stylesheets import black_14_label_stylesheet,\
     red_14_bold_label_stylesheet,\
     black_14_bold_label_stylesheet
-from commun.constants.dimensions import width_search_bar
 
 from gestion.stores.settings_store import settings_store_gestion
 
@@ -30,7 +29,6 @@ class LineBobineSelected(MondonWidget):
         code = QLabel(str(self.bobine.code))
         code.setAlignment(Qt.AlignVCenter)
         code.setStyleSheet(black_14_label_stylesheet)
-        code.setFixedWidth(width_search_bar)
         hbox.addWidget(code)
         laize = QLabel(str(int(self.bobine.laize)))
         laize.setAlignment(Qt.AlignVCenter | Qt.AlignCenter)
