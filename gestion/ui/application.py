@@ -66,15 +66,25 @@ class Application(QApplication):
 
         filter_store.set_plan_prod(PlanProd(start=timestamp_now(), index=1))
         filter_store.set_data_type('bobine')
+
+        def uniquement_les_blanc(bobine_fille):
+            return bobine_fille.color == 'Blanc'
+        def uniquement_en_rupture(bobine_fille):
+            return bobine_fille.etat == 'RUPTURE'
+
         import time
-        for _ in range(5):
+        for i in range(5):
             t_start = time.time()
             w = QMainWindow(parent=self.main_window, flags=Qt.Window)
             t_before_table = time.time()
             table = Table(model=BobineFilleTableModel())
+            if i == 0:
+                table.set_filter(uniquement_les_blanc)
+            if i == 1:
+                table.set_filter(uniquement_en_rupture)
             t_after_table = time.time()
             w.setCentralWidget(table)
-            w.resize(1250, 625)
+            w.resize(1400, 700)
             w.show()
             t_end = time.time()
             print('Fenêtre affichée en {}ms (dont {}ms pour crée la table)'

@@ -1,43 +1,47 @@
-from PyQt5.QtWidgets import (
-    QWidget,
-    QLabel,
-    QPushButton,
-    QVBoxLayout,
-    QHBoxLayout,
-    QTableView,
-    QHeaderView,
-    QSizePolicy,
-    QFrame,
-    QAbstractItemView,
-)
-from PyQt5.QtCore import Qt, QAbstractTableModel, QVariant, QSize, QPoint
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QTableView, QAbstractItemView
+from PyQt5.QtCore import Qt, QAbstractTableModel, QVariant
 from commun.ui.public.mondon_widget import MondonWidget
-
 
 
 class Table(MondonWidget):
     def __init__(self, model, parent=None):
+        """
+        Crée une nouvelle table
+        :param model: Un object héritant de TableModel
+        :param parent: Parent du widget
+        :return: Un widget qui affiche des données définit par `model`
+        """
         super(Table, self).__init__(parent=parent)
-
-        table_view = QTableView()
-        table_view.verticalHeader().hide()
-        table_view.horizontalHeader().hide()
-        table_view.setShowGrid(False)
-        table_view.setSelectionBehavior(QAbstractItemView.SelectRows)
-        table_view.setSelectionMode(QAbstractItemView.SingleSelection)
-
-        self.header_view = TestHeaderView(model, table_view)
-        self.header_view.setFixedHeight(model.get_column_height())
-
-        table_view.setModel(model)
-        for i, column in enumerate(model.get_columns()):
-            table_view.setColumnWidth(i, model.get_column_width(column))
-
+        self.model = model
         vbox = QVBoxLayout()
+
+        self.table_view = QTableView(parent=self)
+        self.table_view.verticalHeader().hide()
+        self.table_view.horizontalHeader().hide()
+        self.table_view.setShowGrid(False)
+        self.table_view.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.table_view.setSelectionMode(QAbstractItemView.SingleSelection)
+
+        self.header_view = TestHeaderView(self.model, parent=self)
+        self.header_view.setFixedHeight(self.model.get_column_height())
+
+        self.table_view.setModel(self.model)
+        for i, column in enumerate(self.model.get_columns()):
+            self.table_view.setColumnWidth(i, self.model.get_column_width(column))
+
         vbox.setSpacing(0)
         vbox.addWidget(self.header_view, 0)
-        vbox.addWidget(table_view, 1)
+        vbox.addWidget(self.table_view, 1)
         self.setLayout(vbox)
+
+    def set_filter(self, filter_fn):
+        """
+        Filtre les éléments affichés dans la table
+        :param filter_fn: Fonction prenant en paramêtre un élément et retourne si il doit être
+          affiché (True) ou caché (False)
+        """
+        for index, element in enumerate(self.model.get_elements()):
+            self.table_view.setRowHidden(index, not filter_fn(element))
 
 
 class TestHeaderView(QWidget):
@@ -58,6 +62,9 @@ class TableModel(QAbstractTableModel):
     def __init__(self):
         super(TableModel, self).__init__()
 
+
+    # Fonction à redéfinir dans les classe enfantes
+
     def get_elements(self):
         return []
 
@@ -72,12 +79,6 @@ class TableModel(QAbstractTableModel):
 
     def get_column_height(self):
         return 24
-
-    def rowCount(self, parent):
-        return len(self.get_elements())
-
-    def columnCount(self, parent):
-        return len(self.get_columns())
 
     def get_text(self, element, column):
         return ""
@@ -97,42 +98,31 @@ class TableModel(QAbstractTableModel):
     def get_color(self, element, column):
         return None
 
+
+    # Fonction interne utilisé par la QTableView
+
+    def rowCount(self, parent):
+        return len(self.get_elements())
+
+    def columnCount(self, parent):
+        return len(self.get_columns())
+
     def data(self, index, role):
         if not index.isValid():
-            print('invalid index {}'.format(index))
             return QVariant()
         element = self.get_elements()[index.row()]
         column = self.get_columns()[index.column()]
 
         if role == Qt.DisplayRole:
             return QVariant(self.get_text(element, column))
-
         if role == Qt.DecorationRole:
             return QVariant(self.get_icon(element, column))
-
         if role == Qt.FontRole:
             return QVariant(self.get_font(element, column))
-
         if role == Qt.TextAlignmentRole:
             return QVariant(self.get_alignment(element, column))
-
         if role == Qt.BackgroundRole:
             return QVariant(self.get_background_color(element, column))
-
         if role == Qt.ForegroundRole:
             return QVariant(self.get_color(element, column))
-
-        if role in (Qt.EditRole, Qt.ToolTipRole, Qt.StatusTipRole, Qt.WhatsThisRole, Qt.CheckStateRole):
-            return QVariant()
-
-        print('invalid role {}'.format(role))
         return QVariant()
-
-    def headerData(self, section, orientation, role):
-        if orientation == Qt.Vertical:
-            return QVariant()
-        column = self.get_columns()[section]
-        if role == Qt.DisplayRole:
-            return column
-        print('headerData(section={}, role={})'.format(section, orientation, role))
-        return None
