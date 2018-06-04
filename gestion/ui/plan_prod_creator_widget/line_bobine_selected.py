@@ -16,8 +16,10 @@ class LineBobineSelected(MondonWidget):
 
     def __init__(self, bobine, amount, parent=None):
         super(LineBobineSelected, self).__init__(parent=parent)
+        settings_store_gestion.plan_prod.ON_TOURS_CHANGED.connect(self.update_widget)
         self.bobine = bobine
         self.amount = amount
+        self.stock_prev_value = 0
         self.production = QLabel()
         self.stock_prev = QLabel()
         self.init_widget()
@@ -75,4 +77,5 @@ class LineBobineSelected(MondonWidget):
 
     def update_widget(self):
         self.production.setText("+{}".format(self.get_production()))
-        self.stock_prev.setText(str(int(self.get_production()+self.bobine.stock)))
+        self.stock_prev_value = int(self.get_production()+self.bobine.stock_therme)
+        self.stock_prev.setText(str(self.stock_prev_value))

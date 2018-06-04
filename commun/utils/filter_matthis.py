@@ -60,7 +60,7 @@ def get_bobine_fille_combinaisons_for_refente(refente, bobines_fille, bobines_fi
             if res:
                 for combi in res:
                     if max_solutions is not None and len(combinaisons.all()) >= max_solutions:
-                        print("Combinaisons: ", combinaisons.all(max_solutions))
+                        # print("Combinaisons: ", combinaisons.all(max_solutions))
                         return combinaisons.all(max_solutions)
                     combinaisons.add(combi)
     # Retourne toutes les combinaisons qu'on a trouvées
