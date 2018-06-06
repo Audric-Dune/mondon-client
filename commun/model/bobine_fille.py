@@ -107,12 +107,4 @@ class BobineFille:
         return 0
 
     def __repr__(self):
-        return "B{} ({}, {}, {}m, {} poses, {}, {}), {}g, {}".format(self.code,
-                                                                     self.color,
-                                                                     self.laize,
-                                                                     self.length,
-                                                                     self.poses,
-                                                                     self.codes_cliche,
-                                                                     self.colors_cliche,
-                                                                     self.gr,
-                                                                     self.sommeil)
+        return 'B({}, {}, {}, {}, {}, {})'.format(self.code, self.laize, self.poses, self.color, self.gr, self.length)

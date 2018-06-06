@@ -206,8 +206,7 @@ class Encrier:
                 self.colors[color] -= 1
         else:
             raise Exception('Impossible d\'enlever la couleur "{}", '
-                            'l\'encrier ne la contient pas ({}).'
-                                .format(color, ', '.join(self.colors.keys())))
+                            'l\'encrier ne la contient pas ({}).'.format(color, ', '.join(self.colors.keys())))
 
     def remove_colors(self, colors):
         if colors is None:
