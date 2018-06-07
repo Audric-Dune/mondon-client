@@ -131,6 +131,7 @@ class DayMenu(MondonWidget):
 
         # Bouton nouveau nettoyage
         self.bt_new_clean.setToolTip("Ajouter une nouvelle période de nettoyage")
+        self.bt_new_clean.clicked.connect(lambda: self.create_new_event(type_event="clean"))
         self.bt_new_clean.setStyleSheet(button_stylesheet)
         self.bt_new_clean.setFixedSize(self.PIXMAPBUTTON_SIZE)
         self.bt_new_clean.addImage("commun/assets/images/icon_add_clean_prod.png")
@@ -196,6 +197,10 @@ class DayMenu(MondonWidget):
     @staticmethod
     def create_new_plan():
         settings_store_gestion.create_new_plan()
+
+    @staticmethod
+    def create_new_event(type_event):
+        settings_store_gestion.create_new_event(type_event)
 
     @staticmethod
     def save_plan_prod():

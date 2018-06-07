@@ -12,6 +12,7 @@ from commun.lib.base_de_donnee import Database
 
 class SettingsStore(QObject):
     SETTINGS_CHANGED_SIGNAL = pyqtSignal()
+    CREATE_EVENT_CONFIG_WINDOW = pyqtSignal(str)
 
     def __init__(self):
         super(SettingsStore, self).__init__()
@@ -38,6 +39,9 @@ class SettingsStore(QObject):
             start_day = timestamp_at_day_ago(self.day_ago)
             plan_prod = PlanProd(start=timestamp_at_time(ts=start_day, hours=DEBUT_PROD_MATIN), index=1)
         self.set(plan_prod=plan_prod)
+
+    def create_new_event(self, type_event):
+        self.CREATE_EVENT_CONFIG_WINDOW.emit(type_event)
 
     def save_plan_prod(self):
         code_bobines_selected = ""
@@ -70,6 +74,5 @@ class SettingsStore(QObject):
     def cancel_plan_prod(self):
         self.plan_prod = None
         self.SETTINGS_CHANGED_SIGNAL.emit()
-
 
 settings_store_gestion = SettingsStore()

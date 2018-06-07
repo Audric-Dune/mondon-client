@@ -23,7 +23,9 @@ class MainWindow(QMainWindow):
         self.central_widget = QWidget(parent=self)
         self.vbox = QVBoxLayout()
         settings_store_gestion.SETTINGS_CHANGED_SIGNAL.connect(self.update_widget)
+        settings_store_gestion.CREATE_EVENT_CONFIG_WINDOW.connect(self.create_event_config_window)
         plan_prod_store.get_plan_prod_from_database()
+        self.event_windows = []
         self.init_widget()
         self.update_widget()
 
@@ -49,3 +51,7 @@ class MainWindow(QMainWindow):
         else:
             self.vbox.addWidget(chart_prod)
 
+    def create_event_config_window(self, type_event):
+        from gestion.ui.window.event_config import EventConfig
+        print(self.event_windows)
+        self.event_windows.append(EventConfig(type_event=type_event))
