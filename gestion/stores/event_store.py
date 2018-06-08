@@ -38,7 +38,7 @@ class EventStore(QObject):
         day_ago = settings_store_gestion.day_ago
         start_defaut_stop_prod = timestamp_at_time(timestamp_at_day_ago(day_ago), hours=FIN_PROD_SOIR_VENDREDI)
         end_defaut_stop_prod = timestamp_at_time(timestamp_at_day_ago(day_ago), hours=FIN_PROD_SOIR)
-        Database.create_event_prod(start=start_defaut_stop_prod, end=end_defaut_stop_prod, type="stop")
+        Database.create_event_prod(start=start_defaut_stop_prod, end=end_defaut_stop_prod, p_type="stop")
         self.update()
 
 
