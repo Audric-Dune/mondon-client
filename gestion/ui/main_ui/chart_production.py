@@ -179,9 +179,11 @@ class ChartProd(MondonWidget):
         ech = self.get_ech(width_total)
         start_day = self.get_start_day(event)
         dec_y = 0
-        type = event.type
-        if type == "stop":
+        p_type = event.type
+        if p_type == "stop":
             dec_y = 4*height_line
+        if p_type == "clean":
+            dec_y = 2*height_line
         draw_rectangle(p,
                        x=x_init+(event.start-start_day)*ech,
                        y=self.MARGIN+self.MARGIN_START_CHART_V+dec_y,
