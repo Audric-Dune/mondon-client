@@ -31,7 +31,7 @@ class EventStore(QObject):
         for event in event_on_data_base:
             if start_ts < event[2] < end_ts:
                 from commun.model.event import Event
-                event = Event(type=event[1], start=event[2], end=event[3], info=event[4])
+                event = Event(p_type=event[1], start=event[2], end=event[3], info=event[4])
                 self.events.append(event)
 
     def add_defaut_stop_prod(self):

@@ -26,9 +26,8 @@ class PlanProd(QObject):
     ON_CHANGED_SIGNAL = pyqtSignal()
     ON_TOURS_CHANGED = pyqtSignal()
 
-    def __init__(self, start, parent=None, index=None):
+    def __init__(self, start, parent=None):
         super(PlanProd, self).__init__(parent=parent)
-        self.index = index
         self.start = start
         self.end = start
         self.tours = 12
@@ -77,7 +76,7 @@ class PlanProd(QObject):
         from gestion.stores.event_store import event_store
         if event_store.events:
             for event in event_store.events:
-                if event.type == "stop":
+                if event.p_type == "stop":
                     if get_hour_in_timestamp(event.end) == FIN_PROD_SOIR:
                         return timestamp_at_time(self.start, hours=get_hour_in_timestamp(event.start))
         return timestamp_at_time(self.start, hours=FIN_PROD_SOIR)

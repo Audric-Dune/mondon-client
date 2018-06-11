@@ -4,8 +4,8 @@
 
 class Event:
 
-    def __init__(self, start, end, type, info=None):
+    def __init__(self, start, end, p_type, info=None):
         self.start = start
         self.end = end
-        self.type = type
+        self.p_type = p_type
         self.info = info

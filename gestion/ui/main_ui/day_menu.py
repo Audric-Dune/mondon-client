@@ -138,12 +138,14 @@ class DayMenu(MondonWidget):
 
         # Bouton nouvelle maintenance
         self.bt_new_maintenance.setToolTip("Ajouter une nouvelle action de maintenance")
+        self.bt_new_maintenance.clicked.connect(lambda: self.create_new_event(type_event="tool"))
         self.bt_new_maintenance.setStyleSheet(button_stylesheet)
         self.bt_new_maintenance.setFixedSize(self.PIXMAPBUTTON_SIZE)
         self.bt_new_maintenance.addImage("commun/assets/images/icon_add_maintenance_prod.png")
 
         # Bouton nouvelle période sans production
         self.bt_new_stop.setToolTip("Ajouter une nouvelle période sans production")
+        self.bt_new_stop.clicked.connect(lambda: self.create_new_event(type_event="stop"))
         self.bt_new_stop.setStyleSheet(button_stylesheet)
         self.bt_new_stop.setFixedSize(self.PIXMAPBUTTON_SIZE)
         self.bt_new_stop.addImage("commun/assets/images/icon_add_stop_prod.png")

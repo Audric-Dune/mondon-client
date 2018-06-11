@@ -5,7 +5,9 @@
 # -*- coding: utf-8 -*-
 
 
-from PyQt5.QtWidgets import QVBoxLayout, QLabel
+from PyQt5.QtWidgets import QVBoxLayout, QLabel, QWidget
+from PyQt5.QtCore import Qt
+
 from gestion.ui.plan_prod_creator_widget.bloc_information import BlocInformation
 from gestion.ui.plan_prod_creator_widget.bloc_selected import BlocSelected
 from gestion.ui.selector_ui.selector_manager import SelectorManager
@@ -17,11 +19,12 @@ from gestion.stores.filter_store import filter_store
 from gestion.ui.plan_prod_creator_widget.bloc_param_prod import BlocParamProd
 
 
-class PlanProdCreator(MondonWidget):
+class PlanProdCreator(QWidget):
 
     def __init__(self, plan_prod, parent=None):
         super(PlanProdCreator, self).__init__(parent=parent)
-        self.set_background_color(color=color_blanc)
+        self.setWindowFlags(Qt.Dialog)
+        self.setFocusPolicy(Qt.ClickFocus)
         self.plan_prod = plan_prod
         self.plan_prod.ON_CHANGED_SIGNAL.connect(self.handle_plan_prod_changed)
         self.plan_prod.ON_TOURS_CHANGED.connect(self.handle_tours_plan_prod_changed)
@@ -36,6 +39,7 @@ class PlanProdCreator(MondonWidget):
         self.bloc_bobines_selected = BlocSelected(data_type="bobine", parent=self, callback=self.show_selector)
         self.bloc_info = BlocInformation(parent=self, plan_prod=plan_prod)
         self.init_ui()
+        self.show()
 
     def init_ui(self):
         master_vbox = QVBoxLayout()

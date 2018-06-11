@@ -390,17 +390,17 @@ class Database:
         return data_plan_prod
 
     @classmethod
-    def create_event_prod(cls, start, end, p_type, info=None):
-        query = "INSERT INTO mondon_event (type,start,end,info) " \
-                "VALUES (?, ?, ?, ?)".format(p_type, start, end, info)
+    def create_event_prod(cls, start, end, p_type, info=None, ensemble=None):
+        query = "INSERT INTO mondon_event (type,start,end,info, ensemble) " \
+                "VALUES (?, ?, ?, ?, ?)".format(p_type, start, end, info, ensemble)
         try:
-            cls.run_query(query, (p_type, start, end, info))
+            cls.run_query(query, (p_type, start, end, info, ensemble))
         except sqlite3.IntegrityError as e:
             logger.log("DATABASE", "(Ignorée) IntegrityError: {}".format(e))
             pass
 
     @classmethod
     def get_event_prod(cls):
-        query = "SELECT id, type, start, end, info FROM mondon_event"
+        query = "SELECT id, type, start, end, info, ensemble FROM mondon_event"
         data_event_prod = cls.run_query(query, ())
         return data_event_prod

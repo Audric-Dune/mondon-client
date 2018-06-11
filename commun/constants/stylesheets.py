@@ -699,13 +699,16 @@ check_box_unselected_stylesheet = """
 white_text_edit_stylesheet = """
     QTextEdit {{
         background-color: {color_blanc};
-        color: {color_vert};
+        color: {color_noir};
         font-size: 14px;
         border: none;
+        selection-background-color: {color_gris_moyen};
     }}
 """.format(
+    color_gris_moyen=color_gris_moyen.hex_string,
     color_vert=color_vert.hex_string,
-    color_blanc=color_blanc.hex_string)
+    color_blanc=color_blanc.hex_string,
+    color_noir=color_noir.hex_string)
 
 red_text_edit_stylesheet = """
     QTextEdit {{
@@ -727,11 +730,13 @@ line_edit_stylesheet = """
         color: {color_noir};
         font-size: 16px;
         border: none;
+        selection-background-color: {color_gris_moyen};
     }}
     QLineEdit:focus {{
         color: {color_vert_fonce};
     }}
 """.format(
+    color_gris_moyen=color_gris_moyen.hex_string,
     color_vert_fonce=color_vert_fonce.hex_string,
     color_blanc=color_blanc.hex_string,
     color_gris_fonce=color_gris_fonce.hex_string,

@@ -34,7 +34,7 @@ class TextEdit(QLineEdit):
         if number_only:
             if not self.only_int:
                 self.only_int = QIntValidator()
-            self.setValidator(self.only_int)
+        self.setValidator(self.only_int)
         if init_value is not None:
             if init_value == 0:
                 init_value = "00"

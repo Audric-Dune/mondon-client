@@ -34,7 +34,7 @@ class BlocParamProd(MondonWidget):
         self.text_edit_tours.setAlignment(Qt.AlignCenter)
         self.hbox_master.addWidget(self.text_edit_tours)
         self.hbox_master.addStretch(1)
-        label_prod = QLabel("PRODUCTION {}".format(self.plan_prod.index))
+        label_prod = QLabel("PRODUCTION")
         label_prod.setStyleSheet(white_16_bold_label_stylesheet)
         self.hbox_master.addWidget(label_prod)
         self.hbox_master.addStretch(1)
