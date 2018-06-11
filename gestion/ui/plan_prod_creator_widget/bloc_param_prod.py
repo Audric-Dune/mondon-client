@@ -14,6 +14,7 @@ from commun.constants.stylesheets import line_edit_green_stylesheet, line_edit_r
 class BlocParamProd(MondonWidget):
     def __init__(self, plan_prod, parent=None):
         super(BlocParamProd, self).__init__(parent=parent)
+        self.setFocusPolicy(Qt.ClickFocus)
         self.background_color = color_bleu_gris
         self.plan_prod = plan_prod
         self.hbox_master = QHBoxLayout()
