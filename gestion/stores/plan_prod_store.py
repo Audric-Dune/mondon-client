@@ -19,6 +19,7 @@ class PlanProdStore(QObject):
 
     def __init__(self):
         super(PlanProdStore, self).__init__()
+        settings_store_gestion.SETTINGS_CHANGED_SIGNAL.connect(self.get_plan_prod_from_database)
         self.plan_prod_on_data_base = None
         self.plans_prods = []
 
@@ -28,7 +29,7 @@ class PlanProdStore(QObject):
         start_ts = timestamp_at_day_ago(settings_store_gestion.day_ago)
         for plan_prod in plan_prod_on_data_base:
             if start_ts < plan_prod[1]:
-                new_plan_prod = PlanProd(start=plan_prod[1])
+                new_plan_prod = PlanProd(start=plan_prod[1], p_id=plan_prod[0])
                 new_plan_prod.bobine_papier_selected = self.get_bobine_papier(code=plan_prod[4])
                 new_plan_prod.refente_selected = self.get_refente(code=plan_prod[5])
                 new_plan_prod.tours = plan_prod[2]

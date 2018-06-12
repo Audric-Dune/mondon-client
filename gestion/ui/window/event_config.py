@@ -341,8 +341,5 @@ class EventConfig(QWidget):
         )
 
     def save_event(self):
-        from commun.lib.base_de_donnee import Database
-        Database.create_event_prod(start=self.start, end=self.end, p_type=self.type_event, info=self.info,
-                                   ensemble=self.ensemble)
-        settings_store_gestion.SETTINGS_CHANGED_SIGNAL.emit()
+        settings_store_gestion.save_event(self)
         self.close()

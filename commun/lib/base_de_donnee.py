@@ -390,6 +390,23 @@ class Database:
         return data_plan_prod
 
     @classmethod
+    def update_plan_prod(cls, p_id, start, refente, bobine_papier, code_bobines_selected, longueur, tours):
+        query = "UPDATE mondon_plan_prod " \
+                "SET start = ?, refente = ?, bobine_papier = ?, code_bobines_selected = ?, longueur = ?, tours = ? " \
+                "WHERE id = ? " \
+            .format(start, refente, bobine_papier, code_bobines_selected, longueur, tours, p_id)
+        try:
+            print(query)
+            cls.run_query(query, (start, refente, bobine_papier, code_bobines_selected, longueur, tours, p_id))
+        except sqlite3.IntegrityError as e:
+            # IntegrityError veut dire que l'on essaye d'insérer une vitesse avec un timestamp
+            # qui existe déjà dans la base de données.
+            # Dans ce cas, on considère que cette valeur n'a pas besoin d'être insérée et on
+            # ignore l'exception.
+            logger.log("DATABASE", "(Ignorée) IntegrityError: {}".format(e))
+            pass
+
+    @classmethod
     def create_event_prod(cls, start, end, p_type, info=None, ensemble=None):
         query = "INSERT INTO mondon_event (type,start,end,info, ensemble) " \
                 "VALUES (?, ?, ?, ?, ?)".format(p_type, start, end, info, ensemble)

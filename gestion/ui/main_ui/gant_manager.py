@@ -1,7 +1,6 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from commun.lib.base_de_donnee import Database
 from commun.utils.timestamp import timestamp_at_day_ago
 
 from gestion.stores.settings_store import settings_store_gestion

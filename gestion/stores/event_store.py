@@ -27,9 +27,8 @@ class EventStore(QObject):
         self.events = []
         event_on_data_base = Database.get_event_prod()
         start_ts = timestamp_at_day_ago(settings_store_gestion.day_ago)
-        end_ts = timestamp_at_day_ago(settings_store_gestion.day_ago-1)
         for event in event_on_data_base:
-            if start_ts < event[2] < end_ts:
+            if start_ts < event[2]:
                 from commun.model.event import Event
                 event = Event(p_type=event[1], start=event[2], end=event[3], info=event[4])
                 self.events.append(event)

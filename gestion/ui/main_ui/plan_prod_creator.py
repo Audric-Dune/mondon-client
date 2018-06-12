@@ -1,9 +1,6 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# !/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 
 from PyQt5.QtWidgets import QVBoxLayout, QLabel, QWidget
 from PyQt5.QtCore import Qt

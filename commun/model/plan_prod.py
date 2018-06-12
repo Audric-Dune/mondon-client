@@ -26,8 +26,9 @@ class PlanProd(QObject):
     ON_CHANGED_SIGNAL = pyqtSignal()
     ON_TOURS_CHANGED = pyqtSignal()
 
-    def __init__(self, start, parent=None):
+    def __init__(self, start, parent=None, p_id=None):
         super(PlanProd, self).__init__(parent=parent)
+        self.p_id = p_id
         self.start = start
         self.end = start
         self.tours = 12
@@ -43,6 +44,9 @@ class PlanProd(QObject):
         self.bobines_filles_selected = []
         self.bobine_papier_selected = None
         self.bobine_poly_selected = None
+
+    def get_start(self):
+        return self.start
 
     def is_valid(self):
         if not self.tours:
@@ -73,13 +77,8 @@ class PlanProd(QObject):
         return True
 
     def get_end_day(self):
-        from gestion.stores.event_store import event_store
-        if event_store.events:
-            for event in event_store.events:
-                if event.p_type == "stop":
-                    if get_hour_in_timestamp(event.end) == FIN_PROD_SOIR:
-                        return timestamp_at_time(self.start, hours=get_hour_in_timestamp(event.start))
-        return timestamp_at_time(self.start, hours=FIN_PROD_SOIR)
+        from gestion.stores.settings_store import settings_store_gestion
+        return settings_store_gestion.get_max_end(self.start)
 
     def get_max_tour(self):
         end_day_ts = self.get_end_day()
