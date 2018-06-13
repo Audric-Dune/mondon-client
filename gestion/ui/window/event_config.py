@@ -81,6 +81,10 @@ class EventConfig(QWidget):
             self.status_label.setText("Début de l'événement avant 06:00")
             self.status_label.setStyleSheet(red_12_label_stylesheet)
             return False
+        if self.end > timestamp_at_time(self.start, hours=22):
+            self.status_label.setText("Fin de l'événement après 22:00")
+            self.status_label.setStyleSheet(red_12_label_stylesheet)
+            return False
         if self.end < self.start:
             self.status_label.setText("Fin de l'événement supérieur au début")
             self.status_label.setStyleSheet(red_12_label_stylesheet)

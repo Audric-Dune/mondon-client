@@ -391,12 +391,12 @@ class Database:
 
     @classmethod
     def update_plan_prod(cls, p_id, start, refente, bobine_papier, code_bobines_selected, longueur, tours):
+        print("update_plan_prod, ID: ", p_id)
         query = "UPDATE mondon_plan_prod " \
                 "SET start = ?, refente = ?, bobine_papier = ?, code_bobines_selected = ?, longueur = ?, tours = ? " \
                 "WHERE id = ? " \
             .format(start, refente, bobine_papier, code_bobines_selected, longueur, tours, p_id)
         try:
-            print(query)
             cls.run_query(query, (start, refente, bobine_papier, code_bobines_selected, longueur, tours, p_id))
         except sqlite3.IntegrityError as e:
             # IntegrityError veut dire que l'on essaye d'insérer une vitesse avec un timestamp
@@ -421,3 +421,9 @@ class Database:
         query = "SELECT id, type, start, end, info, ensemble FROM mondon_event"
         data_event_prod = cls.run_query(query, ())
         return data_event_prod
+
+    @classmethod
+    def get_last_id_plan_prod(cls):
+        query = "SELECT id FROM mondon_plan_prod ORDER BY id DESC LIMIT 1"
+        last_id = cls.run_query(query, ())
+        return last_id[0][0]

@@ -26,7 +26,7 @@ class PlanProdStore(QObject):
     def get_plan_prod_from_database(self):
         self.plans_prods = []
         plan_prod_on_data_base = Database.get_plan_prod()
-        start_ts = timestamp_at_day_ago(settings_store_gestion.day_ago)
+        start_ts = timestamp_at_day_ago(0)
         for plan_prod in plan_prod_on_data_base:
             if start_ts < plan_prod[1]:
                 new_plan_prod = PlanProd(start=plan_prod[1], p_id=plan_prod[0])
@@ -39,6 +39,10 @@ class PlanProdStore(QObject):
                 new_plan_prod.update_all_current_store()
                 new_plan_prod.get_new_item_selected_from_store()
                 self.plans_prods.append(new_plan_prod)
+        self.sort_plans_prods()
+
+    def sort_plans_prods(self):
+        self.plans_prods = sorted(self.plans_prods, key=lambda b: b.get_start(), reverse=False)
 
     @staticmethod
     def get_bobine_papier(code):

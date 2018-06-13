@@ -9,3 +9,6 @@ class Event:
         self.end = end
         self.p_type = p_type
         self.info = info
+
+    def get_start(self):
+        return self.start

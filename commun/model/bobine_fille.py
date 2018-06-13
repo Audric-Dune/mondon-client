@@ -66,8 +66,10 @@ class BobineFille:
                             if pose in poses_cliche:
                                 continue
                             # On retire la pose si incompatible avec la nouvelles pose cliché
-                            else:
+                            try:
                                 poses_cliche.remove(pose)
+                            except ValueError:
+                                pass
 
     def set_vente_annuelle(self, current_vente_annuelle):
         self.vente_annuelle = current_vente_annuelle

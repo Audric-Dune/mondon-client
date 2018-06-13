@@ -5,7 +5,8 @@ from datetime import datetime
 
 from PyQt5.QtCore import pyqtSignal, QObject
 
-from commun.utils.timestamp import timestamp_at_day_ago, timestamp_at_time, timestamp_to_hour_little
+from commun.utils.timestamp import timestamp_at_day_ago, timestamp_at_time, timestamp_after_day_ago,\
+    timestamp_to_hour_little
 from commun.constants.param import DEBUT_PROD_MATIN, FIN_PROD_SOIR
 from commun.lib.base_de_donnee import Database
 
@@ -23,22 +24,53 @@ class SettingsStore(QObject):
 
     def update_plans_prods(self):
         from gestion.stores.plan_prod_store import plan_prod_store
-        plans_prods = self.sort_plan_prod(plan_prod_store.plans_prods)
+        plans_prods = plan_prod_store.plans_prods
         plans_prods_update = []
         for plan_prod in plans_prods:
-            plan_prod.start = self.get_start(plans_prods=plans_prods_update)
-            plan_prod.get_end()
+            print("update_plans_prods: ", plan_prod)
+            self.set_plan_prod(plan_prod, plans_prods_update)
+        self.SETTINGS_CHANGED_SIGNAL.emit()
+
+    def set_plan_prod(self, plan_prod, plans_prods_update):
+        print("set_plan_prod: ", plan_prod)
+        plan_prod.start = self.get_start(plans_prods=plans_prods_update)
+        plan_prod.get_end()
+        print("set_plan_prod_after update: ", plan_prod)
+        start_split = self.is_there_an_event_or_end_day_in_plan_prod(plan_prod)
+        if start_split:
+            self.split_plan_prod(plan_prod, start_split=start_split, plans_prods_update=plans_prods_update)
+        else:
             self.update_plan_prod_on_database(plan_prod)
             plans_prods_update.append(plan_prod)
 
+    def split_plan_prod(self, plan_prod, start_split, plans_prods_update):
+        print("split_plan_prod: ", plan_prod, "start_split: ", start_split)
+        total_tours = plan_prod.tours
+        plan_prod.tours = plan_prod.get_max_tour(end=start_split)
+        self.set_plan_prod(plan_prod, plans_prods_update)
+        from commun.model.plan_prod import PlanProd
+        new_plan_prod = PlanProd(start=None)
+        new_plan_prod.get_plan_prod_param(plan_prod)
+        new_plan_prod.tours = total_tours-plan_prod.tours
+        self.create_new_plan_prod(new_plan_prod)
+        p_id = Database.get_last_id_plan_prod()
+        new_plan_prod.p_id = p_id
+        self.set_plan_prod(new_plan_prod, plans_prods_update)
+
     @staticmethod
-    def sort_plan_prod(plan_prods):
-        plan_prods = sorted(plan_prods, key=lambda b: b.get_start(), reverse=False)
-        return plan_prods
+    def is_there_an_event_or_end_day_in_plan_prod(plan_prod):
+        from gestion.stores.event_store import event_store
+        for event in event_store.events:
+            if plan_prod.end > event.start > plan_prod.start:
+                return event.start
+            if plan_prod.end > timestamp_at_time(plan_prod.start, hours=FIN_PROD_SOIR):
+                return timestamp_at_time(plan_prod.start, hours=FIN_PROD_SOIR)
+        return False
 
     def set(self, day_ago=None, plan_prod=None):
         if day_ago is not None:
             self.day_ago = day_ago
+            self.update_plans_prods()
         if plan_prod:
             self.plan_prod = plan_prod
             from gestion.stores.filter_store import filter_store
@@ -54,19 +86,18 @@ class SettingsStore(QObject):
             self.CREATE_PLAN_PROD_WINDOW.emit()
 
     def get_start(self, start=None, plans_prods=None):
+        print("get_start, start: ", start, "plans_prods: ", plans_prods)
         if start is None:
-            start_day = timestamp_at_day_ago(self.day_ago)
-            start = timestamp_at_time(ts=start_day, hours=DEBUT_PROD_MATIN)
+            start = timestamp_at_time(ts=timestamp_at_day_ago(0), hours=DEBUT_PROD_MATIN)
         new_start = self.get_new_start(start=start, plans_prods=plans_prods)
         if new_start:
-            print("new_start = ", timestamp_to_hour_little(new_start))
             return self.get_start(start=new_start, plans_prods=plans_prods)
         else:
             max_end = self.get_max_end(start)
-            print("max_end = ", timestamp_to_hour_little(max_end))
             if max_end - start < 900:
                 if max_end == timestamp_at_time(ts=max_end, hours=FIN_PROD_SOIR):
-                    return False
+                    new_start = timestamp_after_day_ago(start=start, day_ago=1, hour=DEBUT_PROD_MATIN)
+                    return self.get_start(start=new_start, plans_prods=plans_prods)
                 return self.get_start(start=max_end, plans_prods=plans_prods)
             return start
 
@@ -130,6 +161,15 @@ class SettingsStore(QObject):
                                   tours=self.plan_prod.tours)
         self.plan_prod = None
         self.SETTINGS_CHANGED_SIGNAL.emit()
+
+    def create_new_plan_prod(self, plan_prod):
+        code_bobines_selected = self.get_code_bobine_selected(plan_prod.bobines_filles_selected)
+        Database.create_plan_prod(bobine_papier=plan_prod.bobine_papier_selected.code,
+                                  code_bobines_selected=code_bobines_selected,
+                                  refente=plan_prod.refente_selected.code,
+                                  start=plan_prod.start,
+                                  longueur=plan_prod.longueur,
+                                  tours=plan_prod.tours)
 
     def update_plan_prod_on_database(self, plan_prod):
         code_bobines_selected = self.get_code_bobine_selected(plan_prod.bobines_filles_selected)

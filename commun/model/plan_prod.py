@@ -6,7 +6,7 @@ import copy
 from PyQt5.QtCore import pyqtSignal, QObject
 
 from commun.constants.param import FIN_PROD_SOIR, PERCENT_PROD_THEROIQUE_MAXI
-from commun.utils.timestamp import get_hour_in_timestamp, timestamp_at_time
+from commun.utils.timestamp import get_hour_in_timestamp, timestamp_at_time, timestamp_to_hour_little
 from commun.utils import filter
 from commun.model.refente import Refente
 from commun.model.contraintes import Contrainte
@@ -45,6 +45,20 @@ class PlanProd(QObject):
         self.bobine_papier_selected = None
         self.bobine_poly_selected = None
 
+    def __repr__(self):
+        return "{}-{}, {}".format(timestamp_to_hour_little(self.start),
+                                  timestamp_to_hour_little(self.end),
+                                  self.bobine_papier_selected.color)
+
+    def get_plan_prod_param(self, plan_prod):
+        self.start = plan_prod.start
+        self.end = plan_prod.end
+        self.tours = plan_prod.tours
+        self.longueur = plan_prod.longueur
+        self.refente_selected = plan_prod.refente_selected
+        self.bobines_filles_selected = plan_prod.bobines_filles_selected
+        self.bobine_papier_selected = plan_prod.bobine_papier_selected
+
     def get_start(self):
         return self.start
 
@@ -80,9 +94,10 @@ class PlanProd(QObject):
         from gestion.stores.settings_store import settings_store_gestion
         return settings_store_gestion.get_max_end(self.start)
 
-    def get_max_tour(self):
-        end_day_ts = self.get_end_day()
-        max_prod_ts = end_day_ts - self.start
+    def get_max_tour(self, end=None):
+        if end is None:
+            end = self.get_end_day()
+        max_prod_ts = end - self.start
         max_tour = (max_prod_ts*3/(PERCENT_PROD_THEROIQUE_MAXI/100)/self.longueur)
         return int(max_tour)
 
@@ -122,6 +137,7 @@ class PlanProd(QObject):
             self.end = self.start
         else:
             self.end = self.start + (((self.longueur * self.tours)/3)*(PERCENT_PROD_THEROIQUE_MAXI/100))
+        return self.end
 
     def set_tours(self, tours):
         self.tours = tours

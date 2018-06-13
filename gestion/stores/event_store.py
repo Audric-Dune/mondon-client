@@ -23,15 +23,19 @@ class EventStore(QObject):
     def update(self):
         self.get_event_from_database()
 
+    def sort_events(self):
+        self.events = sorted(self.events, key=lambda b: b.get_start(), reverse=False)
+
     def get_event_from_database(self):
         self.events = []
         event_on_data_base = Database.get_event_prod()
-        start_ts = timestamp_at_day_ago(settings_store_gestion.day_ago)
+        start_ts = timestamp_at_day_ago(0)
         for event in event_on_data_base:
             if start_ts < event[2]:
                 from commun.model.event import Event
                 event = Event(p_type=event[1], start=event[2], end=event[3], info=event[4])
                 self.events.append(event)
+        self.sort_events()
 
     def add_defaut_stop_prod(self):
         day_ago = settings_store_gestion.day_ago
