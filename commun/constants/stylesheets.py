@@ -66,6 +66,7 @@ red_title_label_stylesheet = create_qlabel_stylesheet(color=color_blanc,
 red_12_label_stylesheet = create_qlabel_stylesheet(color=color_blanc,
                                                    background_color=color_rouge,
                                                    font_size="12px")
+white_12_no_background_label_stylesheet = create_qlabel_stylesheet(color=color_blanc,font_size="12px")
 red_14_label_stylesheet = create_qlabel_stylesheet(color=color_blanc,
                                                    background_color=color_rouge,
                                                    font_size="14px")

@@ -5,17 +5,19 @@ from PyQt5.QtWidgets import QWidget
 from PyQt5.QtGui import QPainter, QBrush, QColor
 from PyQt5.QtCore import Qt
 
-from commun.constants.colors import color_rouge, color_vert
+from commun.constants.colors import color_rouge
+from commun.ui.public.context_menu import ContextMenu
+
+from gestion.stores.settings_store import settings_store_gestion
 
 
 class EventUi(QWidget):
     def __init__(self, event, ech, parent=None):
         super(EventUi, self).__init__(parent=parent)
-        self.setFocusPolicy(Qt.ClickFocus)
         self.ech = ech
         self.event = event
-        self.selected = True
-        self.color = color_rouge
+        self.context_menu = ContextMenu()
+        self.init_context_menu()
         self.init_ui()
         self.show()
 
@@ -23,20 +25,26 @@ class EventUi(QWidget):
         self.setFixedWidth(self.ech*(self.event.end-self.event.start))
         self.setFixedHeight(50)
 
+    def init_context_menu(self):
+        self.context_menu.add_action(literal_name="Modifier", callback=self.edit_event)
+        self.context_menu.add_action(literal_name="Supprimer", callback=self.delete_event)
+
+    def delete_event(self):
+        settings_store_gestion.delete_event(self.event)
+
+    def edit_event(self):
+        print("edit_event")
+
     def paintEvent(self, e):
         p = QPainter(self)
-        color = self.color.rgb_components
-        qcolor = QColor(color[0], color[1], color[2])
+        color = color_rouge.rgb_components
+        qcolor_background = QColor(color[0], color[1], color[2])
         brush = QBrush()
         brush.setStyle(Qt.BDiagPattern)
-        brush.setColor(qcolor)
+        brush.setColor(qcolor_background)
         p.setBrush(brush)
         p.drawRect(0, 0, self.width()-1, self.height()-1)
 
-    def focusInEvent(self, e):
-        self.color = color_vert
-        super(EventUi, self).focusInEvent(e)
-
-    def focusOutEvent(self, e):
-        self.color = color_rouge
-        super(EventUi, self).focusOutEvent(e)
+    def mousePressEvent(self, e):
+        if e.button() == Qt.RightButton:
+            self.context_menu.show()

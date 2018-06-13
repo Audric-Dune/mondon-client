@@ -427,3 +427,14 @@ class Database:
         query = "SELECT id FROM mondon_plan_prod ORDER BY id DESC LIMIT 1"
         last_id = cls.run_query(query, ())
         return last_id[0][0]
+
+    @classmethod
+    def delete_event_prod(cls, p_id):
+        query = "DELETE FROM mondon_event " \
+                "WHERE id = ? ".format(p_id)
+        try:
+            cls.run_query(query, (p_id,))
+        except sqlite3.IntegrityError as e:
+            logger.log("DATABASE", "(Ignorée) IntegrityError: {}".format(e))
+            pass
+

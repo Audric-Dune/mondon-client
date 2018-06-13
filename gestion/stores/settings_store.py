@@ -21,8 +21,10 @@ class SettingsStore(QObject):
         self.day_ago = 0
         self.plan_prod = None
         self.ech = 1
+        self.cursor = None
 
     def update_plans_prods(self):
+        self.cursor = None
         from gestion.stores.plan_prod_store import plan_prod_store
         plans_prods = plan_prod_store.plans_prods
         plans_prods_update = []
@@ -40,6 +42,7 @@ class SettingsStore(QObject):
         if start_split:
             self.split_plan_prod(plan_prod, start_split=start_split, plans_prods_update=plans_prods_update)
         else:
+            self.cursor = plan_prod.end
             self.update_plan_prod_on_database(plan_prod)
             plans_prods_update.append(plan_prod)
 
@@ -88,7 +91,8 @@ class SettingsStore(QObject):
     def get_start(self, start=None, plans_prods=None):
         print("get_start, start: ", start, "plans_prods: ", plans_prods)
         if start is None:
-            start = timestamp_at_time(ts=timestamp_at_day_ago(0), hours=DEBUT_PROD_MATIN)
+            today = timestamp_at_day_ago(0)
+            start = timestamp_at_time(ts=today, hours=DEBUT_PROD_MATIN) if self.cursor is None else self.cursor
         new_start = self.get_new_start(start=start, plans_prods=plans_prods)
         if new_start:
             return self.get_start(start=new_start, plans_prods=plans_prods)
@@ -184,6 +188,13 @@ class SettingsStore(QObject):
     def save_event(self, event):
         Database.create_event_prod(start=event.start, end=event.end, p_type=event.type_event, info=event.info,
                                    ensemble=event.ensemble)
+        from gestion.stores.event_store import event_store
+        event_store.update()
+        self.update_plans_prods()
+        settings_store_gestion.SETTINGS_CHANGED_SIGNAL.emit()
+
+    def delete_event(self, event):
+        Database.delete_event_prod(p_id=event.p_id)
         from gestion.stores.event_store import event_store
         event_store.update()
         self.update_plans_prods()
