@@ -6,8 +6,11 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QCursor, QPainter, QPen, QColor
 
 from commun.constants.colors import color_gris_moyen, color_blanc, color_vert_moyen, color_rouge,\
-    color_vert_fonce, color_rouge_clair
-from commun.constants.stylesheets import white_12_no_background_label_stylesheet, black_12_label_stylesheet
+    color_vert_fonce, color_rouge_clair, color_gris_clair
+from commun.constants.stylesheets import white_12_no_background_label_stylesheet,\
+    black_12_label_stylesheet, gray_moyen_12_no_bg_label_stylesheet
+
+from gestion.stores.settings_store import settings_store_gestion
 
 
 class ContextMenu(QWidget):
@@ -48,11 +51,14 @@ class LineContextMenu(QWidget):
         self.risk_style = risk_style
         self.setFixedHeight(20)
         self.callback = callback
-        self.color = color_blanc
         self.label = QLabel(literal_name)
-        self.label.setStyleSheet(black_12_label_stylesheet)
         if shortcut is not None and isinstance(shortcut, str):
             self.shortcut_label = QLabel(shortcut)
+        self.disabled = False
+        if settings_store_gestion.day_ago > 0:
+            self.disabled = True
+        self.color = color_gris_clair if self.disabled else color_blanc
+        self.label.setStyleSheet(gray_moyen_12_no_bg_label_stylesheet if self.disabled else black_12_label_stylesheet)
         self.init_widget()
 
     def init_widget(self):
@@ -71,22 +77,25 @@ class LineContextMenu(QWidget):
         p.fillRect(1, 0, self.width()-2, self.height(), qcolor)
 
     def mouseReleaseEvent(self, e):
-        if e.button() == Qt.LeftButton:
+        if e.button() == Qt.LeftButton and not self.disabled:
             self.callback()
             self.parent.close()
         super(LineContextMenu, self).mouseReleaseEvent(e)
 
     def mousePressEvent(self, e):
-        self.color = color_rouge_clair if self.risk_style else color_vert_moyen
-        self.update()
+        if not self.disabled:
+            self.color = color_rouge_clair if self.risk_style else color_vert_moyen
+            self.update()
         super(LineContextMenu, self).enterEvent(e)
 
     def enterEvent(self, e):
-        self.color = color_rouge if self.risk_style else color_vert_fonce
-        self.label.setStyleSheet(white_12_no_background_label_stylesheet)
+        if not self.disabled:
+            self.color = color_rouge if self.risk_style else color_vert_fonce
+            self.label.setStyleSheet(white_12_no_background_label_stylesheet)
         super(LineContextMenu, self).enterEvent(e)
 
     def leaveEvent(self, e):
-        self.color = color_blanc
-        self.label.setStyleSheet(black_12_label_stylesheet)
+        if not self.disabled:
+            self.color = color_blanc
+            self.label.setStyleSheet(black_12_label_stylesheet)
         super(LineContextMenu, self).leaveEvent(e)

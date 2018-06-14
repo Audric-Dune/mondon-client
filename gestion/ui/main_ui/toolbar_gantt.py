@@ -8,8 +8,8 @@ from PyQt5.QtCore import Qt, QPoint, pyqtSignal
 from commun.constants.colors import color_noir, color_blanc, color_vert_fonce, color_vert_moyen,\
     color_gris_moyen, color_rouge, color_rouge_clair
 from commun.constants.stylesheets import black_12_label_stylesheet,\
-    white_12_no_bg_label_stylesheet,\
-    gray_clair_12_no_bg_label_stylesheet
+    white_12_no_bg_label_stylesheet, \
+    gray_moyen_12_no_bg_label_stylesheet
 
 from gestion.stores.settings_store import settings_store_gestion
 
@@ -37,6 +37,7 @@ class ToolbarGantt(QWidget):
                                     callback=self._handle_click_bt_delete,
                                     risk_style=True)
         settings_store_gestion.FOCUS_CHANGED_SIGNAL.connect(self.update_ui)
+        settings_store_gestion.ON_DAY_CHANGED.connect(self.update_ui)
         self.init_bt()
         self.init_ui()
         self.update_ui()
@@ -53,6 +54,10 @@ class ToolbarGantt(QWidget):
         self.setLayout(hbox)
 
     def update_ui(self):
+        if settings_store_gestion.day_ago > 0:
+            self.bt_add.set_disabled(True)
+        else:
+            self.bt_add.set_disabled(False)
         if settings_store_gestion.focus:
             self.bt_delete.set_disabled(False)
             self.bt_edit.set_disabled(False)
@@ -61,7 +66,6 @@ class ToolbarGantt(QWidget):
             self.bt_edit.set_disabled(True)
         self.bt_delete.update_ui()
         self.bt_edit.update_ui()
-
 
     def init_bt(self):
         self.bt_insert.set_disabled(True)
@@ -153,7 +157,7 @@ class ButtonMenu(QWidget):
         elif self.disabled:
             self.background_color = color_blanc
             self.pixmap_icon.setPixmap(self.icon_disabled)
-            self.label.setStyleSheet(gray_clair_12_no_bg_label_stylesheet)
+            self.label.setStyleSheet(gray_moyen_12_no_bg_label_stylesheet)
         elif self.button_press:
             self.background_color = color_rouge_clair if self.risk_style else color_vert_moyen
             self.pixmap_icon.setPixmap(self.icon_hover)
@@ -183,6 +187,8 @@ class ButtonMenu(QWidget):
         self.update_ui()
 
     def _handle_button_press(self):
+        if self.disabled:
+            return
         if self.dropdown:
             self.dropdown.show_popup()
         elif self.callback is not None:

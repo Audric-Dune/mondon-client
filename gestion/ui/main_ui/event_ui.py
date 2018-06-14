@@ -27,7 +27,7 @@ class EventUi(QWidget):
         self.setFixedHeight(50)
 
     def init_context_menu(self):
-        self.context_menu.add_action(literal_name="Modifier", callback=self.edit_event)
+        self.context_menu.add_action(literal_name="Editer", callback=self.edit_event)
         self.context_menu.add_action(literal_name="Supprimer", callback=self.delete_event, risk_style=True)
 
     def delete_event(self):
@@ -49,7 +49,6 @@ class EventUi(QWidget):
     def mouseReleaseEvent(self, e):
         if e.button() == Qt.RightButton:
             self.context_menu.show()
-        super(EventUi, self).mousePressEvent(e)
 
     def focusInEvent(self, e):
         settings_store_gestion.set_item_focus(item=self.event)

@@ -15,6 +15,7 @@ class SettingsStore(QObject):
     FOCUS_CHANGED_SIGNAL = pyqtSignal()
     CREATE_EVENT_CONFIG_WINDOW = pyqtSignal(str)
     CREATE_PLAN_PROD_WINDOW = pyqtSignal()
+    ON_DAY_CHANGED = pyqtSignal()
 
     def __init__(self):
         super(SettingsStore, self).__init__()
@@ -265,8 +266,9 @@ class SettingsStore(QObject):
         self.SETTINGS_CHANGED_SIGNAL.emit()
 
     def set_item_focus(self, item):
-        self.focus = item
-        self.FOCUS_CHANGED_SIGNAL.emit()
+        if self.day_ago <= 0:
+            self.focus = item
+            self.FOCUS_CHANGED_SIGNAL.emit()
 
     def set_day_ago(self, day_ago):
         # Test si nouveau jour est un samedi ou dimanche
@@ -279,6 +281,7 @@ class SettingsStore(QObject):
                 self.set_day_ago(day_ago-1)
         else:
             self.set(day_ago=day_ago)
+        self.ON_DAY_CHANGED.emit()
 
     def cancel_plan_prod(self):
         self.plan_prod = None

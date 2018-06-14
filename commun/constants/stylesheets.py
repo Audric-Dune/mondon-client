@@ -50,7 +50,7 @@ white_12_label_stylesheet = create_qlabel_stylesheet(color=color_blanc,
                                                      background_color=color_bleu_gris,
                                                      font_size="12px")
 white_12_no_bg_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, font_size="12px")
-gray_clair_12_no_bg_label_stylesheet = create_qlabel_stylesheet(color=color_gris_moyen, font_size="12px")
+gray_moyen_12_no_bg_label_stylesheet = create_qlabel_stylesheet(color=color_gris_moyen, font_size="12px")
 white_14_label_no_background_stylesheet = create_qlabel_stylesheet(color=color_blanc, font_size="14px")
 test_label_stylesheet = create_qlabel_stylesheet(color=color_orange,
                                                  background_color=color_vert,

@@ -40,7 +40,6 @@ class PlanProdCreator(QWidget):
 
     def init_ui(self):
         master_vbox = QVBoxLayout()
-        master_vbox.setContentsMargins(0, 0, 0, 0)
         vbox = QVBoxLayout()
         # self.titre_prod.setFixedHeight(30)
         # self.titre_prod.setStyleSheet(white_12_bold_label_stylesheet)
@@ -51,10 +50,10 @@ class PlanProdCreator(QWidget):
         vbox.addWidget(self.bloc_papier_selected)
         vbox.addWidget(self.bloc_perfo_selected)
         vbox.addWidget(self.bloc_poly_selected)
-        master_vbox.addWidget(self.bloc_info)
         master_vbox.addWidget(self.bloc_param_prod)
         master_vbox.addWidget(self.bloc_bobines_selected)
         master_vbox.addLayout(vbox)
+        master_vbox.addWidget(self.bloc_info)
         self.setLayout(master_vbox)
 
     def update_bloc_selected(self):
