@@ -133,6 +133,9 @@ class EventConfig(QWidget):
 
     def on_duration_settings_changed(self, value, unit):
         # Récupère les valeurs des champs duration
+        # Update hour à 00 si la minute est renseigné et que l'heure est à "-"
+        if self.duration_hour.text() == "-" and self.duration_min:
+            self.duration_hour.setText("00")
         try:
             duration_hour = int(self.duration_hour.text())
         except ValueError:
@@ -243,8 +246,7 @@ class EventConfig(QWidget):
         vbox.setContentsMargins(5, 5, 5, 5)
         vbox.addWidget(self.get_bloc_title())
         vbox.addWidget(self.get_bloc_settings())
-        if self.type_event == "tool":
-            vbox.addWidget(self.get_bloc_info())
+        vbox.addWidget(self.get_bloc_info())
         vbox.addWidget(self.get_bloc_bt())
         vbox.addWidget(self.status_label)
         self.setLayout(vbox)
@@ -291,14 +293,16 @@ class EventConfig(QWidget):
         info_contain = QWidget(parent=self)
         self.set_background_color(info_contain)
         info_contain_vbox = QVBoxLayout()
-        ensemble_dropdown = Dropdown(parent=self)
-        ensemble_dropdown.set_placeholder("Sélectionner l'ensemble concerné")
-        ensemble_dropdown_items = ["Colle à froid", "Enrouleurs", "Groupe appel enrouleur", "Calandre", "Colle à chaud",
-                                   "Cadre guidage", "Groupe imprimeur", "Dérouleur papier", "Dérouleur polypro"]
-        for item in ensemble_dropdown_items:
-            ensemble_dropdown.add_item(item)
-            ensemble_dropdown.VALUE_SELECTED_SIGNAL.connect(self.add_ensemble)
-        info_contain_vbox.addWidget(ensemble_dropdown)
+        if self.type_event == "tool":
+            ensemble_dropdown = Dropdown(parent=self)
+            ensemble_dropdown.set_placeholder("Sélectionner l'ensemble concerné")
+            ensemble_dropdown_items = ["Colle à froid", "Enrouleurs", "Groupe appel enrouleur", "Calandre",
+                                       "Colle à chaud", "Cadre guidage", "Groupe imprimeur", "Dérouleur papier",
+                                       "Dérouleur polypro"]
+            for item in ensemble_dropdown_items:
+                ensemble_dropdown.add_item(item)
+                ensemble_dropdown.VALUE_SELECTED_SIGNAL.connect(self.add_ensemble)
+            info_contain_vbox.addWidget(ensemble_dropdown)
         info_text_edit = QTextEdit()
         info_text_edit.setPlaceholderText("Information complémentaire...")
         info_text_edit.setStyleSheet(white_text_edit_stylesheet)

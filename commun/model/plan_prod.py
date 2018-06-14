@@ -5,8 +5,8 @@ import copy
 
 from PyQt5.QtCore import pyqtSignal, QObject
 
-from commun.constants.param import FIN_PROD_SOIR, PERCENT_PROD_THEROIQUE_MAXI
-from commun.utils.timestamp import get_hour_in_timestamp, timestamp_at_time, timestamp_to_hour_little
+from commun.constants.param import PERCENT_PROD_THEROIQUE_MAXI
+from commun.utils.timestamp import timestamp_to_hour_little
 from commun.utils import filter
 from commun.model.refente import Refente
 from commun.model.contraintes import Contrainte

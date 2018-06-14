@@ -9,6 +9,9 @@ from PyQt5.QtCore import Qt
 
 from commun.constants.colors import color_bleu, color_vert
 from commun.utils.color_bobine import get_color_bobine
+from commun.ui.public.context_menu import ContextMenu
+
+from gestion.stores.settings_store import settings_store_gestion
 
 
 class ProdUi(QWidget):
@@ -19,8 +22,20 @@ class ProdUi(QWidget):
         self.prod = prod
         self.selected = True
         self.color = get_color_bobine(bobine_color=self.prod.bobine_papier_selected.color)
+        self.context_menu = ContextMenu()
+        self.init_context_menu()
         self.init_ui()
         self.show()
+
+    def init_context_menu(self):
+        self.context_menu.add_action(literal_name="Modifier", callback=self.edit_prod)
+        self.context_menu.add_action(literal_name="Supprimer", callback=self.delete_prod)
+
+    def delete_prod(self):
+        settings_store_gestion.delete_plan_prod(self.prod)
+
+    def edit_prod(self):
+        print("edit_event")
 
     def init_ui(self):
         self.setFixedWidth(ceil(self.ech*(self.prod.end-self.prod.start)))
@@ -36,10 +51,6 @@ class ProdUi(QWidget):
         p.setBrush(brush)
         p.drawRect(0, 0, self.width()-1, self.height()-1)
 
-    def focusInEvent(self, e):
-        self.color = color_vert
-        super(ProdUi, self).focusInEvent(e)
-
-    def focusOutEvent(self, e):
-        self.color = color_bleu
-        super(ProdUi, self).focusOutEvent(e)
+    def mousePressEvent(self, e):
+        if e.button() == Qt.RightButton:
+            self.context_menu.show()

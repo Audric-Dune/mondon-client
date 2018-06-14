@@ -5,8 +5,7 @@ from datetime import datetime
 
 from PyQt5.QtCore import pyqtSignal, QObject
 
-from commun.utils.timestamp import timestamp_at_day_ago, timestamp_at_time, timestamp_after_day_ago,\
-    timestamp_to_hour_little
+from commun.utils.timestamp import timestamp_at_day_ago, timestamp_at_time, timestamp_after_day_ago, timestamp_to_hour_little
 from commun.constants.param import DEBUT_PROD_MATIN, FIN_PROD_SOIR
 from commun.lib.base_de_donnee import Database
 
@@ -28,10 +27,44 @@ class SettingsStore(QObject):
         from gestion.stores.plan_prod_store import plan_prod_store
         plans_prods = plan_prod_store.plans_prods
         plans_prods_update = []
+        last_plan_prod = None
         for plan_prod in plans_prods:
             print("update_plans_prods: ", plan_prod)
             self.set_plan_prod(plan_prod, plans_prods_update)
+            if last_plan_prod is None:
+                continue
+            else:
+                if self.is_meltable_plans_prods(plan_prod_1=last_plan_prod, plan_prod_2=plan_prod):
+                    self.merge_plan_prod(plan_prod_1=last_plan_prod, plan_prod_2=plan_prod)
+                    del plans_prods_update[-2:-1]
+                    plans_prods_update.append(last_plan_prod)
+            last_plan_prod = plan_prod
+        self.merge_plans_prods(plans_prods_update)
         self.SETTINGS_CHANGED_SIGNAL.emit()
+
+    def merge_plans_prods(self, plans_prods_update):
+        last_plan_prod = None
+        for plan_prod in plans_prods_update:
+            if last_plan_prod is None:
+                last_plan_prod = plan_prod
+            else:
+                if self.is_meltable_plans_prods(plan_prod_1=last_plan_prod, plan_prod_2=plan_prod):
+                    self.merge_plan_prod(plan_prod_1=last_plan_prod, plan_prod_2=plan_prod)
+                else:
+                    last_plan_prod = plan_prod
+
+    def merge_plan_prod(self, plan_prod_1, plan_prod_2):
+        plan_prod_1.end = plan_prod_2.end
+        plan_prod_1.tours += plan_prod_2.tours
+        self.update_plan_prod_on_database(plan_prod_1)
+        self.delete_plan_prod(plan_prod_2, update=False)
+
+    def is_meltable_plans_prods(self, plan_prod_1, plan_prod_2):
+        code_bob_1 = self.get_code_bobine_selected(plan_prod_1.bobines_filles_selected)
+        code_bob_2 = self.get_code_bobine_selected(plan_prod_2.bobines_filles_selected)
+        if code_bob_1 == code_bob_2 and plan_prod_1.end == plan_prod_2.start:
+            return True
+        return False
 
     def set_plan_prod(self, plan_prod, plans_prods_update):
         print("set_plan_prod: ", plan_prod)
@@ -39,6 +72,7 @@ class SettingsStore(QObject):
         plan_prod.get_end()
         print("set_plan_prod_after update: ", plan_prod)
         start_split = self.is_there_an_event_or_end_day_in_plan_prod(plan_prod)
+        print(self.is_there_an_event_or_end_day_in_plan_prod(plan_prod))
         if start_split:
             self.split_plan_prod(plan_prod, start_split=start_split, plans_prods_update=plans_prods_update)
         else:
@@ -66,8 +100,8 @@ class SettingsStore(QObject):
         for event in event_store.events:
             if plan_prod.end > event.start > plan_prod.start:
                 return event.start
-            if plan_prod.end > timestamp_at_time(plan_prod.start, hours=FIN_PROD_SOIR):
-                return timestamp_at_time(plan_prod.start, hours=FIN_PROD_SOIR)
+        if plan_prod.end > timestamp_at_time(plan_prod.start, hours=FIN_PROD_SOIR):
+            return timestamp_at_time(plan_prod.start, hours=FIN_PROD_SOIR)
         return False
 
     def set(self, day_ago=None, plan_prod=None):
@@ -198,6 +232,14 @@ class SettingsStore(QObject):
         from gestion.stores.event_store import event_store
         event_store.update()
         self.update_plans_prods()
+        settings_store_gestion.SETTINGS_CHANGED_SIGNAL.emit()
+
+    def delete_plan_prod(self, plan_prod, update=True):
+        Database.delete_plan_prod(p_id=plan_prod.p_id)
+        from gestion.stores.plan_prod_store import plan_prod_store
+        plan_prod_store.get_plan_prod_from_database()
+        if update:
+            self.update_plans_prods()
         settings_store_gestion.SETTINGS_CHANGED_SIGNAL.emit()
 
     def set_day_ago(self, day_ago):

@@ -438,3 +438,13 @@ class Database:
             logger.log("DATABASE", "(Ignorée) IntegrityError: {}".format(e))
             pass
 
+    @classmethod
+    def delete_plan_prod(cls, p_id):
+        query = "DELETE FROM mondon_plan_prod " \
+                "WHERE id = ? ".format(p_id)
+        try:
+            cls.run_query(query, (p_id,))
+        except sqlite3.IntegrityError as e:
+            logger.log("DATABASE", "(Ignorée) IntegrityError: {}".format(e))
+            pass
+
