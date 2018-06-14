@@ -12,6 +12,7 @@ from commun.lib.base_de_donnee import Database
 
 class SettingsStore(QObject):
     SETTINGS_CHANGED_SIGNAL = pyqtSignal()
+    FOCUS_CHANGED_SIGNAL = pyqtSignal()
     CREATE_EVENT_CONFIG_WINDOW = pyqtSignal(str)
     CREATE_PLAN_PROD_WINDOW = pyqtSignal()
 
@@ -21,6 +22,7 @@ class SettingsStore(QObject):
         self.plan_prod = None
         self.read_plan_prod = None
         self.ech = 1
+        self.focus = None
         self.cursor = None
 
     def update_plans_prods(self):
@@ -236,14 +238,23 @@ class SettingsStore(QObject):
         from gestion.stores.event_store import event_store
         event_store.update()
         self.update_plans_prods()
-        settings_store_gestion.SETTINGS_CHANGED_SIGNAL.emit()
+        self.SETTINGS_CHANGED_SIGNAL.emit()
+
+    def delete_item(self):
+        from commun.model.event import Event
+        from commun.model.plan_prod import PlanProd
+        print(self.focus)
+        if isinstance(self.focus, Event):
+            self.delete_event(event=self.focus)
+        if isinstance(self.focus, PlanProd):
+            self.delete_plan_prod(plan_prod=self.focus)
 
     def delete_event(self, event):
         Database.delete_event_prod(p_id=event.p_id)
         from gestion.stores.event_store import event_store
         event_store.update()
         self.update_plans_prods()
-        settings_store_gestion.SETTINGS_CHANGED_SIGNAL.emit()
+        self.SETTINGS_CHANGED_SIGNAL.emit()
 
     def delete_plan_prod(self, plan_prod, update=True):
         Database.delete_plan_prod(p_id=plan_prod.p_id)
@@ -251,7 +262,11 @@ class SettingsStore(QObject):
         plan_prod_store.get_plan_prod_from_database()
         if update:
             self.update_plans_prods()
-        settings_store_gestion.SETTINGS_CHANGED_SIGNAL.emit()
+        self.SETTINGS_CHANGED_SIGNAL.emit()
+
+    def set_item_focus(self, item):
+        self.focus = item
+        self.FOCUS_CHANGED_SIGNAL.emit()
 
     def set_day_ago(self, day_ago):
         # Test si nouveau jour est un samedi ou dimanche

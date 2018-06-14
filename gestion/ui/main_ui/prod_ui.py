@@ -28,7 +28,7 @@ class ProdUi(QWidget):
 
     def init_context_menu(self):
         self.context_menu.add_action(literal_name="Modifier", callback=self.edit_prod)
-        self.context_menu.add_action(literal_name="Supprimer", callback=self.delete_prod)
+        self.context_menu.add_action(literal_name="Supprimer", callback=self.delete_prod, risk_style=True)
 
     def delete_prod(self):
         settings_store_gestion.delete_plan_prod(self.prod)
@@ -50,6 +50,13 @@ class ProdUi(QWidget):
         p.setBrush(brush)
         p.drawRect(0, 0, self.width()-1, self.height()-1)
 
-    def mousePressEvent(self, e):
+    def mouseReleaseEvent(self, e):
         if e.button() == Qt.RightButton:
             self.context_menu.show()
+        super(ProdUi, self).mouseReleaseEvent(e)
+
+    def focusInEvent(self, e):
+        settings_store_gestion.set_item_focus(item=self.prod)
+
+    def focusOutEvent(self, e):
+        settings_store_gestion.set_item_focus(item=None)

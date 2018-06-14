@@ -5,7 +5,8 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QHBoxLayout
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QCursor, QPainter, QPen, QColor
 
-from commun.constants.colors import color_gris_moyen, color_blanc, color_vert_moyen
+from commun.constants.colors import color_gris_moyen, color_blanc, color_vert_moyen, color_rouge,\
+    color_vert_fonce, color_rouge_clair
 from commun.constants.stylesheets import white_12_no_background_label_stylesheet, black_12_label_stylesheet
 
 
@@ -19,9 +20,9 @@ class ContextMenu(QWidget):
         self.setMinimumWidth(100)
         self.setLayout(self.vbox)
 
-    def add_action(self, literal_name, callback, shortcut=None):
+    def add_action(self, literal_name, callback, shortcut=None, risk_style=None):
         self.vbox.addWidget(LineContextMenu(parent=self, literal_name=literal_name,
-                                            callback=callback, shortcut=shortcut))
+                                            callback=callback, shortcut=shortcut, risk_style=risk_style))
 
     def paintEvent(self, e):
         p = QPainter(self)
@@ -41,9 +42,10 @@ class ContextMenu(QWidget):
 
 class LineContextMenu(QWidget):
 
-    def __init__(self, parent, callback, literal_name, shortcut=None):
+    def __init__(self, parent, callback, literal_name, shortcut=None, risk_style=None):
         super(LineContextMenu, self).__init__(parent=parent)
         self.parent = parent
+        self.risk_style = risk_style
         self.setFixedHeight(20)
         self.callback = callback
         self.color = color_blanc
@@ -74,8 +76,13 @@ class LineContextMenu(QWidget):
             self.parent.close()
         super(LineContextMenu, self).mouseReleaseEvent(e)
 
+    def mousePressEvent(self, e):
+        self.color = color_rouge_clair if self.risk_style else color_vert_moyen
+        self.update()
+        super(LineContextMenu, self).enterEvent(e)
+
     def enterEvent(self, e):
-        self.color = color_vert_moyen
+        self.color = color_rouge if self.risk_style else color_vert_fonce
         self.label.setStyleSheet(white_12_no_background_label_stylesheet)
         super(LineContextMenu, self).enterEvent(e)
 
