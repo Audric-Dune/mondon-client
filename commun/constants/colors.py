@@ -42,7 +42,7 @@ color_gris_noir = Color("#595959")
 
 # Gestion des couleurs bobines
 bob_orange = Color("#e67e22")
-bob_blanc = Color("#ffda79")
+bob_blanc = Color("#f6f6f6")
 bob_ivoire = Color("#f7f1e3")
 bob_jaune = Color("#f1c40f")
 bob_ecru = Color("#f7d794")
