@@ -36,7 +36,7 @@ class EventConfig(QWidget):
             self.ensemble = None
             self.info = None
         self.status_label = QLabel()
-        self.bt_valid = QPushButton("Valider")
+        self.bt_valid = QPushButton("Validé")
         self.start_hour = TextEdit(number_only=True, number_min=6,
                                    number_max=22, width=self.WIDTH_TEXT_EDIT, alignement="center", init_value="")
         self.start_hour.textEdited.connect(lambda: self.on_settings_changed(value=self.start_hour.text(),

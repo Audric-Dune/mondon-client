@@ -30,7 +30,6 @@ class SettingsStore(QObject):
         plans_prods_update = []
         last_plan_prod = None
         for plan_prod in plans_prods:
-            print("update_plans_prods: ", plan_prod)
             self.set_plan_prod(plan_prod, plans_prods_update)
             if last_plan_prod is None:
                 continue
@@ -68,12 +67,9 @@ class SettingsStore(QObject):
         return False
 
     def set_plan_prod(self, plan_prod, plans_prods_update):
-        print("set_plan_prod: ", plan_prod)
         plan_prod.start = self.get_start(plans_prods=plans_prods_update)
         plan_prod.get_end()
-        print("set_plan_prod_after update: ", plan_prod)
         start_split = self.is_there_an_event_or_end_day_in_plan_prod(plan_prod)
-        print(self.is_there_an_event_or_end_day_in_plan_prod(plan_prod))
         if start_split:
             self.split_plan_prod(plan_prod, start_split=start_split, plans_prods_update=plans_prods_update)
         else:
@@ -82,7 +78,6 @@ class SettingsStore(QObject):
             plans_prods_update.append(plan_prod)
 
     def split_plan_prod(self, plan_prod, start_split, plans_prods_update):
-        print("split_plan_prod: ", plan_prod, "start_split: ", start_split)
         total_tours = plan_prod.tours
         plan_prod.tours = plan_prod.get_max_tour(end=start_split)
         self.set_plan_prod(plan_prod, plans_prods_update)
@@ -140,7 +135,6 @@ class SettingsStore(QObject):
         self.CREATE_PLAN_PROD_WINDOW.emit()
 
     def get_start(self, start=None, plans_prods=None):
-        print("get_start, start: ", start, "plans_prods: ", plans_prods)
         if start is None:
             today = timestamp_at_day_ago(0)
             start = timestamp_at_time(ts=today, hours=DEBUT_PROD_MATIN) if self.cursor is None else self.cursor

@@ -391,7 +391,6 @@ class Database:
 
     @classmethod
     def update_plan_prod(cls, p_id, start, refente, bobine_papier, code_bobines_selected, longueur, tours):
-        print("update_plan_prod, ID: ", p_id)
         query = "UPDATE mondon_plan_prod " \
                 "SET start = ?, refente = ?, bobine_papier = ?, code_bobines_selected = ?, longueur = ?, tours = ? " \
                 "WHERE id = ? " \
