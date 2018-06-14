@@ -7,7 +7,6 @@ from PyQt5.QtWidgets import QWidget
 from PyQt5.QtGui import QPainter, QBrush, QColor
 from PyQt5.QtCore import Qt
 
-from commun.constants.colors import color_bleu, color_vert
 from commun.utils.color_bobine import get_color_bobine
 from commun.ui.public.context_menu import ContextMenu
 
