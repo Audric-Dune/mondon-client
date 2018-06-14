@@ -35,7 +35,7 @@ class ProdUi(QWidget):
         settings_store_gestion.delete_plan_prod(self.prod)
 
     def edit_prod(self):
-        print("edit_event")
+        settings_store_gestion.read_plan_prod(self.prod)
 
     def init_ui(self):
         self.setFixedWidth(ceil(self.ech*(self.prod.end-self.prod.start)))

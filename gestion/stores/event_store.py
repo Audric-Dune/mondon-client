@@ -29,7 +29,8 @@ class EventStore(QObject):
     def get_event_from_database(self):
         self.events = []
         event_on_data_base = Database.get_event_prod()
-        start_ts = timestamp_at_day_ago(0)
+        day_ago = settings_store_gestion.day_ago if settings_store_gestion.day_ago > 0 else 0
+        start_ts = timestamp_at_day_ago(day_ago)
         for event in event_on_data_base:
             if start_ts < event[2]:
                 from commun.model.event import Event

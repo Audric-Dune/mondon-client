@@ -36,7 +36,7 @@ class EventConfig(QWidget):
             self.ensemble = None
             self.info = None
         self.status_label = QLabel()
-        self.bt_valid = QPushButton("Validé")
+        self.bt_valid = QPushButton("Valider")
         self.start_hour = TextEdit(number_only=True, number_min=6,
                                    number_max=22, width=self.WIDTH_TEXT_EDIT, alignement="center", init_value="")
         self.start_hour.textEdited.connect(lambda: self.on_settings_changed(value=self.start_hour.text(),
@@ -325,7 +325,7 @@ class EventConfig(QWidget):
         self.bt_valid.setStyleSheet(button_little_stylesheet)
         self.bt_valid.setFixedSize(80, 25)
         self.bt_valid.clicked.connect(self.save_event)
-        bt_cancel = QPushButton("Annulé")
+        bt_cancel = QPushButton("Annuler")
         bt_cancel.clicked.connect(self.close)
         bt_cancel.setStyleSheet(button_little_red_stylesheet)
         bt_cancel.setFixedSize(80, 25)

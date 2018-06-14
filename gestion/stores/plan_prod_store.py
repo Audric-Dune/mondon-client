@@ -26,7 +26,8 @@ class PlanProdStore(QObject):
     def get_plan_prod_from_database(self):
         self.plans_prods = []
         plan_prod_on_data_base = Database.get_plan_prod()
-        start_ts = timestamp_at_day_ago(0)
+        day_ago = settings_store_gestion.day_ago if settings_store_gestion.day_ago > 0 else 0
+        start_ts = timestamp_at_day_ago(day_ago)
         for plan_prod in plan_prod_on_data_base:
             if start_ts < plan_prod[1]:
                 new_plan_prod = PlanProd(start=plan_prod[1], p_id=plan_prod[0])
@@ -56,13 +57,18 @@ class PlanProdStore(QObject):
             if refente.code == code:
                 return refente
 
-    def add_bobine_to_plan_prod(self, code_bobines_filles, plan_prod):
+    @staticmethod
+    def add_bobine_to_plan_prod(code_bobines_filles, plan_prod):
         code_bobines_filles_split = code_bobines_filles.split("_")
         bobine_fille = None
         pose = None
         for string in code_bobines_filles_split:
             if string and string[0] == "B":
-                bobine_fille = self.get_bobine_fille(code=string)
+                def get_bobine_fille(code):
+                    for bobine in bobine_fille_store.bobines:
+                        if bobine.code == code:
+                            return bobine
+                bobine_fille = get_bobine_fille(code=string)
             try:
                 pose = int(string)
             except ValueError:
@@ -72,12 +78,6 @@ class PlanProdStore(QObject):
                 plan_prod.bobines_filles_selected.append(new_bobine_fille)
                 bobine_fille = None
                 pose = None
-
-    @staticmethod
-    def get_bobine_fille(code):
-        for bobine in bobine_fille_store.bobines:
-            if bobine.code == code:
-                return bobine
 
 
 plan_prod_store = PlanProdStore()

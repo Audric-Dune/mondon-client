@@ -19,6 +19,7 @@ class SettingsStore(QObject):
         super(SettingsStore, self).__init__()
         self.day_ago = 0
         self.plan_prod = None
+        self.read_plan_prod = None
         self.ech = 1
         self.cursor = None
 
@@ -104,14 +105,15 @@ class SettingsStore(QObject):
             return timestamp_at_time(plan_prod.start, hours=FIN_PROD_SOIR)
         return False
 
-    def set(self, day_ago=None, plan_prod=None):
+    def set(self, day_ago=None, plan_prod=None, read_plan_prod=None):
         if day_ago is not None:
             self.day_ago = day_ago
-            self.update_plans_prods()
         if plan_prod:
             self.plan_prod = plan_prod
             from gestion.stores.filter_store import filter_store
             filter_store.set_plan_prod(plan_prod)
+        if read_plan_prod:
+            self.read_plan_prod = read_plan_prod
         self.SETTINGS_CHANGED_SIGNAL.emit()
 
     def create_new_plan(self):
@@ -121,6 +123,21 @@ class SettingsStore(QObject):
             plan_prod = PlanProd(start=start_prod)
             self.set(plan_prod=plan_prod)
             self.CREATE_PLAN_PROD_WINDOW.emit()
+
+    def read_plan_prod(self, plan_prod):
+        from commun.model.plan_prod import PlanProd
+        from gestion.stores.plan_prod_store import plan_prod_store
+        new_plan_prod = PlanProd(start=plan_prod[1], p_id=plan_prod[0])
+        new_plan_prod.bobine_papier_selected = self.get_bobine_papier(code=plan_prod[4])
+        new_plan_prod.refente_selected = self.get_refente(code=plan_prod[5])
+        new_plan_prod.tours = plan_prod[2]
+        new_plan_prod.longueur = plan_prod[3]
+        new_plan_prod.get_end()
+        plan_prod_store.add_bobine_to_plan_prod(plan_prod=new_plan_prod, code_bobines_filles=plan_prod[6])
+        new_plan_prod.update_all_current_store()
+        new_plan_prod.get_new_item_selected_from_store()
+        self.set(read_plan_prod=new_plan_prod)
+        self.CREATE_PLAN_PROD_WINDOW.emit()
 
     def get_start(self, start=None, plans_prods=None):
         print("get_start, start: ", start, "plans_prods: ", plans_prods)

@@ -94,6 +94,14 @@ class DayMenu(MondonWidget):
             self.bt_new_stop.hide()
             self.bt_new_plan.hide()
         else:
+            if settings_store_gestion.day_ago > 0:
+                disabled = True
+            else:
+                disabled = False
+            self.bt_new_plan.setDisabled(disabled)
+            self.bt_new_clean.setDisabled(disabled)
+            self.bt_new_maintenance.setDisabled(disabled)
+            self.bt_new_stop.setDisabled(disabled)
             self.right_hbox.addWidget(self.bt_new_plan)
             self.right_hbox.addWidget(self.bt_new_clean)
             self.right_hbox.addWidget(self.bt_new_maintenance)
