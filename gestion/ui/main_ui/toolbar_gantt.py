@@ -25,7 +25,8 @@ class ToolbarGantt(QWidget):
         self.bt_edit = ButtonMenu(parent=self, text="Editer",
                                   icon="commun/assets/images/edit.png",
                                   icon_disabled="commun/assets/images/edit_disabled.png",
-                                  icon_hover="commun/assets/images/edit_hover.png")
+                                  icon_hover="commun/assets/images/edit_hover.png",
+                                  callback=self._handle_select_item_from_edit)
         self.bt_insert = ButtonMenu(parent=self, text="Insérer",
                                     icon="commun/assets/images/insert.png",
                                     icon_disabled="commun/assets/images/insert_disabled.png",
@@ -91,14 +92,21 @@ class ToolbarGantt(QWidget):
         p.setBrush(brush)
         p.drawRect(0, 0, self.width()-1, self.height()-1)
 
-    def _handle_select_item_from_add(self, item_selected_name):
+    @staticmethod
+    def _handle_select_item_from_add(item_selected_name):
         if item_selected_name == "plan_prod":
             settings_store_gestion.create_new_plan()
         else:
             settings_store_gestion.create_new_event(item_selected_name)
 
-    def _handle_click_bt_delete(self):
+    @staticmethod
+    def _handle_select_item_from_edit():
+        settings_store_gestion.focus_edit()
+
+    @staticmethod
+    def _handle_click_bt_delete():
         settings_store_gestion.delete_item()
+
 
 class ButtonMenu(QWidget):
 
@@ -173,7 +181,7 @@ class ButtonMenu(QWidget):
         self.update()
 
     def set_dropdown(self, callback):
-        self.dropdown=DropDown(parent=self)
+        self.dropdown = DropDown(parent=self)
         self.dropdown.SELECT_ITEM_SIGNAL.connect(callback)
         self.vbox.addWidget(self.dropdown)
 
@@ -291,7 +299,7 @@ class Popup(QWidget):
 
     def __init__(self):
         super(Popup, self).__init__()
-        self.setWindowFlag(Qt.Popup)
+        self.setWindowFlags(Qt.Popup)
         self.vbox = QVBoxLayout()
         self.init_ui()
 
@@ -333,7 +341,7 @@ class LineItem(QLabel):
         self.name = name
         self.background_color = color_blanc
         self.setStyleSheet(black_12_label_stylesheet)
-        self.setFixedHeight(20)
+        self.setFixedHeight(30)
 
     def paintEvent(self, e):
         p = QPainter(self)

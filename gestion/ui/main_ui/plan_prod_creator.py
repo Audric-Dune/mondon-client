@@ -7,12 +7,11 @@ from PyQt5.QtCore import Qt
 
 from gestion.ui.plan_prod_creator_widget.bloc_information import BlocInformation
 from gestion.ui.plan_prod_creator_widget.bloc_selected import BlocSelected
+from gestion.ui.plan_prod_creator_widget.bloc_bt import BlocBt
 from gestion.ui.selector_ui.selector_manager import SelectorManager
 
-from commun.constants.colors import color_blanc
-from commun.constants.stylesheets import white_12_bold_label_stylesheet
-from commun.ui.public.mondon_widget import MondonWidget
 from gestion.stores.filter_store import filter_store
+from gestion.stores.settings_store import settings_store_gestion
 from gestion.ui.plan_prod_creator_widget.bloc_param_prod import BlocParamProd
 
 
@@ -35,17 +34,13 @@ class PlanProdCreator(QWidget):
         self.bloc_refente_selected = BlocSelected(data_type="refente", parent=self, callback=self.show_selector)
         self.bloc_bobines_selected = BlocSelected(data_type="bobine", parent=self, callback=self.show_selector)
         self.bloc_info = BlocInformation(parent=self, plan_prod=plan_prod)
+        self.bloc_bt = BlocBt(parent=self, plan_prod=plan_prod, callback=self.handle_click_bt)
         self.init_ui()
         self.show()
 
     def init_ui(self):
         master_vbox = QVBoxLayout()
         vbox = QVBoxLayout()
-        # self.titre_prod.setFixedHeight(30)
-        # self.titre_prod.setStyleSheet(white_12_bold_label_stylesheet)
-        # self.titre_prod.setContentsMargins(5, 0, 0, 0)
-        # self.titre_prod.setMinimumWidth(800)
-        # vbox.addWidget(self.titre_prod)
         vbox.addWidget(self.bloc_refente_selected)
         vbox.addWidget(self.bloc_papier_selected)
         vbox.addWidget(self.bloc_perfo_selected)
@@ -53,6 +48,7 @@ class PlanProdCreator(QWidget):
         master_vbox.addWidget(self.bloc_param_prod)
         master_vbox.addWidget(self.bloc_bobines_selected)
         master_vbox.addLayout(vbox)
+        master_vbox.addWidget(self.bloc_bt)
         master_vbox.addWidget(self.bloc_info)
         self.setLayout(master_vbox)
 
@@ -74,6 +70,16 @@ class PlanProdCreator(QWidget):
     def handle_tours_plan_prod_changed(self):
         self.bloc_param_prod.update_label()
         self.bloc_info.update_widget()
+
+    def handle_click_bt(self, bt_name):
+        if bt_name == "valid":
+            if self.plan_prod.p_id:
+                settings_store_gestion.update_plan_prod_on_database(self.plan_prod)
+            else:
+                settings_store_gestion.save_plan_prod()
+        if bt_name == "cancel":
+            settings_store_gestion.plan_prod = None
+        self.close()
 
     def show_selector(self):
         self.selector_manager.show()

@@ -122,7 +122,7 @@ class SettingsStore(QObject):
             self.set(plan_prod=plan_prod)
             self.CREATE_PLAN_PROD_WINDOW.emit()
 
-    def read_plan_prod(self, plan_prod):
+    def read_plan_prod(self, plan_prod=None):
         from commun.model.plan_prod import PlanProd
         from gestion.stores.plan_prod_store import plan_prod_store
         new_plan_prod = PlanProd(start=plan_prod[1], p_id=plan_prod[0])
@@ -135,6 +135,10 @@ class SettingsStore(QObject):
         new_plan_prod.update_all_current_store()
         new_plan_prod.get_new_item_selected_from_store()
         self.set(read_plan_prod=new_plan_prod)
+        self.CREATE_PLAN_PROD_WINDOW.emit()
+
+    def edit_plan_prod(self, plan_prod):
+        self.plan_prod = plan_prod
         self.CREATE_PLAN_PROD_WINDOW.emit()
 
     def get_start(self, start=None, plans_prods=None):
@@ -232,6 +236,7 @@ class SettingsStore(QObject):
                                   start=plan_prod.start,
                                   longueur=plan_prod.longueur,
                                   tours=plan_prod.tours)
+        self.SETTINGS_CHANGED_SIGNAL.emit()
 
     def save_event(self, event):
         Database.create_event_prod(start=event.start, end=event.end, p_type=event.type_event, info=event.info,
@@ -244,11 +249,18 @@ class SettingsStore(QObject):
     def delete_item(self):
         from commun.model.event import Event
         from commun.model.plan_prod import PlanProd
-        print(self.focus)
         if isinstance(self.focus, Event):
             self.delete_event(event=self.focus)
         if isinstance(self.focus, PlanProd):
             self.delete_plan_prod(plan_prod=self.focus)
+
+    def focus_edit(self):
+        from commun.model.event import Event
+        from commun.model.plan_prod import PlanProd
+        if isinstance(self.focus, Event):
+            print("read_event")
+        if isinstance(self.focus, PlanProd):
+            self.edit_plan_prod(plan_prod=self.focus)
 
     def delete_event(self, event):
         Database.delete_event_prod(p_id=event.p_id)
