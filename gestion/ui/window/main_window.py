@@ -23,6 +23,7 @@ class MainWindow(QMainWindow):
         self.central_widget = QWidget(parent=self)
         settings_store_gestion.CREATE_PLAN_PROD_WINDOW.connect(self.create_plan_prod_creator_window)
         settings_store_gestion.CREATE_EVENT_CONFIG_WINDOW.connect(self.create_event_config_window)
+        settings_store_gestion.CREATE_EVENT_CONFIG_EDIT_WINDOW.connect(self.create_event_config_edit_window)
         plan_prod_store.get_plan_prod_from_database()
         self.gant_manager = GantManager()
         self.toolbar_gantt = ToolbarGantt(parent=self)
@@ -47,3 +48,7 @@ class MainWindow(QMainWindow):
     def create_event_config_window(self, type_event):
         from gestion.ui.window.event_config import EventConfig
         self.event_windows.append(EventConfig(type_event=type_event))
+
+    def create_event_config_edit_window(self, event):
+        from gestion.ui.window.event_config import EventConfig
+        self.event_windows.append(EventConfig(type_event=event.p_type, event=event))

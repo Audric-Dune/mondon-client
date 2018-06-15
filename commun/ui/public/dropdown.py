@@ -68,13 +68,13 @@ class Dropdown(QWidget):
         hbox.setSpacing(0)
         self.setLayout(hbox)
 
-    def update_widget(self, bool):
+    def update_widget(self, p_bool):
         """
         S'occupe d'activer ou désactiver la dropdown
-        :param bool: True pour activer, False pour désactiver
+        :param p_bool: True pour activer, False pour désactiver
         """
         # Si True
-        if bool:
+        if p_bool:
             # On active les boutons
             self.bt_dropdown.setDisabled(False)
             self.bt_arrow_dropdown.setDisabled(False)
@@ -224,16 +224,16 @@ class PopupItem(QWidget):
         hbox.addWidget(self.label)
         self.setLayout(hbox)
 
-    def eventFilter(self, object, event):
+    def eventFilter(self, object, e):
         """
         Gestion des évènements
         Fonction PyQt appelé a chaque évènement
         :param object: Paramètre obligatoire
-        :param event: L'évenement
+        :param e: L'évenement
         :return: Bool
         """
         # Si l'évenement est la rentré de la souris dans l'object
-        if event.type() == QEvent.Enter:
+        if e.type() == QEvent.Enter:
             # On stocke l'info que la souris est dans l'object
             self.hover = True
             # On met en blanc le texte
@@ -243,7 +243,7 @@ class PopupItem(QWidget):
             # On retourne TRUE pour que l'évènement soit pris en compte
             return True
         # Si l'évenement est la sortie de la souris de l'object
-        if event.type() == QEvent.Leave:
+        if e.type() == QEvent.Leave:
             # On stocke l'info que la souris n'est pas dans l'object
             self.hover = False
             # On met en noir le texte
@@ -253,7 +253,7 @@ class PopupItem(QWidget):
             # On retourne TRUE pour que l'évènement soit pris en compte
             return True
         # Si l'évenement est le click sur l'item
-        if event.type() == QEvent.MouseButtonRelease:
+        if e.type() == QEvent.MouseButtonRelease:
             # On émet un signal qui indique qu'on a clické sur l'item
             self.ITEM_CLICKED.emit(self.item_label)
             # On retourne TRUE pour que l'évènement soit pris en compte

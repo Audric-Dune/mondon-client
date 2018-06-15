@@ -27,16 +27,8 @@ class EventConfig(QWidget):
         self.setWindowFlags(Qt.Dialog)
         self.setFocusPolicy(Qt.ClickFocus)
         self.type_event = type_event
-        if event:
-            print(event)
-        else:
-            self.start = None
-            self.duration = None
-            self.end = None
-            self.ensemble = None
-            self.info = None
-        self.status_label = QLabel()
-        self.bt_valid = QPushButton("Validé")
+        self.ensemble_dropdown = Dropdown(parent=self)
+        self.info_text_edit = QTextEdit()
         self.start_hour = TextEdit(number_only=True, number_min=6,
                                    number_max=22, width=self.WIDTH_TEXT_EDIT, alignement="center", init_value="")
         self.start_hour.textEdited.connect(lambda: self.on_settings_changed(value=self.start_hour.text(),
@@ -61,10 +53,46 @@ class EventConfig(QWidget):
                                 init_value=0, width=self.WIDTH_TEXT_EDIT, alignement="center", mode_min=True)
         self.end_min.textEdited.connect(lambda: self.on_settings_changed(value=self.end_min.text(),
                                                                          name="end", unit="min"))
+        if event:
+            self.p_id = event.p_id
+            self.start = event.start
+            self.end = event.end
+            self.duration = self.end - self.start
+            self.ensemble = event.ensemble
+            self.info = event.info
+            self.init_text_edit()
+            self.init_info()
+            self.init_ensemble()
+        else:
+            self.p_id = None
+            self.start = None
+            self.duration = None
+            self.end = None
+            self.ensemble = None
+            self.info = None
+        self.status_label = QLabel()
+        self.bt_valid = QPushButton("Validé")
         self.init_widget()
         self.show()
         self.setFixedSize(self.size())
         self.update_bt_validate()
+
+    def init_text_edit(self):
+        self.start_min.setText(str(get_min_in_timestamp(self.start)))
+        self.start_hour.setText(str(get_min_in_timestamp(self.start)))
+        self.end_min.setText(str(get_min_in_timestamp(self.end)))
+        self.end_hour.setText(str(get_min_in_timestamp(self.end)))
+        self.duration_min.setText(str(self.get_min_in_duration(self.duration)))
+        self.duration_hour.setText(str(self.get_hour_in_duration(self.duration)))
+
+    def init_info(self):
+        if self.info is not None:
+            self.info_text_edit.setText(self.info)
+        
+    def init_ensemble(self):
+        if self.ensemble is not None:
+            print(self.ensemble)
+            self.ensemble_dropdown.update_value_selected(self.ensemble)
 
     def update_bt_validate(self):
         if self.is_valid_event():
@@ -294,21 +322,19 @@ class EventConfig(QWidget):
         self.set_background_color(info_contain)
         info_contain_vbox = QVBoxLayout()
         if self.type_event == "tool":
-            ensemble_dropdown = Dropdown(parent=self)
-            ensemble_dropdown.set_placeholder("Sélectionner l'ensemble concerné")
+            self.ensemble_dropdown.set_placeholder("Sélectionner l'ensemble concerné")
             ensemble_dropdown_items = ["Colle à froid", "Enrouleurs", "Groupe appel enrouleur", "Calandre",
                                        "Colle à chaud", "Cadre guidage", "Groupe imprimeur", "Dérouleur papier",
                                        "Dérouleur polypro"]
             for item in ensemble_dropdown_items:
-                ensemble_dropdown.add_item(item)
-                ensemble_dropdown.VALUE_SELECTED_SIGNAL.connect(self.add_ensemble)
-            info_contain_vbox.addWidget(ensemble_dropdown)
-        info_text_edit = QTextEdit()
-        info_text_edit.setPlaceholderText("Information complémentaire...")
-        info_text_edit.setStyleSheet(white_text_edit_stylesheet)
-        info_text_edit.setFixedHeight(50)
-        info_text_edit.textChanged.connect(lambda: self.on_info_text_changed(info_text_edit))
-        info_contain_vbox.addWidget(info_text_edit)
+                self.ensemble_dropdown.add_item(item)
+                self.ensemble_dropdown.VALUE_SELECTED_SIGNAL.connect(self.add_ensemble)
+            info_contain_vbox.addWidget(self.ensemble_dropdown)
+        self.info_text_edit.setPlaceholderText("Information complémentaire...")
+        self.info_text_edit.setStyleSheet(white_text_edit_stylesheet)
+        self.info_text_edit.setFixedHeight(50)
+        self.info_text_edit.textChanged.connect(lambda: self.on_info_text_changed(self.info_text_edit))
+        info_contain_vbox.addWidget(self.info_text_edit)
         info_contain.setLayout(info_contain_vbox)
         return info_contain
 

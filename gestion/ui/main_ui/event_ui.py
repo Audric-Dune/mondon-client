@@ -6,7 +6,6 @@ from PyQt5.QtGui import QPainter, QBrush, QColor, QPen
 from PyQt5.QtCore import Qt
 
 from commun.constants.colors import color_gris_noir, color_rouge, color_noir
-# from commun.ui.public.context_menu import ContextMenu
 
 from gestion.stores.settings_store import settings_store_gestion
 
@@ -18,8 +17,6 @@ class EventUi(QWidget):
         self.ech = ech
         self.event = event
         self.border_color = color_noir
-        # self.context_menu = ContextMenu()
-        # self.init_context_menu()
         self.init_ui()
         self.show()
 
@@ -27,15 +24,8 @@ class EventUi(QWidget):
         self.setFixedWidth(self.ech*(self.event.end-self.event.start))
         self.setFixedHeight(50)
 
-    # def init_context_menu(self):
-    #     self.context_menu.add_action(literal_name="Editer", callback=self.edit_event)
-    #     self.context_menu.add_action(literal_name="Supprimer", callback=self.delete_event, risk_style=True)
-
     def delete_event(self):
         settings_store_gestion.delete_event(self.event)
-
-    def edit_event(self):
-        print("edit_event")
 
     def paintEvent(self, e):
         p = QPainter(self)
@@ -52,10 +42,6 @@ class EventUi(QWidget):
         pen.setColor(qborder_color)
         p.setPen(pen)
         p.drawRect(0, 0, self.width()-1, self.height()-1)
-
-    # def mouseReleaseEvent(self, e):
-    #     if e.button() == Qt.RightButton:
-    #         self.context_menu.show()
 
     def focusInEvent(self, e):
         self.border_color = color_rouge
