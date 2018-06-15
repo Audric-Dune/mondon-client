@@ -109,12 +109,12 @@ class Dropdown(QWidget):
         # On émet un signal qui indique que l'utilisateur a sélectionné une valeur
         self.VALUE_SELECTED_SIGNAL.emit(value, self.index)
 
-    def set_activated(self, bool):
+    def set_activated(self, p_bool):
         """
         Fonction transitoire pour mettre a jour la dropdown
-        :param bool: True pour activer, False pour désactiver
+        :param p_bool: True pour activer, False pour désactiver
         """
-        self.update_widget(bool)
+        self.update_widget(p_bool)
 
     def set_placeholder(self, placeholder=None):
         """
@@ -122,12 +122,12 @@ class Dropdown(QWidget):
         :param placeholder: La valeur intiale de la dropdown
         """
         # Si j'ai une nouvelle valeur initiale
-        if placeholder:
+        if placeholder and self.selected is None:
             # On la stock dans les parametres de la dropdown
             self.placeholder = placeholder
-        # On met a jour le text de la dropdown avec la valeur initiale stocké dans les paramètres
-        self.bt_dropdown.setText(self.placeholder)
-        self.bt_dropdown.setStyleSheet(button_dropdown_placeholder_stylesheet)
+            # On met a jour le text de la dropdown avec la valeur initiale stocké dans les paramètres
+            self.bt_dropdown.setText(self.placeholder)
+            self.bt_dropdown.setStyleSheet(button_dropdown_placeholder_stylesheet)
 
     def display_popup(self):
         """

@@ -53,6 +53,7 @@ class EventConfig(QWidget):
                                 init_value=0, width=self.WIDTH_TEXT_EDIT, alignement="center", mode_min=True)
         self.end_min.textEdited.connect(lambda: self.on_settings_changed(value=self.end_min.text(),
                                                                          name="end", unit="min"))
+        self.event = event
         if event:
             self.p_id = event.p_id
             self.start = event.start
@@ -79,19 +80,18 @@ class EventConfig(QWidget):
 
     def init_text_edit(self):
         self.start_min.setText(str(get_min_in_timestamp(self.start)))
-        self.start_hour.setText(str(get_min_in_timestamp(self.start)))
+        self.start_hour.setText(str(get_hour_in_timestamp(self.start)))
         self.end_min.setText(str(get_min_in_timestamp(self.end)))
-        self.end_hour.setText(str(get_min_in_timestamp(self.end)))
+        self.end_hour.setText(str(get_hour_in_timestamp(self.end)))
         self.duration_min.setText(str(self.get_min_in_duration(self.duration)))
         self.duration_hour.setText(str(self.get_hour_in_duration(self.duration)))
 
     def init_info(self):
         if self.info is not None:
             self.info_text_edit.setText(self.info)
-        
+
     def init_ensemble(self):
         if self.ensemble is not None:
-            print(self.ensemble)
             self.ensemble_dropdown.update_value_selected(self.ensemble)
 
     def update_bt_validate(self):
@@ -330,6 +330,7 @@ class EventConfig(QWidget):
                 self.ensemble_dropdown.add_item(item)
                 self.ensemble_dropdown.VALUE_SELECTED_SIGNAL.connect(self.add_ensemble)
             info_contain_vbox.addWidget(self.ensemble_dropdown)
+
         self.info_text_edit.setPlaceholderText("Information complémentaire...")
         self.info_text_edit.setStyleSheet(white_text_edit_stylesheet)
         self.info_text_edit.setFixedHeight(50)
