@@ -39,7 +39,7 @@ class ProdUi(QWidget):
         pass
 
     def init_ui(self):
-        self.setFixedWidth(ceil(self.ech*(self.prod.end-self.prod.start)))
+        self.setFixedWidth(ceil(self.ech*(self.prod.end-self.prod.start))+1)
         self.setFixedHeight(50)
 
     def paintEvent(self, e):
@@ -50,7 +50,7 @@ class ProdUi(QWidget):
         brush.setStyle(Qt.SolidPattern)
         brush.setColor(qcolor)
         p.setBrush(brush)
-        p.drawRect(0, 0, self.width()-1, self.height()-1)
+        p.drawRect(0, 0, self.width(), self.height())
         color = self.border_color.rgb_components
         qborder_color = QColor(color[0], color[1], color[2])
         pen = QPen()

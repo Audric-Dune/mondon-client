@@ -25,6 +25,7 @@ class MainWindow(QMainWindow):
         settings_store_gestion.CREATE_EVENT_CONFIG_WINDOW.connect(self.create_event_config_window)
         settings_store_gestion.CREATE_EVENT_CONFIG_EDIT_WINDOW.connect(self.create_event_config_edit_window)
         plan_prod_store.get_plan_prod_from_database()
+        self.setMinimumWidth(800)
         self.gant_manager = GantManager()
         self.toolbar_gantt = ToolbarGantt(parent=self)
         self.event_windows = []
@@ -41,6 +42,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.central_widget)
         vbox.addWidget(self.toolbar_gantt)
         vbox.addWidget(self.gant_manager.gant_prod)
+        vbox.addStretch()
 
     def create_plan_prod_creator_window(self):
         self.plan_prod_window = PlanProdCreator(plan_prod=settings_store_gestion.plan_prod)

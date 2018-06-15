@@ -21,7 +21,7 @@ class EventUi(QWidget):
         self.show()
 
     def init_ui(self):
-        self.setFixedWidth(self.ech*(self.event.end-self.event.start))
+        self.setFixedWidth(self.ech*(self.event.end-self.event.start)+1)
         self.setFixedHeight(50)
 
     def delete_event(self):
@@ -35,7 +35,7 @@ class EventUi(QWidget):
         brush.setStyle(Qt.BDiagPattern)
         brush.setColor(background_color)
         p.setBrush(brush)
-        p.drawRect(0, 0, self.width()-1, self.height()-1)
+        p.drawRect(0, 0, self.width(), self.height())
         color = self.border_color.rgb_components
         qborder_color = QColor(color[0], color[1], color[2])
         pen = QPen()
