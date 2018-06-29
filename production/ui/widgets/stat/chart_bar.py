@@ -93,7 +93,6 @@ class ContentChart(MondonWidget):
         self.hbox.setContentsMargins(10, 0, 10, 0)
         self.hbox.setSpacing(5)
         len_format = 0
-        print(settings_stat_store.format)
         if settings_stat_store.format == "week":
             len_format = 5
         if settings_stat_store.format == "month":

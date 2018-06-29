@@ -113,7 +113,10 @@ class StatStore(QObject):
             self.merge_data_from_month()
 
     def merge_data_from_month(self):
-        new_data = {"matin": [], "soir": [], "total": []}
+        if settings_stat_store.data_type == "métrage":
+            new_data = {"matin": [], "soir": [], "total": []}
+        else:
+            new_data = {"Prévu": [], "Imprévu": [], "total": []}
         year_ago = settings_stat_store.year_ago
         for key in self.data.keys():
             current_month = 1
@@ -175,9 +178,9 @@ class StatStore(QObject):
                 self.stat["soir"] = self.stat_calculator_metrage(moment="soir")
                 self.stat["total"] = self.stat_calculator_metrage(moment="total")
             elif settings_stat_store.data_type == "temps":
-                self.stat["Prévu"] = self.stat_calculator_temps(_type="Prévu")
-                self.stat["Imprévu"] = self.stat_calculator_temps(_type="Imprévu")
-                self.stat["total"] = self.stat_calculator_temps(_type="total")
+                self.stat["Prévu"] = self.stat_calculator_temps(p_type="Prévu")
+                self.stat["Imprévu"] = self.stat_calculator_temps(p_type="Imprévu")
+                self.stat["total"] = self.stat_calculator_temps(p_type="total")
             else:
                 self.stat_calculator_raison()
 
@@ -374,8 +377,8 @@ class StatStore(QObject):
         dic_stat["mean"] = round(mean_data)
         return dic_stat
 
-    def stat_calculator_temps(self, _type):
-        data = self.data[_type]
+    def stat_calculator_temps(self, p_type):
+        data = self.data[p_type]
         if not data:
             return self.empty_stat()
         dic_stat = dict()

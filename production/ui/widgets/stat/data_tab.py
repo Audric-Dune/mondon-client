@@ -88,7 +88,7 @@ class LineTitle(MondonWidget):
         self.hbox.addWidget(self.create_label_tittle(text=texte, align=Qt.AlignLeft | Qt.AlignVCenter))
         if settings_stat_store.format == "week":
             text_total = "Total semaine"
-        elif settings_stat_store.format == "week":
+        elif settings_stat_store.format == "month":
             text_total = "Total mois"
         else:
             text_total = "Total année"
@@ -106,7 +106,12 @@ class LineTitle(MondonWidget):
         label_raison = self.create_label_tittle(text="Raison d'arrêt", align=Qt.AlignLeft | Qt.AlignVCenter)
         label_raison.setFixedWidth(500)
         self.hbox.addWidget(label_raison)
-        text_total = "Total semaine" if settings_stat_store.format == "week" else "Total mois"
+        if settings_stat_store.format == "week":
+            text_total = "Total semaine"
+        elif settings_stat_store.format == "month":
+            text_total = "Total mois"
+        else:
+            text_total = "Total année"
         self.hbox.addWidget(self.create_label_tittle(text=text_total, align=Qt.AlignCenter | Qt.AlignVCenter))
         self.hbox.addWidget(self.create_label_tittle(text="Nombre de fois", align=Qt.AlignCenter | Qt.AlignVCenter))
         self.hbox.addWidget(self.create_label_tittle(text="Moyenne",

@@ -7,6 +7,7 @@ from commun.utils.data import affiche_entier
 from commun.constants.colors import color_bleu_gris, color_blanc, color_noir
 from commun.ui.public.mondon_widget import MondonWidget
 from commun.utils.drawing import draw_text, draw_rectangle
+from commun.utils.timestamp import format_timedelta
 
 from production.stores.settings_stat_store import settings_stat_store
 
@@ -24,7 +25,7 @@ class StatChartBar(MondonWidget):
         if settings_stat_store.data_type == "métrage":
             self.text_value = str(affiche_entier(value))
         else:
-            self.text_value = str(timedelta(seconds=round(value)))
+            self.text_value = str(format_timedelta(timedelta(seconds=round(value))))
         self.value = value
         self.max_value = max_value
         self.color_label = color_blanc

@@ -35,6 +35,8 @@ class StatMenu(MondonWidget):
         self.bt_temps_semaine.clicked.connect(self.on_click_temps_semaine)
         self.bt_temps_mois = QPushButton("Par mois")
         self.bt_temps_mois.clicked.connect(self.on_click_temps_mois)
+        self.bt_temps_annee = QPushButton("Par année")
+        self.bt_temps_annee.clicked.connect(self.on_click_temps_annee)
 
         self.label_stat_raisons = QLabel("Statistique raisons")
 
@@ -43,12 +45,16 @@ class StatMenu(MondonWidget):
         self.bt_raisons_prevue_semaine.clicked.connect(self.on_click_raisons_prevue_semaine)
         self.bt_raisons_prevue_mois = QPushButton("Par mois")
         self.bt_raisons_prevue_mois.clicked.connect(self.on_click_raisons_prevue_mois)
+        self.bt_raisons_prevue_annee = QPushButton("Par année")
+        self.bt_raisons_prevue_annee.clicked.connect(self.on_click_raisons_prevue_annee)
 
         self.label_stat_imprevue_raisons = QLabel("Raisons imprévues")
         self.bt_raisons_imprevue_semaine = QPushButton("Par semaine")
         self.bt_raisons_imprevue_semaine.clicked.connect(self.on_click_raisons_imprevue_semaine)
         self.bt_raisons_imprevue_mois = QPushButton("Par mois")
         self.bt_raisons_imprevue_mois.clicked.connect(self.on_click_raisons_imprevue_mois)
+        self.bt_raisons_imprevue_annee = QPushButton("Par année")
+        self.bt_raisons_imprevue_annee.clicked.connect(self.on_click_raisons_imprevue_annee)
 
         self.init_widget()
         self.update_stylesheet()
@@ -62,10 +68,13 @@ class StatMenu(MondonWidget):
         self.bt_metrage_annee.setStyleSheet(button_white_stylesheet)
         self.bt_temps_semaine.setStyleSheet(button_white_stylesheet)
         self.bt_temps_mois.setStyleSheet(button_white_stylesheet)
+        self.bt_temps_annee.setStyleSheet(button_white_stylesheet)
         self.bt_raisons_prevue_semaine.setStyleSheet(button_white_stylesheet)
         self.bt_raisons_prevue_mois.setStyleSheet(button_white_stylesheet)
+        self.bt_raisons_prevue_annee.setStyleSheet(button_white_stylesheet)
         self.bt_raisons_imprevue_semaine.setStyleSheet(button_white_stylesheet)
         self.bt_raisons_imprevue_mois.setStyleSheet(button_white_stylesheet)
+        self.bt_raisons_imprevue_annee.setStyleSheet(button_white_stylesheet)
 
         if settings_stat_store.data_type == "métrage":
             if settings_stat_store.week_ago >= 0:
@@ -77,18 +86,24 @@ class StatMenu(MondonWidget):
         if settings_stat_store.data_type == "temps":
             if settings_stat_store.week_ago >= 0:
                 self.bt_temps_semaine.setStyleSheet(button_green_stylesheet)
-            else:
+            elif settings_stat_store.month_ago >= 0:
                 self.bt_temps_mois.setStyleSheet(button_green_stylesheet)
+            else:
+                self.bt_temps_annee.setStyleSheet(button_green_stylesheet)
         if settings_stat_store.data_type == "raisons prévue":
             if settings_stat_store.week_ago >= 0:
                 self.bt_raisons_prevue_semaine.setStyleSheet(button_green_stylesheet)
-            else:
+            elif settings_stat_store.month_ago >= 0:
                 self.bt_raisons_prevue_mois.setStyleSheet(button_green_stylesheet)
+            else:
+                self.bt_raisons_prevue_annee.setStyleSheet(button_green_stylesheet)
         if settings_stat_store.data_type == "raisons imprévue":
             if settings_stat_store.week_ago >= 0:
                 self.bt_raisons_imprevue_semaine.setStyleSheet(button_green_stylesheet)
-            else:
+            elif settings_stat_store.month_ago >= 0:
                 self.bt_raisons_imprevue_mois.setStyleSheet(button_green_stylesheet)
+            else:
+                self.bt_raisons_imprevue_annee.setStyleSheet(button_green_stylesheet)
 
     def init_widget(self):
         self.vbox.setSpacing(0)
@@ -111,6 +126,8 @@ class StatMenu(MondonWidget):
         self.bt_temps_semaine.setFixedHeight(self.BUTTON_HEIGHT)
         self.bt_temps_mois.setStyleSheet(button_white_stylesheet)
         self.bt_temps_mois.setFixedHeight(self.BUTTON_HEIGHT)
+        self.bt_temps_annee.setStyleSheet(button_white_stylesheet)
+        self.bt_temps_annee.setFixedHeight(self.BUTTON_HEIGHT)
 
         self.label_stat_raisons.setStyleSheet(white_title_label_stylesheet)
         self.label_stat_raisons.setFixedHeight(self.BUTTON_HEIGHT)
@@ -122,6 +139,8 @@ class StatMenu(MondonWidget):
         self.bt_raisons_prevue_semaine.setFixedHeight(self.BUTTON_HEIGHT)
         self.bt_raisons_prevue_mois.setStyleSheet(button_white_stylesheet)
         self.bt_raisons_prevue_mois.setFixedHeight(self.BUTTON_HEIGHT)
+        self.bt_raisons_prevue_annee.setStyleSheet(button_white_stylesheet)
+        self.bt_raisons_prevue_annee.setFixedHeight(self.BUTTON_HEIGHT)
 
         self.label_stat_imprevue_raisons.setStyleSheet(red_title_label_stylesheet)
         self.label_stat_imprevue_raisons.setFixedHeight(self.BUTTON_HEIGHT)
@@ -130,6 +149,8 @@ class StatMenu(MondonWidget):
         self.bt_raisons_imprevue_semaine.setFixedHeight(self.BUTTON_HEIGHT)
         self.bt_raisons_imprevue_mois.setStyleSheet(button_white_stylesheet)
         self.bt_raisons_imprevue_mois.setFixedHeight(self.BUTTON_HEIGHT)
+        self.bt_raisons_imprevue_annee.setStyleSheet(button_white_stylesheet)
+        self.bt_raisons_imprevue_annee.setFixedHeight(self.BUTTON_HEIGHT)
 
         self.vbox.addWidget(self.label_stat_metrage)
         self.vbox.addWidget(self.bt_metrage_semaine)
@@ -139,16 +160,19 @@ class StatMenu(MondonWidget):
         self.vbox.addWidget(self.label_stat_temps)
         self.vbox.addWidget(self.bt_temps_semaine)
         self.vbox.addWidget(self.bt_temps_mois)
+        self.vbox.addWidget(self.bt_temps_annee)
         self.vbox.addStretch(2)
         self.vbox.addWidget(self.label_stat_raisons)
         self.vbox.addStretch(1)
         self.vbox.addWidget(self.label_stat_raisons_prevue)
         self.vbox.addWidget(self.bt_raisons_prevue_semaine)
         self.vbox.addWidget(self.bt_raisons_prevue_mois)
+        self.vbox.addWidget(self.bt_raisons_prevue_annee)
         self.vbox.addStretch(1)
         self.vbox.addWidget(self.label_stat_imprevue_raisons)
         self.vbox.addWidget(self.bt_raisons_imprevue_semaine)
         self.vbox.addWidget(self.bt_raisons_imprevue_mois)
+        self.vbox.addWidget(self.bt_raisons_imprevue_annee)
 
         self.vbox.addStretch(100)
         self.setLayout(self.vbox)
@@ -174,6 +198,10 @@ class StatMenu(MondonWidget):
         settings_stat_store.set_new_settings(p_type="temps", month_ago=0)
 
     @staticmethod
+    def on_click_temps_annee():
+        settings_stat_store.set_new_settings(p_type="temps", year_ago=0)
+
+    @staticmethod
     def on_click_raisons_prevue_semaine():
         settings_stat_store.set_new_settings(p_type="raisons prévue", week_ago=0)
 
@@ -182,9 +210,17 @@ class StatMenu(MondonWidget):
         settings_stat_store.set_new_settings(p_type="raisons prévue", month_ago=0)
 
     @staticmethod
+    def on_click_raisons_prevue_annee():
+        settings_stat_store.set_new_settings(p_type="raisons prévue", year_ago=0)
+
+    @staticmethod
     def on_click_raisons_imprevue_semaine():
         settings_stat_store.set_new_settings(p_type="raisons imprévue", week_ago=0)
 
     @staticmethod
     def on_click_raisons_imprevue_mois():
         settings_stat_store.set_new_settings(p_type="raisons imprévue", month_ago=0)
+
+    @staticmethod
+    def on_click_raisons_imprevue_annee():
+        settings_stat_store.set_new_settings(p_type="raisons imprévue", year_ago=0)
