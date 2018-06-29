@@ -26,7 +26,7 @@ class AppMenu(MondonWidget):
         self.menu_selected = None
         self.hbox = QHBoxLayout()
         self.list_bt = {}
-        # self.bt_stat = QPushButton("Statistique")
+        self.bt_stat = QPushButton("Statistique")
         self.bt_rapport = QPushButton("Rapport")
         # self.bt_team_gestion = QPushButton("Gestion équipes")
         self.label_user = QLabel()
@@ -47,11 +47,11 @@ class AppMenu(MondonWidget):
         bt_acceuil.clicked.connect(lambda: self.on_click("prod"))
         self.hbox.addWidget(bt_acceuil)
 
-        # self.bt_stat.setFixedWidth(self.WIDTH_BT)
-        # self.bt_stat.hide()
-        # self.list_bt["chart_stat"] = self.bt_stat
-        # self.bt_stat.clicked.connect(lambda: self.on_click("chart_stat"))
-        # self.hbox.addWidget(self.bt_stat)
+        self.bt_stat.setFixedWidth(self.WIDTH_BT)
+        self.bt_stat.hide()
+        self.list_bt["chart_stat"] = self.bt_stat
+        self.bt_stat.clicked.connect(lambda: self.on_click("chart_stat"))
+        self.hbox.addWidget(self.bt_stat)
 
         self.bt_rapport.setFixedWidth(self.WIDTH_BT)
         self.bt_rapport.hide()
@@ -80,12 +80,12 @@ class AppMenu(MondonWidget):
         if user_store.user_level == 0:
             user = "Opérateur"
             self.bt_rapport.hide()
-            # self.bt_stat.hide()
+            self.bt_stat.hide()
             # self.bt_team_gestion.hide()
         else:
             user = "Superviseur"
             self.bt_rapport.show()
-            # self.bt_stat.show()
+            self.bt_stat.show()
             # self.bt_team_gestion.show()
         self.label_user.setText(user)
 

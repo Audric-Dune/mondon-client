@@ -8,7 +8,7 @@ from commun.constants.colors import color_bleu_gris
 from commun.constants.stylesheets import button_stylesheet, white_22_label_stylesheet, green_maj_label_stylesheet
 from commun.ui.public.mondon_widget import MondonWidget
 from commun.ui.public.pixmap_button import PixmapButton
-from commun.utils.timestamp import timestamp_at_week_ago, timestamp_at_month_ago
+from commun.utils.timestamp import timestamp_at_week_ago, timestamp_at_month_ago, timestamp_at_year_ago
 
 from production.stores.settings_stat_store import settings_stat_store
 
@@ -73,6 +73,10 @@ class ChartBarMenu(MondonWidget):
         limit_month_stat = 1509490800 if settings_stat_store.data_type == "métrage" else 1514761200
         if timestamp_at_month_ago(settings_stat_store.month_ago) == limit_month_stat \
                 and settings_stat_store.month_ago >= 0:
+            disabled_bt_moins = True
+        limit_year_stat = 1514761200
+        if timestamp_at_year_ago(settings_stat_store.year_ago) == limit_year_stat \
+                and settings_stat_store.year_ago >= 0:
             disabled_bt_moins = True
         self.bt_moins.setDisabled(disabled_bt_moins)
 

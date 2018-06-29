@@ -17,7 +17,8 @@ from commun.utils.timestamp import timestamp_at_week_ago,\
     timestamp_at_month_ago,\
     timestamp_after_day_ago,\
     timestamp_to_day,\
-    timestamp_at_time
+    timestamp_at_time,\
+    timestamp_at_year_ago
 
 from production.stores.data_store_manager import data_store_manager
 from production.stores.settings_stat_store import settings_stat_store
@@ -80,33 +81,32 @@ class StatStore(QObject):
         return True
 
     def get_data_metrage_or_temps(self, start, end):
-        if settings_stat_store.year_ago < 0:
-            # On parcour tout les jours entre start et end
-            current_day = start
-            while current_day < end:
-                data = []
-                # Vérifie si on est pas dans un jours du weekend
-                if not self.is_weekend(ts_day=current_day):
-                    if settings_stat_store.data_type == "métrage":
-                        # Récupère les data du ts courant dans les data en database
-                        data = self.get_data_on_ts(data=self.data_on_database, ts=current_day)
-                        if not data:
-                            data_store = self.get_data_store(ts_day=current_day)
-                            data.append(round(current_day))
-                            data.append(data_store.metrage_matin)
-                            data.append(data_store.metrage_soir)
-                    elif settings_stat_store.data_type == "temps":
+        # On parcour tout les jours entre start et end
+        current_day = start
+        while current_day < end:
+            data = []
+            # Vérifie si on est pas dans un jours du weekend
+            if not self.is_weekend(ts_day=current_day):
+                if settings_stat_store.data_type == "métrage":
+                    # Récupère les data du ts courant dans les data en database
+                    data = self.get_data_on_ts(data=self.data_on_database, ts=current_day)
+                    if not data:
                         data_store = self.get_data_store(ts_day=current_day)
                         data.append(round(current_day))
-                        data.append(data_store.arret_time_matin + data_store.arret_time_soir)
-                        data.append(data_store.imprevu_arret_time_matin + data_store.imprevu_arret_time_soir)
-                # Ajoute les data du jour courant au data générale
-                if settings_stat_store.data_type == "métrage":
-                    self.add_data_metrage(data)
+                        data.append(data_store.metrage_matin)
+                        data.append(data_store.metrage_soir)
                 elif settings_stat_store.data_type == "temps":
-                    self.add_data_temps(data)
-                # Passe au jour suivant
-                current_day = timestamp_after_day_ago(start=current_day, day_ago=1)
+                    data_store = self.get_data_store(ts_day=current_day)
+                    data.append(round(current_day))
+                    data.append(data_store.arret_time_matin + data_store.arret_time_soir)
+                    data.append(data_store.imprevu_arret_time_matin + data_store.imprevu_arret_time_soir)
+            # Ajoute les data du jour courant au data générale
+            if settings_stat_store.data_type == "métrage":
+                self.add_data_metrage(data)
+            elif settings_stat_store.data_type == "temps":
+                self.add_data_temps(data)
+            # Passe au jour suivant
+            current_day = timestamp_after_day_ago(start=current_day, day_ago=1)
 
     def get_data_raisons(self):
         list_arret = self.data_on_database[0]
@@ -179,6 +179,12 @@ class StatStore(QObject):
                 end_ts = timestamp_now()
             else:
                 end_ts = timestamp_at_month_ago(settings_stat_store.month_ago - 1)
+        if settings_stat_store.year_ago >= 0:
+            start_ts = timestamp_at_year_ago(settings_stat_store.year_ago)
+            if settings_stat_store.year_ago == 0:
+                end_ts = timestamp_now()
+            else:
+                end_ts = timestamp_at_year_ago(settings_stat_store.month_ago - 1)
         return start_ts, end_ts
 
     @staticmethod

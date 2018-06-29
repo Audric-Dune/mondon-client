@@ -66,6 +66,11 @@ def timestamp_to_month(timestamp):
     return datetime.fromtimestamp(timestamp).strftime('%B - %Y')
 
 
+def timestamp_to_year(timestamp):
+    locale.setlocale(locale.LC_TIME, '')
+    return datetime.fromtimestamp(timestamp).strftime('%Y')
+
+
 def hour_in_timestamp(ts):
     return datetime.fromtimestamp(ts).strftime("%H:%M")
 
@@ -137,6 +142,18 @@ def timestamp_at_month_ago(month_ago=0):
         i += 1
     return datetime(year=year,
                     month=month,
+                    day=1,
+                    hour=0,
+                    minute=0,
+                    second=0,
+                    microsecond=0).timestamp()
+
+
+def timestamp_at_year_ago(year_ago):
+    current_year = datetime.now().year
+    year = current_year - year_ago
+    return datetime(year=year,
+                    month=1,
                     day=1,
                     hour=0,
                     minute=0,

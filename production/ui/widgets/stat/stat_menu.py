@@ -27,6 +27,8 @@ class StatMenu(MondonWidget):
         self.bt_metrage_semaine.clicked.connect(self.on_click_metrage_semaine)
         self.bt_metrage_mois = QPushButton("Par mois")
         self.bt_metrage_mois.clicked.connect(self.on_click_metrage_mois)
+        self.bt_metrage_annee = QPushButton("Par année")
+        self.bt_metrage_annee.clicked.connect(self.on_click_metrage_annee)
 
         self.label_stat_temps = QLabel("Statistique temps d'arrêt")
         self.bt_temps_semaine = QPushButton("Par semaine")
@@ -57,6 +59,7 @@ class StatMenu(MondonWidget):
     def update_stylesheet(self):
         self.bt_metrage_semaine.setStyleSheet(button_white_stylesheet)
         self.bt_metrage_mois.setStyleSheet(button_white_stylesheet)
+        self.bt_metrage_annee.setStyleSheet(button_white_stylesheet)
         self.bt_temps_semaine.setStyleSheet(button_white_stylesheet)
         self.bt_temps_mois.setStyleSheet(button_white_stylesheet)
         self.bt_raisons_prevue_semaine.setStyleSheet(button_white_stylesheet)
@@ -67,8 +70,10 @@ class StatMenu(MondonWidget):
         if settings_stat_store.data_type == "métrage":
             if settings_stat_store.week_ago >= 0:
                 self.bt_metrage_semaine.setStyleSheet(button_green_stylesheet)
-            else:
+            elif settings_stat_store.month_ago >= 0:
                 self.bt_metrage_mois.setStyleSheet(button_green_stylesheet)
+            else:
+                self.bt_metrage_annee.setStyleSheet(button_green_stylesheet)
         if settings_stat_store.data_type == "temps":
             if settings_stat_store.week_ago >= 0:
                 self.bt_temps_semaine.setStyleSheet(button_green_stylesheet)
@@ -96,6 +101,8 @@ class StatMenu(MondonWidget):
         self.bt_metrage_semaine.setFixedHeight(self.BUTTON_HEIGHT)
         self.bt_metrage_mois.setStyleSheet(button_white_stylesheet)
         self.bt_metrage_mois.setFixedHeight(self.BUTTON_HEIGHT)
+        self.bt_metrage_annee.setStyleSheet(button_white_stylesheet)
+        self.bt_metrage_annee.setFixedHeight(self.BUTTON_HEIGHT)
 
         self.label_stat_temps.setStyleSheet(white_title_label_stylesheet)
         self.label_stat_temps.setFixedHeight(self.BUTTON_HEIGHT)
@@ -127,6 +134,7 @@ class StatMenu(MondonWidget):
         self.vbox.addWidget(self.label_stat_metrage)
         self.vbox.addWidget(self.bt_metrage_semaine)
         self.vbox.addWidget(self.bt_metrage_mois)
+        self.vbox.addWidget(self.bt_metrage_annee)
         self.vbox.addStretch(2)
         self.vbox.addWidget(self.label_stat_temps)
         self.vbox.addWidget(self.bt_temps_semaine)
@@ -147,32 +155,36 @@ class StatMenu(MondonWidget):
 
     @staticmethod
     def on_click_metrage_semaine():
-        settings_stat_store.set_new_settings(type="métrage", week_ago=0)
+        settings_stat_store.set_new_settings(p_type="métrage", week_ago=0)
 
     @staticmethod
     def on_click_metrage_mois():
-        settings_stat_store.set_new_settings(type="métrage", month_ago=0)
+        settings_stat_store.set_new_settings(p_type="métrage", month_ago=0)
+
+    @staticmethod
+    def on_click_metrage_annee():
+        settings_stat_store.set_new_settings(p_type="métrage", year_ago=0)
 
     @staticmethod
     def on_click_temps_semaine():
-        settings_stat_store.set_new_settings(type="temps", week_ago=0)
+        settings_stat_store.set_new_settings(p_type="temps", week_ago=0)
 
     @staticmethod
     def on_click_temps_mois():
-        settings_stat_store.set_new_settings(type="temps", month_ago=0)
+        settings_stat_store.set_new_settings(p_type="temps", month_ago=0)
 
     @staticmethod
     def on_click_raisons_prevue_semaine():
-        settings_stat_store.set_new_settings(type="raisons prévue", week_ago=0)
+        settings_stat_store.set_new_settings(p_type="raisons prévue", week_ago=0)
 
     @staticmethod
     def on_click_raisons_prevue_mois():
-        settings_stat_store.set_new_settings(type="raisons prévue", month_ago=0)
+        settings_stat_store.set_new_settings(p_type="raisons prévue", month_ago=0)
 
     @staticmethod
     def on_click_raisons_imprevue_semaine():
-        settings_stat_store.set_new_settings(type="raisons imprévue", week_ago=0)
+        settings_stat_store.set_new_settings(p_type="raisons imprévue", week_ago=0)
 
     @staticmethod
     def on_click_raisons_imprevue_mois():
-        settings_stat_store.set_new_settings(type="raisons imprévue", month_ago=0)
+        settings_stat_store.set_new_settings(p_type="raisons imprévue", month_ago=0)
