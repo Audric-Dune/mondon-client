@@ -18,7 +18,9 @@ from commun.utils.timestamp import timestamp_at_week_ago,\
     timestamp_after_day_ago,\
     timestamp_to_day,\
     timestamp_at_time,\
-    timestamp_at_year_ago
+    timestamp_at_year_ago,\
+    timestamp_at_month,\
+    timestamp_to_year
 
 from production.stores.data_store_manager import data_store_manager
 from production.stores.settings_stat_store import settings_stat_store
@@ -107,6 +109,26 @@ class StatStore(QObject):
                 self.add_data_temps(data)
             # Passe au jour suivant
             current_day = timestamp_after_day_ago(start=current_day, day_ago=1)
+        if settings_stat_store.year_ago >= 0:
+            self.merge_data_from_month()
+
+    def merge_data_from_month(self):
+        new_data = {"matin": [], "soir": [], "total": []}
+        year_ago = settings_stat_store.year_ago
+        for key in self.data.keys():
+            current_month = 1
+            current_value = 0
+            for data in self.data[key]:
+                ts = data[0]
+                value = data[1]
+                if ts < timestamp_at_month(year_ago=year_ago, month=current_month+1):
+                    current_value += value
+                else:
+                    new_data[key].append((timestamp_at_month(year_ago=year_ago, month=current_month), current_value))
+                    current_month += 1
+                    current_value = 0
+            new_data[key].append((timestamp_at_month(year_ago=year_ago, month=current_month), current_value))
+        self.data = new_data
 
     def get_data_raisons(self):
         list_arret = self.data_on_database[0]

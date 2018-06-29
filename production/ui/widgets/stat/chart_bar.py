@@ -17,7 +17,9 @@ from commun.ui.public.mondon_widget import MondonWidget
 from commun.utils.layout import clear_layout
 from commun.utils.timestamp import timestamp_to_name_number_day_month,\
     timestamp_to_day_month_little,\
-    timestamp_after_day_ago
+    timestamp_after_day_ago,\
+    timestamp_to_month_little,\
+    timestamp_at_month
 from commun.utils.day import is_weekend
 from production.stores.settings_stat_store import settings_stat_store
 from production.stores.stat_store import stat_store
@@ -91,9 +93,12 @@ class ContentChart(MondonWidget):
         self.hbox.setContentsMargins(10, 0, 10, 0)
         self.hbox.setSpacing(5)
         len_format = 0
+        print(settings_stat_store.format)
         if settings_stat_store.format == "week":
             len_format = 5
         if settings_stat_store.format == "month":
+            len_format = len(stat_store.data["total"])
+        if settings_stat_store.format == "years":
             len_format = len(stat_store.data["total"])
         index = 0
         while index < len_format:
@@ -154,18 +159,24 @@ class ChartLegend(MondonWidget):
                 len_format = 5
             if settings_stat_store.format == "month":
                 len_format = len(stat_store.data["total"])
+            if settings_stat_store.format == "years":
+                len_format = len(stat_store.data["total"])
             start = stat_store.data["total"][0][0]
         index = 0
         str_date = "NA"
         dec_weekend = 0
         while index < len_format:
-            while is_weekend(timestamp_after_day_ago(start, day_ago=index + dec_weekend)):
-                dec_weekend += 1
-            ts = timestamp_after_day_ago(start, day_ago=index + dec_weekend)
-            if settings_stat_store.format == "week":
-                str_date = timestamp_to_name_number_day_month(ts).capitalize()
-            if settings_stat_store.format == "month":
-                str_date = timestamp_to_day_month_little(ts)
+            if settings_stat_store.format == "years":
+                ts_start_month = timestamp_at_month(year_ago=settings_stat_store.year_ago, month=index+1)
+                str_date = timestamp_to_month_little(ts_start_month).capitalize()
+            else:
+                while is_weekend(timestamp_after_day_ago(start, day_ago=index + dec_weekend)):
+                    dec_weekend += 1
+                ts = timestamp_after_day_ago(start, day_ago=index + dec_weekend)
+                if settings_stat_store.format == "week":
+                    str_date = timestamp_to_name_number_day_month(ts).capitalize()
+                if settings_stat_store.format == "month":
+                    str_date = timestamp_to_day_month_little(ts)
             self.hbox.addWidget(self.create_label(str_date))
             index += 1
 

@@ -86,9 +86,15 @@ class LineTitle(MondonWidget):
         self.hbox.setSpacing(0)
         texte = "Equipe" if settings_stat_store.data_type == "métrage" else "Type"
         self.hbox.addWidget(self.create_label_tittle(text=texte, align=Qt.AlignLeft | Qt.AlignVCenter))
-        text_total = "Total semaine" if settings_stat_store.format == "week" else "Total mois"
+        if settings_stat_store.format == "week":
+            text_total = "Total semaine"
+        elif settings_stat_store.format == "week":
+            text_total = "Total mois"
+        else:
+            text_total = "Total année"
         self.hbox.addWidget(self.create_label_tittle(text=text_total, align=Qt.AlignCenter | Qt.AlignVCenter))
-        self.hbox.addWidget(self.create_label_tittle(text="Moyenne jour", align=Qt.AlignCenter | Qt.AlignVCenter))
+        text_moyenne = "Moyenne mois" if settings_stat_store.format == "years" else "Moyenne jour"
+        self.hbox.addWidget(self.create_label_tittle(text=text_moyenne, align=Qt.AlignCenter | Qt.AlignVCenter))
         self.hbox.addWidget(self.create_label_tittle(text="Maximum", align=Qt.AlignCenter | Qt.AlignVCenter))
         texte = "Ratio capacité" if settings_stat_store.data_type == "métrage" else "Ratio temps d'arrêt"
         self.hbox.addWidget(self.create_label_tittle(text=texte, align=Qt.AlignRight | Qt.AlignVCenter))

@@ -38,7 +38,7 @@ class SettingsStatStore(QObject):
         if self.month_ago >= 0:
             self.display_setting = [False, False, True]
         if self.year_ago >= 0:
-            self.display_setting = [False, False, True]
+            self.display_setting = [True, True, True]
 
     def get_format(self):
         if self.week_ago >= 0:
