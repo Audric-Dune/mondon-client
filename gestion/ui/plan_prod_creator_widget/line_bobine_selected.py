@@ -21,6 +21,7 @@ class LineBobineSelected(MondonWidget):
         self.stock_prev_value = 0
         self.production = QLabel()
         self.stock_prev = QLabel()
+        self.etat = QLabel()
         self.init_widget()
         self.update_widget()
 
@@ -39,12 +40,12 @@ class LineBobineSelected(MondonWidget):
         amount.setAlignment(Qt.AlignVCenter | Qt.AlignCenter)
         amount.setStyleSheet(black_14_label_stylesheet)
         hbox.addWidget(amount)
-        stock_value = str(int(self.bobine.stock))
+        stock_value = str(int(self.bobine.stock_at_time))
         stock = QLabel(stock_value)
         stock.setAlignment(Qt.AlignVCenter | Qt.AlignCenter)
         stock.setStyleSheet(black_14_label_stylesheet)
         hbox.addWidget(stock)
-        stock_therme_value = str(int(self.bobine.stock_therme))
+        stock_therme_value = str(int(self.bobine.stock_therme_at_time))
         stock_therme = QLabel(stock_therme_value)
         stock_therme.setAlignment(Qt.AlignVCenter | Qt.AlignCenter)
         stock_therme.setStyleSheet(black_14_label_stylesheet)
@@ -55,19 +56,25 @@ class LineBobineSelected(MondonWidget):
         self.stock_prev.setAlignment(Qt.AlignVCenter | Qt.AlignCenter)
         self.stock_prev.setStyleSheet(black_14_bold_label_stylesheet)
         hbox.addWidget(self.stock_prev)
-        etat_value = self.bobine.etat
-        etat = QLabel(etat_value)
-        etat.setAlignment(Qt.AlignVCenter | Qt.AlignCenter)
-        if etat_value == "RUPTURE":
-            etat_label_stylesheet = black_14_bold_label_stylesheet
-        elif etat_value == "SURSTOCK":
-            etat_label_stylesheet = red_14_bold_label_stylesheet
-        else:
-            etat.setText("OK")
-            etat_label_stylesheet = black_14_label_stylesheet
-        etat.setStyleSheet(etat_label_stylesheet)
-        hbox.addWidget(etat)
+        etat_value = self.get_etat()
+        self.etat.setAlignment(Qt.AlignVCenter | Qt.AlignCenter)
+        # if etat_value == "RUPTURE":
+        #     etat_label_stylesheet = black_14_bold_label_stylesheet
+        # elif etat_value == "SURSTOCK":
+        #     etat_label_stylesheet = red_14_bold_label_stylesheet
+        # else:
+        #     etat.setText("OK")
+        #     etat_label_stylesheet = black_14_label_stylesheet
+        # etat.setStyleSheet(etat_label_stylesheet)
+        hbox.addWidget(self.etat)
         self.setLayout(hbox)
+
+    def get_etat(self):
+        if self.bobine.vente_mensuelle > self.stock_prev_value:
+            return "RUPTURE"
+        elif self.bobine.vente_annuelle < self.stock_prev_value:
+            return "SURSTOCK"
+        return "OK"
 
     def get_production(self):
         tours = settings_store_gestion.plan_prod.tours
@@ -76,5 +83,14 @@ class LineBobineSelected(MondonWidget):
 
     def update_widget(self):
         self.production.setText("+{}".format(self.get_production()))
-        self.stock_prev_value = int(self.get_production()+self.bobine.stock_therme)
+        self.stock_prev_value = int(self.get_production()+self.bobine.stock_therme_at_time)
         self.stock_prev.setText(str(self.stock_prev_value))
+        etat_value = self.get_etat()
+        self.etat.setText(etat_value)
+        if etat_value == "RUPTURE":
+            etat_label_stylesheet = black_14_bold_label_stylesheet
+        elif etat_value == "SURSTOCK":
+            etat_label_stylesheet = red_14_bold_label_stylesheet
+        else:
+            etat_label_stylesheet = black_14_label_stylesheet
+        self.etat.setStyleSheet(etat_label_stylesheet)

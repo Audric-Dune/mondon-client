@@ -109,9 +109,18 @@ class SettingsStore(QObject):
             self.day_ago = day_ago
         if plan_prod:
             self.plan_prod = plan_prod
-            from gestion.stores.filter_store import filter_store
-            filter_store.set_plan_prod(plan_prod)
+        self.update_stock_bobines()
         self.SETTINGS_CHANGED_SIGNAL.emit()
+
+    def update_stock_bobines(self):
+        from commun.stores.bobine_fille_store import bobine_fille_store
+        for bobine in bobine_fille_store.bobines:
+            bobine.get_stock_at_time(day_ago=self.day_ago)
+
+    def update_stock_bobines_at_time(self):
+        from commun.stores.bobine_fille_store import bobine_fille_store
+        for bobine in bobine_fille_store.bobines:
+            bobine.get_stock_at_time(time=self.plan_prod.start)
 
     def create_new_plan(self):
         from commun.model.plan_prod import PlanProd
@@ -123,6 +132,7 @@ class SettingsStore(QObject):
 
     def edit_plan_prod(self, plan_prod):
         self.plan_prod = plan_prod
+        self.update_stock_bobines_at_time()
         self.CREATE_PLAN_PROD_WINDOW.emit()
 
     def get_start(self, start=None, plans_prods=None):

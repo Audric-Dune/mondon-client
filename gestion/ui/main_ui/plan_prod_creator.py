@@ -70,6 +70,7 @@ class PlanProdCreator(QWidget):
     def handle_tours_plan_prod_changed(self):
         self.bloc_param_prod.update_label()
         self.bloc_info.update_widget()
+        self.bloc_bobines_selected.update_widget()
 
     def handle_click_bt(self, bt_name):
         if bt_name == "valid":

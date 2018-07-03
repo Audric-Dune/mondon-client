@@ -3,6 +3,7 @@
 
 from PyQt5.QtWidgets import QHBoxLayout, QLabel
 from PyQt5.QtCore import pyqtSignal, Qt
+
 from commun.ui.public.mondon_widget import MondonWidget
 from commun.constants.colors import color_blanc, color_vert_fonce, color_gris_fonce
 from commun.constants.stylesheets import black_14_label_stylesheet,\
@@ -10,6 +11,8 @@ from commun.constants.stylesheets import black_14_label_stylesheet,\
     black_14_bold_label_stylesheet
 from commun.model.bobine_fille import BobineFille
 from commun.constants.dimensions import dict_width_selector_bobine, width_search_bar
+
+from gestion.stores.settings_store import settings_store_gestion
 
 
 class LineBobine(MondonWidget):
@@ -60,27 +63,23 @@ class LineBobine(MondonWidget):
         poses.setAlignment(Qt.AlignVCenter | Qt.AlignCenter)
         poses.setStyleSheet(black_14_label_stylesheet)
         hbox.addWidget(poses)
-        # colors_cliche_value = self.bobine.colors_cliche if self.bobine.colors_cliche else "-"
-        # colors_cliche = QLabel(str(colors_cliche_value))
-        # colors_cliche.setAlignment(Qt.AlignVCenter | Qt.AlignCenter)
-        # colors_cliche.setStyleSheet(black_14_label_stylesheet)
-        # hbox.addWidget(colors_cliche)
         vente_mensuelle_value = 1 if 0 < self.bobine.vente_mensuelle < 1 else self.bobine.vente_mensuelle
         vente_mensuelle_value = str(int(vente_mensuelle_value))
         vente_mensuelle = QLabel(vente_mensuelle_value)
         vente_mensuelle.setAlignment(Qt.AlignVCenter | Qt.AlignCenter)
         vente_mensuelle.setStyleSheet(black_14_label_stylesheet)
         hbox.addWidget(vente_mensuelle)
-        stock_value = str(int(self.bobine.stock))
-        stock = QLabel(stock_value)
-        stock.setAlignment(Qt.AlignVCenter | Qt.AlignCenter)
-        stock.setStyleSheet(black_14_label_stylesheet)
-        hbox.addWidget(stock)
-        stock_therme_value = str(int(self.bobine.stock_therme))
-        stock_therme = QLabel(stock_therme_value)
-        stock_therme.setAlignment(Qt.AlignVCenter | Qt.AlignCenter)
-        stock_therme.setStyleSheet(black_14_label_stylesheet)
-        hbox.addWidget(stock_therme)
+        self.bobine.get_stock_at_time(time=settings_store_gestion.plan_prod.start)
+        stock_at_time_value = str(int(self.bobine.stock_at_time))
+        stock_at_time = QLabel(stock_at_time_value)
+        stock_at_time.setAlignment(Qt.AlignVCenter | Qt.AlignCenter)
+        stock_at_time.setStyleSheet(black_14_label_stylesheet)
+        hbox.addWidget(stock_at_time)
+        stock_therme_at_time_value = str(int(self.bobine.stock_therme_at_time))
+        stock_therme_at_time = QLabel(stock_therme_at_time_value)
+        stock_therme_at_time.setAlignment(Qt.AlignVCenter | Qt.AlignCenter)
+        stock_therme_at_time.setStyleSheet(black_14_label_stylesheet)
+        hbox.addWidget(stock_therme_at_time)
         etat_value = self.bobine.etat
         etat = QLabel(etat_value)
         etat.setAlignment(Qt.AlignVCenter | Qt.AlignCenter)

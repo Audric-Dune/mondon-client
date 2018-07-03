@@ -86,10 +86,10 @@ class LineBobine(QWidget):
         add_collum(layout=hbox, text=self.bobine.code, aligment=Qt.AlignVCenter | Qt.AlignLeft, size=200)
         add_collum(layout=hbox, text=str(int(self.bobine.laize)))
         add_collum(layout=hbox, text=str(self.bobine.color))
-        add_collum(layout=hbox, text=str(int(self.bobine.stock)))
-        add_collum(layout=hbox, text=str(int(self.bobine.stock_therme)))
+        add_collum(layout=hbox, text=str(int(self.bobine.stock_at_day_ago)))
+        add_collum(layout=hbox, text=str(int(self.bobine.stock_therme_at_day_ago)))
         add_collum(layout=hbox, text="+{}".format(int(self.quantity)))
-        add_collum(layout=hbox, text=str(int(self.bobine.stock_therme + self.quantity)))
+        add_collum(layout=hbox, text=str(int(self.bobine.stock_therme_at_day_ago + self.quantity)))
         self.setLayout(hbox)
 
 

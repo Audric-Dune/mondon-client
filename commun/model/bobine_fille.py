@@ -25,8 +25,12 @@ class BobineFille:
         self.laize = float(laize)
         self.length = int(length)
         self.color = color
-        self.stock = stock
-        self.stock_therme = stock_therme
+        self.init_stock = stock
+        self.stock_at_day_ago = stock
+        self.stock_at_time = stock
+        self.init_stock_therme = stock_therme
+        self.stock_therme_at_day_ago = stock_therme
+        self.stock_therme_at_time = stock_therme
         self.creation_time = creation_time
         self.gr = gr
         self.poses = poses if poses else [0]
@@ -77,10 +81,38 @@ class BobineFille:
         self.get_etat()
 
     def get_etat(self):
-        if self.vente_mensuelle > self.stock_therme:
+        if self.vente_mensuelle > self.stock_therme_at_time:
             self.etat = "RUPTURE"
-        elif self.vente_annuelle < self.stock_therme:
+        elif self.vente_annuelle < self.stock_therme_at_time:
             self.etat = "SURSTOCK"
+
+    def get_stock_at_time(self, day_ago=None, time=None):
+        def get_bobine_in_plan_prod(p_bobine, p_plan_prod):
+            for p_bobine_in_plan_prod in p_plan_prod.bobines_filles_selected:
+                if p_bobine.code == p_bobine_in_plan_prod.code:
+                    return p_bobine_in_plan_prod
+            return None
+        if day_ago is None and not time:
+            return
+        from gestion.stores.plan_prod_store import plan_prod_store
+        stock = self.init_stock
+        stock_therme = self.init_stock_therme
+        from commun.utils.timestamp import timestamp_at_day_ago
+        ts = time if time else timestamp_at_day_ago(day_ago)
+        for plan_prod in plan_prod_store.plans_prods:
+            if plan_prod.start < ts:
+                bobine_in_plan_prod = get_bobine_in_plan_prod(self, plan_prod)
+                if bobine_in_plan_prod:
+                    pose = bobine_in_plan_prod.pose if bobine_in_plan_prod.pose else 1
+                    stock += pose * plan_prod.tours
+                    stock_therme += pose * plan_prod.tours
+        if day_ago is not None:
+            self.stock_at_day_ago = stock
+            self.stock_therme_at_day_ago = stock_therme
+        else:
+            self.stock_at_time = stock
+            self.stock_therme_at_time = stock_therme
+        self.get_etat()
 
     @staticmethod
     def get_poses_and_colors_from_code_cliche(code_cliche):
