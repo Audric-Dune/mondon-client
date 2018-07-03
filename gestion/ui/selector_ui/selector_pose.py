@@ -12,14 +12,13 @@ class SelectorPose(QWidget):
         self.setWindowFlags(Qt.Dialog)
         self.bobine = bobine
         self.handle_selected_bobine = handle_selected_bobine
-        self.poses = bobine.poses
+        self.poses = bobine.valid_poses
         self.init_widget()
 
     def init_widget(self):
         hbox = QHBoxLayout()
         for pose in self.poses:
             self.add_bt_pose(hbox, pose, self.handle_bt_click)
-
         self.setLayout(hbox)
 
     @staticmethod

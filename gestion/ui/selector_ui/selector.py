@@ -38,11 +38,11 @@ class Selector(MondonWidget):
         self.master_vbox.setContentsMargins(0, 0, 0, 0)
         self.master_vbox.setSpacing(0)
         self.selector_pose = None
-        self.vbox = QVBoxLayout()
-        self.scroll_bar = QScrollArea(parent=self)
-        self.scroll_bar.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.content_scrollbar = QWidget(parent=self.scroll_bar)
-        self.init_lists_lines()
+        # self.vbox = QVBoxLayout()
+        # self.scroll_bar = QScrollArea(parent=self)
+        # self.scroll_bar.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        # self.content_scrollbar = QWidget(parent=self.scroll_bar)
+        # self.init_lists_lines()
         self.init_widget()
         self.update_widget()
 
@@ -92,25 +92,28 @@ class Selector(MondonWidget):
             self.lines_poly.append(line_bobine_poly)
 
     def init_widget(self):
-        self.vbox.setContentsMargins(0, 0, 0, 0)
-        self.vbox.setSpacing(5)
-        for line_bobine in self.lines_bobine:
-            self.vbox.addWidget(line_bobine)
-        for line_refente in self.lines_refente:
-            self.vbox.addWidget(line_refente)
-        for line_papier in self.lines_papier:
-            self.vbox.addWidget(line_papier)
-        for line_poly in self.lines_poly:
-            self.vbox.addWidget(line_poly)
-        for line_perfo in self.lines_perfo:
-            self.vbox.addWidget(line_perfo)
-        self.vbox.addStretch()
-        self.content_scrollbar.setLayout(self.vbox)
-        self.content_scrollbar.setContentsMargins(0, 0, 0, 0)
-        self.scroll_bar.setWidget(self.content_scrollbar)
-        self.scroll_bar.setStyleSheet(scroll_bar_stylesheet)
-        self.scroll_bar.setWidgetResizable(True)
-        self.master_vbox.addWidget(self.scroll_bar)
+        # self.vbox.setContentsMargins(0, 0, 0, 0)
+        # self.vbox.setSpacing(5)
+        from test_tables.tables import BobineFilleTableModel
+        from test_tables.core import Table
+        self.master_vbox.addWidget(Table(model=BobineFilleTableModel(), parent=self))
+        # for line_bobine in self.lines_bobine:
+        #     self.vbox.addWidget(line_bobine)
+        # for line_refente in self.lines_refente:
+        #     self.vbox.addWidget(line_refente)
+        # for line_papier in self.lines_papier:
+        #     self.vbox.addWidget(line_papier)
+        # for line_poly in self.lines_poly:
+        #     self.vbox.addWidget(line_poly)
+        # for line_perfo in self.lines_perfo:
+        #     self.vbox.addWidget(line_perfo)
+        # self.vbox.addStretch()
+        # self.content_scrollbar.setLayout(self.vbox)
+        # self.content_scrollbar.setContentsMargins(0, 0, 0, 0)
+        # self.scroll_bar.setWidget(self.content_scrollbar)
+        # self.scroll_bar.setStyleSheet(scroll_bar_stylesheet)
+        # self.scroll_bar.setWidgetResizable(True)
+        # self.master_vbox.addWidget(self.scroll_bar)
         self.setLayout(self.master_vbox)
 
     def on_filter_changed(self):
@@ -246,38 +249,39 @@ class Selector(MondonWidget):
         return False
 
     def update_widget(self):
-        self.update_list()
-        self.sort_bobine()
-        current_data_type = filter_store.data_type
-        self.hide_lines()
-        self.vbox.takeAt(self.vbox.count()-1)
-        if current_data_type == "bobine" or not current_data_type:
-            for bobine in self.list_bobines:
-                line_bobine = self.get_line_bobine(bobine)
-                line_bobine.show()
-                self.vbox.addWidget(line_bobine)
-        if current_data_type == "refente":
-            for refente in self.list_refente:
-                line_refente = self.get_line_refente(refente)
-                line_refente.show()
-                self.vbox.addWidget(line_refente)
-        if current_data_type == "perfo":
-            for perfo in self.plan_prod.current_perfo_store.perfos:
-                line_perfo = self.get_line_perfo(perfo)
-                line_perfo.show()
-                self.vbox.addWidget(line_perfo)
-        if current_data_type == "papier":
-            for bobine in self.list_papier:
-                line_bobine_papier = self.get_line_papier(bobine)
-                line_bobine_papier.show()
-                self.vbox.addWidget(line_bobine_papier)
-        if current_data_type == "poly":
-            for bobine in self.list_poly:
-                line_bobine_poly = self.get_line_poly(bobine)
-                line_bobine_poly.show()
-                self.vbox.addWidget(line_bobine_poly)
-        self.vbox.addStretch()
-        self.resize_window()
+        pass
+        # self.update_list()
+        # self.sort_bobine()
+        # current_data_type = filter_store.data_type
+        # self.hide_lines()
+        # self.vbox.takeAt(self.vbox.count()-1)
+        # if current_data_type == "bobine" or not current_data_type:
+        #     for bobine in self.list_bobines:
+        #         line_bobine = self.get_line_bobine(bobine)
+        #         line_bobine.show()
+        #         self.vbox.addWidget(line_bobine)
+        # if current_data_type == "refente":
+        #     for refente in self.list_refente:
+        #         line_refente = self.get_line_refente(refente)
+        #         line_refente.show()
+        #         self.vbox.addWidget(line_refente)
+        # if current_data_type == "perfo":
+        #     for perfo in self.plan_prod.current_perfo_store.perfos:
+        #         line_perfo = self.get_line_perfo(perfo)
+        #         line_perfo.show()
+        #         self.vbox.addWidget(line_perfo)
+        # if current_data_type == "papier":
+        #     for bobine in self.list_papier:
+        #         line_bobine_papier = self.get_line_papier(bobine)
+        #         line_bobine_papier.show()
+        #         self.vbox.addWidget(line_bobine_papier)
+        # if current_data_type == "poly":
+        #     for bobine in self.list_poly:
+        #         line_bobine_poly = self.get_line_poly(bobine)
+        #         line_bobine_poly.show()
+        #         self.vbox.addWidget(line_bobine_poly)
+        # self.vbox.addStretch()
+        # self.resize_window()
 
     def resize_window(self):
         self.setMinimumHeight(500)

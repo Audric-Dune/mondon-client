@@ -49,47 +49,10 @@ class Application(QApplication):
         self.init_refente_store()
         self.init_perfo_store()
         self.init_ui()
-        self.test_tables()
 
     def init_ui(self):
         self.main_window = MainWindow()
         self.main_window.show()
-
-    def test_tables(self):
-        pass
-        # from gestion.stores.filter_store import filter_store
-        # from commun.model.plan_prod import PlanProd
-        # from commun.utils.timestamp import timestamp_now
-        # from test_tables.core import Table
-        # from test_tables.tables import BobineFilleTableModel
-        # from PyQt5.QtCore import Qt
-        # from PyQt5.QtWidgets import QMainWindow
-        #
-        # filter_store.set_plan_prod(PlanProd(start=timestamp_now(), index=1))
-        # filter_store.set_data_type('bobine')
-        #
-        # def uniquement_les_blanc(bobine_fille):
-        #     return bobine_fille.color == 'Blanc'
-        # def uniquement_en_rupture(bobine_fille):
-        #     return bobine_fille.etat == 'RUPTURE'
-        #
-        # import time
-        # for i in range(5):
-        #     t_start = time.time()
-        #     w = QMainWindow(parent=self.main_window, flags=Qt.Window)
-        #     t_before_table = time.time()
-        #     table = Table(model=BobineFilleTableModel())
-        #     if i == 0:
-        #         table.set_filter(uniquement_les_blanc)
-        #     if i == 1:
-        #         table.set_filter(uniquement_en_rupture)
-        #     t_after_table = time.time()
-        #     w.setCentralWidget(table)
-        #     w.resize(1400, 700)
-        #     w.show()
-        #     t_end = time.time()
-        #     print('Fenêtre affichée en {}ms (dont {}ms pour crée la table)'
-        #           .format(int((t_end - t_start) * 1000) / 10, int((t_after_table - t_before_table) * 1000) / 10))
 
     @staticmethod
     def init_refente_store():

@@ -1,7 +1,6 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import copy
 
 from PyQt5.QtCore import pyqtSignal, QObject
 

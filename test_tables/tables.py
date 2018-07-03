@@ -11,6 +11,7 @@ from test_tables.core import TableModel
 
 
 class BobineFilleTableModel(TableModel):
+
     # Quelques constantes
     logo_dune_production = QIcon('commun/assets/icons/logo_dune_production.ico')
     etat_font = QFont('Arial Narrow', 14, QFont.Bold)
@@ -18,18 +19,26 @@ class BobineFilleTableModel(TableModel):
     default_color = QColor(*color_noir.rgb_components)
     etat_rupture_color = QColor(*color_rouge.rgb_components)
     column_widths = {
-        "code": 200,
+        "code": 250,
         "laize": 100,
         "color": 120,
         "gr": 120,
         "length": 100,
         "poses": 100,
         "vente_mensuelle": 150,
-        "stock": 100,
-        "stock_therme": 150,
+        "stock_at_time": 100,
+        "stock_therme_at_time": 150,
         "etat": 120,
         "sommeil": 100,
     }
+
+    def __int__(self, plan_prod):
+        self.plan_prod = plan_prod
+
+    def refresh(self):
+        len_elements = len(self.get_elements())
+        len_collums = len(self.get_columns())
+        self.dataChanged.emit(self.createIndex(0, 0), self.createIndex(len_elements, len_collums))
 
     def get_elements(self):
         """
@@ -41,8 +50,8 @@ class BobineFilleTableModel(TableModel):
         """
         Définit la liste des colonnes de la table
         """
-        return ['code', 'laize', 'color', 'gr', 'length', 'poses', 'vente_mensuelle', 'stock',
-                'stock_therme', 'etat', 'sommeil']
+        return ['code', 'laize', 'color', 'gr', 'length', 'poses', 'vente_mensuelle', 'stock_at_time',
+                'stock_therme_at_time', 'etat', 'sommeil']
 
     def get_column_widget(self, column):
         """
@@ -50,12 +59,15 @@ class BobineFilleTableModel(TableModel):
         """
         try:
             index = filter_store.list_filter_bobine_fille.index(column)
+            print(index)
             return SelectorCollumFilter(parent=None,
                                         title=filter_store.title_filter_bobine_fille[index],
                                         name_filter=filter_store.list_filter_bobine_fille[index],
                                         sort_mode=filter_store.sort_mode_bobine_fille[index],
                                         filter_mode=filter_store.filter_mode_bobine_fille[index])
         except ValueError:
+            return None
+        except KeyError:
             return None
 
     def get_column_width(self, column):
@@ -74,7 +86,7 @@ class BobineFilleTableModel(TableModel):
         """
         Retourne le texte qui est affiché pour l'élément `element` dans la colonne `column`
         """
-        return getattr(element, column)
+        return str(getattr(element, column))
 
     def get_icon(self, element, column):
         """
