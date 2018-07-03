@@ -6,13 +6,13 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout
 
 from commun.constants.dimensions import chart_menu_height
-from commun.utils.layout import clear_layout
 
 from gestion.stores.plan_prod_store import plan_prod_store
 from gestion.stores.settings_store import settings_store_gestion
 from gestion.ui.main_ui.day_menu import DayMenu
 from gestion.ui.main_ui.plan_prod_creator import PlanProdCreator
 from gestion.ui.main_ui.gant_manager import GantManager
+from gestion.ui.main_ui.tab_prod_bobines import TabProdBobine
 from gestion.ui.main_ui.toolbar_gantt import ToolbarGantt
 
 
@@ -27,6 +27,7 @@ class MainWindow(QMainWindow):
         plan_prod_store.get_plan_prod_from_database()
         self.setMinimumWidth(800)
         self.gant_manager = GantManager()
+        self.tab_prod_bobines = TabProdBobine(parent=self)
         self.toolbar_gantt = ToolbarGantt(parent=self)
         self.event_windows = []
         self.plan_prod_window = None
@@ -42,6 +43,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.central_widget)
         vbox.addWidget(self.toolbar_gantt)
         vbox.addWidget(self.gant_manager.gant_prod)
+        vbox.addWidget(self.tab_prod_bobines)
         vbox.addStretch()
 
     def create_plan_prod_creator_window(self):

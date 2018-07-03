@@ -1,7 +1,7 @@
 # Database location
 # DATABASE_LOCATION = 'I:\data_prod_bob/2018_06_20_mondon.db'
-DATABASE_LOCATION = 'I:\data_prod_bob/mondon.db'
-# DATABASE_LOCATION = '../mondon.db'
+# DATABASE_LOCATION = 'I:\data_prod_bob/mondon.db'
+DATABASE_LOCATION = '../mondon.db'
 
 # Mot de passe
 USER = {"Opérateur": None, "Superviseur": "dunesa"}

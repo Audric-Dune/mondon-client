@@ -16,7 +16,6 @@ class LineBobineSelected(MondonWidget):
 
     def __init__(self, bobine, amount, parent=None):
         super(LineBobineSelected, self).__init__(parent=parent)
-        settings_store_gestion.plan_prod.ON_TOURS_CHANGED.connect(self.update_widget)
         self.bobine = bobine
         self.amount = amount
         self.stock_prev_value = 0

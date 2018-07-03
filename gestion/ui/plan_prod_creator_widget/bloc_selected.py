@@ -13,6 +13,7 @@ from commun.ui.public.refente_ui import RefenteUi
 from commun.ui.public.perfo_ui import PerfoUi
 from commun.ui.public.dec_bobine_refente import DecBobineRefente
 from commun.utils.layout import clear_layout
+from commun.utils.bobines import group_bobine
 
 from gestion.stores.filter_store import filter_store
 from gestion.ui.plan_prod_creator_widget.line_bobine_selected import LineBobineSelected
@@ -109,25 +110,11 @@ class BlocSelected(MondonWidget):
             content_layout.setContentsMargins(0, 0, 0, 5)
             if self.parent.plan_prod.bobines_filles_selected:
                 content_layout.addWidget(LegendBobineSelected())
-                for value in self.group_bobine(bobines=self.parent.plan_prod.bobines_filles_selected).values():
+                for value in group_bobine(bobines=self.parent.plan_prod.bobines_filles_selected).values():
                     content_layout.addWidget(LineBobineSelected(bobine=value[0], amount=value[1]))
             else:
                 content_layout.addLayout(self.get_ui_select(text="une bobine fille"))
             return content_layout
-
-    @staticmethod
-    def group_bobine(bobines):
-        dict_bobines = {}
-        bobines = sorted(bobines, key=lambda b: b.get_value("code"), reverse=False)
-        for bobine in bobines:
-            pose = bobine.pose if bobine.pose else 1
-            if dict_bobines.get(bobine.code):
-                dict_bobines[bobine.code][1] += pose
-            else:
-                dict_bobines[bobine.code] = []
-                dict_bobines[bobine.code].append(bobine)
-                dict_bobines[bobine.code].append(pose)
-        return dict_bobines
 
     def is_selected(self):
         if self.data_type == "refente" and self.parent.plan_prod.refente_selected:

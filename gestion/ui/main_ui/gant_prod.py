@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5.QtWidgets import QWidget
-from PyQt5.QtGui import QPen, QPainter, QColor
-from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QPen, QPainter, QColor, QFont
+from PyQt5.QtCore import Qt, QRect
 
 from commun.utils.timestamp import timestamp_at_day_ago, timestamp_at_time
 from commun.constants.param import DEBUT_PROD_MATIN, FIN_PROD_SOIR
@@ -36,14 +36,17 @@ class GantProd(QWidget):
         super(GantProd, self).resizeEvent(e)
 
     def paintEvent(self, e):
-        self.draw_background()
-        self.draw_border()
-        self.draw_init_axis()
-        self.draw_axis()
+        p = QPainter(self)
+        self.draw_background(p)
+        self.draw_border(p)
+        self.draw_init_axis(p)
+        self.draw_axis(p)
+        self.draw_legend_h(p)
+        self.draw_legend_v(p)
+        p.end()
         super(GantProd, self).paintEvent(e)
 
-    def draw_init_axis(self):
-        p = QPainter(self)
+    def draw_init_axis(self, p):
         color = color_noir.rgb_components
         qcolor = QColor(color[0], color[1], color[2])
         pen = QPen()
@@ -55,8 +58,7 @@ class GantProd(QWidget):
         p.drawLine(self.DEC_X_LEFT, self.height()-self.DEC_Y_BOTTOM,
                    self.width()-self.DEC_X_RIGHT, self.height()-self.DEC_Y_BOTTOM)
 
-    def draw_axis(self):
-        p = QPainter(self)
+    def draw_axis(self, p):
         color = color_gris_moyen.rgb_components
         qcolor = QColor(color[0], color[1], color[2])
         pen = QPen()
@@ -70,8 +72,7 @@ class GantProd(QWidget):
             p.drawLine(self.DEC_X_LEFT+dec, self.DEC_Y_TOP, self.DEC_X_LEFT+dec, self.height()-self.DEC_Y_BOTTOM+2)
             i += 1
 
-    def draw_border(self):
-        p = QPainter(self)
+    def draw_border(self, p):
         color = color_gris_noir.rgb_components
         qcolor = QColor(color[0], color[1], color[2])
         pen = QPen()
@@ -79,11 +80,48 @@ class GantProd(QWidget):
         p.setPen(pen)
         p.drawRect(0, 0, self.width()-1, self.height()-1)
 
-    def draw_background(self):
-        p = QPainter(self)
+    def draw_background(self, p):
         color = color_blanc.rgb_components
         qcolor = QColor(color[0], color[1], color[2])
         p.fillRect(0, 0, self.width()-1, self.height()-1, qcolor)
+
+    def draw_legend_h(self, p):
+        size_text = 30
+        color = color_noir.rgb_components
+        qcolor = QColor(color[0], color[1], color[2])
+        pen = QPen()
+        pen.setColor(qcolor)
+        p.setPen(pen)
+        p.setFont(QFont("Arial Narrow", 10))
+        i = 0
+        ech_dec = (self.width()-self.DEC_X)/8
+        dec = self.DEC_X_LEFT - size_text/2
+        start_hour = 6
+        while i < 9:
+            dec += ech_dec
+            x = dec-ech_dec
+            y = self.height()-self.DEC_Y_BOTTOM
+            rec_text = QRect(x, y, size_text, self.DEC_Y_BOTTOM)
+            text = "{}:00".format(start_hour)
+            p.drawText(rec_text, Qt.AlignCenter, text)
+            start_hour += 2
+            i += 1
+
+    def draw_legend_v(self, p):
+        color = color_noir.rgb_components
+        qcolor = QColor(color[0], color[1], color[2])
+        pen = QPen()
+        pen.setColor(qcolor)
+        p.setPen(pen)
+        p.setFont(QFont("Arial Narrow", 10))
+        text_rect = QRect(0, self.DEC_Y_TOP, self.DEC_X_LEFT-10, 50)
+        p.drawText(text_rect, Qt.AlignRight | Qt.AlignVCenter, "Production")
+        text_rect = QRect(0, self.DEC_Y_TOP+55, self.DEC_X_LEFT-10, 50)
+        p.drawText(text_rect, Qt.AlignRight | Qt.AlignVCenter, "Nettoyage")
+        text_rect = QRect(0, self.DEC_Y_TOP+110, self.DEC_X_LEFT-10, 50)
+        p.drawText(text_rect, Qt.AlignRight | Qt.AlignVCenter, "Maintenance")
+        text_rect = QRect(0, self.DEC_Y_TOP+165, self.DEC_X_LEFT-10, 50)
+        p.drawText(text_rect, Qt.AlignRight | Qt.AlignVCenter, "Arrêt production")
 
     def init_ui(self):
         for item in self.items:

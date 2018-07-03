@@ -20,7 +20,7 @@ class LegendBobineSelected(QWidget):
         hbox.setContentsMargins(0, 5, 0, 5)
         hbox.addWidget(self.get_label("Code", center=False))
         hbox.addWidget(self.get_label("Laize"))
-        hbox.addWidget(self.get_label("Quantité"))
+        hbox.addWidget(self.get_label("Piste"))
         hbox.addWidget(self.get_label("Stock actuel"))
         hbox.addWidget(self.get_label("Stock à therme"))
         hbox.addWidget(self.get_label("Production"))
