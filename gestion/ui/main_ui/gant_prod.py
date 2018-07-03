@@ -13,7 +13,7 @@ from gestion.ui.main_ui.prod_ui import ProdUi
 
 
 class GantProd(QWidget):
-    DEC_X_LEFT = 100
+    DEC_X_LEFT = 120
     DEC_X_RIGHT = 20
     DEC_X = DEC_X_LEFT + DEC_X_RIGHT
     DEC_Y_TOP = 10
@@ -86,7 +86,7 @@ class GantProd(QWidget):
         p.fillRect(0, 0, self.width()-1, self.height()-1, qcolor)
 
     def draw_legend_h(self, p):
-        size_text = 30
+        size_text = 40
         color = color_noir.rgb_components
         qcolor = QColor(color[0], color[1], color[2])
         pen = QPen()

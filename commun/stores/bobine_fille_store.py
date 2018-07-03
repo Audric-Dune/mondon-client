@@ -14,4 +14,5 @@ class BobineFilleStore:
             if bobine.code == code:
                 return bobine
 
+
 bobine_fille_store = BobineFilleStore()

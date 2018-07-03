@@ -10,6 +10,7 @@ from commun.utils.timestamp import timestamp_to_hour_little
 from commun.utils import filter
 from commun.model.refente import Refente
 from commun.model.contraintes import Contrainte
+from commun.model.bobine_fille_valid import BobineFilleValid
 from commun.stores.refente_store import RefenteStore
 from commun.stores.perfo_store import PerfoStore
 from commun.stores.bobine_fille_store import BobineFilleStore
@@ -146,7 +147,7 @@ class PlanProd(QObject):
 
     def init_bobine_fille_store(self):
         for bobine in bobine_fille_store.bobines:
-            new_bobine = copy.deepcopy(bobine)
+            new_bobine = BobineFilleValid(bobine=bobine)
             self.current_bobine_fille_store.add_bobine(new_bobine)
 
     def init_refente_store(self):

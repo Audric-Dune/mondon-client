@@ -3,9 +3,12 @@
 
 
 class BobineFilleValid:
-    def __init__(self, bobine, valid_poses):
+    def __init__(self, bobine):
         self.bobine = bobine
-        self.valid_poses = valid_poses
+        self.valid_poses = bobine.poses
+
+    def init_valid_poses(self):
+        self.valid_poses = self.bobine.poses
 
     def __getattr__(self, attr):
         if attr == "valid_poses":

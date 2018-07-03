@@ -9,14 +9,14 @@ from commun.constants.colors import color_blanc, color_vert_fonce, color_gris_fo
 from commun.constants.stylesheets import black_14_label_stylesheet,\
     red_14_bold_label_stylesheet,\
     black_14_bold_label_stylesheet
-from commun.model.bobine_fille import BobineFille
+from commun.model.bobine_fille_valid import BobineFilleValid
 from commun.constants.dimensions import dict_width_selector_bobine, width_search_bar
 
 from gestion.stores.settings_store import settings_store_gestion
 
 
 class LineBobine(MondonWidget):
-    ON_DBCLICK_SIGNAL = pyqtSignal(BobineFille)
+    ON_DBCLICK_SIGNAL = pyqtSignal(BobineFilleValid)
 
     def __init__(self, parent=None, bobine=None):
         super(LineBobine, self).__init__(parent=parent)
@@ -29,9 +29,15 @@ class LineBobine(MondonWidget):
         self.memo_button_press = 0
         self.setFocus()
         self.bobine = bobine
+        self.poses = QLabel()
         self.state = None
         self.installEventFilter(self)
         self.init_widget()
+        self.update_widget()
+
+    def update_widget(self):
+        poses_value = "Neutre" if self.bobine.valid_poses[0] == 0 else self.bobine.valid_poses
+        self.poses.setText(str(poses_value))
 
     def init_widget(self):
         hbox = QHBoxLayout()
@@ -58,11 +64,9 @@ class LineBobine(MondonWidget):
         length.setAlignment(Qt.AlignVCenter | Qt.AlignCenter)
         length.setStyleSheet(black_14_label_stylesheet)
         hbox.addWidget(length)
-        poses_value = "Neutre" if self.bobine.poses[0] == 0 else self.bobine.poses
-        poses = QLabel(str(poses_value))
-        poses.setAlignment(Qt.AlignVCenter | Qt.AlignCenter)
-        poses.setStyleSheet(black_14_label_stylesheet)
-        hbox.addWidget(poses)
+        self.poses.setAlignment(Qt.AlignVCenter | Qt.AlignCenter)
+        self.poses.setStyleSheet(black_14_label_stylesheet)
+        hbox.addWidget(self.poses)
         vente_mensuelle_value = 1 if 0 < self.bobine.vente_mensuelle < 1 else self.bobine.vente_mensuelle
         vente_mensuelle_value = str(int(vente_mensuelle_value))
         vente_mensuelle = QLabel(vente_mensuelle_value)

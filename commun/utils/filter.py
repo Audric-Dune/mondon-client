@@ -323,8 +323,10 @@ def filter_bobines_fille_for_contrainte(bobines_fille, contrainte):
 def filter_bobines_fille(bobines_fille, bobines_papier, refentes, bobines_fille_selected):
     new_bobines_fille = []
     for bobine_fille in bobines_fille:
-        if is_valid_bobine_fille(bobine_fille, bobines_fille, bobines_papier, refentes, bobines_fille_selected):
-            new_bobines_fille.append(bobine_fille)
+        from commun.model.bobine_fille_valid import BobineFilleValid
+        bobine_fille_valid = BobineFilleValid(bobine=bobine_fille)
+        if is_valid_bobine_fille(bobine_fille_valid, bobines_fille, bobines_papier, refentes, bobines_fille_selected):
+            new_bobines_fille.append(bobine_fille_valid)
     return new_bobines_fille
 
 
@@ -347,10 +349,12 @@ def is_valid_bobine_fille_and_bobine_papier(bobine_fille,
                                             refentes,
                                             bobines_fille_selected):
     for refente in refentes:
+        bobine_fille.init_valid_poses()
         if not is_valid_refente_for_bobine_papier(refente, bobine_papier):
             continue
         for pose in bobine_fille.poses:
             if not is_valid_bobine_fille_and_pose_for_refente(bobine_fille, pose, refente, bobines_fille_selected):
+                bobine_fille.valid_poses.remove(pose)
                 continue
             if bobines_fille_selected:
                     new_bobines_fille_selected = bobines_fille_selected.copy()
@@ -359,7 +363,6 @@ def is_valid_bobine_fille_and_bobine_papier(bobine_fille,
             from commun.model.bobine_fille_selected import BobineFilleSelected
             new_bobine_fille_selected = BobineFilleSelected(bobine=bobine_fille, pose=pose)
             new_bobines_fille_selected.append(new_bobine_fille_selected)
-
             if UTILISE_MATTHIS:
                 if is_valid_refente_bobines_fille_bobines_fille_selected(refente,
                                                                          bobines_fille,
