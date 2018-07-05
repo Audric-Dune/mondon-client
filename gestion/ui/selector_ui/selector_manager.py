@@ -29,7 +29,7 @@ class SelectorManager(QWidget):
 
     def init_widget(self):
         self.vbox.setContentsMargins(5, 5, 5, 5)
-        self.vbox.setSpacing(0)
+        self.vbox.setSpacing(10)
         self.setLayout(self.vbox)
 
     def on_data_type_changed(self):

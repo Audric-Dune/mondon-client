@@ -1,13 +1,14 @@
+# !/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QColor, QIcon, QFont
 
 from commun.constants.colors import color_gris_clair, color_rouge, color_noir
 from commun.stores.bobine_fille_store import bobine_fille_store
-
+from commun.utils.core_table import TableModel
 from gestion.stores.filter_store import filter_store
 from gestion.ui.selector_ui.selector_collum_filter import SelectorCollumFilter
-
-from test_tables.core import TableModel
 
 
 class BobineFilleTableModel(TableModel):

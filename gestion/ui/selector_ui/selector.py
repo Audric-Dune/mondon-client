@@ -1,21 +1,19 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtWidgets import QScrollArea, QVBoxLayout, QWidget
-from PyQt5.Qt import Qt, QSizePolicy
-
-from gestion.ui.line_in_selector.line_bobine import LineBobine
-from gestion.ui.line_in_selector.line_bobine_poly import LineBobinePoly
-from gestion.ui.line_in_selector.line_perfo import LinePerfo
-from gestion.ui.line_in_selector.line_refente import LineRefente
-from gestion.ui.selector_ui.selector_pose import SelectorPose
+from PyQt5.QtWidgets import QVBoxLayout
 
 from commun.constants.colors import color_bleu_gris
 from commun.constants.stylesheets import scroll_bar_stylesheet
 from commun.ui.public.mondon_widget import MondonWidget
 from gestion.stores.filter_store import filter_store
 from gestion.stores.settings_store import settings_store_gestion
+from gestion.ui.line_in_selector.line_bobine import LineBobine
 from gestion.ui.line_in_selector.line_bobine_papier import LineBobinePapier
+from gestion.ui.line_in_selector.line_bobine_poly import LineBobinePoly
+from gestion.ui.line_in_selector.line_perfo import LinePerfo
+from gestion.ui.line_in_selector.line_refente import LineRefente
+from gestion.ui.selector_ui.selector_pose import SelectorPose
 
 
 class Selector(MondonWidget):
@@ -38,11 +36,11 @@ class Selector(MondonWidget):
         self.master_vbox.setContentsMargins(0, 0, 0, 0)
         self.master_vbox.setSpacing(0)
         self.selector_pose = None
-        # self.vbox = QVBoxLayout()
-        # self.scroll_bar = QScrollArea(parent=self)
-        # self.scroll_bar.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        # self.content_scrollbar = QWidget(parent=self.scroll_bar)
-        # self.init_lists_lines()
+        self.vbox = QVBoxLayout()
+        self.scroll_bar = QScrollArea(parent=self)
+        self.scroll_bar.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.content_scrollbar = QWidget(parent=self.scroll_bar)
+        self.init_lists_lines()
         self.init_widget()
         self.update_widget()
 
@@ -92,28 +90,28 @@ class Selector(MondonWidget):
             self.lines_poly.append(line_bobine_poly)
 
     def init_widget(self):
-        # self.vbox.setContentsMargins(0, 0, 0, 0)
-        # self.vbox.setSpacing(5)
-        from test_tables.tables import BobineFilleTableModel
-        from test_tables.core import Table
-        self.master_vbox.addWidget(Table(model=BobineFilleTableModel(), parent=self))
-        # for line_bobine in self.lines_bobine:
-        #     self.vbox.addWidget(line_bobine)
-        # for line_refente in self.lines_refente:
-        #     self.vbox.addWidget(line_refente)
-        # for line_papier in self.lines_papier:
-        #     self.vbox.addWidget(line_papier)
-        # for line_poly in self.lines_poly:
-        #     self.vbox.addWidget(line_poly)
-        # for line_perfo in self.lines_perfo:
-        #     self.vbox.addWidget(line_perfo)
-        # self.vbox.addStretch()
-        # self.content_scrollbar.setLayout(self.vbox)
-        # self.content_scrollbar.setContentsMargins(0, 0, 0, 0)
-        # self.scroll_bar.setWidget(self.content_scrollbar)
-        # self.scroll_bar.setStyleSheet(scroll_bar_stylesheet)
-        # self.scroll_bar.setWidgetResizable(True)
-        # self.master_vbox.addWidget(self.scroll_bar)
+        self.vbox.setContentsMargins(0, 0, 0, 0)
+        self.vbox.setSpacing(5)
+        # from gestion.ui.selector_ui.bobine_fille_table_selector import BobineFilleTableSelector
+        # from commun.utils.core_table import Table
+        # self.master_vbox.addWidget(Table(model=BobineFilleTableSelector(self.plan_prod), parent=self))
+        for line_bobine in self.lines_bobine:
+            self.vbox.addWidget(line_bobine)
+        for line_refente in self.lines_refente:
+            self.vbox.addWidget(line_refente)
+        for line_papier in self.lines_papier:
+            self.vbox.addWidget(line_papier)
+        for line_poly in self.lines_poly:
+            self.vbox.addWidget(line_poly)
+        for line_perfo in self.lines_perfo:
+            self.vbox.addWidget(line_perfo)
+        self.vbox.addStretch()
+        self.content_scrollbar.setLayout(self.vbox)
+        self.content_scrollbar.setContentsMargins(0, 0, 0, 0)
+        self.scroll_bar.setWidget(self.content_scrollbar)
+        self.scroll_bar.setStyleSheet(scroll_bar_stylesheet)
+        self.scroll_bar.setWidgetResizable(True)
+        self.master_vbox.addWidget(self.scroll_bar)
         self.setLayout(self.master_vbox)
 
     def on_filter_changed(self):
