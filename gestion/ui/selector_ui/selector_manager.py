@@ -3,7 +3,7 @@
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QVBoxLayout, QWidget, QDesktopWidget
-from gestion.ui.selector_ui.selector import Selector
+from gestion.ui.selector_ui.selector_table import SelectorTable
 
 from gestion.stores.filter_store import filter_store
 from gestion.ui.selector_ui.selector_filter import SelectorFilter
@@ -17,7 +17,7 @@ class SelectorManager(QWidget):
         self.keyboardGrabber()
         self.vbox = QVBoxLayout()
         self.search_code = None
-        self.selector = Selector(parent=self, plan_prod=plan_prod)
+        self.selector = SelectorTable(parent=self, plan_prod=plan_prod)
         filter_store.ON_DATA_TYPE_CHANGED.connect(self.on_data_type_changed)
         self.init_widget()
 

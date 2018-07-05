@@ -1,8 +1,10 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QTableView, QAbstractItemView
-from PyQt5.QtCore import Qt, QAbstractTableModel, QVariant
+from PyQt5.QtCore import Qt, QAbstractTableModel, QVariant, pyqtSignal
 
 
 class Table(QWidget):
+    mouse_double_click_signal = pyqtSignal(int)
+
     def __init__(self, model, parent=None):
         """
         Crée une nouvelle table
@@ -14,7 +16,8 @@ class Table(QWidget):
         self.model = model
         vbox = QVBoxLayout()
 
-        self.table_view = QTableView(parent=self)
+        self.table_view = TableView(parent=self)
+        self.table_view.mouse_double_click_signal.connect(self.handle_mouse_double_click)
         self.table_view.verticalHeader().hide()
         self.table_view.horizontalHeader().hide()
         self.table_view.setShowGrid(False)
@@ -27,6 +30,23 @@ class Table(QWidget):
         vbox.setSpacing(0)
         vbox.addWidget(self.table_view, 1)
         self.setLayout(vbox)
+
+    def handle_mouse_double_click(self, index):
+        self.mouse_double_click_signal.emit(index)
+
+
+class TableView(QTableView):
+    mouse_double_click_signal = pyqtSignal(int)
+
+    def __init__(self, parent):
+        super(TableView, self).__init__(parent=parent)
+
+    def mouseDoubleClickEvent(self, *args, **kwargs):
+        index_double_click = self.selectionModel().currentIndex().row()
+        self.mouse_double_click_signal.emit(index_double_click)
+        self.update()
+        self.setVisible(False)
+        self.setVisible(True)
 
 
 class TableModel(QAbstractTableModel):
