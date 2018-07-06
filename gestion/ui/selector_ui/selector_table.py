@@ -46,7 +46,10 @@ class SelectorTable(MondonWidget):
         pass
 
     def get_bobine_with_index(self, index):
-        self.handle_selected_bobine(bobine=self.plan_prod.current_bobine_fille_store.bobines[index])
+        try:
+            self.handle_selected_bobine(bobine=self.plan_prod.current_bobine_fille_store.bobines[index])
+        except IndexError:
+            pass
 
     def handle_selected_bobine(self, bobine, pose=None):
         if pose:

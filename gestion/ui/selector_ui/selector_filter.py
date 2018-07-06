@@ -26,6 +26,7 @@ class SelectorFilter(MondonWidget):
 
     def init_widget(self):
         hbox = QHBoxLayout()
+        hbox.setContentsMargins(10, 10, 30, 10)
         hbox.setSpacing(10)
         if filter_store.data_type == "bobine":
             hbox.addLayout(self.get_search_bar())

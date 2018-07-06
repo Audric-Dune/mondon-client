@@ -17,7 +17,7 @@ class SelectorManager(QWidget):
         self.keyboardGrabber()
         self.vbox = QVBoxLayout()
         self.search_code = None
-        self.selector = SelectorTable(parent=self, plan_prod=plan_prod)
+        self.plan_prod = plan_prod
         filter_store.ON_DATA_TYPE_CHANGED.connect(self.on_data_type_changed)
         self.init_widget()
 
@@ -33,15 +33,12 @@ class SelectorManager(QWidget):
         self.setLayout(self.vbox)
 
     def on_data_type_changed(self):
-        items = (self.vbox.itemAt(i) for i in range(self.vbox.count()))
-        index = 0
-        for item in items:
-            if item and item.widget().objectName() == "SelectorFilter":
-                self.vbox.takeAt(index).widget().deleteLater()
-            index += 1
+        from commun.utils.layout import clear_layout
+        clear_layout(self.vbox)
+        selector = SelectorTable(parent=self, plan_prod=self.plan_prod)
         selector_filter = SelectorFilter(parent=self)
         self.vbox.addWidget(selector_filter)
-        self.vbox.addWidget(self.selector)
+        self.vbox.addWidget(selector)
 
     def show(self):
         super(SelectorManager, self).show()
