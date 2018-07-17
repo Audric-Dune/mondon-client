@@ -23,6 +23,8 @@ class SelectorTable(MondonWidget):
         super(SelectorTable, self).__init__(parent=parent)
         self.plan_prod = plan_prod
         self.parent = parent
+        self.table_bobine_fille = None
+        filter_store.ON_CHANGED_SIGNAL.connect(self.update_widget)
         self.background_color = color_bleu_gris
         self.master_vbox = QVBoxLayout()
         self.master_vbox.setContentsMargins(0, 0, 0, 0)
@@ -30,20 +32,20 @@ class SelectorTable(MondonWidget):
         self.selector_pose = None
         self.vbox = QVBoxLayout()
         self.init_widget()
-        self.update_widget()
 
     def init_widget(self):
         self.vbox.setContentsMargins(0, 0, 0, 0)
         self.vbox.setSpacing(5)
         from gestion.ui.selector_ui.bobine_fille_table_selector import BobineFilleTableSelector
         from commun.utils.core_table import Table
-        table_bobine_fille = Table(model=BobineFilleTableSelector(self.plan_prod), parent=self)
-        table_bobine_fille.mouse_double_click_signal.connect(self.get_bobine_with_index)
-        self.master_vbox.addWidget(table_bobine_fille)
+        self.table_bobine_fille = Table(model=BobineFilleTableSelector(self.plan_prod), parent=self)
+        self.table_bobine_fille.mouse_double_click_signal.connect(self.get_bobine_with_index)
+        self.master_vbox.addWidget(self.table_bobine_fille)
         self.setLayout(self.master_vbox)
 
     def update_widget(self):
-        pass
+        if self.table_bobine_fille is not None:
+            self.table_bobine_fille.refresh()
 
     def get_bobine_with_index(self, index):
         try:
@@ -59,4 +61,5 @@ class SelectorTable(MondonWidget):
         else:
             self.selector_pose = SelectorPose(self.handle_selected_bobine, bobine)
             self.selector_pose.show()
+        self.update_widget()
         settings_store_gestion.plan_prod.get_new_item_selected_from_store()

@@ -31,6 +31,10 @@ class Table(QWidget):
         vbox.addWidget(self.table_view, 1)
         self.setLayout(vbox)
 
+    def refresh(self):
+        self.model.refresh()
+        self.table_view.refresh_ui()
+
     def handle_mouse_double_click(self, index):
         self.mouse_double_click_signal.emit(index)
 
@@ -41,22 +45,26 @@ class TableView(QTableView):
     def __init__(self, parent):
         super(TableView, self).__init__(parent=parent)
 
-    def mouseDoubleClickEvent(self, *args, **kwargs):
-        index_double_click = self.selectionModel().currentIndex().row()
-        self.mouse_double_click_signal.emit(index_double_click)
+    def refresh_ui(self):
         self.update()
         self.setVisible(False)
         self.setVisible(True)
+
+    def mouseDoubleClickEvent(self, *args, **kwargs):
+        index_double_click = self.selectionModel().currentIndex().row()
+        self.mouse_double_click_signal.emit(index_double_click)
+        self.refresh_ui()
 
 
 class TableModel(QAbstractTableModel):
     def __init__(self):
         super(TableModel, self).__init__()
+        self.elements = []
 
     # Fonction à redéfinir dans les classe enfantes
 
     def get_elements(self):
-        return []
+        return self.elements
 
     def get_columns(self):
         return []
@@ -91,7 +99,7 @@ class TableModel(QAbstractTableModel):
     # Fonction interne utilisé par la QTableView
 
     def rowCount(self, parent):
-        return len(self.get_elements())
+        return len(self.elements)
 
     def columnCount(self, parent):
         return len(self.get_columns())
@@ -99,7 +107,7 @@ class TableModel(QAbstractTableModel):
     def data(self, index, role):
         if not index.isValid():
             return QVariant()
-        element = self.get_elements()[index.row()]
+        element = self.elements[index.row()]
         column = self.get_columns()[index.column()]
 
         if role == Qt.DisplayRole:

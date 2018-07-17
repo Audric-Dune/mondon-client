@@ -17,18 +17,23 @@ class BobineFilleTableSelector(TableModel):
     def __init__(self, plan_prod):
         super(BobineFilleTableSelector, self).__init__()
         self.plan_prod = plan_prod
+        self.elements = []
         self.column_code_width = width_search_bar
         self.column_widths = dict_width_selector_bobine
+        self.refresh()
+
+    def refresh(self):
+        self.elements = self.get_elements()
 
     def get_elements(self):
         """
         Définit la liste des objets à afficher dans la table
         """
-        # for bobine in self.plan_prod.current_bobine_fille_store.bobines:
-        #     if self.is_valid_bobine_from_filters(bobine) and self.is_valid_from_search_code(bobine):
-        #         elements.append(bobine)
+        import time
+        print("get_elements", time.time())
         elements = []
         for bobine in self.plan_prod.current_bobine_fille_store.bobines:
+            if self.is_valid_bobine_from_filters(bobine) and self.is_valid_from_search_code(bobine):
                 elements.append(bobine)
         return elements
 

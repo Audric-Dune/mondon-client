@@ -37,7 +37,8 @@ class BobineFilleTableModel(TableModel):
         self.plan_prod = plan_prod
 
     def refresh(self):
-        len_elements = len(self.get_elements())
+        self.elements = self.get_elements()
+        len_elements = len(self.elements)
         len_collums = len(self.get_columns())
         self.dataChanged.emit(self.createIndex(0, 0), self.createIndex(len_elements, len_collums))
 
