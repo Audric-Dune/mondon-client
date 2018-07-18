@@ -42,7 +42,7 @@ class SelectorTable(MondonWidget):
 
     def get_bobine_with_index(self, index):
         try:
-            self.handle_selected_bobine(bobine=self.plan_prod.current_bobine_fille_store.bobines[index])
+            self.handle_selected_bobine(bobine=self.table_bobine_fille.model.elements[index])
         except IndexError:
             pass
 

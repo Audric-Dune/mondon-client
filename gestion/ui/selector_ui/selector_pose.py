@@ -12,7 +12,7 @@ class SelectorPose(QWidget):
         self.setWindowFlags(Qt.Dialog)
         self.bobine = bobine
         self.handle_selected_bobine = handle_selected_bobine
-        self.poses = bobine.valid_poses
+        self.poses = bobine.poses
         self.init_widget()
 
     def init_widget(self):

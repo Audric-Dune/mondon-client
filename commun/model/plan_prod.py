@@ -44,6 +44,8 @@ class PlanProd(QObject):
         self.bobines_filles_selected = []
         self.bobine_papier_selected = None
         self.bobine_poly_selected = None
+        # if not p_id:
+        #     self.update_all_current_store()
 
     def __repr__(self):
         return "{}-{}, {}".format(timestamp_to_hour_little(self.start),

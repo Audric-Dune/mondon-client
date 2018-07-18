@@ -24,13 +24,21 @@ class BobineFilleTableSelector(TableModel):
 
     def refresh(self):
         self.elements = self.get_elements()
+        self.sort_bobine()
+
+    def sort_bobine(self):
+        self.elements = self.sort_item(self.elements, "code", True)
+        self.elements = self.sort_item(self.elements, filter_store.sort_name, filter_store.sort_asc)
+
+    @staticmethod
+    def sort_item(items, sort_name, sort_asc):
+        items = sorted(items, key=lambda b: b.get_value(sort_name), reverse=not sort_asc)
+        return items
 
     def get_elements(self):
         """
         Définit la liste des objets à afficher dans la table
         """
-        import time
-        print("get_elements", time.time())
         elements = []
         for bobine in self.plan_prod.current_bobine_fille_store.bobines:
             if self.is_valid_bobine_from_filters(bobine) and self.is_valid_from_search_code(bobine):
@@ -59,6 +67,8 @@ class BobineFilleTableSelector(TableModel):
         return Qt.AlignCenter | Qt.AlignVCenter
 
     def get_text(self, element, column):
+        if column == "poses":
+            return str(getattr(element, "valid_poses"))
         if column == "laize" or column == "vente_mensuelle"\
                 or column == "stock_at_time" or column == "stock_therme_at_time":
             return str(int(getattr(element, column)))

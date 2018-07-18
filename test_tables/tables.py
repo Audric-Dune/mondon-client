@@ -61,7 +61,6 @@ class BobineFilleTableModel(TableModel):
         """
         try:
             index = filter_store.list_filter_bobine_fille.index(column)
-            print(index)
             return SelectorCollumFilter(parent=None,
                                         title=filter_store.title_filter_bobine_fille[index],
                                         name_filter=filter_store.list_filter_bobine_fille[index],
