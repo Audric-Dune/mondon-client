@@ -7,6 +7,7 @@ from gestion.ui.selector_ui.selector_table import SelectorTable
 
 from gestion.stores.filter_store import filter_store
 from gestion.ui.selector_ui.selector_filter import SelectorFilter
+from gestion.ui.selector_ui.selector import Selector
 
 
 class SelectorManager(QWidget):
@@ -35,7 +36,10 @@ class SelectorManager(QWidget):
     def on_data_type_changed(self):
         from commun.utils.layout import clear_layout
         clear_layout(self.vbox)
-        selector = SelectorTable(parent=self, plan_prod=self.plan_prod)
+        if filter_store.data_type == "bobine":
+            selector = SelectorTable(parent=self, plan_prod=self.plan_prod)
+        else:
+            selector = Selector(parent=self, plan_prod=self.plan_prod)
         selector_filter = SelectorFilter(parent=self)
         self.vbox.addWidget(selector_filter)
         self.vbox.addWidget(selector)

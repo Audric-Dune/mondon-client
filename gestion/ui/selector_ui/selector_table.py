@@ -1,19 +1,12 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtWidgets import QVBoxLayout, QWidget, QScrollArea
-from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QVBoxLayout
 
 from commun.constants.colors import color_bleu_gris
-from commun.constants.stylesheets import scroll_bar_stylesheet
 from commun.ui.public.mondon_widget import MondonWidget
 from gestion.stores.filter_store import filter_store
 from gestion.stores.settings_store import settings_store_gestion
-from gestion.ui.line_in_selector.line_bobine import LineBobine
-from gestion.ui.line_in_selector.line_bobine_papier import LineBobinePapier
-from gestion.ui.line_in_selector.line_bobine_poly import LineBobinePoly
-from gestion.ui.line_in_selector.line_perfo import LinePerfo
-from gestion.ui.line_in_selector.line_refente import LineRefente
 from gestion.ui.selector_ui.selector_pose import SelectorPose
 
 
