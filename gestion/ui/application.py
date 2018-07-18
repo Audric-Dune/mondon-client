@@ -175,6 +175,7 @@ class Application(QApplication):
     def extract_bobine_from_line(sheet, current_row, last_bobine_id):
         current_id = sheet.cell_value(current_row, 1)
         current_laize = sheet.cell_value(current_row, 3)
+        current_laize = 173.3 if current_laize == 173 else current_laize
         if current_id == last_bobine_id or current_laize == "":
             return
         else:

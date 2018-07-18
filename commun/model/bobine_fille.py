@@ -132,10 +132,10 @@ class BobineFille:
             return self.color
         if value_name == "gr":
             return self.gr
-        if value_name == "stock":
-            return self.stock
-        if value_name == "stock_therme":
-            return self.stock_therme
+        if value_name == "stock_at_time":
+            return self.stock_at_time
+        if value_name == "stock_therme_at_time":
+            return self.stock_therme_at_time
         if value_name == "vente_mensuelle":
             return self.vente_mensuelle
         return 0

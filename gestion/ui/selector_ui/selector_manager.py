@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QVBoxLayout, QWidget, QDesktopWidget
+from PyQt5.QtWidgets import QVBoxLayout, QWidget, QDesktopWidget, QSizePolicy
 from gestion.ui.selector_ui.selector_table import SelectorTable
 
 from gestion.stores.filter_store import filter_store
@@ -43,6 +43,7 @@ class SelectorManager(QWidget):
         selector_filter = SelectorFilter(parent=self)
         self.vbox.addWidget(selector_filter)
         self.vbox.addWidget(selector)
+        self.setFixedWidth(self.sizeHint().width())
 
     def show(self):
         super(SelectorManager, self).show()
