@@ -5,7 +5,7 @@ from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtWidgets import QHBoxLayout, QLabel
 
 from commun.constants.colors import color_bleu_gris
-from commun.constants.stylesheets import button_stylesheet, white_22_label_stylesheet, button_red_stylesheet
+from commun.constants.stylesheets import button_stylesheet, white_22_label_stylesheet
 from commun.ui.public.mondon_widget import MondonWidget
 from commun.ui.public.pixmap_button import PixmapButton
 from commun.utils.timestamp import timestamp_at_day_ago, timestamp_to_date
