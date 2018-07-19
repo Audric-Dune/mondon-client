@@ -128,6 +128,7 @@ class SettingsStore(QObject):
         if start_prod:
             plan_prod = PlanProd(start=start_prod)
             self.set(plan_prod=plan_prod)
+            self.update_stock_bobines_at_time()
             self.CREATE_PLAN_PROD_WINDOW.emit()
 
     def edit_plan_prod(self, plan_prod):

@@ -42,6 +42,7 @@ class BobineFilleTableSelector(TableModel):
         elements = []
         for bobine in self.plan_prod.current_bobine_fille_store.bobines:
             if self.is_valid_bobine_from_filters(bobine) and self.is_valid_from_search_code(bobine):
+                bobine.get_stock_at_time(time=self.plan_prod.start)
                 elements.append(bobine)
         return elements
 

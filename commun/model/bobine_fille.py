@@ -87,11 +87,12 @@ class BobineFille:
             self.etat = "SURSTOCK"
 
     def get_stock_at_time(self, day_ago=None, time=None):
-        def get_bobine_in_plan_prod(p_bobine, p_plan_prod):
+        def get_piste_in_plan_prod(p_bobine, p_plan_prod):
+            piste = 0
             for p_bobine_in_plan_prod in p_plan_prod.bobines_filles_selected:
                 if p_bobine.code == p_bobine_in_plan_prod.code:
-                    return p_bobine_in_plan_prod
-            return None
+                    piste += 1 if p_bobine_in_plan_prod.pose == 0 else p_bobine_in_plan_prod.pose
+            return piste if piste > 0 else None
         if day_ago is None and not time:
             return
         from gestion.stores.plan_prod_store import plan_prod_store
@@ -100,12 +101,11 @@ class BobineFille:
         from commun.utils.timestamp import timestamp_at_day_ago
         ts = time if time else timestamp_at_day_ago(day_ago)
         for plan_prod in plan_prod_store.plans_prods:
-            if plan_prod.start < ts:
-                bobine_in_plan_prod = get_bobine_in_plan_prod(self, plan_prod)
-                if bobine_in_plan_prod:
-                    pose = bobine_in_plan_prod.pose if bobine_in_plan_prod.pose else 1
-                    stock += pose * plan_prod.tours
-                    stock_therme += pose * plan_prod.tours
+            if timestamp_at_day_ago(0) <= plan_prod.start < ts:
+                piste_in_plan_prod = get_piste_in_plan_prod(self, plan_prod)
+                if piste_in_plan_prod:
+                    stock += piste_in_plan_prod * plan_prod.tours
+                    stock_therme += piste_in_plan_prod * plan_prod.tours
         if day_ago is not None:
             self.stock_at_day_ago = stock
             self.stock_therme_at_day_ago = stock_therme
