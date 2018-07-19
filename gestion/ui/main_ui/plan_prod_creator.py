@@ -41,6 +41,7 @@ class PlanProdCreator(QWidget):
     def init_ui(self):
         master_vbox = QVBoxLayout()
         vbox = QVBoxLayout()
+        vbox.setContentsMargins(0, 0, 0, 0)
         vbox.addWidget(self.bloc_refente_selected)
         vbox.addWidget(self.bloc_papier_selected)
         vbox.addWidget(self.bloc_perfo_selected)

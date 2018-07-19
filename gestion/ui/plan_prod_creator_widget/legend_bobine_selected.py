@@ -18,9 +18,9 @@ class LegendBobineSelected(QWidget):
     def init_widget(self):
         hbox = QHBoxLayout()
         hbox.setContentsMargins(0, 5, 0, 5)
-        hbox.addWidget(self.get_label("Code", center=False))
-        hbox.addWidget(self.get_label("Laize"))
-        hbox.addWidget(self.get_label("Piste"))
+        hbox.addWidget(self.get_label("Code", center=False, width=200))
+        hbox.addWidget(self.get_label("Laize", width=80))
+        hbox.addWidget(self.get_label("Piste", width=80))
         hbox.addWidget(self.get_label("Stock actuel"))
         hbox.addWidget(self.get_label("Stock à therme"))
         hbox.addWidget(self.get_label("Production"))
@@ -29,7 +29,7 @@ class LegendBobineSelected(QWidget):
         self.setLayout(hbox)
 
     @staticmethod
-    def get_label(text, vcenter=True, center=True):
+    def get_label(text, vcenter=True, center=True, width=None):
         label = QLabel(text)
         if center and not vcenter:
             label.setAlignment(Qt.AlignVCenter)
@@ -38,6 +38,8 @@ class LegendBobineSelected(QWidget):
         else:
             label.setAlignment(Qt.AlignVCenter | Qt.AlignCenter)
         label.setStyleSheet(black_14_label_stylesheet)
+        if width is not None:
+            label.setFixedWidth(width)
         return label
 
     def paintEvent(self, event):

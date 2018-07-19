@@ -43,6 +43,9 @@ class BobineFilleTableSelector(TableModel):
         for bobine in self.plan_prod.current_bobine_fille_store.bobines:
             if self.is_valid_bobine_from_filters(bobine) and self.is_valid_from_search_code(bobine):
                 elements.append(bobine)
+            else:
+                print(bobine.code)
+                print(bobine.poses)
         return elements
 
     def get_columns(self):
@@ -94,9 +97,13 @@ class BobineFilleTableSelector(TableModel):
             return False
 
     def is_valid_bobine_from_filters(self, bobine):
+        index = 0
         for name in filter_store.list_filter_bobine_fille:
+            if not filter_store.filter_mode_bobine_fille[index]:
+                continue
             if not self.is_valid_bobine_from_filter(bobine, name):
                 return False
+            index += 1
         return True
 
     @staticmethod
