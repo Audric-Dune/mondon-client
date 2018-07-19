@@ -43,9 +43,6 @@ class BobineFilleTableSelector(TableModel):
         for bobine in self.plan_prod.current_bobine_fille_store.bobines:
             if self.is_valid_bobine_from_filters(bobine) and self.is_valid_from_search_code(bobine):
                 elements.append(bobine)
-            else:
-                print(bobine.code)
-                print(bobine.poses)
         return elements
 
     def get_columns(self):

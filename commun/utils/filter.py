@@ -348,7 +348,7 @@ def is_valid_bobine_fille_and_bobine_papier(bobine_fille,
                                             bobine_papier,
                                             refentes,
                                             bobines_fille_selected):
-    available_pose = get_available_pose(bobine=bobine_fille)
+    available_pose = bobine_fille.poses
     bobine_fille.valid_poses = []
     for refente in refentes:
         if not is_valid_refente_for_bobine_papier(refente, bobine_papier):
@@ -367,7 +367,6 @@ def is_valid_bobine_fille_and_bobine_papier(bobine_fille,
             from commun.model.bobine_fille_selected import BobineFilleSelected
             new_bobine_fille_selected = BobineFilleSelected(bobine=bobine_fille, pose=pose)
             new_bobines_fille_selected.append(new_bobine_fille_selected)
-
             if is_valid_refente_bobines_fille_bobines_fille_selected(refente,
                                                                      bobines_fille,
                                                                      new_bobines_fille_selected):
@@ -454,7 +453,7 @@ def is_valid_bobine_fille_and_pose_for_refente(bobine_fille,
 def is_valid_bobine_fille_for_bobines_fille(bobine_fille, bobines_fille):
     if not bobines_fille:
         return True
-    poses = bobine_fille.poses
+    poses = bobine_fille.poses.copy()
     for bobine_fille_contrainte in bobines_fille:
         if not is_valid_bobine_fille_for_bobine_fille(bobine_fille, bobine_fille_contrainte):
             return False
@@ -521,29 +520,3 @@ def is_valid_perfo_for_refentes(perfo, refentes):
         if perfo.code == refente.code_perfo:
             return True
     return False
-
-
-# FILTRE POSE
-
-
-def filter_poses_in_bobines_fille_for_refentes(bobines_fille, refentes, bobines_fille_selected):
-    for bobines_fille in bobines_fille:
-        filter_poses_in_bobine_fille_for_refentes(bobines_fille, refentes, bobines_fille_selected)
-
-
-def filter_poses_in_bobine_fille_for_refentes(bobine_fille, refentes, bobines_fille_selected):
-    list_poses = []
-    for refente in refentes:
-        new_poses = []
-        for pose in bobine_fille.poses:
-            if is_valid_bobine_fille_and_pose_for_refente(bobine_fille, pose, refente, bobines_fille_selected):
-                new_poses.append(pose)
-        list_poses.append(new_poses)
-    for pose in bobine_fille.poses:
-        pose_in_list_poses = False
-        for poses in list_poses:
-            if pose in poses:
-                pose_in_list_poses = True
-                break
-        if not pose_in_list_poses:
-            bobine_fille.poses.remove(pose)

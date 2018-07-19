@@ -14,8 +14,9 @@ class BobineFilleValid:
             return getattr(self.bobine, attr)
 
     def __repr__(self):
-        return '{}, {}, {}, {}, {}'.format(self.code,
-                                           self.laize,
-                                           self.color,
-                                           self.gr,
-                                           self.length)
+        return '{}, {}, {}, {}, {}, {}'.format(self.code,
+                                               self.laize,
+                                               self.color,
+                                               self.gr,
+                                               self.length,
+                                               self.poses)

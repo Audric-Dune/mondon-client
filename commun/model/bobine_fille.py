@@ -141,4 +141,4 @@ class BobineFille:
         return 0
 
     def __repr__(self):
-        return 'B({}, {}, {}, {}, {}, {})'.format(self.code, self.laize, self.poses, self.color, self.gr, self.length)
+        return '{}, {}, {}, {}, {}, {}'.format(self.code, self.laize, self.poses, self.color, self.gr, self.length)
