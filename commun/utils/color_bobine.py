@@ -11,7 +11,8 @@ from commun.constants.colors import \
     bob_prune,\
     bob_rouge,\
     bob_vert,\
-    color_bleu_gris
+    color_bleu_gris,\
+    bob_poly
 
 
 def get_color_bobine(bobine_color):
@@ -36,4 +37,6 @@ def get_color_bobine(bobine_color):
         color = bob_jaune
     if bobine_color == "Ivoire":
         color = bob_ivoire
+    if bobine_color == "Polypro":
+        color = bob_poly
     return color
