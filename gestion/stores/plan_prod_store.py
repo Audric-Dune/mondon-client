@@ -7,6 +7,7 @@ from PyQt5.QtCore import QObject
 from commun.lib.base_de_donnee import Database
 from commun.utils.timestamp import timestamp_at_day_ago
 from commun.stores.bobine_papier_store import bobine_papier_store
+from commun.stores.bobine_poly_store import bobine_poly_store
 from commun.stores.refente_store import refente_store
 from commun.stores.bobine_fille_store import bobine_fille_store
 from commun.model.plan_prod import PlanProd
@@ -32,6 +33,7 @@ class PlanProdStore(QObject):
             if start_ts < plan_prod[1]:
                 new_plan_prod = PlanProd(start=plan_prod[1], p_id=plan_prod[0])
                 new_plan_prod.bobine_papier_selected = self.get_bobine_papier(code=plan_prod[4])
+                new_plan_prod.bobine_poly_selected = self.get_bobine_poly(code=plan_prod[7])
                 new_plan_prod.refente_selected = self.get_refente(code=plan_prod[5])
                 new_plan_prod.tours = plan_prod[2]
                 new_plan_prod.longueur = plan_prod[3]
@@ -48,6 +50,12 @@ class PlanProdStore(QObject):
     @staticmethod
     def get_bobine_papier(code):
         for bobine in bobine_papier_store.bobines:
+            if bobine.code == code:
+                return bobine
+
+    @staticmethod
+    def get_bobine_poly(code):
+        for bobine in bobine_poly_store.bobines:
             if bobine.code == code:
                 return bobine
 

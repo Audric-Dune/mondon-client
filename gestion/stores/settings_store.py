@@ -107,20 +107,33 @@ class SettingsStore(QObject):
     def set(self, day_ago=None, plan_prod=None):
         if day_ago is not None:
             self.day_ago = day_ago
+            self.update_stock_bobines()
         if plan_prod:
             self.plan_prod = plan_prod
-        self.update_stock_bobines()
+            self.update_stock_bobines_at_time()
         self.SETTINGS_CHANGED_SIGNAL.emit()
 
     def update_stock_bobines(self):
         from commun.stores.bobine_fille_store import bobine_fille_store
+        from commun.stores.bobine_papier_store import bobine_papier_store
+        from commun.stores.bobine_poly_store import bobine_poly_store
         for bobine in bobine_fille_store.bobines:
             bobine.get_stock_at_time(day_ago=self.day_ago)
+        for bobine_papier in bobine_papier_store.bobines:
+            bobine_papier.get_stock_at_time(day_ago=self.day_ago)
+        for bobine_poly in bobine_poly_store.bobines:
+            bobine_poly.get_stock_at_time(day_ago=self.day_ago)
 
     def update_stock_bobines_at_time(self):
         from commun.stores.bobine_fille_store import bobine_fille_store
+        from commun.stores.bobine_papier_store import bobine_papier_store
+        from commun.stores.bobine_poly_store import bobine_poly_store
         for bobine in bobine_fille_store.bobines:
             bobine.get_stock_at_time(time=self.plan_prod.start)
+        for bobine_papier in bobine_papier_store.bobines:
+            bobine_papier.get_stock_at_time(time=self.plan_prod.start)
+        for bobine_poly in bobine_poly_store.bobines:
+            bobine_poly.get_stock_at_time(time=self.plan_prod.start)
 
     def create_new_plan(self):
         from commun.model.plan_prod import PlanProd
@@ -213,7 +226,8 @@ class SettingsStore(QObject):
                                   refente=self.plan_prod.refente_selected.code,
                                   start=self.plan_prod.start,
                                   longueur=self.plan_prod.longueur,
-                                  tours=self.plan_prod.tours)
+                                  tours=self.plan_prod.tours,
+                                  bobine_poly=self.plan_prod.bobine_poly_selected.code)
         self.plan_prod = None
         self.SETTINGS_CHANGED_SIGNAL.emit()
 
@@ -224,7 +238,8 @@ class SettingsStore(QObject):
                                   refente=plan_prod.refente_selected.code,
                                   start=plan_prod.start,
                                   longueur=plan_prod.longueur,
-                                  tours=plan_prod.tours)
+                                  tours=plan_prod.tours,
+                                  bobine_poly=plan_prod.bobine_poly_selected.code)
 
     def update_plan_prod_on_database(self, plan_prod):
         code_bobines_selected = self.get_code_bobine_selected(plan_prod.bobines_filles_selected)
@@ -234,7 +249,8 @@ class SettingsStore(QObject):
                                   refente=plan_prod.refente_selected.code,
                                   start=plan_prod.start,
                                   longueur=plan_prod.longueur,
-                                  tours=plan_prod.tours)
+                                  tours=plan_prod.tours,
+                                  bobine_poly=plan_prod.bobine_poly_selected.code)
         self.SETTINGS_CHANGED_SIGNAL.emit()
 
     def save_event(self, event):

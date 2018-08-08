@@ -45,7 +45,6 @@ class Application(QApplication):
         super(Application, self).__init__(argv)
         self.main_window = None
         self.read_xls()
-        self.read_xlsm()
         self.init_refente_store()
         self.init_perfo_store()
         self.init_ui()
@@ -96,6 +95,7 @@ class Application(QApplication):
         self.get_cliche_from_xls()
         self.get_bobine_fille_from_xls()
         self.get_vente_annuelle_from_xls()
+        self.get_bobine_mere_from_xls()
 
     def get_cliche_from_xls(self):
         xls = open_xls('ARTICLE CLICHE.xls')
@@ -124,6 +124,15 @@ class Application(QApplication):
         current_row = 0
         while current_row < max_row:
             self.extract_vente_from_line(sheet, current_row)
+            current_row += 1
+
+    def get_bobine_mere_from_xls(self):
+        xls = open_xls('ARTICLE BOBINE MERE.xls')
+        sheet = xls.sheet_by_name("Sage")
+        max_row = sheet.nrows
+        current_row = 0
+        while current_row < max_row:
+            self.extract_bobine_mere_from_line(sheet, current_row)
             current_row += 1
 
     def extract_vente_from_line(self, sheet, current_row):
@@ -206,37 +215,60 @@ class Application(QApplication):
             current_bobine.update_bobine_from_cliche()
             bobine_fille_store.add_bobine(current_bobine)
 
-    def read_xlsm(self):
-        xls = open_xls('Etude stock bobine V5 MASTER 18-02-23.xlsm')
-        for sheet in xls.sheets():
-            if sheet.name == "TYPE BOBINE MERE":
-                start_ligne = 1
-                current_ligne = start_ligne
-                while current_ligne < sheet.nrows:
-                    if sheet.cell_value(current_ligne, 1) == "":
-                        break
-                    else:
-                        code = sheet.cell_value(current_ligne, 3)
-                        color = str(sheet.cell_value(current_ligne, 1)).title()
-                        gr = self.get_gr_bobine_mere(gr=sheet.cell_value(current_ligne, 5),
-                                                     color=sheet.cell_value(current_ligne, 1))
-                        bobine_mere = BobineMere(code=code,
-                                                 color=color,
-                                                 laize=sheet.cell_value(current_ligne, 0),
-                                                 gr=gr,
-                                                 length=sheet.cell_value(current_ligne, 6))
-                        if color == "Poly":
-                            bobine_poly_store.add_bobine(bobine_mere)
-                        else:
-                            bobine_papier_store.add_bobine(bobine_mere)
-                    current_ligne += 1
-
     @staticmethod
-    def get_gr_bobine_mere(gr, color):
-        if gr != "" and color != "POLY":
-            return gr
-        elif color == "POLY":
-            return "20µ"
+    def extract_bobine_mere_from_line(sheet, current_row):
+        code = sheet.cell_value(current_row, 1)
+        laize = sheet.cell_value(current_row, 3)
+        length = sheet.cell_value(current_row, 4)
+        color = sheet.cell_value(current_row, 10)
+        gr = sheet.cell_value(current_row, 5) if color != "POLYPRO" else "20µ"
+        stock = sheet.cell_value(current_row, 6)
+        stock_therme = sheet.cell_value(current_row, 7)
+        sommeil = sheet.cell_value(current_row, 9)
+        if sommeil == 0 and code and laize:
+            bobine_mere = BobineMere(code=code,
+                                     laize=laize,
+                                     length=length,
+                                     color=color,
+                                     gr=gr,
+                                     stock=stock,
+                                     stock_therme=stock_therme)
+            if color == "POLYPRO":
+                bobine_poly_store.add_bobine(bobine_mere)
+            else:
+                bobine_papier_store.add_bobine(bobine_mere)
+
+    # def read_xlsm(self):
+    #     xls = open_xls('Etude stock bobine V5 MASTER 18-02-23.xlsm')
+    #     for sheet in xls.sheets():
+    #         if sheet.name == "TYPE BOBINE MERE":
+    #             start_ligne = 1
+    #             current_ligne = start_ligne
+    #             while current_ligne < sheet.nrows:
+    #                 if sheet.cell_value(current_ligne, 1) == "":
+    #                     break
+    #                 else:
+    #                     code = sheet.cell_value(current_ligne, 3)
+    #                     color = str(sheet.cell_value(current_ligne, 1)).title()
+    #                     gr = self.get_gr_bobine_mere(gr=sheet.cell_value(current_ligne, 5),
+    #                                                  color=sheet.cell_value(current_ligne, 1))
+    #                     bobine_mere = BobineMere(code=code,
+    #                                              color=color,
+    #                                              laize=sheet.cell_value(current_ligne, 0),
+    #                                              gr=gr,
+    #                                              length=sheet.cell_value(current_ligne, 6))
+    #                     if color == "Poly":
+    #                         bobine_poly_store.add_bobine(bobine_mere)
+    #                     else:
+    #                         bobine_papier_store.add_bobine(bobine_mere)
+    #                 current_ligne += 1
+
+    # @staticmethod
+    # def get_gr_bobine_mere(gr, color):
+    #     if gr != "" and color != "POLY":
+    #         return gr
+    #     elif color == "POLY":
+    #         return "20µ"
 
     @staticmethod
     def is_sommeil(sommeil):

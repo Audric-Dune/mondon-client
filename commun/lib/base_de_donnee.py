@@ -374,29 +374,33 @@ class Database:
         return data_perfo
 
     @classmethod
-    def create_plan_prod(cls, start, refente, bobine_papier, code_bobines_selected, longueur, tours):
-        query = "INSERT INTO mondon_plan_prod (refente,bobine_papier,start,code_bobines_selected,longueur,tours) " \
-                "VALUES (?, ?, ?, ?, ?, ?)".format(refente, bobine_papier, start, code_bobines_selected, longueur, tours)
+    def create_plan_prod(cls, start, refente, bobine_papier, code_bobines_selected, longueur, tours, bobine_poly):
+        query = "INSERT INTO mondon_plan_prod (refente,bobine_papier,start,code_bobines_selected," \
+                "longueur,tours,bobine_poly) " \
+                "VALUES (?, ?, ?, ?, ?, ?, ?)".format(refente, bobine_papier, start,
+                                                      code_bobines_selected, longueur, tours, bobine_poly)
         try:
-            cls.run_query(query, (refente, bobine_papier, start, code_bobines_selected, longueur, tours))
+            cls.run_query(query, (refente, bobine_papier, start, code_bobines_selected, longueur, tours, bobine_poly))
         except sqlite3.IntegrityError as e:
             logger.log("DATABASE", "(Ignorée) IntegrityError: {}".format(e))
             pass
 
     @classmethod
     def get_plan_prod(cls):
-        query = "SELECT id, start, tours, longueur, bobine_papier, refente, code_bobines_selected FROM mondon_plan_prod"
+        query = "SELECT id, start, tours, longueur, bobine_papier, refente, code_bobines_selected, bobine_poly " \
+                "FROM mondon_plan_prod"
         data_plan_prod = cls.run_query(query, ())
         return data_plan_prod
 
     @classmethod
-    def update_plan_prod(cls, p_id, start, refente, bobine_papier, code_bobines_selected, longueur, tours):
+    def update_plan_prod(cls, p_id, start, refente, bobine_papier, code_bobines_selected, longueur, tours, bobine_poly):
         query = "UPDATE mondon_plan_prod " \
-                "SET start = ?, refente = ?, bobine_papier = ?, code_bobines_selected = ?, longueur = ?, tours = ? " \
-                "WHERE id = ? " \
-            .format(start, refente, bobine_papier, code_bobines_selected, longueur, tours, p_id)
+                "SET start = ?, refente = ?, bobine_papier = ?, code_bobines_selected = ?, longueur = ?, tours = ?," \
+                "bobine_poly = ? WHERE id = ? " \
+            .format(start, refente, bobine_papier, code_bobines_selected, longueur, tours, bobine_poly, p_id)
         try:
-            cls.run_query(query, (start, refente, bobine_papier, code_bobines_selected, longueur, tours, p_id))
+            cls.run_query(query, (start, refente, bobine_papier, code_bobines_selected,
+                                  longueur, tours, bobine_poly, p_id))
         except sqlite3.IntegrityError as e:
             # IntegrityError veut dire que l'on essaye d'insérer une vitesse avec un timestamp
             # qui existe déjà dans la base de données.

@@ -23,15 +23,15 @@ class FilterStore(QObject):
         self.filter_mode_bobine_fille = [True, True, True, True, False, False, False, False, True, True]
         self.sort_mode_bobine_fille = [True, True, True, True, False, True, True, True, False, False]
         # FILTER POLY
-        self.list_filter_poly = ["code", "laize", "length", "famille"]
-        self.title_filter_poly = ["Code", "Laize", "Longueur", "Famille"]
-        self.filter_mode_poly = [False, False, False, False]
-        self.sort_mode_poly = [True, True, True, False]
+        self.list_filter_poly = ["code", "laize", "length", "famille", "stock_at_time", "stock_therme_at_time"]
+        self.title_filter_poly = ["Code", "Laize", "Longueur", "Famille", "Stock", "Stock à therme"]
+        self.filter_mode_poly = [False, False, False, False, False, False]
+        self.sort_mode_poly = [True, True, True, False, True, True]
         # FILTER BOBINE PAPIER
-        self.list_filter_papier = ["code", "laize", "color", "gr", "length"]
-        self.title_filter_papier = ["Code", "Laize", "Couleur", "Grammage", "Longueur"]
-        self.filter_mode_papier = [False, True, True, True, True]
-        self.sort_mode_papier = [True, True, True, True, True]
+        self.list_filter_papier = ["code", "laize", "color", "gr", "length", "stock_at_time", "stock_therme_at_time"]
+        self.title_filter_papier = ["Code", "Laize", "Couleur", "Grammage", "Longueur", "Stock", "Stock à therme"]
+        self.filter_mode_papier = [False, True, True, True, True, False, False]
+        self.sort_mode_papier = [True, True, True, True, True, True, True]
         # FILTER REFENTE
         self.list_filter_refente = ["code_perfo", "laize_fille", "laize"]
         self.title_filter_refente = ["Code perfo.", "Laize bobine fille", "Laize bobine mère"]

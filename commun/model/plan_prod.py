@@ -58,6 +58,7 @@ class PlanProd(QObject):
         self.refente_selected = plan_prod.refente_selected
         self.bobines_filles_selected = plan_prod.bobines_filles_selected
         self.bobine_papier_selected = plan_prod.bobine_papier_selected
+        self.bobine_poly_selected = plan_prod.bobine_poly_selected
 
     def get_start(self):
         return self.start

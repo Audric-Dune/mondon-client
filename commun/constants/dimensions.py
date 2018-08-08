@@ -42,7 +42,9 @@ dict_width_selector_bobine = {"laize": 100, "color": 120, "gr": 120, "length": 1
                               "vente_mensuelle": 150, "stock_at_time": 100, "stock_therme_at_time": 150, "etat": 120,
                               "sommeil": 100}
 dict_width_selector_refente = {"code_perfo": 120, "laize_fille": 1000, "laize": 160}
-dict_width_selector_poly = {"code": 120, "laize": 120, "length": 120, "famille": 120}
-dict_width_selector_papier = {"code": 120, "laize": 120, "color": 120, "gr": 120, "length": 100}
+dict_width_selector_poly = {"code": 120, "laize": 120, "length": 120, "famille": 120,
+                            "stock_at_time": 100, "stock_therme_at_time": 150}
+dict_width_selector_papier = {"code": 120, "laize": 120, "color": 120, "gr": 120, "length": 100,
+                              "stock_at_time": 100, "stock_therme_at_time": 150}
 dict_width_line_bobine_selected = {"code": 120, "laize": 100, "quantite": 100, "stock_actu": 100, "stock_therme": 100,
                                    "prod": 100, "stock_prev": 100, "etat_prev": 100}

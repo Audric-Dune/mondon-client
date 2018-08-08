@@ -45,6 +45,14 @@ class LineBobinePoly(LineSelector):
         famille.setStyleSheet(black_14_label_stylesheet)
         famille.setAlignment(Qt.AlignCenter)
         hbox.addWidget(famille)
+        stock_at_time = QLabel(str(self.bobine.stock_at_time))
+        stock_at_time.setStyleSheet(black_14_label_stylesheet)
+        stock_at_time.setAlignment(Qt.AlignCenter)
+        hbox.addWidget(stock_at_time)
+        stock_therme_at_time = QLabel(str(self.bobine.stock_therme_at_time))
+        stock_therme_at_time.setStyleSheet(black_14_label_stylesheet)
+        stock_therme_at_time.setAlignment(Qt.AlignCenter)
+        hbox.addWidget(stock_therme_at_time)
         for key in dict_width_selector_poly.keys():
             vars()[key].setMinimumWidth(dict_width_selector_poly[key])
 
