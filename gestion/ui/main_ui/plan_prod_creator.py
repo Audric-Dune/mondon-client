@@ -13,6 +13,7 @@ from gestion.ui.selector_ui.selector_manager import SelectorManager
 from gestion.stores.filter_store import filter_store
 from gestion.stores.settings_store import settings_store_gestion
 from gestion.ui.plan_prod_creator_widget.bloc_param_prod import BlocParamProd
+from gestion.ui.plan_prod_creator_widget.line_encrier import LineEncrier
 
 
 class PlanProdCreator(QWidget):
@@ -28,6 +29,9 @@ class PlanProdCreator(QWidget):
         self.selector_manager.hide()
         self.bloc_param_prod = BlocParamProd(plan_prod=self.plan_prod, parent=self)
         self.titre_prod = QLabel("NOUVELLE PRODUCTION")
+        self.line_encrier_1 = LineEncrier(parent=self, encrier=self.plan_prod.encrier_1)
+        self.line_encrier_2 = LineEncrier(parent=self, encrier=self.plan_prod.encrier_2)
+        self.line_encrier_3 = LineEncrier(parent=self, encrier=self.plan_prod.encrier_3)
         self.bloc_poly_selected = BlocSelected(data_type="poly", parent=self, callback=self.show_selector)
         self.bloc_papier_selected = BlocSelected(data_type="papier", parent=self, callback=self.show_selector)
         self.bloc_perfo_selected = BlocSelected(data_type="perfo", parent=self, callback=self.show_selector)
@@ -43,6 +47,9 @@ class PlanProdCreator(QWidget):
         vbox = QVBoxLayout()
         vbox.setContentsMargins(0, 0, 0, 0)
         vbox.addWidget(self.bloc_refente_selected)
+        vbox.addWidget(self.line_encrier_3)
+        vbox.addWidget(self.line_encrier_2)
+        vbox.addWidget(self.line_encrier_1)
         vbox.addWidget(self.bloc_papier_selected)
         vbox.addWidget(self.bloc_perfo_selected)
         vbox.addWidget(self.bloc_poly_selected)
@@ -60,8 +67,14 @@ class PlanProdCreator(QWidget):
         self.bloc_perfo_selected.update_widget()
         self.bloc_papier_selected.update_widget()
 
+    def update_encriers(self):
+        self.line_encrier_1.update_widget()
+        self.line_encrier_2.update_widget()
+        self.line_encrier_3.update_widget()
+
     def handle_plan_prod_changed(self):
         self.update_bloc_selected()
+        self.update_encriers()
         if filter_store.data_type != "bobine" or len(self.plan_prod.current_bobine_fille_store.bobines) == 0:
             self.selector_manager.hide()
         self.bloc_param_prod.update_label()

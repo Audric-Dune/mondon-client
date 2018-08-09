@@ -10,6 +10,7 @@ from commun.utils import filter
 from commun.model.refente import Refente
 from commun.model.contraintes import Contrainte
 from commun.model.bobine_fille_valid import BobineFilleValid
+from commun.model.encrier import Encrier
 from commun.stores.refente_store import RefenteStore
 from commun.stores.perfo_store import PerfoStore
 from commun.stores.bobine_fille_store import BobineFilleStore
@@ -32,6 +33,10 @@ class PlanProd(QObject):
         self.start = start
         self.end = start
         self.tours = 12
+        self.encrier_1 = Encrier()
+        self.encrier_2 = Encrier()
+        self.encrier_3 = Encrier()
+        self.encriers = [self.encrier_1, self.encrier_2, self.encrier_3]
         self.longueur = None
         self.current_refente_store = RefenteStore()
         self.current_perfo_store = PerfoStore()
@@ -44,11 +49,56 @@ class PlanProd(QObject):
         self.bobines_filles_selected = []
         self.bobine_papier_selected = None
         self.bobine_poly_selected = None
+        if p_id is None:
+            self.set_color_encrier_from_last_plan_prod()
 
     def __repr__(self):
         return "{}-{}, {}".format(timestamp_to_hour_little(self.start),
                                   timestamp_to_hour_little(self.end),
                                   self.bobine_papier_selected.color)
+
+    def set_refente_encrier(self):
+        for encrier in self.encriers:
+            encrier.refente = self.refente_selected
+
+    def set_color_encrier_from_last_plan_prod(self):
+        from gestion.stores.plan_prod_store import plan_prod_store
+        last_plan_prod = plan_prod_store.get_last_plan_prod(start_plan_prod=self.start)
+        if last_plan_prod:
+            self.encrier_1.color_last_prod = last_plan_prod.encrier_1.color
+            self.encrier_2.color_last_prod = last_plan_prod.encrier_2.color
+            self.encrier_3.color_last_prod = last_plan_prod.encrier_3.color
+
+    def set_color_encrier_from_bobine(self, color):
+
+        def color_available_in_encrier(encriers, p_color):
+            for encrier in encriers:
+                if encrier.color == p_color:
+                    return True
+            return False
+
+        def get_free_encrier(encriers):
+            for encrier in encriers:
+                if encrier.color_last_prod is None and encrier.color is None:
+                    return encrier
+            for encrier in encriers:
+                if encrier.color is None:
+                    return encrier
+            return False
+
+        if color_available_in_encrier(encriers=self.encriers, p_color=color):
+            pass
+        else:
+            free_encrier = get_free_encrier(encriers=self.encriers)
+            free_encrier.set_color(color)
+
+    def update_encrier(self, bobine):
+        self.encrier_1.bobines_filles_selected = self.bobines_filles_selected
+        self.encrier_2.bobines_filles_selected = self.bobines_filles_selected
+        self.encrier_3.bobines_filles_selected = self.bobines_filles_selected
+        if bobine.colors_cliche is not None:
+            for color in bobine.colors_cliche:
+                self.set_color_encrier_from_bobine(color)
 
     def get_plan_prod_param(self, plan_prod):
         self.start = plan_prod.start
@@ -171,10 +221,12 @@ class PlanProd(QObject):
         new_bobine = BobineFilleSelected(bobine, pose=pose)
         self.bobines_filles_selected.append(new_bobine)
         self.update_all_current_store()
+        self.update_encrier(bobine=bobine)
         self.ON_CHANGED_SIGNAL.emit()
 
     def add_refente_selected(self, refente):
         self.refente_selected = refente
+        self.set_refente_encrier()
         self.update_all_current_store()
         self.ON_CHANGED_SIGNAL.emit()
 
@@ -328,7 +380,7 @@ class PlanProd(QObject):
         if len(self.current_bobine_papier_store.bobines) == 1:
             self.bobine_papier_selected = self.current_bobine_papier_store.bobines[0]
         if len(self.current_refente_store.refentes) == 1:
-            self.refente_selected = self.current_refente_store.refentes[0]
+            self.add_refente_selected(self.current_refente_store.refentes[0])
         self.ON_CHANGED_SIGNAL.emit()
 
     @staticmethod

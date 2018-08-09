@@ -374,30 +374,35 @@ class Database:
         return data_perfo
 
     @classmethod
-    def create_plan_prod(cls, start, refente, bobine_papier, code_bobines_selected, longueur, tours, bobine_poly):
+    def create_plan_prod(cls, start, refente, bobine_papier, code_bobines_selected, longueur, tours, bobine_poly,
+                         encrier_1, encrier_2, encrier_3):
         query = "INSERT INTO mondon_plan_prod (refente,bobine_papier,start,code_bobines_selected," \
-                "longueur,tours,bobine_poly) " \
-                "VALUES (?, ?, ?, ?, ?, ?, ?)".format(refente, bobine_papier, start,
-                                                      code_bobines_selected, longueur, tours, bobine_poly)
+                "longueur,tours,bobine_poly,encrier_1,encrier_2,encrier_3) " \
+                "VALUES (?, ?, ?, ?, ?, ?, ?)".format(refente, bobine_papier, start, code_bobines_selected, longueur,
+                                                      tours, bobine_poly, encrier_1, encrier_2, encrier_3)
         try:
-            cls.run_query(query, (refente, bobine_papier, start, code_bobines_selected, longueur, tours, bobine_poly))
+            cls.run_query(query, (refente, bobine_papier, start, code_bobines_selected, longueur, tours, bobine_poly,
+                                  encrier_1, encrier_2, encrier_3))
         except sqlite3.IntegrityError as e:
             logger.log("DATABASE", "(Ignorée) IntegrityError: {}".format(e))
             pass
 
     @classmethod
     def get_plan_prod(cls):
-        query = "SELECT id, start, tours, longueur, bobine_papier, refente, code_bobines_selected, bobine_poly " \
+        query = "SELECT id, start, tours, longueur, bobine_papier, refente, code_bobines_selected, bobine_poly, " \
+                "encrier_1, encrier_2, encrier_3 " \
                 "FROM mondon_plan_prod"
         data_plan_prod = cls.run_query(query, ())
         return data_plan_prod
 
     @classmethod
-    def update_plan_prod(cls, p_id, start, refente, bobine_papier, code_bobines_selected, longueur, tours, bobine_poly):
+    def update_plan_prod(cls, p_id, start, refente, bobine_papier, code_bobines_selected, longueur, tours, bobine_poly,
+                         encrier_1, encrier_2, encrier_3):
         query = "UPDATE mondon_plan_prod " \
                 "SET start = ?, refente = ?, bobine_papier = ?, code_bobines_selected = ?, longueur = ?, tours = ?," \
-                "bobine_poly = ? WHERE id = ? " \
-            .format(start, refente, bobine_papier, code_bobines_selected, longueur, tours, bobine_poly, p_id)
+                "bobine_poly = ?, encrier_1 = ?, encrier_2 = ?, encrier_3 = ? WHERE id = ? " \
+            .format(start, refente, bobine_papier, code_bobines_selected, longueur, tours, encrier_1, encrier_2,
+                    encrier_3, bobine_poly, p_id)
         try:
             cls.run_query(query, (start, refente, bobine_papier, code_bobines_selected,
                                   longueur, tours, bobine_poly, p_id))

@@ -76,7 +76,7 @@ class RefenteBuffer:
         # Définit l'index de la première laize non-occupée
         self.index = self.get_first_free_laize_index()
         # Initialise un encrier de taille 3
-        self.encrier = Encrier(max_size=3)
+        self.encrier = Encriers(max_size=3)
 
     # Retourne l'index de la première laize qui n'est pas None.
     # Démarre à `start_index`.
@@ -177,7 +177,7 @@ class RefenteBuffer:
 
 
 # Représente une combinaison de couleurs utilisées avec une limite sur le nombre de couleurs
-class Encrier:
+class Encriers:
     def __init__(self, max_size):
         self.max_size = max_size
         self.colors = {}

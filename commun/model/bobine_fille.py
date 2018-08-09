@@ -38,6 +38,7 @@ class BobineFille:
         self.vente_annuelle = 0
         self.vente_mensuelle = 0
         self.etat = ""
+        self.update_bobine_from_cliche()
 
     def update_bobine_from_cliche(self):
         """
@@ -50,8 +51,8 @@ class BobineFille:
                 # Récupère les poses et couleurs associés au cliché
                 poses_and_colors = self.get_poses_and_colors_from_code_cliche(code_cliche)
                 if poses_and_colors:
-                    poses_cliche = poses_and_colors[0]
-                    colors_cliche = poses_and_colors[1]
+                    poses_cliche = poses_and_colors[0].copy()
+                    colors_cliche = poses_and_colors[1].copy()
                     # Si la bobine ne contient pas encore de poses (self.poses = [0])
                     # on initialise les poses et couleurs avec le cliché courant
                     if self.poses[0] == 0:

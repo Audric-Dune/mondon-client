@@ -17,12 +17,9 @@ class BobineFilleSelected:
             return getattr(self.bobine, attr)
 
     def __repr__(self):
-        return 'B({}, {}, {}, {}, {}, {})'.format(self.code,
-                                                  self.laize,
-                                                  self.pose,
-                                                  self.color,
-                                                  self.gr,
-                                                  self.length)
+        return '{}, pose {}, index {}'.format(self.code,
+                                              self.pose,
+                                              self.index)
 
     def __lt__(self, other):
         return self.pose < other.pose if self.code == other.code else self.code < other.code

@@ -227,7 +227,10 @@ class SettingsStore(QObject):
                                   start=self.plan_prod.start,
                                   longueur=self.plan_prod.longueur,
                                   tours=self.plan_prod.tours,
-                                  bobine_poly=self.plan_prod.bobine_poly_selected.code)
+                                  bobine_poly=self.plan_prod.bobine_poly_selected.code,
+                                  encrier_1=self.plan_prod.encrier_1.color,
+                                  encrier_2=self.plan_prod.encrier_2.color,
+                                  encrier_3=self.plan_prod.encrier_3.color)
         self.plan_prod = None
         self.SETTINGS_CHANGED_SIGNAL.emit()
 
@@ -239,7 +242,10 @@ class SettingsStore(QObject):
                                   start=plan_prod.start,
                                   longueur=plan_prod.longueur,
                                   tours=plan_prod.tours,
-                                  bobine_poly=plan_prod.bobine_poly_selected.code)
+                                  bobine_poly=plan_prod.bobine_poly_selected.code,
+                                  encrier_1=plan_prod.encrier_1.color,
+                                  encrier_2=plan_prod.encrier_2.color,
+                                  encrier_3=plan_prod.encrier_3.color)
 
     def update_plan_prod_on_database(self, plan_prod):
         code_bobines_selected = self.get_code_bobine_selected(plan_prod.bobines_filles_selected)
@@ -250,7 +256,10 @@ class SettingsStore(QObject):
                                   start=plan_prod.start,
                                   longueur=plan_prod.longueur,
                                   tours=plan_prod.tours,
-                                  bobine_poly=plan_prod.bobine_poly_selected.code)
+                                  bobine_poly=plan_prod.bobine_poly_selected.code,
+                                  encrier_1=plan_prod.encrier_1.color,
+                                  encrier_2=plan_prod.encrier_2.color,
+                                  encrier_3=plan_prod.encrier_3.color)
         self.SETTINGS_CHANGED_SIGNAL.emit()
 
     def save_event(self, event):

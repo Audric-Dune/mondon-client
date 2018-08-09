@@ -43,6 +43,7 @@ class Application(QApplication):
         if argv is None:
             argv = []
         super(Application, self).__init__(argv)
+        self.B130091AEPCLOLIVET = None
         self.main_window = None
         self.read_xls()
         self.init_refente_store()
@@ -212,7 +213,6 @@ class Application(QApplication):
                                          stock_therme=current_stock_therme,
                                          creation_time=current_creation_time,
                                          sommeil=current_sommeil)
-            current_bobine.update_bobine_from_cliche()
             bobine_fille_store.add_bobine(current_bobine)
 
     @staticmethod
@@ -237,38 +237,6 @@ class Application(QApplication):
                 bobine_poly_store.add_bobine(bobine_mere)
             else:
                 bobine_papier_store.add_bobine(bobine_mere)
-
-    # def read_xlsm(self):
-    #     xls = open_xls('Etude stock bobine V5 MASTER 18-02-23.xlsm')
-    #     for sheet in xls.sheets():
-    #         if sheet.name == "TYPE BOBINE MERE":
-    #             start_ligne = 1
-    #             current_ligne = start_ligne
-    #             while current_ligne < sheet.nrows:
-    #                 if sheet.cell_value(current_ligne, 1) == "":
-    #                     break
-    #                 else:
-    #                     code = sheet.cell_value(current_ligne, 3)
-    #                     color = str(sheet.cell_value(current_ligne, 1)).title()
-    #                     gr = self.get_gr_bobine_mere(gr=sheet.cell_value(current_ligne, 5),
-    #                                                  color=sheet.cell_value(current_ligne, 1))
-    #                     bobine_mere = BobineMere(code=code,
-    #                                              color=color,
-    #                                              laize=sheet.cell_value(current_ligne, 0),
-    #                                              gr=gr,
-    #                                              length=sheet.cell_value(current_ligne, 6))
-    #                     if color == "Poly":
-    #                         bobine_poly_store.add_bobine(bobine_mere)
-    #                     else:
-    #                         bobine_papier_store.add_bobine(bobine_mere)
-    #                 current_ligne += 1
-
-    # @staticmethod
-    # def get_gr_bobine_mere(gr, color):
-    #     if gr != "" and color != "POLY":
-    #         return gr
-    #     elif color == "POLY":
-    #         return "20µ"
 
     @staticmethod
     def is_sommeil(sommeil):

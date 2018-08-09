@@ -37,6 +37,9 @@ class PlanProdStore(QObject):
                 new_plan_prod.refente_selected = self.get_refente(code=plan_prod[5])
                 new_plan_prod.tours = plan_prod[2]
                 new_plan_prod.longueur = plan_prod[3]
+                new_plan_prod.encrier_1.set_color(plan_prod[8])
+                new_plan_prod.encrier_2.set_color(plan_prod[9])
+                new_plan_prod.encrier_3.set_color(plan_prod[10])
                 new_plan_prod.get_end()
                 self.add_bobine_to_plan_prod(plan_prod=new_plan_prod, code_bobines_filles=plan_prod[6])
                 new_plan_prod.update_all_current_store()
@@ -46,6 +49,14 @@ class PlanProdStore(QObject):
 
     def sort_plans_prods(self):
         self.plans_prods = sorted(self.plans_prods, key=lambda b: b.get_start(), reverse=False)
+
+    def get_last_plan_prod(self, start_plan_prod):
+        self.get_plan_prod_from_database()
+        last_plan_prod = None
+        for plan_prod in self.plans_prods:
+            if plan_prod.start < start_plan_prod:
+                last_plan_prod = plan_prod
+        return last_plan_prod
 
     @staticmethod
     def get_bobine_papier(code):
