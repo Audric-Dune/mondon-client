@@ -52,3 +52,13 @@ bob_rouge = Color("#e74c3c")
 bob_vert = Color("#2ecc71")
 bob_marron = Color("#784212")
 bob_poly = Color("#ecf0f1")
+
+# Gestion des couleurs clichés
+cliche_blanc = Color("#f6f6f6")
+cliche_orange = Color("#f57923")
+cliche_jaune = Color("#ffde00")
+cliche_noir = Color("#3d3d3d")
+cliche_rouge = Color("#cc001e")
+cliche_vert = Color("#00985f")
+cliche_bistre = Color("#886d4f")
+cliche_bleu = Color("#02578e")
