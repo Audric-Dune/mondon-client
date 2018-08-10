@@ -1,24 +1,32 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtWidgets import QHBoxLayout, QLabel, QWidget
-from PyQt5.QtGui import QPen, QPainter, QColor
+from PyQt5.QtWidgets import QHBoxLayout, QWidget
+from PyQt5.QtGui import QPen, QPainter, QColor, QDrag
 
-from commun.constants.colors import color_blanc, color_rouge, color_vert, color_noir
+from commun.constants.colors import color_blanc
 from commun.utils.layout import clear_layout
 from commun.ui.public.cliche_ui import ClicheUi
-from commun.ui.public.mondon_widget import MondonWidget
+from PyQt5.QtCore import Qt, QMimeData
 
 
 class LineEncrier(QWidget):
 
-    def __init__(self, parent=None, encrier=None):
+    def __init__(self, parent=None, encrier=None, index=None):
         super(LineEncrier, self).__init__(parent=parent)
         self.setFixedHeight(80)
         self.encrier = encrier
+        self.index = index
         self.hbox = QHBoxLayout()
         self.init_widget()
         self.update_widget()
+
+    def mouseMoveEvent(self, e):
+        mime_data = QMimeData()
+        mime_data.setText(str(self.index))
+        drag = QDrag(self)
+        drag.setMimeData(mime_data)
+        drag.exec_(Qt.MoveAction)
 
     def init_widget(self):
         self.hbox.setContentsMargins(10, 0, 0, 10)

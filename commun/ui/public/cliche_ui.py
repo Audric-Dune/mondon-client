@@ -2,9 +2,6 @@
 # -*- coding: utf-8 -*-
 
 
-# !/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 from PyQt5.QtGui import QPen, QPainter, QColor
 
 from commun.ui.public.mondon_widget import QWidget

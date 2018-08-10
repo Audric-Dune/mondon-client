@@ -20,6 +20,7 @@ class PlanProdCreator(QWidget):
 
     def __init__(self, plan_prod, parent=None):
         super(PlanProdCreator, self).__init__(parent=parent)
+        self.setAcceptDrops(True)
         self.setWindowFlags(Qt.Dialog)
         self.setFocusPolicy(Qt.ClickFocus)
         self.plan_prod = plan_prod
@@ -29,9 +30,9 @@ class PlanProdCreator(QWidget):
         self.selector_manager.hide()
         self.bloc_param_prod = BlocParamProd(plan_prod=self.plan_prod, parent=self)
         self.titre_prod = QLabel("NOUVELLE PRODUCTION")
-        self.line_encrier_1 = LineEncrier(parent=self, encrier=self.plan_prod.encrier_1)
-        self.line_encrier_2 = LineEncrier(parent=self, encrier=self.plan_prod.encrier_2)
-        self.line_encrier_3 = LineEncrier(parent=self, encrier=self.plan_prod.encrier_3)
+        self.line_encrier_1 = LineEncrier(parent=self, encrier=self.plan_prod.encrier_1, index=1)
+        self.line_encrier_2 = LineEncrier(parent=self, encrier=self.plan_prod.encrier_2, index=2)
+        self.line_encrier_3 = LineEncrier(parent=self, encrier=self.plan_prod.encrier_3, index=3)
         self.bloc_poly_selected = BlocSelected(data_type="poly", parent=self, callback=self.show_selector)
         self.bloc_papier_selected = BlocSelected(data_type="papier", parent=self, callback=self.show_selector)
         self.bloc_perfo_selected = BlocSelected(data_type="perfo", parent=self, callback=self.show_selector)
@@ -41,6 +42,35 @@ class PlanProdCreator(QWidget):
         self.bloc_bt = BlocBt(parent=self, plan_prod=plan_prod, callback=self.handle_click_bt)
         self.init_ui()
         self.show()
+
+    def dragEnterEvent(self, e):
+        index_drag = e.mimeData().text()
+        if self.line_encrier_1.geometry().contains(e.pos()) and index_drag != 1:
+            print("OK")
+            e.accept()
+        elif self.line_encrier_2.geometry().contains(e.pos()) and index_drag != 2:
+            print("OK")
+            e.accept()
+        elif self.line_encrier_3.geometry().contains(e.pos()) and index_drag != 3:
+            print("OK")
+            e.accept()
+        else:
+            e.ignore()
+
+    def dropEvent(self, e):
+        index_drag = e.mimeData().text()
+        index_drop = None
+        if self.line_encrier_1.geometry().contains(e.pos()) and index_drag != 1:
+            index_drop = 1
+        if self.line_encrier_2.geometry().contains(e.pos()) and index_drag != 2:
+            index_drop = 2
+        if self.line_encrier_3.geometry().contains(e.pos()) and index_drag != 3:
+            index_drop = 3
+        if index_drop is None:
+            e.ignore()
+        else:
+            print("Encrier {} remplace encrier {}".format(index_drag, index_drop))
+            e.accept()
 
     def init_ui(self):
         master_vbox = QVBoxLayout()
