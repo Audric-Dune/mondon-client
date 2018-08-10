@@ -17,7 +17,6 @@ class LineEncrier(QWidget):
         self.setFixedHeight(80)
         self.encrier = encrier
         self.hbox = QHBoxLayout()
-        self.color_label = QLabel()
         self.init_widget()
         self.update_widget()
 
@@ -30,11 +29,7 @@ class LineEncrier(QWidget):
         clear_layout(self.hbox)
         refente = self.encrier.refente
         if refente:
-            # self.hbox.addSpacing(980-refente.laize-refente.dec)
-            spacing = MondonWidget()
-            spacing.set_background_color(color_rouge)
-            spacing.setFixedWidth(980-refente.laize-refente.dec)
-            self.hbox.addWidget(spacing)
+            self.hbox.addSpacing(980-refente.laize-refente.dec)
         else:
             self.hbox.addStretch()
         current_index = 0
@@ -55,12 +50,7 @@ class LineEncrier(QWidget):
                                                              color=self.encrier.color))
                                 new_index += bobine.pose
                     if current_index == new_index:
-                        spacing = MondonWidget()
-                        spacing.set_background_color(color_vert)
-                        spacing.set_border(color_noir)
-                        spacing.setFixedWidth(laize)
-                        self.hbox.addWidget(spacing)
-                        # self.hbox.addSpacing(laize)
+                        self.hbox.addSpacing(laize)
                         current_index += 1
                         new_index = current_index
                     else:

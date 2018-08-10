@@ -9,8 +9,8 @@ from PyQt5.QtGui import QPen, QPainter, QColor
 
 from commun.ui.public.mondon_widget import QWidget
 from commun.utils.drawing import draw_rectangle, draw_text
-from commun.utils.color_bobine import get_color_bobine
-from commun.constants.colors import color_gris, color_noir
+from commun.utils.color_cliche import get_color_cliche
+from commun.constants.colors import color_noir
 
 
 class ClicheUi(QWidget):
@@ -52,22 +52,22 @@ class ClicheUi(QWidget):
         y = 0
         w = self.laize * self.ech - 1
         h = (self.CLICHE_HEIGHT - 1) * self.ech
-        # if self.bobine:
-        #     color = get_color_bobine(self.bobine.color)
-        # else:
-        #     color = color_gris
-        color = color_gris
+        color = get_color_cliche(self.color)
         draw_rectangle(p, x, y, w, h, color=color, border_color=color_noir)
 
-    def draw_code(self, p):
+    def draw_text(self, p):
         x = 0
-        y = 0
+        y = -20
         w = self.laize * self.ech
         h = self.CLICHE_HEIGHT * self.ech
-        font_size = 10 * self.ech
+        font_size = 14 * self.ech
         text = self.cliche.code
+        draw_text(p, x, y, w, h, color=color_noir, align="C", font_size=font_size, text=text)
+        pose = self.bobine_selected.pose
+        text = "({} pose)".format(pose) if pose == 1 else "({} poses)".format(pose)
+        y = 10
         draw_text(p, x, y, w, h, color=color_noir, align="C", font_size=font_size, text=text)
 
     def draw(self, p):
         self.draw_cliche(p)
-        self.draw_code(p)
+        self.draw_text(p)
