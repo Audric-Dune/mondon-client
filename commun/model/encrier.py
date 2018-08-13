@@ -11,7 +11,7 @@ class Encrier:
         self.color_last_prod = None
 
     def set_color(self, color):
-        self.color = color
+        self.color = color[1:] if color[0] == "_" else color
 
     def __str__(self):
         return "Encrier: couleur {}, bobines {}, refente {}".format(self.color,

@@ -232,11 +232,18 @@ class SettingsStore(QObject):
                                   longueur=self.plan_prod.longueur,
                                   tours=self.plan_prod.tours,
                                   bobine_poly=self.plan_prod.bobine_poly_selected.code,
-                                  encrier_1=self.plan_prod.encrier_1.color,
-                                  encrier_2=self.plan_prod.encrier_2.color,
-                                  encrier_3=self.plan_prod.encrier_3.color)
+                                  encrier_1=self.get_color_encrier(self.plan_prod.encrier_1),
+                                  encrier_2=self.get_color_encrier(self.plan_prod.encrier_2),
+                                  encrier_3=self.get_color_encrier(self.plan_prod.encrier_3))
         self.plan_prod = None
         self.SETTINGS_CHANGED_SIGNAL.emit()
+
+    @staticmethod
+    def get_color_encrier(encrier):
+        if encrier.color:
+            return encrier.color
+        else:
+            return "_{}".format(encrier.color_last_prod)
 
     def create_new_plan_prod(self, plan_prod):
         code_bobines_selected = self.get_code_bobine_selected(plan_prod.bobines_filles_selected)
@@ -247,9 +254,9 @@ class SettingsStore(QObject):
                                   longueur=plan_prod.longueur,
                                   tours=plan_prod.tours,
                                   bobine_poly=plan_prod.bobine_poly_selected.code,
-                                  encrier_1=plan_prod.encrier_1.color,
-                                  encrier_2=plan_prod.encrier_2.color,
-                                  encrier_3=plan_prod.encrier_3.color)
+                                  encrier_1=self.get_color_encrier(self.plan_prod.encrier_1),
+                                  encrier_2=self.get_color_encrier(self.plan_prod.encrier_2),
+                                  encrier_3=self.get_color_encrier(self.plan_prod.encrier_3))
 
     def update_plan_prod_on_database(self, plan_prod):
         code_bobines_selected = self.get_code_bobine_selected(plan_prod.bobines_filles_selected)
@@ -261,9 +268,9 @@ class SettingsStore(QObject):
                                   longueur=plan_prod.longueur,
                                   tours=plan_prod.tours,
                                   bobine_poly=plan_prod.bobine_poly_selected.code,
-                                  encrier_1=plan_prod.encrier_1.color,
-                                  encrier_2=plan_prod.encrier_2.color,
-                                  encrier_3=plan_prod.encrier_3.color)
+                                  encrier_1=self.get_color_encrier(self.plan_prod.encrier_1),
+                                  encrier_2=self.get_color_encrier(self.plan_prod.encrier_2),
+                                  encrier_3=self.get_color_encrier(self.plan_prod.encrier_3))
         self.SETTINGS_CHANGED_SIGNAL.emit()
 
     def save_event(self, event):

@@ -61,8 +61,8 @@ class PlanProd(QObject):
         index = 0
         for bobine in self.bobines_filles_selected:
             bobine.index = index
-            print(bobine)
             index += bobine.pose
+        self.set_bobines_fille_selected_to_encriers()
 
     def set_refente_encrier(self):
         for encrier in self.encriers:
@@ -72,9 +72,17 @@ class PlanProd(QObject):
         from gestion.stores.plan_prod_store import plan_prod_store
         last_plan_prod = plan_prod_store.get_last_plan_prod(start_plan_prod=self.start)
         if last_plan_prod:
-            self.encrier_1.color_last_prod = last_plan_prod.encrier_1.color
-            self.encrier_2.color_last_prod = last_plan_prod.encrier_2.color
-            self.encrier_3.color_last_prod = last_plan_prod.encrier_3.color
+            self.encrier_1.color_last_prod = self.get_color_from_last_plan_prod(plan_prod=last_plan_prod,
+                                                                                index_encrier=1)
+            self.encrier_2.color_last_prod = self.get_color_from_last_plan_prod(plan_prod=last_plan_prod,
+                                                                                index_encrier=2)
+            self.encrier_3.color_last_prod = self.get_color_from_last_plan_prod(plan_prod=last_plan_prod,
+                                                                                index_encrier=3)
+
+    @staticmethod
+    def get_color_from_last_plan_prod(plan_prod, index_encrier):
+        color = plan_prod.encriers[index_encrier-1].color
+        return color[1:] if color[0] == "_" else color
 
     def set_color_encrier_from_bobine(self, color):
 
@@ -100,7 +108,6 @@ class PlanProd(QObject):
             free_encrier.set_color(color)
 
     def set_bobines_fille_selected_to_encriers(self):
-        self.set_index_to_bobines_filles_selected()
         self.encrier_1.bobines_filles_selected = self.bobines_filles_selected
         self.encrier_2.bobines_filles_selected = self.bobines_filles_selected
         self.encrier_3.bobines_filles_selected = self.bobines_filles_selected

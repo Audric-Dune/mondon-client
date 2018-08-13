@@ -32,9 +32,10 @@ class LineEncrier(QWidget):
     def update_widget(self):
         clear_layout(self.hbox)
         encrier = self.plan_prod.encriers[self.index-1]
+        print(encrier)
         refente = encrier.refente
-        if encrier.color is None:
-            if encrier.color_last_prod is None:
+        if encrier.color is None or encrier.color == "None":
+            if encrier.color_last_prod is None or encrier.color_last_prod == "None":
                 text_label = "Encrier vide"
             else:
                 text_label = "Couleur actuelle encrier: {}".format(encrier.color_last_prod)

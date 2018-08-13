@@ -48,6 +48,7 @@ class MainWindow(QMainWindow):
 
     def create_plan_prod_creator_window(self):
         self.plan_prod_window = PlanProdCreator(plan_prod=settings_store_gestion.plan_prod)
+        self.plan_prod_window.update_encriers()
 
     def create_event_config_window(self, type_event):
         from gestion.ui.window.event_config import EventConfig
