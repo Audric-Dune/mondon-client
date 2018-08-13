@@ -164,6 +164,9 @@ green_maj_label_stylesheet = create_qlabel_stylesheet(color=color_blanc,
                                                       font_size="16px",
                                                       padding="0px 20px 0px 20px",
                                                       bold="bold")
+black_16_italic_label_stylesheet = create_qlabel_stylesheet(color=color_noir,
+                                                            font_size="16px",
+                                                            italic="italic")
 red_16_bold_label_stylesheet = create_qlabel_stylesheet(color=color_rouge, font_size="16px", bold="bold")
 red_14_bold_label_stylesheet = create_qlabel_stylesheet(color=color_rouge, font_size="14px", bold="bold")
 black_14_bold_label_stylesheet = create_qlabel_stylesheet(color=color_noir, font_size="14px", bold="bold")

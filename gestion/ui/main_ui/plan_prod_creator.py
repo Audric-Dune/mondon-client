@@ -5,11 +5,12 @@
 from PyQt5.QtWidgets import QVBoxLayout, QLabel, QWidget
 from PyQt5.QtCore import Qt
 
+from commun.constants.colors import color_vert, color_rouge
+
 from gestion.ui.plan_prod_creator_widget.bloc_information import BlocInformation
 from gestion.ui.plan_prod_creator_widget.bloc_selected import BlocSelected
 from gestion.ui.plan_prod_creator_widget.bloc_bt import BlocBt
 from gestion.ui.selector_ui.selector_manager import SelectorManager
-
 from gestion.stores.filter_store import filter_store
 from gestion.stores.settings_store import settings_store_gestion
 from gestion.ui.plan_prod_creator_widget.bloc_param_prod import BlocParamProd
@@ -30,9 +31,17 @@ class PlanProdCreator(QWidget):
         self.selector_manager.hide()
         self.bloc_param_prod = BlocParamProd(plan_prod=self.plan_prod, parent=self)
         self.titre_prod = QLabel("NOUVELLE PRODUCTION")
-        self.line_encrier_1 = LineEncrier(parent=self, encrier=self.plan_prod.encrier_1, index=1)
-        self.line_encrier_2 = LineEncrier(parent=self, encrier=self.plan_prod.encrier_2, index=2)
-        self.line_encrier_3 = LineEncrier(parent=self, encrier=self.plan_prod.encrier_3, index=3)
+        self.line_encrier_1 = LineEncrier(parent=self, plan_prod=plan_prod, index=1)
+        self.line_encrier_2 = LineEncrier(parent=self, plan_prod=plan_prod, index=2)
+        self.line_encrier_3 = LineEncrier(parent=self, plan_prod=plan_prod, index=3)
+        self.line_encrier_1_drag = LineEncrier(parent=self, plan_prod=plan_prod, index=1)
+        self.line_encrier_1_drag.hide()
+        self.line_encrier_2_drag = LineEncrier(parent=self, plan_prod=plan_prod, index=2)
+        self.line_encrier_2_drag.hide()
+        self.line_encrier_3_drag = LineEncrier(parent=self, plan_prod=plan_prod, index=3)
+        self.line_encrier_3_drag.hide()
+        self.delta_x_drag = None
+        self.delta_y_drag = None
         self.bloc_poly_selected = BlocSelected(data_type="poly", parent=self, callback=self.show_selector)
         self.bloc_papier_selected = BlocSelected(data_type="papier", parent=self, callback=self.show_selector)
         self.bloc_perfo_selected = BlocSelected(data_type="perfo", parent=self, callback=self.show_selector)
@@ -44,20 +53,67 @@ class PlanProdCreator(QWidget):
         self.show()
 
     def dragEnterEvent(self, e):
+        e.accept()
+
+    def dragMoveEvent(self, e):
         index_drag = e.mimeData().text()
-        if self.line_encrier_1.geometry().contains(e.pos()) and index_drag != 1:
-            print("OK")
-            e.accept()
-        elif self.line_encrier_2.geometry().contains(e.pos()) and index_drag != 2:
-            print("OK")
-            e.accept()
-        elif self.line_encrier_3.geometry().contains(e.pos()) and index_drag != 3:
-            print("OK")
-            e.accept()
-        else:
-            e.ignore()
+        if index_drag == "1":
+            self.show_encrier_drag(encrier_drag=self.line_encrier_1_drag,
+                                   mouse_pos=e.pos(),
+                                   encrier=self.line_encrier_1)
+            self.line_encrier_1_drag.width_F = 2
+            if self.is_correct_drop_pos(index_drag=index_drag, mouse_pos=e.pos()):
+                self.line_encrier_1_drag.border_color = color_vert
+            else:
+                self.line_encrier_1_drag.border_color = color_rouge
+        elif index_drag == "2":
+            self.show_encrier_drag(encrier_drag=self.line_encrier_2_drag,
+                                   mouse_pos=e.pos(),
+                                   encrier=self.line_encrier_2)
+            self.line_encrier_2_drag.width_F = 2
+            if self.is_correct_drop_pos(index_drag=index_drag, mouse_pos=e.pos()):
+                self.line_encrier_2_drag.border_color = color_vert
+            else:
+                self.line_encrier_2_drag.border_color = color_rouge
+        elif index_drag == "3":
+            self.show_encrier_drag(encrier_drag=self.line_encrier_3_drag,
+                                   mouse_pos=e.pos(),
+                                   encrier=self.line_encrier_3)
+            self.line_encrier_3_drag.width_F = 2
+            if self.is_correct_drop_pos(index_drag=index_drag, mouse_pos=e.pos()):
+                self.line_encrier_3_drag.border_color = color_vert
+            else:
+                self.line_encrier_3_drag.border_color = color_rouge
+
+    def show_encrier_drag(self, encrier_drag, mouse_pos, encrier):
+        encrier_drag.setFixedSize(encrier.size())
+        encrier_drag.update_widget()
+        encrier_pos = encrier.pos()
+        if self.delta_x_drag is None:
+            self.delta_x_drag = mouse_pos.x()-encrier_pos.x()
+            self.delta_y_drag = mouse_pos.y()-encrier_pos.y()
+        encrier_drag.move(mouse_pos.x()-self.delta_x_drag, mouse_pos.y()-self.delta_y_drag)
+        encrier_drag.show()
+        encrier_drag.activateWindow()
+        encrier_drag.raise_()
+
+    def is_correct_drop_pos(self, index_drag, mouse_pos):
+        if self.line_encrier_1.geometry().contains(mouse_pos) and index_drag != "1":
+            return True
+        if self.line_encrier_2.geometry().contains(mouse_pos) and index_drag != "2":
+            return True
+        if self.line_encrier_3.geometry().contains(mouse_pos) and index_drag != "3":
+            return True
+        return False
+
+    def dragLeaveEvent(self, e):
+        self.hide_line_encrier_drag()
+        e.accept()
 
     def dropEvent(self, e):
+        self.hide_line_encrier_drag()
+        self.delta_x_drag = None
+        self.delta_y_drag = None
         index_drag = e.mimeData().text()
         index_drop = None
         if self.line_encrier_1.geometry().contains(e.pos()) and index_drag != 1:
@@ -69,8 +125,20 @@ class PlanProdCreator(QWidget):
         if index_drop is None:
             e.ignore()
         else:
-            print("Encrier {} remplace encrier {}".format(index_drag, index_drop))
+            self.swap_encrier(index_1=int(index_drag), index_2=int(index_drop))
             e.accept()
+
+    def swap_encrier(self, index_1, index_2):
+        color_encrier_1 = self.plan_prod.encriers[index_1-1].color
+        color_encrier_2 = self.plan_prod.encriers[index_2-1].color
+        self.plan_prod.encriers[index_1-1].color = color_encrier_2
+        self.plan_prod.encriers[index_2-1].color = color_encrier_1
+        self.update_encriers()
+
+    def hide_line_encrier_drag(self):
+        self.line_encrier_1_drag.hide()
+        self.line_encrier_2_drag.hide()
+        self.line_encrier_3_drag.hide()
 
     def init_ui(self):
         master_vbox = QVBoxLayout()

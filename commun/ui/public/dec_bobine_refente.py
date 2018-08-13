@@ -56,7 +56,7 @@ class DecBobineRefente(QWidget):
         p.setPen(pen)
         # _____ DRAW RIVE DROITE _____
         p.drawLine(w, 0, w, self.height())
-        p.setFont(QFont('Decorative', self.FONT_SIZE_INFO-(5* self.ech)))
+        p.setFont(QFont('Decorative', self.FONT_SIZE_INFO-(5*self.ech)))
         p.translate(self.width(), (55 * self.ech))
         p.rotate(-90)
         p.drawText(0, 0, "Coté mur")
