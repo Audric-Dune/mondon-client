@@ -50,7 +50,8 @@ class PlanProd(QObject):
         self.bobine_papier_selected = None
         self.bobine_poly_selected = None
         if p_id is None:
-            self.set_color_encrier_from_last_plan_prod()
+            if self.start:
+                self.set_color_encrier_from_last_plan_prod()
 
     def __repr__(self):
         return "{}-{}, {}".format(timestamp_to_hour_little(self.start),
@@ -82,6 +83,8 @@ class PlanProd(QObject):
     @staticmethod
     def get_color_from_last_plan_prod(plan_prod, index_encrier):
         color = plan_prod.encriers[index_encrier-1].color
+        if color is None:
+            return None
         return color[1:] if color[0] == "_" else color
 
     def set_color_encrier_from_bobine(self, color):
