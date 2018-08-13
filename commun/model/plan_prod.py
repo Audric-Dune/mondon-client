@@ -73,41 +73,49 @@ class PlanProd(QObject):
         from gestion.stores.plan_prod_store import plan_prod_store
         last_plan_prod = plan_prod_store.get_last_plan_prod(start_plan_prod=self.start)
         if last_plan_prod:
-            self.encrier_1.color_last_prod = self.get_color_from_last_plan_prod(plan_prod=last_plan_prod,
-                                                                                index_encrier=1)
-            self.encrier_2.color_last_prod = self.get_color_from_last_plan_prod(plan_prod=last_plan_prod,
-                                                                                index_encrier=2)
-            self.encrier_3.color_last_prod = self.get_color_from_last_plan_prod(plan_prod=last_plan_prod,
-                                                                                index_encrier=3)
+            if self.encrier_1.color is None or self.encrier_1.color[0] == "_":
+                self.encrier_1.set_color(self.get_color_encrier_last_plan_prod(last_plan_prod.encrier_1.color))
+            if self.encrier_2.color is None or self.encrier_2.color[0] == "_":
+                self.encrier_2.set_color(self.get_color_encrier_last_plan_prod(last_plan_prod.encrier_2.color))
+            if self.encrier_3.color is None or self.encrier_3.color[0] == "_":
+                self.encrier_3.set_color(self.get_color_encrier_last_plan_prod(last_plan_prod.encrier_3.color))
 
     @staticmethod
-    def get_color_from_last_plan_prod(plan_prod, index_encrier):
-        color = plan_prod.encriers[index_encrier-1].color
+    def get_color_encrier_last_plan_prod(color):
         if color is None:
             return None
-        return color[1:] if color[0] == "_" else color
+        elif color[0] == "_":
+            return color
+        else:
+            return "_{}".format(color)
 
-    def set_color_encrier_from_bobine(self, color):
+    def set_color_encrier_from_bobine(self, color, colors_cliche):
 
         def color_available_in_encrier(encriers, p_color):
             for encrier in encriers:
+                if encrier.color is None:
+                    continue
+                if encrier.color[1:] == p_color:
+                    encrier.set_color(p_color)
+                    return True
                 if encrier.color == p_color:
+                    if p_color[0] == "_":
+                        encrier.set_color(p_color[1:])
                     return True
             return False
 
-        def get_free_encrier(encriers):
+        def get_free_encrier(encriers, p_colors_cliche):
             for encrier in encriers:
-                if encrier.color_last_prod is None and encrier.color is None:
-                    return encrier
-            for encrier in encriers:
-                if encrier.color is None:
+                if encrier.color is None or encrier.color[0] == "_":
+                    if encrier.color and encrier.color[1:] in p_colors_cliche:
+                        continue
                     return encrier
             return False
 
         if color_available_in_encrier(encriers=self.encriers, p_color=color):
             pass
         else:
-            free_encrier = get_free_encrier(encriers=self.encriers)
+            free_encrier = get_free_encrier(encriers=self.encriers, p_colors_cliche=colors_cliche)
             free_encrier.set_color(color)
 
     def set_bobines_fille_selected_to_encriers(self):
@@ -119,7 +127,7 @@ class PlanProd(QObject):
         self.set_bobines_fille_selected_to_encriers()
         if bobine.colors_cliche is not None:
             for color in bobine.colors_cliche:
-                self.set_color_encrier_from_bobine(color)
+                self.set_color_encrier_from_bobine(color, bobine.colors_cliche)
 
     def get_plan_prod_param(self, plan_prod):
         self.start = plan_prod.start
@@ -130,6 +138,9 @@ class PlanProd(QObject):
         self.bobines_filles_selected = plan_prod.bobines_filles_selected
         self.bobine_papier_selected = plan_prod.bobine_papier_selected
         self.bobine_poly_selected = plan_prod.bobine_poly_selected
+        self.encrier_1.color = plan_prod.encrier_1.color
+        self.encrier_2.color = plan_prod.encrier_2.color
+        self.encrier_3.color = plan_prod.encrier_3.color
 
     def get_start(self):
         return self.start

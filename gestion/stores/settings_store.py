@@ -28,6 +28,7 @@ class SettingsStore(QObject):
         self.cursor = None
 
     def update_plans_prods(self):
+        print("update_plans_prods")
         self.cursor = None
         from gestion.stores.plan_prod_store import plan_prod_store
         plans_prods = plan_prod_store.plans_prods
@@ -232,18 +233,11 @@ class SettingsStore(QObject):
                                   longueur=self.plan_prod.longueur,
                                   tours=self.plan_prod.tours,
                                   bobine_poly=self.plan_prod.bobine_poly_selected.code,
-                                  encrier_1=self.get_color_encrier(self.plan_prod.encrier_1),
-                                  encrier_2=self.get_color_encrier(self.plan_prod.encrier_2),
-                                  encrier_3=self.get_color_encrier(self.plan_prod.encrier_3))
+                                  encrier_1=self.plan_prod.encrier_1.color,
+                                  encrier_2=self.plan_prod.encrier_2.color,
+                                  encrier_3=self.plan_prod.encrier_3.color)
         self.plan_prod = None
         self.SETTINGS_CHANGED_SIGNAL.emit()
-
-    @staticmethod
-    def get_color_encrier(encrier):
-        if encrier.color:
-            return encrier.color
-        else:
-            return "_{}".format(encrier.color_last_prod)
 
     def create_new_plan_prod(self, plan_prod):
         code_bobines_selected = self.get_code_bobine_selected(plan_prod.bobines_filles_selected)
@@ -254,9 +248,9 @@ class SettingsStore(QObject):
                                   longueur=plan_prod.longueur,
                                   tours=plan_prod.tours,
                                   bobine_poly=plan_prod.bobine_poly_selected.code,
-                                  encrier_1=self.get_color_encrier(self.plan_prod.encrier_1),
-                                  encrier_2=self.get_color_encrier(self.plan_prod.encrier_2),
-                                  encrier_3=self.get_color_encrier(self.plan_prod.encrier_3))
+                                  encrier_1=self.plan_prod.encrier_1.color,
+                                  encrier_2=self.plan_prod.encrier_2.color,
+                                  encrier_3=self.plan_prod.encrier_3.color)
 
     def update_plan_prod_on_database(self, plan_prod):
         code_bobines_selected = self.get_code_bobine_selected(plan_prod.bobines_filles_selected)
@@ -268,10 +262,21 @@ class SettingsStore(QObject):
                                   longueur=plan_prod.longueur,
                                   tours=plan_prod.tours,
                                   bobine_poly=plan_prod.bobine_poly_selected.code,
-                                  encrier_1=self.get_color_encrier(self.plan_prod.encrier_1),
-                                  encrier_2=self.get_color_encrier(self.plan_prod.encrier_2),
-                                  encrier_3=self.get_color_encrier(self.plan_prod.encrier_3))
+                                  encrier_1=plan_prod.encrier_1.color,
+                                  encrier_2=plan_prod.encrier_2.color,
+                                  encrier_3=plan_prod.encrier_3.color)
+        self.update_next_plan_prod_from_encrier(plan_prod.start)
         self.SETTINGS_CHANGED_SIGNAL.emit()
+
+    def update_next_plan_prod_from_encrier(self, start):
+        from gestion.stores.plan_prod_store import plan_prod_store
+        for plan_prod in plan_prod_store.plans_prods:
+            if plan_prod.start > start:
+                plan_prod.set_color_encrier_from_last_plan_prod()
+                Database.update_encriers_plan_prod(p_id=plan_prod.p_id,
+                                                   encrier_1=plan_prod.encrier_1.color,
+                                                   encrier_2=plan_prod.encrier_2.color,
+                                                   encrier_3=plan_prod.encrier_3.color)
 
     def save_event(self, event):
         Database.create_event_prod(start=event.start, end=event.end, p_type=event.type_event, info=event.info,

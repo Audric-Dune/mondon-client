@@ -113,12 +113,18 @@ class BlocEncrier(QWidget):
     def swap_encrier(self, index_1, index_2):
         color_encrier_1 = self.plan_prod.encriers[index_1-1].color
         color_encrier_2 = self.plan_prod.encriers[index_2-1].color
-        self.plan_prod.encriers[index_1-1].color = color_encrier_2
-        self.plan_prod.encriers[index_2-1].color = color_encrier_1
+        if color_encrier_2 is None:
+            self.plan_prod.encriers[index_1-1].color = None
+        else:
+            self.plan_prod.encriers[index_1-1].color = color_encrier_2 if color_encrier_2[0] != "_" else None
+        if color_encrier_1 is None:
+            self.plan_prod.encriers[index_2-1].color = None
+        else:
+            self.plan_prod.encriers[index_2-1].color = color_encrier_1 if color_encrier_1[0] != "_" else None
+        self.plan_prod.set_color_encrier_from_last_plan_prod()
         self.parent.update_encriers()
 
     def hide_line_encrier_drag(self):
         self.line_encrier_1_drag.hide()
         self.line_encrier_2_drag.hide()
         self.line_encrier_3_drag.hide()
-3

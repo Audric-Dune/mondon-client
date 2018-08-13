@@ -33,12 +33,12 @@ class LineEncrier(QWidget):
         clear_layout(self.hbox)
         encrier = self.plan_prod.encriers[self.index-1]
         refente = encrier.refente
-        print(encrier)
-        if encrier.color is None or encrier.color == "None":
-            if encrier.color_last_prod is None or encrier.color_last_prod == "None":
+        if encrier.color is None or encrier.color[0] == "_":
+            if encrier.color is None:
                 text_label = "Encrier vide"
             else:
-                text_label = "Couleur actuelle encrier: {}".format(encrier.color_last_prod)
+                color = encrier.color[1:]
+                text_label = "Couleur actuelle encrier: {}".format(color)
             label_color_encrier = QLabel(text_label)
             label_color_encrier.setStyleSheet(black_16_italic_label_stylesheet)
             label_color_encrier.setAlignment(Qt.AlignCenter)
@@ -94,7 +94,8 @@ class LineEncrier(QWidget):
         return True
 
     def mouseMoveEvent(self, e):
-        if self.plan_prod.encriers[self.index-1].color is None:
+        color_encrier = self.plan_prod.encriers[self.index-1].color
+        if color_encrier is None or color_encrier[0] == "_":
             e.ignore()
         else:
             mime_data = QMimeData()
