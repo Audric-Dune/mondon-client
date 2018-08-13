@@ -44,6 +44,7 @@ class PlanProdStore(QObject):
                 self.add_bobine_to_plan_prod(plan_prod=new_plan_prod, code_bobines_filles=plan_prod[6])
                 new_plan_prod.update_all_current_store()
                 new_plan_prod.get_new_item_selected_from_store()
+                new_plan_prod.set_bobines_fille_selected_to_encriers()
                 self.plans_prods.append(new_plan_prod)
         self.sort_plans_prods()
 

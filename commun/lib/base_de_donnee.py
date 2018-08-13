@@ -382,7 +382,6 @@ class Database:
                                                                longueur, tours, bobine_poly, encrier_1, encrier_2,
                                                                encrier_3)
         try:
-            print(query)
             cls.run_query(query, (refente, bobine_papier, start, code_bobines_selected, longueur, tours, bobine_poly,
                                   encrier_1, encrier_2, encrier_3))
         except sqlite3.IntegrityError as e:
@@ -407,7 +406,7 @@ class Database:
                     encrier_3, bobine_poly, p_id)
         try:
             cls.run_query(query, (start, refente, bobine_papier, code_bobines_selected,
-                                  longueur, tours, bobine_poly, p_id))
+                                  longueur, tours, bobine_poly, encrier_1, encrier_2, encrier_3, p_id))
         except sqlite3.IntegrityError as e:
             # IntegrityError veut dire que l'on essaye d'insérer une vitesse avec un timestamp
             # qui existe déjà dans la base de données.

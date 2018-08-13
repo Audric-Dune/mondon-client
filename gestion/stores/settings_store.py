@@ -211,6 +211,10 @@ class SettingsStore(QObject):
 
     @staticmethod
     def get_code_bobine_selected(bobines_filles_selected):
+        def sort_item(items, sort_name, sort_asc):
+            items = sorted(items, key=lambda b: b.get_value(sort_name), reverse=not sort_asc)
+            return items
+        sort_item(items=bobines_filles_selected, sort_name="index", sort_asc=True)
         code_bobines_selected = ""
         for bobine in bobines_filles_selected:
             code_bobines_selected += str(bobine.code)

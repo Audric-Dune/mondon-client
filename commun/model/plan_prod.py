@@ -57,6 +57,13 @@ class PlanProd(QObject):
                                   timestamp_to_hour_little(self.end),
                                   self.bobine_papier_selected.color)
 
+    def set_index_to_bobines_filles_selected(self):
+        index = 0
+        for bobine in self.bobines_filles_selected:
+            bobine.index = index
+            print(bobine)
+            index += bobine.pose
+
     def set_refente_encrier(self):
         for encrier in self.encriers:
             encrier.refente = self.refente_selected
@@ -92,10 +99,14 @@ class PlanProd(QObject):
             free_encrier = get_free_encrier(encriers=self.encriers)
             free_encrier.set_color(color)
 
-    def update_encrier(self, bobine):
+    def set_bobines_fille_selected_to_encriers(self):
+        self.set_index_to_bobines_filles_selected()
         self.encrier_1.bobines_filles_selected = self.bobines_filles_selected
         self.encrier_2.bobines_filles_selected = self.bobines_filles_selected
         self.encrier_3.bobines_filles_selected = self.bobines_filles_selected
+
+    def update_encrier(self, bobine):
+        self.set_bobines_fille_selected_to_encriers()
         if bobine.colors_cliche is not None:
             for color in bobine.colors_cliche:
                 self.set_color_encrier_from_bobine(color)
