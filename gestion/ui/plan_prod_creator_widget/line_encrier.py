@@ -32,8 +32,8 @@ class LineEncrier(QWidget):
     def update_widget(self):
         clear_layout(self.hbox)
         encrier = self.plan_prod.encriers[self.index-1]
-        print(encrier)
         refente = encrier.refente
+        print(encrier)
         if encrier.color is None or encrier.color == "None":
             if encrier.color_last_prod is None or encrier.color_last_prod == "None":
                 text_label = "Encrier vide"
@@ -60,7 +60,7 @@ class LineEncrier(QWidget):
                         for bobine in encrier.bobines_filles_selected:
                             if bobine.pose == 0:
                                 continue
-                            if encrier.color in bobine.colors_cliche and current_index == bobine.index:
+                            if self.is_valid_encrier_from_bobine(encrier=encrier, bobine=bobine, index=current_index):
                                 self.hbox.addWidget(ClicheUi(parent=self,
                                                              bobine_selected=bobine,
                                                              color=encrier.color))
@@ -79,6 +79,19 @@ class LineEncrier(QWidget):
                     elif encrier.color in bobine.colors_cliche:
                         self.hbox.addWidget(ClicheUi(parent=self, bobine_selected=bobine, color=encrier.color))
         self.hbox.addStretch()
+
+    def is_valid_encrier_from_bobine(self, encrier, bobine, index):
+        if index != bobine.index:
+            return False
+        if encrier.color not in bobine.colors_cliche:
+            return False
+        encriers = self.plan_prod.encriers
+        for p_encrier in encriers:
+            if p_encrier == encrier:
+                return True
+            if p_encrier.color == encrier.color:
+                return False
+        return True
 
     def mouseMoveEvent(self, e):
         if self.plan_prod.encriers[self.index-1].color is None:
