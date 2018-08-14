@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5.QtWidgets import QHBoxLayout
+from PyQt5.QtCore import QPoint
 
 from commun.ui.public.bobine_fille_selected_ui import BobineFilleSelected
 from commun.ui.public.bobine_fille_ui import BobineFille
@@ -13,12 +14,59 @@ class RefenteUi(MondonWidget):
 
     def __init__(self, parent=None, refente=None, bobines_selected=None, ech=1):
         super(RefenteUi, self).__init__(parent=parent)
+        self.setAcceptDrops(True)
+        self.bobine_drag = None
+        self.delta_x_drag = None
+        self.delta_y_drag = None
         self.set_background_color(color_blanc)
         self.ech = ech
         self.refente = refente
         self.hbox = QHBoxLayout()
         self.bobines_selected = bobines_selected
         self.init_widget(refente)
+
+    def dragEnterEvent(self, e):
+        e.accept()
+
+    def dragMoveEvent(self, e):
+        bobine_pos = QPoint(0, 0)
+        split_mime_data = e.mimeData().text().split("_")
+        code_bobine = split_mime_data[0]
+        pose = int(split_mime_data[1])
+        index = int(split_mime_data[2])
+        for bobine in self.bobines_selected:
+            if bobine.code == code_bobine and bobine.pose == pose and bobine.index == index:
+                if self.bobine_drag is None:
+                    self.bobine_drag = BobineFilleSelected(bobine_selected=bobine, parent=self)
+                    self.bobine_drag.show()
+        if self.bobine_drag is not None:
+            for p_index in range(self.hbox.count()):
+                bobine_widget = self.hbox.itemAt(p_index).widget()
+                if not bobine_widget:
+                    continue
+                bobine = bobine_widget.bobine
+                if bobine.code == code_bobine and bobine.pose == pose and bobine.index == index:
+                    print("bobine_pos")
+                    bobine_pos = bobine_widget.pos()
+            if self.delta_x_drag is None:
+                self.delta_x_drag = e.pos().x() - bobine_pos.x()
+                self.delta_y_drag = e.pos().y() - bobine_pos.y()
+            self.bobine_drag.move(e.pos().x() - self.delta_x_drag, e.pos().y() - self.delta_y_drag)
+        e.accept()
+
+    def dragLeaveEvent(self, e):
+        self.delete_bobine_drag()
+        e.accept()
+
+    def dropEvent(self, e):
+        self.delta_x_drag = None
+        self.delta_y_drag = None
+        self.delete_bobine_drag()
+        e.accept()
+
+    def delete_bobine_drag(self):
+        self.bobine_drag.deleteLater()
+        self.bobine_drag = None
 
     def init_widget(self, refente):
         self.hbox.setSpacing(0)
