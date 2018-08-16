@@ -10,7 +10,6 @@ class Encrier:
         self.refente = refente
 
     def set_color(self, color):
-        print(color)
         self.color = color
 
     def __str__(self):

@@ -28,7 +28,6 @@ class SettingsStore(QObject):
         self.cursor = None
 
     def update_plans_prods(self):
-        print("update_plans_prods")
         self.cursor = None
         from gestion.stores.plan_prod_store import plan_prod_store
         plans_prods = plan_prod_store.plans_prods
