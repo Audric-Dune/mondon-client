@@ -82,24 +82,17 @@ class PlanProdStore(QObject):
     @staticmethod
     def add_bobine_to_plan_prod(code_bobines_filles, plan_prod):
         code_bobines_filles_split = code_bobines_filles.split("_")
-        bobine_fille = None
-        pose = None
-        for string in code_bobines_filles_split:
-            if string and string[0] == "B":
-                def get_bobine_fille(code):
-                    for bobine in bobine_fille_store.bobines:
-                        if bobine.code == code:
-                            return bobine
-                bobine_fille = get_bobine_fille(code=string)
-            try:
-                pose = int(string)
-            except ValueError:
-                pass
-            if bobine_fille and pose is not None:
-                new_bobine_fille = BobineFilleSelected(bobine=bobine_fille, index=None, pose=pose)
-                plan_prod.bobines_filles_selected.append(new_bobine_fille)
-                bobine_fille = None
-                pose = None
+        index = 0
+        while True:
+            if code_bobines_filles_split[index]:
+                bobine = bobine_fille_store.get_bobine(code_bobines_filles_split[index])
+                bobine_selected = BobineFilleSelected(bobine=bobine,
+                                                      pose=int(code_bobines_filles_split[index+1]),
+                                                      index=int(code_bobines_filles_split[index+2]))
+                plan_prod.bobines_filles_selected.append(bobine_selected)
+                index += 3
+            else:
+                break
 
 
 plan_prod_store = PlanProdStore()

@@ -221,6 +221,8 @@ class SettingsStore(QObject):
             code_bobines_selected += "_"
             code_bobines_selected += str(bobine.pose)
             code_bobines_selected += "_"
+            code_bobines_selected += str(bobine.index)
+            code_bobines_selected += "_"
         return code_bobines_selected
 
     def save_plan_prod(self):

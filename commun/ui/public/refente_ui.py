@@ -24,8 +24,6 @@ class RefenteUi(MondonWidget):
         self.refente = refente
         self.hbox = QHBoxLayout()
         self.bobines_selected = bobines_selected
-        if bobines_selected:
-            self.bobines_selected = sorted(bobines_selected, key=lambda b: b.get_value("index"), reverse=False)
         self.init_widget(refente)
 
     def dragEnterEvent(self, e):
@@ -57,6 +55,8 @@ class RefenteUi(MondonWidget):
                     pass
                 else:
                     for p_bobine in bobines_fille_buffer:
+                        bobines_fille_buffer = sorted(bobines_fille_buffer, key=lambda b: b.get_value("index"),
+                                                      reverse=False)
                         if self.can_apply_bobine_at_index(p_bobine,
                                                           index=index_laize,
                                                           refente=refente_buffer,
@@ -65,7 +65,8 @@ class RefenteUi(MondonWidget):
                             self.remove_bobine(bobine=p_bobine, bobines=bobines_fille_buffer)
                 index_laize += 1
             if self.is_complete_refente(refente_buffer):
-                self.valid_index.append(index)
+                if index != bobine.index:
+                    self.valid_index.append(index)
 
     @staticmethod
     def is_complete_refente(refente):
@@ -75,7 +76,6 @@ class RefenteUi(MondonWidget):
         return True
 
     def can_apply_bobine_at_index(self, bobine, index, refente, pose):
-        print(index)
         if refente[index] == bobine.laize:
             pose -= 1
             if pose <= 0:
@@ -127,22 +127,33 @@ class RefenteUi(MondonWidget):
         e.accept()
 
     def dropEvent(self, e):
-        for p_index in range(self.hbox.count()):
-            bobine_widget = self.hbox.itemAt(p_index).widget()
-            if bobine_widget is None:
-                continue
-            if bobine_widget.geometry().contains(e.pos()) and bobine_widget.bobine.index in self.valid_index:
-                self.get_new_bobines_fille_selected(bobine=self.bobine_drag.bobine,
-                                                    index_bobine=bobine_widget.bobine.index,
-                                                    bobines=self.bobines_selected)
-                from gestion.stores.settings_store import settings_store_gestion
-                settings_store_gestion.plan_prod.bobines_filles_selected = self.bobines_selected
-                settings_store_gestion.plan_prod.ON_CHANGED_SIGNAL.emit()
+        index_drop = self.get_index_at_pos(e.pos())
+        if index_drop in self.valid_index:
+            self.get_new_bobines_fille_selected(bobine=self.bobine_drag.bobine,
+                                                index_bobine=index_drop,
+                                                bobines=self.bobines_selected)
+            from gestion.stores.settings_store import settings_store_gestion
+            settings_store_gestion.plan_prod.bobines_filles_selected = self.bobines_selected
+            settings_store_gestion.plan_prod.ON_CHANGED_SIGNAL.emit()
         self.delta_x_drag = None
         self.delta_y_drag = None
         self.valid_index = []
         self.delete_bobine_drag()
         e.accept()
+
+    def get_index_at_pos(self, pos):
+        counter = 0
+        index = 0
+        for laize in self.refente.laizes:
+            counter += laize
+            if pos.x() < counter:
+                counter_decimal = counter-laize
+                while counter_decimal <= counter:
+                    counter_decimal += laize/10
+                    if pos.x() < counter_decimal:
+                        return min(self.valid_index, key=lambda x: abs(x-index))
+                    index += 0.1
+            index += 1
 
     def get_new_bobines_fille_selected(self, bobine, bobines, index_bobine):
         bobines_buffer = bobines.copy()
