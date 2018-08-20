@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
-from PyQt5.QtWidgets import QVBoxLayout, QLabel, QWidget
+from PyQt5.QtWidgets import QVBoxLayout, QLabel, QWidget, QHBoxLayout
 from PyQt5.QtCore import Qt
 
 from gestion.ui.plan_prod_creator_widget.bloc_information import BlocInformation
@@ -13,6 +13,7 @@ from gestion.stores.filter_store import filter_store
 from gestion.stores.settings_store import settings_store_gestion
 from gestion.ui.plan_prod_creator_widget.bloc_param_prod import BlocParamProd
 from gestion.ui.plan_prod_creator_widget.bloc_encrier import BlocEncrier
+from gestion.ui.plan_prod_creator_widget.tab_reglage import TabReglage
 
 
 class PlanProdCreator(QWidget):
@@ -29,6 +30,7 @@ class PlanProdCreator(QWidget):
         self.bloc_param_prod = BlocParamProd(plan_prod=self.plan_prod, parent=self)
         self.titre_prod = QLabel("NOUVELLE PRODUCTION")
         self.bloc_encrier = BlocEncrier(parent=self, plan_prod=self.plan_prod)
+        self.bloc_encrier.ON_CHANGED_SIGNAL.connect(self.on_encrier_changed)
         self.bloc_poly_selected = BlocSelected(data_type="poly", parent=self, callback=self.show_selector)
         self.bloc_papier_selected = BlocSelected(data_type="papier", parent=self, callback=self.show_selector)
         self.bloc_perfo_selected = BlocSelected(data_type="perfo", parent=self, callback=self.show_selector)
@@ -36,10 +38,25 @@ class PlanProdCreator(QWidget):
         self.bloc_bobines_selected = BlocSelected(data_type="bobine", parent=self, callback=self.show_selector)
         self.bloc_info = BlocInformation(parent=self, plan_prod=plan_prod)
         self.bloc_bt = BlocBt(parent=self, plan_prod=plan_prod, callback=self.handle_click_bt)
+        self.bloc_tab_reglage = TabReglage(parent=self, plan_prod=plan_prod)
         self.init_ui()
         self.show()
 
     def init_ui(self):
+        master_hbox = QHBoxLayout()
+        master_hbox.addLayout(self.get_plan_prod_selector_ui())
+        master_hbox.addLayout(self.get_plan_prod_reglage_ui())
+        self.setLayout(master_hbox)
+
+    def on_encrier_changed(self):
+        self.bloc_tab_reglage.update_widget()
+
+    def get_plan_prod_reglage_ui(self):
+        master_vbox = QVBoxLayout()
+        master_vbox.addWidget(self.bloc_tab_reglage)
+        return master_vbox
+
+    def get_plan_prod_selector_ui(self):
         master_vbox = QVBoxLayout()
         vbox = QVBoxLayout()
         vbox.setContentsMargins(0, 0, 0, 0)
@@ -53,7 +70,7 @@ class PlanProdCreator(QWidget):
         master_vbox.addLayout(vbox)
         master_vbox.addWidget(self.bloc_bt)
         master_vbox.addWidget(self.bloc_info)
-        self.setLayout(master_vbox)
+        return master_vbox
 
     def update_bloc_selected(self):
         self.bloc_poly_selected.update_widget()
@@ -70,6 +87,7 @@ class PlanProdCreator(QWidget):
     def handle_plan_prod_changed(self):
         self.update_bloc_selected()
         self.update_encriers()
+        self.bloc_tab_reglage.update_widget()
         if filter_store.data_type != "bobine" or len(self.plan_prod.current_bobine_fille_store.bobines) == 0:
             self.selector_manager.hide()
         self.bloc_param_prod.update_label()

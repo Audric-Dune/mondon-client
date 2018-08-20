@@ -2,12 +2,15 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5.QtWidgets import QWidget, QVBoxLayout
+from PyQt5.QtCore import pyqtSignal
 
 from commun.constants.colors import color_vert, color_rouge
 from gestion.ui.plan_prod_creator_widget.line_encrier import LineEncrier
 
 
 class BlocEncrier(QWidget):
+    ON_CHANGED_SIGNAL = pyqtSignal()
+
     def __init__(self, parent=None, plan_prod=None):
         super(BlocEncrier, self).__init__(parent=parent)
         self.setAcceptDrops(True)
@@ -108,6 +111,7 @@ class BlocEncrier(QWidget):
             e.ignore()
         else:
             self.swap_encrier(index_1=int(index_drag), index_2=int(index_drop))
+            self.ON_CHANGED_SIGNAL.emit()
             e.accept()
 
     def swap_encrier(self, index_1, index_2):

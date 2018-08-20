@@ -269,7 +269,8 @@ class SettingsStore(QObject):
         self.update_next_plan_prod_from_encrier(plan_prod.start)
         self.SETTINGS_CHANGED_SIGNAL.emit()
 
-    def update_next_plan_prod_from_encrier(self, start):
+    @staticmethod
+    def update_next_plan_prod_from_encrier(start):
         from gestion.stores.plan_prod_store import plan_prod_store
         for plan_prod in plan_prod_store.plans_prods:
             if plan_prod.start > start:
