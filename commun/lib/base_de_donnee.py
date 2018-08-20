@@ -358,7 +358,7 @@ class Database:
     @classmethod
     def get_refente(cls):
         query = "SELECT id, id_perfo, dec, laize1, laize2, laize3," \
-                " laize4, laize5, laize6, laize7 " \
+                " laize4, laize5, laize6, laize7, chute " \
                 "FROM mondon_refente " \
             .format()
         data_refente = cls.run_query(query, ())

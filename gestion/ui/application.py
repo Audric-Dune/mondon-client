@@ -67,7 +67,8 @@ class Application(QApplication):
                                   laize4=data_refente[6],
                                   laize5=data_refente[7],
                                   laize6=data_refente[8],
-                                  laize7=data_refente[9])
+                                  laize7=data_refente[9],
+                                  chute=data_refente[10])
             refente_store.add_refente(new_refente)
 
     @staticmethod

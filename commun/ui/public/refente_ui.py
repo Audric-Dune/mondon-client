@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import QHBoxLayout
 from PyQt5.QtCore import QPoint
 
 from commun.ui.public.bobine_fille_selected_ui import BobineFilleSelected
+from commun.ui.public.chute_ui import ChuteUi
 from commun.ui.public.bobine_fille_ui import BobineFille
 from commun.ui.public.mondon_widget import MondonWidget
 from commun.constants.colors import color_blanc
@@ -114,7 +115,10 @@ class RefenteUi(MondonWidget):
                 bobine_widget = self.hbox.itemAt(p_index).widget()
                 if not bobine_widget:
                     continue
-                bobine = bobine_widget.bobine
+                try:
+                    bobine = bobine_widget.bobine
+                except AttributeError:
+                    continue
                 if bobine.code == code_bobine and bobine.pose == pose and bobine.index == index:
                     bobine_pos = bobine_widget.pos()
             if self.delta_x_drag is None:
@@ -184,6 +188,8 @@ class RefenteUi(MondonWidget):
         self.hbox.setSpacing(0)
         self.hbox.setContentsMargins(0, 0, 0, 0)
         index = 0
+        if refente.chute:
+            self.hbox.addWidget(ChuteUi(parent=self, chute=refente.chute))
         while index < len(refente.laizes):
             laize = refente.laizes[index]
             if laize:
