@@ -7,6 +7,7 @@ from PyQt5.QtGui import QPen, QPainter, QColor
 from commun.ui.public.mondon_widget import QWidget
 from commun.utils.drawing import draw_rectangle, draw_text
 from commun.utils.color_cliche import get_color_cliche
+from commun.utils.cliches import get_cliche_from_code
 from commun.constants.colors import color_noir
 
 
@@ -24,15 +25,8 @@ class ClicheUi(QWidget):
 
     def get_cliche(self):
         for code_cliche in self.bobine_selected.codes_cliche:
-            cliche = self.get_cliche_from_code(code_cliche)
+            cliche = get_cliche_from_code(code_cliche)
             if self.color in cliche.colors:
-                return cliche
-
-    @staticmethod
-    def get_cliche_from_code(code_cliche):
-        from commun.stores.cliche_store import cliche_store
-        for cliche in cliche_store.cliches:
-            if cliche.code == code_cliche:
                 return cliche
 
     def paintEvent(self, e):

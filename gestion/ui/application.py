@@ -11,7 +11,9 @@ from commun.stores.bobine_papier_store import bobine_papier_store
 from commun.stores.refente_store import refente_store
 from commun.stores.perfo_store import perfo_store
 from commun.stores.cliche_store import cliche_store
+from commun.stores.reglage_store import reglage_store
 from commun.model.bobine_fille import BobineFille
+from commun.model.reglage import Reglage
 from commun.model.cliche import Cliche
 from commun.model.bobine_mere import BobineMere
 from commun.model.refente import Refente
@@ -98,6 +100,7 @@ class Application(QApplication):
         self.get_bobine_fille_from_xls()
         self.get_vente_annuelle_from_xls()
         self.get_bobine_mere_from_xls()
+        self.get_data_reglage_from_xls()
 
     def get_cliche_from_xls(self):
         xls = open_xls('ARTICLE CLICHE.xls')
@@ -136,6 +139,25 @@ class Application(QApplication):
         while current_row < max_row:
             self.extract_bobine_mere_from_line(sheet, current_row)
             current_row += 1
+
+    def get_data_reglage_from_xls(self):
+        xls = open_xls('BASE DE DONNEE TEMPS DE REGLAGE PRODUCTION.xls')
+        sheet = xls.sheet_by_name("data")
+        max_row = sheet.nrows
+        current_row = 1
+        while current_row < max_row:
+            self.extract_data_reglage_from_line(sheet, current_row)
+            current_row += 1
+
+    @staticmethod
+    def extract_data_reglage_from_line(sheet, current_row):
+        cat = sheet.cell_value(current_row, 0)
+        p_id = sheet.cell_value(current_row, 1)
+        des = sheet.cell_value(current_row, 2)
+        temps = sheet.cell_value(current_row, 3)
+        optionnel = sheet.cell_value(current_row, 4)
+        info = sheet.cell_value(current_row, 5)
+        reglage_store.add_reglage(Reglage(cat=cat, des=des, p_id=p_id, time=temps, optionnel=optionnel, info=info))
 
     def extract_vente_from_line(self, sheet, current_row):
         current_id = sheet.cell_value(current_row, 0)

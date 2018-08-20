@@ -6,7 +6,7 @@ from PyQt5.QtGui import QPen, QPainter, QColor, QBrush
 
 from commun.ui.public.mondon_widget import QWidget
 from commun.utils.drawing import draw_rectangle, draw_text
-from commun.constants.colors import color_gris, color_noir, color_gris_noir, color_blanc
+from commun.constants.colors import color_gris, color_noir, color_gris_noir
 
 
 class ChuteUi(QWidget):
