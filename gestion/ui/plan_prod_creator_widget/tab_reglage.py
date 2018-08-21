@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QHBoxLayout
-from PyQt5.QtGui import QPen, QPainter, QColor, QFont
+from PyQt5.QtGui import QPen, QPainter, QColor
 
 from commun.constants.colors import color_noir, color_blanc
 from commun.stores.reglage_store import reglage_store

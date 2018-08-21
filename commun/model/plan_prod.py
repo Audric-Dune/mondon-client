@@ -21,6 +21,7 @@ from commun.stores.bobine_fille_store import bobine_fille_store
 from commun.stores.perfo_store import perfo_store
 from commun.stores.refente_store import refente_store
 from commun.stores.bobine_poly_store import bobine_poly_store
+from commun.model.data_reglages import DataReglages
 
 
 class PlanProd(QObject):
@@ -32,6 +33,8 @@ class PlanProd(QObject):
         self.p_id = p_id
         self.start = start
         self.end = start
+        self.last_plan_prod = None
+        self.data_reglage = DataReglages(plan_prod=self)
         self.tours = 12
         self.encrier_1 = Encrier()
         self.encrier_2 = Encrier()
@@ -49,9 +52,6 @@ class PlanProd(QObject):
         self.bobines_filles_selected = []
         self.bobine_papier_selected = None
         self.bobine_poly_selected = None
-        if p_id is None:
-            if self.start:
-                self.set_color_encrier_from_last_plan_prod()
 
     def __repr__(self):
         return "{}-{}, {}".format(timestamp_to_hour_little(self.start),
@@ -69,16 +69,19 @@ class PlanProd(QObject):
         for encrier in self.encriers:
             encrier.refente = self.refente_selected
 
-    def set_color_encrier_from_last_plan_prod(self):
+    def get_last_plan_prod(self):
         from gestion.stores.plan_prod_store import plan_prod_store
-        last_plan_prod = plan_prod_store.get_last_plan_prod(start_plan_prod=self.start)
-        if last_plan_prod:
+        self.last_plan_prod = plan_prod_store.get_last_plan_prod(start_plan_prod=self.start)
+
+    def set_color_encrier_from_last_plan_prod(self):
+        print("set_color_encrier_from_last_plan_prod")
+        if self.last_plan_prod:
             if self.encrier_1.color is None or self.encrier_1.color[0] == "_":
-                self.encrier_1.set_color(self.get_color_encrier_last_plan_prod(last_plan_prod.encrier_1.color))
+                self.encrier_1.set_color(self.get_color_encrier_last_plan_prod(self.last_plan_prod.encrier_1.color))
             if self.encrier_2.color is None or self.encrier_2.color[0] == "_":
-                self.encrier_2.set_color(self.get_color_encrier_last_plan_prod(last_plan_prod.encrier_2.color))
+                self.encrier_2.set_color(self.get_color_encrier_last_plan_prod(self.last_plan_prod.encrier_2.color))
             if self.encrier_3.color is None or self.encrier_3.color[0] == "_":
-                self.encrier_3.set_color(self.get_color_encrier_last_plan_prod(last_plan_prod.encrier_3.color))
+                self.encrier_3.set_color(self.get_color_encrier_last_plan_prod(self.last_plan_prod.encrier_3.color))
 
     @staticmethod
     def get_color_encrier_last_plan_prod(color):
@@ -319,6 +322,7 @@ class PlanProd(QObject):
         self.init_bobine_poly_store()
 
     def update_all_current_store(self):
+        print("update_all_current_store")
         self.init_current_store()
         self.definied_longueur()
         contrainte = self.get_contrainte()

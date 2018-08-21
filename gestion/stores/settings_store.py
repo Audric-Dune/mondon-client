@@ -136,6 +136,7 @@ class SettingsStore(QObject):
             bobine_poly.get_stock_at_time(time=self.plan_prod.start)
 
     def create_new_plan(self):
+        print("create_new_plan")
         from commun.model.plan_prod import PlanProd
         start_prod = self.get_start()
         if start_prod:
@@ -150,6 +151,7 @@ class SettingsStore(QObject):
         self.CREATE_PLAN_PROD_WINDOW.emit()
 
     def get_start(self, start=None, plans_prods=None):
+        print("get_start")
         if start is None:
             today = timestamp_at_day_ago(0)
             start = timestamp_at_time(ts=today, hours=DEBUT_PROD_MATIN) if self.cursor is None else self.cursor
@@ -313,8 +315,6 @@ class SettingsStore(QObject):
 
     def delete_plan_prod(self, plan_prod, update=True):
         Database.delete_plan_prod(p_id=plan_prod.p_id)
-        from gestion.stores.plan_prod_store import plan_prod_store
-        plan_prod_store.get_plan_prod_from_database()
         if update:
             self.update_plans_prods()
         self.SETTINGS_CHANGED_SIGNAL.emit()
