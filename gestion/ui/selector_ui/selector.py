@@ -254,16 +254,16 @@ class Selector(MondonWidget):
 
     def handle_selected_refente(self, refente):
         self.plan_prod.add_refente_selected(refente)
-        settings_store_gestion.plan_prod.get_new_item_selected_from_store()
+        self.plan_prod.get_new_item_selected_from_store()
 
     def handle_selected_perfo(self, perfo):
         self.plan_prod.add_perfo_selected(perfo)
-        settings_store_gestion.plan_prod.get_new_item_selected_from_store()
+        self.plan_prod.get_new_item_selected_from_store()
 
     def handle_selected_bobine_papier(self, bobine):
         self.plan_prod.add_bobine_papier_selected(bobine)
-        settings_store_gestion.plan_prod.get_new_item_selected_from_store()
+        self.plan_prod.get_new_item_selected_from_store()
 
     def handle_selected_bobine_poly(self, bobine):
         self.plan_prod.add_bobine_poly_selected(bobine)
-        settings_store_gestion.plan_prod.get_new_item_selected_from_store()
+        self.plan_prod.get_new_item_selected_from_store()

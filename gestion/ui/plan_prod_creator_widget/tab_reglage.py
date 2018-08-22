@@ -28,9 +28,8 @@ class TabReglage(QWidget):
 
     def update_widget(self):
         clear_layout(self.vbox)
-        last_plan_prod = plan_prod_store.get_last_plan_prod(start_plan_prod=self.plan_prod.start)
         for reglage in reglage_store.reglages:
-            if reglage.is_active(p=self.plan_prod, last_p=last_plan_prod) and not reglage.optionnel:
+            if reglage.is_active(p=self.plan_prod, last_p=self.plan_prod.last_plan_prod) and not reglage.optionnel:
                 self.vbox.addWidget(LineReglage(parent=self, reglage=reglage))
         self.vbox.addStretch(0)
 

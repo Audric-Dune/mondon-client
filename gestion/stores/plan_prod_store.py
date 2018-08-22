@@ -21,7 +21,6 @@ class PlanProdStore(QObject):
         self.plans_prods = []
 
     def get_plan_prod_from_database(self):
-        print("get_plan_prod_from_database")
         self.plans_prods = []
         plan_prod_on_data_base = Database.get_plan_prod()
         for data_plan_prod in plan_prod_on_data_base:
@@ -52,14 +51,12 @@ class PlanProdStore(QObject):
         self.plans_prods = sorted(self.plans_prods, key=lambda b: b.get_start(), reverse=False)
 
     def get_last_plan_prod(self, start_plan_prod):
-        print("get_last_plan_prod")
         last_plan_prod = None
         for plan_prod in self.plans_prods:
             if plan_prod is None:
                 continue
             if plan_prod.start < start_plan_prod:
                 last_plan_prod = plan_prod
-        print(last_plan_prod)
         return last_plan_prod
 
     @staticmethod

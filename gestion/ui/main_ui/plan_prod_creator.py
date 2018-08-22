@@ -23,6 +23,7 @@ class PlanProdCreator(QWidget):
         self.setWindowFlags(Qt.Dialog)
         self.setFocusPolicy(Qt.ClickFocus)
         self.plan_prod = plan_prod
+        plan_prod.set_refente_encrier()
         self.plan_prod.ON_CHANGED_SIGNAL.connect(self.handle_plan_prod_changed)
         self.plan_prod.ON_TOURS_CHANGED.connect(self.handle_tours_plan_prod_changed)
         self.selector_manager = SelectorManager(parent=self, plan_prod=self.plan_prod)

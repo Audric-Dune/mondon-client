@@ -54,9 +54,12 @@ class PlanProd(QObject):
         self.bobine_poly_selected = None
 
     def __repr__(self):
-        return "{}-{}, {}".format(timestamp_to_hour_little(self.start),
-                                  timestamp_to_hour_little(self.end),
-                                  self.bobine_papier_selected.color)
+        return "{}-{}, {}: cliché_1 {}, cliché_2 {}, cliché_3 {}".format(timestamp_to_hour_little(self.start),
+                                                                         timestamp_to_hour_little(self.end),
+                                                                         self.bobine_papier_selected.color,
+                                                                         self.encrier_1.color,
+                                                                         self.encrier_2.color,
+                                                                         self.encrier_3.color)
 
     def set_index_to_bobines_filles_selected(self):
         index = 0
@@ -69,12 +72,20 @@ class PlanProd(QObject):
         for encrier in self.encriers:
             encrier.refente = self.refente_selected
 
+    def init_new_plan(self):
+        self.get_last_plan_prod()
+        self.set_color_encrier_from_last_plan_prod()
+        self.add_plan_prod_on_store()
+
+    def add_plan_prod_on_store(self):
+        from gestion.stores.plan_prod_store import plan_prod_store
+        plan_prod_store.plans_prods.append(self)
+
     def get_last_plan_prod(self):
         from gestion.stores.plan_prod_store import plan_prod_store
         self.last_plan_prod = plan_prod_store.get_last_plan_prod(start_plan_prod=self.start)
 
     def set_color_encrier_from_last_plan_prod(self):
-        print("set_color_encrier_from_last_plan_prod")
         if self.last_plan_prod:
             if self.encrier_1.color is None or self.encrier_1.color[0] == "_":
                 self.encrier_1.set_color(self.get_color_encrier_last_plan_prod(self.last_plan_prod.encrier_1.color))
@@ -322,7 +333,6 @@ class PlanProd(QObject):
         self.init_bobine_poly_store()
 
     def update_all_current_store(self):
-        print("update_all_current_store")
         self.init_current_store()
         self.definied_longueur()
         contrainte = self.get_contrainte()
