@@ -34,7 +34,7 @@ class PlanProd(QObject):
         self.start = start
         self.end = start
         self.last_plan_prod = None
-        self.data_reglage = DataReglages(plan_prod=self)
+        self.data_reglages = DataReglages(plan_prod=self)
         self.tours = 12
         self.encrier_1 = Encrier()
         self.encrier_2 = Encrier()
@@ -75,6 +75,7 @@ class PlanProd(QObject):
     def init_new_plan(self):
         self.get_last_plan_prod()
         self.set_color_encrier_from_last_plan_prod()
+        self.data_reglages.update_reglage()
         self.add_plan_prod_on_store()
 
     def add_plan_prod_on_store(self):
@@ -84,6 +85,7 @@ class PlanProd(QObject):
     def get_last_plan_prod(self):
         from gestion.stores.plan_prod_store import plan_prod_store
         self.last_plan_prod = plan_prod_store.get_last_plan_prod(start_plan_prod=self.start)
+        self.data_reglages.set_last_plan_prod(last_plan_prod=self.last_plan_prod)
 
     def set_color_encrier_from_last_plan_prod(self):
         if self.last_plan_prod:

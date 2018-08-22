@@ -28,7 +28,9 @@ class DataReglages:
                 if data_reglage:
                     new_data_reglages.append(data_reglage)
                 else:
-                    self.add_reglage(reglage=reglage)
+                    new_data_reglage = DataReglage(reglage=reglage)
+                    new_data_reglages.append(new_data_reglage)
+        self.data_reglages = new_data_reglages
 
     def get_data_reglage_from_id(self, id_reglage):
         for data_reglage in self.data_reglages:

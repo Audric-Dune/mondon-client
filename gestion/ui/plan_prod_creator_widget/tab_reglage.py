@@ -27,19 +27,19 @@ class TabReglage(QWidget):
         self.setLayout(self.vbox)
 
     def update_widget(self):
+        self.plan_prod.data_reglages.update_reglage()
         clear_layout(self.vbox)
-        for reglage in reglage_store.reglages:
-            if reglage.is_active(p=self.plan_prod, last_p=self.plan_prod.last_plan_prod) and not reglage.optionnel:
-                self.vbox.addWidget(LineReglage(parent=self, reglage=reglage))
+        for data_reglage in self.plan_prod.data_reglages.data_reglages:
+            self.vbox.addWidget(LineReglage(parent=self, data_reglage=data_reglage))
         self.vbox.addStretch(0)
 
 
 class LineReglage(QWidget):
 
-    def __init__(self, parent=None, reglage=None):
+    def __init__(self, parent=None, data_reglage=None):
         super(LineReglage, self).__init__(parent=parent)
-        self.reglage = reglage
-        self.id = reglage.id
+        self.data_reglage = data_reglage
+        self.reglage = data_reglage.reglage
         self.init_ui()
 
     def init_ui(self):
@@ -51,10 +51,12 @@ class LineReglage(QWidget):
         qty = self.reglage.qty if self.reglage.qty else 1
         label_qty = QLabel("x{}".format(qty))
         hbox.addWidget(label_qty)
-        check_box_conducteur = CheckboxButton(parent=self)
+        check_box_conducteur = CheckboxButton(parent=self, is_check=not self.data_reglage.check_box_conducteur)
+        check_box_conducteur.ON_CLICK_SIGNAL.connect(lambda: self.data_reglage.flip_check_box("conducteur"))
         check_box_conducteur.setFixedSize(20, 20)
         hbox.addWidget(check_box_conducteur)
-        check_box_aide = CheckboxButton(parent=self)
+        check_box_aide = CheckboxButton(parent=self, is_check=not self.data_reglage.check_box_aide)
+        check_box_aide.ON_CLICK_SIGNAL.connect(lambda: self.data_reglage.flip_check_box("aide"))
         check_box_aide.setFixedSize(20, 20)
         hbox.addWidget(check_box_aide)
         label_time = QLabel("{} min".format(self.reglage.time))

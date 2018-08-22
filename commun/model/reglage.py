@@ -27,7 +27,7 @@ class Reglage:
         if last_p is None:
             return False
         if self.optionnel:
-            return True
+            return False
         if self.id == 0 or self.id == 23:
             if p.perfo_selected and p.perfo_selected.code == last_p.perfo_selected.code:
                 return False

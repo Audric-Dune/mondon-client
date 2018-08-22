@@ -38,36 +38,46 @@ class RefenteUi(MondonWidget):
         mouse_pos = e.pos()
         self.drag_ui(code_bobine, pose, index, mouse_pos)
         if not self.valid_index:
-            self.get_valid_index_from_bobine_drag(bobine=self.bobine_drag.bobine)
+            self.valid_index = self.get_valid_index_from_bobine(bobine=self.bobine_drag.bobine)
+        print("self.valid_index", self.valid_index)
         e.accept()
 
-    def get_valid_index_from_bobine_drag(self, bobine):
-        for index in range(len(self.refente.laizes)-1):
-            bobines_fille_buffer = self.bobines_selected.copy()
+    def get_valid_index_from_bobine(self, bobine):
+        valid_index = []
+        for index in range(len(self.refente.laizes)):
+            bobines_buffer = self.bobines_selected.copy()
             refente_buffer = self.refente.laizes.copy()
             if self.can_apply_bobine_at_index(bobine, index, refente=refente_buffer, pose=bobine.pose):
                 self.apply_bobine(bobine=bobine, start_index=index, refente=refente_buffer)
-                self.remove_bobine(bobine=bobine, bobines=bobines_fille_buffer)
+                bobines_buffer.remove(bobine)
             else:
                 continue
-            index_laize = 0
-            for laize in refente_buffer:
-                if laize is None:
-                    pass
-                else:
-                    for p_bobine in bobines_fille_buffer:
-                        bobines_fille_buffer = sorted(bobines_fille_buffer, key=lambda b: b.get_value("index"),
-                                                      reverse=False)
-                        if self.can_apply_bobine_at_index(p_bobine,
-                                                          index=index_laize,
-                                                          refente=refente_buffer,
-                                                          pose=p_bobine.pose):
-                            self.apply_bobine(bobine=p_bobine, start_index=index_laize, refente=refente_buffer)
-                            self.remove_bobine(bobine=p_bobine, bobines=bobines_fille_buffer)
-                index_laize += 1
-            if self.is_complete_refente(refente_buffer):
-                if index != bobine.index:
-                    self.valid_index.append(index)
+            if self.is_valid_refente_buffer_with_bobines_buffer(bobines_buffer=bobines_buffer,
+                                                                refente_buffer=refente_buffer):
+                valid_index.append(index)
+        return valid_index
+
+    def is_valid_refente_buffer_with_bobines_buffer(self, bobines_buffer, refente_buffer):
+        bb = bobines_buffer.copy()
+        rb = refente_buffer.copy()
+        if self.is_complete_refente(rb):
+            return True
+        index = 0
+        for laize in rb:
+            if laize is None:
+                pass
+            else:
+                for p_bobine in bb:
+                    if self.can_apply_bobine_at_index(p_bobine,
+                                                      index=index,
+                                                      refente=rb,
+                                                      pose=p_bobine.pose):
+                        self.apply_bobine(bobine=p_bobine, start_index=index, refente=rb)
+                        bb.remove(p_bobine)
+                        if self.is_valid_refente_buffer_with_bobines_buffer(bb, rb):
+                            return True
+            index += 1
+        return False
 
     @staticmethod
     def is_complete_refente(refente):
@@ -77,6 +87,8 @@ class RefenteUi(MondonWidget):
         return True
 
     def can_apply_bobine_at_index(self, bobine, index, refente, pose):
+        if index >= 7:
+            return False
         if refente[index] == bobine.laize:
             pose -= 1
             if pose <= 0:
@@ -126,19 +138,34 @@ class RefenteUi(MondonWidget):
                 self.delta_y_drag = mouse_pos.y() - bobine_pos.y()
             self.bobine_drag.move(mouse_pos.x() - self.delta_x_drag, mouse_pos.y() - self.delta_y_drag)
 
+    @staticmethod
+    def get_bobine_buffer(bobines):
+        bobines_buffer = {}
+        for bobine in bobines:
+            bobines_buffer[bobine.index] = bobine
+        import collections
+        bobines_buffer = collections.OrderedDict(sorted(bobines_buffer.items()))
+        return bobines_buffer
+
     def dragLeaveEvent(self, e):
         self.delete_bobine_drag()
         e.accept()
 
     def dropEvent(self, e):
-        index_drop = self.get_index_at_pos(e.pos())
-        if index_drop in self.valid_index:
-            self.get_new_bobines_fille_selected(bobine=self.bobine_drag.bobine,
-                                                index_bobine=index_drop,
-                                                bobines=self.bobines_selected)
-            from gestion.stores.settings_store import settings_store_gestion
-            settings_store_gestion.plan_prod.bobines_filles_selected = self.bobines_selected
-            settings_store_gestion.plan_prod.ON_CHANGED_SIGNAL.emit()
+        if self.valid_index:
+            index_drop = self.get_index_at_pos(e.pos())
+            print("index_drop", index_drop)
+            valid_index_drop = min(self.valid_index, key=lambda x: abs(x-index_drop))
+            print("valid_index_drop", valid_index_drop)
+            if index_drop == self.bobine_drag.bobine.index:
+                pass
+            elif valid_index_drop in self.valid_index:
+                self.get_new_bobines_fille_selected(bobine=self.bobine_drag.bobine,
+                                                    index_bobine=valid_index_drop,
+                                                    bobines=self.bobines_selected)
+                from gestion.stores.settings_store import settings_store_gestion
+                settings_store_gestion.plan_prod.bobines_filles_selected = self.bobines_selected
+                settings_store_gestion.plan_prod.ON_CHANGED_SIGNAL.emit()
         self.delta_x_drag = None
         self.delta_y_drag = None
         self.valid_index = []
@@ -155,14 +182,13 @@ class RefenteUi(MondonWidget):
                 while counter_decimal <= counter:
                     counter_decimal += laize/10
                     if pos.x() < counter_decimal:
-                        return min(self.valid_index, key=lambda x: abs(x-index))
+                        return index
                     index += 0.1
             index += 1
 
     def get_new_bobines_fille_selected(self, bobine, bobines, index_bobine):
-        bobines_buffer = bobines.copy()
-        bobines_buffer.remove(bobine)
-        bobines_buffer = sorted(bobines_buffer, key=lambda b: b.get_value("index"), reverse=False)
+        bobines_buffer = self.get_bobine_buffer(bobines)
+        bobines_buffer = self.remove_value_in_buffer(buffer=bobines_buffer, element=bobine)
         index = 0
         while index < len(self.refente.laizes):
             laize = self.refente.laizes[index]
@@ -172,12 +198,19 @@ class RefenteUi(MondonWidget):
                 bobine.index = index
                 index += bobine.pose if bobine.pose else 1
             else:
-                for p_bobine in bobines_buffer:
-                    if laize == p_bobine.laize:
+                for k, p_bobine in bobines_buffer.items():
+                    if laize == p_bobine.laize and index in self.get_valid_index_from_bobine(p_bobine):
                         p_bobine.index = index
                         index += p_bobine.pose if p_bobine.pose else 1
-                        bobines_buffer.remove(p_bobine)
+                        bobines_buffer = self.remove_value_in_buffer(buffer=bobines_buffer, element=p_bobine)
                         break
+
+    @staticmethod
+    def remove_value_in_buffer(buffer, element):
+        for k, v in buffer.items():
+            if v == element:
+                del buffer[k]
+                return buffer
 
     def delete_bobine_drag(self):
         if self.bobine_drag:
