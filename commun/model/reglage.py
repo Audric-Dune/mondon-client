@@ -51,8 +51,7 @@ class Reglage:
             qty = 0
             for tuple_cliche in last_p_cliche:
                 cliche = get_cliche_from_code(tuple_cliche[0])
-                qty += len(cliche.colors)
-            if qty == 0:
+                qty += len(cliche.colors) if cliche else 0
                 return False
             self.qty = qty
             return True
