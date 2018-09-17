@@ -8,12 +8,14 @@ from commun.utils.timestamp import timestamp_to_hour_little
 from commun.constants.colors import color_bleu_gris
 from commun.ui.public.mondon_widget import MondonWidget
 from commun.ui.public.text_edit import TextEdit
-from commun.constants.stylesheets import line_edit_green_stylesheet, line_edit_red_stylesheet, white_12_label_stylesheet, white_16_bold_label_stylesheet, red_12_bold_label_stylesheet
+from commun.constants.stylesheets import line_edit_green_stylesheet, line_edit_red_stylesheet,\
+    white_12_label_stylesheet, white_16_bold_label_stylesheet, red_12_bold_label_stylesheet
 
 
 class BlocParamProd(MondonWidget):
     def __init__(self, plan_prod, parent=None):
         super(BlocParamProd, self).__init__(parent=parent)
+        self.setFixedHeight(50)
         self.setFocusPolicy(Qt.ClickFocus)
         self.background_color = color_bleu_gris
         self.plan_prod = plan_prod

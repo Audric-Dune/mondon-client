@@ -29,7 +29,6 @@ class PlanProdCreator(QWidget):
         self.selector_manager = SelectorManager(parent=self, plan_prod=self.plan_prod)
         self.selector_manager.hide()
         self.bloc_param_prod = BlocParamProd(plan_prod=self.plan_prod, parent=self)
-        self.titre_prod = QLabel("NOUVELLE PRODUCTION")
         self.bloc_encrier = BlocEncrier(parent=self, plan_prod=self.plan_prod)
         self.bloc_encrier.ON_CHANGED_SIGNAL.connect(self.on_encrier_changed)
         self.bloc_poly_selected = BlocSelected(data_type="poly", parent=self, callback=self.show_selector)

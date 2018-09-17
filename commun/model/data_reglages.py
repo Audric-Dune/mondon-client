@@ -45,7 +45,6 @@ class DataReglages:
                 if data_reglage.check_box_aide:
                     self.time_aide += time
         print(self.time_aide)
-        print(self.time_conducteur)
 
     def update_reglage(self):
         new_data_reglages = []
