@@ -9,16 +9,12 @@ from commun.stores.reglage_store import reglage_store
 from commun.ui.public.checkbox_button import CheckboxButton
 from commun.utils.layout import clear_layout
 
-from gestion.stores.plan_prod_store import plan_prod_store
-
 
 class TabReglage(QWidget):
 
     def __init__(self, parent=None, plan_prod=None):
         super(TabReglage, self).__init__(parent=parent)
         self.plan_prod = plan_prod
-        self.time_aide = 0
-        self.time_conducteur = 0
         self.vbox = QVBoxLayout()
         self.init_ui()
         self.update_widget()
@@ -30,16 +26,21 @@ class TabReglage(QWidget):
         self.plan_prod.data_reglages.update_reglage()
         clear_layout(self.vbox)
         for data_reglage in self.plan_prod.data_reglages.data_reglages:
-            self.vbox.addWidget(LineReglage(parent=self, data_reglage=data_reglage))
+            if not data_reglage.reglage.is_optionnel() and data_reglage.reglage.cat != "CHAUFFE":
+                self.vbox.addWidget(LineReglage(parent=self, data_reglage=data_reglage))
+        self.vbox.addSpacing(50)
+        for data_reglage in self.plan_prod.data_reglages.data_reglages:
+            if data_reglage.reglage.is_optionnel():
+                self.vbox.addWidget(LineReglage(parent=self, data_reglage=data_reglage))
         self.vbox.addStretch(0)
 
 
 class LineReglage(QWidget):
 
-    def __init__(self, parent=None, data_reglage=None):
+    def __init__(self, parent=None, data_reglage=None, reglage=None):
         super(LineReglage, self).__init__(parent=parent)
         self.data_reglage = data_reglage
-        self.reglage = data_reglage.reglage
+        self.reglage = data_reglage.reglage if data_reglage else reglage
         self.init_ui()
 
     def init_ui(self):
@@ -48,7 +49,7 @@ class LineReglage(QWidget):
         label_des = QLabel(self.reglage.des)
         label_des.setFixedWidth(350)
         hbox.addWidget(label_des)
-        qty = self.reglage.qty if self.reglage.qty else 1
+        qty = self.reglage.qty
         label_qty = QLabel("x{}".format(qty))
         hbox.addWidget(label_qty)
         check_box_conducteur = CheckboxButton(parent=self, is_check=not self.data_reglage.check_box_conducteur)

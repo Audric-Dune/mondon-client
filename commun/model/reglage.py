@@ -14,7 +14,7 @@ class Reglage:
         self.time = int(time)
         self.optionnel = optionnel
         self.info = info
-        self.qty = None
+        self.qty = 1
 
     def is_active(self, p, last_p):
         """
@@ -25,8 +25,6 @@ class Reglage:
         :return: True si le réglage est actif
         """
         if last_p is None:
-            return False
-        if self.optionnel:
             return False
         if self.id == 0 or self.id == 23:
             if p.perfo_selected and p.perfo_selected.code == last_p.perfo_selected.code:
