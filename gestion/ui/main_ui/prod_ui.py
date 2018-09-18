@@ -23,44 +23,33 @@ class ProdUi(QWidget):
         self.selected = True
         self.color = get_color_bobine(bobine_color=self.prod.bobine_papier_selected.color)
         self.border_color = color_noir
-        # self.context_menu = ContextMenu()
-        # self.init_context_menu()
         self.init_ui()
         self.show()
 
-    # def init_context_menu(self):
-    #     self.context_menu.add_action(literal_name="Editer", callback=self.edit_prod)
-    #     self.context_menu.add_action(literal_name="Supprimer", callback=self.delete_prod, risk_style=True)
-
-    def delete_prod(self):
-        settings_store_gestion.delete_plan_prod(self.prod)
-
-    def edit_prod(self):
-        pass
-
     def init_ui(self):
-        self.setFixedWidth(ceil(self.ech*(self.prod.end-self.prod.start))+1)
-        self.setFixedHeight(50)
+        self.setFixedWidth(ceil(self.ech*(self.prod.end-self.prod.start)))
+        self.setFixedHeight(105)
 
     def paintEvent(self, e):
         p = QPainter(self)
+        w = ceil(self.ech*(self.prod.data_reglages.time_reglage*60))
+        self.draw_rect(p, x=w, y=0, w=self.width()-w-1, s_brush=Qt.SolidPattern)
+        self.draw_rect(p, x=0, y=self.height()/2+5, w=w, s_brush=Qt.BDiagPattern)
+
+    def draw_rect(self, p, x, y, w, s_brush):
         color = self.color.rgb_components
         qcolor = QColor(color[0], color[1], color[2])
         brush = QBrush()
-        brush.setStyle(Qt.SolidPattern)
+        brush.setStyle(s_brush)
         brush.setColor(qcolor)
         p.setBrush(brush)
-        p.drawRect(0, 0, self.width(), self.height())
+        p.drawRect(x, y, w, self.height()/2-5)
         color = self.border_color.rgb_components
         qborder_color = QColor(color[0], color[1], color[2])
         pen = QPen()
         pen.setColor(qborder_color)
         p.setPen(pen)
-        p.drawRect(0, 0, self.width()-1, self.height()-1)
-
-    # def mouseReleaseEvent(self, e):
-    #     if e.button() == Qt.RightButton:
-    #         self.context_menu.show()
+        p.drawRect(x, y, w, (self.height())/2-5)
 
     def focusInEvent(self, e):
         self.border_color = color_rouge

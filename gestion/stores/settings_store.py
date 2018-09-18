@@ -7,6 +7,7 @@ from PyQt5.QtCore import pyqtSignal, QObject
 
 from commun.utils.timestamp import timestamp_at_day_ago, timestamp_at_time, timestamp_after_day_ago, is_vendredi
 from commun.constants.param import DEBUT_PROD_MATIN, FIN_PROD_SOIR
+from gestion.stores.plan_prod_store import plan_prod_store
 from commun.lib.base_de_donnee import Database
 
 
@@ -227,42 +228,28 @@ class SettingsStore(QObject):
         return code_bobines_selected
 
     def save_plan_prod(self):
-        print("save_plan_prod")
-        code_bobines_selected = self.get_code_bobine_selected(self.plan_prod.bobines_filles_selected)
-        code_data_reglages = self.plan_prod.data_reglages.get_data_reglage_code()
-        Database.create_plan_prod(bobine_papier=self.plan_prod.bobine_papier_selected.code,
-                                  code_bobines_selected=code_bobines_selected,
-                                  refente=self.plan_prod.refente_selected.code,
-                                  start=self.plan_prod.start,
-                                  longueur=self.plan_prod.longueur,
-                                  tours=self.plan_prod.tours,
-                                  bobine_poly=self.plan_prod.bobine_poly_selected.code,
-                                  code_data_reglages=code_data_reglages,
-                                  encrier_1=self.plan_prod.encrier_1.color,
-                                  encrier_2=self.plan_prod.encrier_2.color,
-                                  encrier_3=self.plan_prod.encrier_3.color)
+        if self.plan_prod.p_id:
+            self.update_plan_prod_on_database(plan_prod=self.plan_prod)
+        else:
+            code_bobines_selected = self.get_code_bobine_selected(self.plan_prod.bobines_filles_selected)
+            code_data_reglages = self.plan_prod.data_reglages.get_data_reglage_code()
+            Database.create_plan_prod(bobine_papier=self.plan_prod.bobine_papier_selected.code,
+                                      code_bobines_selected=code_bobines_selected,
+                                      refente=self.plan_prod.refente_selected.code,
+                                      start=self.plan_prod.start,
+                                      longueur=self.plan_prod.longueur,
+                                      tours=self.plan_prod.tours,
+                                      bobine_poly=self.plan_prod.bobine_poly_selected.code,
+                                      code_data_reglages=code_data_reglages,
+                                      encrier_1=self.plan_prod.encrier_1.color,
+                                      encrier_2=self.plan_prod.encrier_2.color,
+                                      encrier_3=self.plan_prod.encrier_3.color)
         self.plan_prod = None
         self.SETTINGS_CHANGED_SIGNAL.emit()
 
-    def create_new_plan_prod(self, plan_prod):
-        print("create_new_plan_prod")
-        code_bobines_selected = self.get_code_bobine_selected(plan_prod.bobines_filles_selected)
-        code_data_reglages = self.plan_prod.data_reglages.get_data_reglage_code()
-        Database.create_plan_prod(bobine_papier=plan_prod.bobine_papier_selected.code,
-                                  code_bobines_selected=code_bobines_selected,
-                                  refente=plan_prod.refente_selected.code,
-                                  start=plan_prod.start,
-                                  longueur=plan_prod.longueur,
-                                  tours=plan_prod.tours,
-                                  bobine_poly=plan_prod.bobine_poly_selected.code,
-                                  code_data_reglages=code_data_reglages,
-                                  encrier_1=self.plan_prod.encrier_1.color,
-                                  encrier_2=self.plan_prod.encrier_2.color,
-                                  encrier_3=self.plan_prod.encrier_3.color)
-
     def update_plan_prod_on_database(self, plan_prod):
         code_bobines_selected = self.get_code_bobine_selected(plan_prod.bobines_filles_selected)
-        code_data_reglages = self.plan_prod.data_reglages.get_data_reglage_code()
+        code_data_reglages = plan_prod.data_reglages.get_data_reglage_code()
         Database.update_plan_prod(p_id=plan_prod.p_id,
                                   bobine_papier=plan_prod.bobine_papier_selected.code,
                                   code_bobines_selected=code_bobines_selected,
@@ -321,6 +308,7 @@ class SettingsStore(QObject):
         self.SETTINGS_CHANGED_SIGNAL.emit()
 
     def delete_plan_prod(self, plan_prod, update=True):
+        plan_prod_store.plans_prods.remove(plan_prod)
         Database.delete_plan_prod(p_id=plan_prod.p_id)
         if update:
             self.update_plans_prods()

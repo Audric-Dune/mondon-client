@@ -28,7 +28,7 @@ class GantProd(QWidget):
         self.end_day = None
         self.prods = prods
         self.events = events
-        self.setFixedHeight(self.DEC_Y_TOP+self.DEC_Y_BOTTOM+50*4+5*3)
+        self.setFixedHeight(self.DEC_Y_TOP+self.DEC_Y_BOTTOM+50*5+6*3)
         self.init_ui()
 
     def resizeEvent(self, e):
@@ -117,10 +117,12 @@ class GantProd(QWidget):
         text_rect = QRect(0, self.DEC_Y_TOP, self.DEC_X_LEFT-10, 50)
         p.drawText(text_rect, Qt.AlignRight | Qt.AlignVCenter, "Production")
         text_rect = QRect(0, self.DEC_Y_TOP+55, self.DEC_X_LEFT-10, 50)
-        p.drawText(text_rect, Qt.AlignRight | Qt.AlignVCenter, "Nettoyage")
+        p.drawText(text_rect, Qt.AlignRight | Qt.AlignVCenter, "Réglage")
         text_rect = QRect(0, self.DEC_Y_TOP+110, self.DEC_X_LEFT-10, 50)
-        p.drawText(text_rect, Qt.AlignRight | Qt.AlignVCenter, "Maintenance")
+        p.drawText(text_rect, Qt.AlignRight | Qt.AlignVCenter, "Nettoyage")
         text_rect = QRect(0, self.DEC_Y_TOP+165, self.DEC_X_LEFT-10, 50)
+        p.drawText(text_rect, Qt.AlignRight | Qt.AlignVCenter, "Maintenance")
+        text_rect = QRect(0, self.DEC_Y_TOP+220, self.DEC_X_LEFT-10, 50)
         p.drawText(text_rect, Qt.AlignRight | Qt.AlignVCenter, "Arrêt production")
 
     def init_ui(self):
@@ -137,11 +139,11 @@ class GantProd(QWidget):
             new_event = EventUi(parent=self, event=event, ech=ech)
             x = (event.start - self.start_day) * ech + self.DEC_X_LEFT
             if event.p_type == "clean":
-                y = self.DEC_Y_TOP + 55
-            elif event.p_type == "tool":
                 y = self.DEC_Y_TOP + 110
+            elif event.p_type == "tool":
+                y = self.DEC_Y_TOP + 165
             else:
-                y = self.DEC_Y_TOP + 166
+                y = self.DEC_Y_TOP + 221
             new_event.setGeometry(x, y, new_event.width(), new_event.height())
             self.items.append(new_event)
 
