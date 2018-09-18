@@ -112,3 +112,7 @@ class PlanProdCreator(QWidget):
 
     def show_selector(self):
         self.selector_manager.show()
+    
+    def closeEvent(self, e):
+        self.handle_click_bt(bt_name="cancel")
+        super(PlanProdCreator, self).closeEvent(e)
