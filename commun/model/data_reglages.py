@@ -32,6 +32,7 @@ class DataReglages:
         self.get_time()
 
     def get_time(self):
+        print("get_time")
         self.time_aide = 0
         self.time_conducteur = 0
         for data_reglage in self.data_reglages:
@@ -50,7 +51,7 @@ class DataReglages:
     def get_time_reglage(self):
         time = 0
         for data_reglage in self.data_reglages:
-            if data_reglage.reglage.cat == "CHAUFFE":
+            if data_reglage.reglage.cat == "CHAUFFE" and data_reglage.reglage.is_active(p=self.p, last_p=self.last_p):
                 time = data_reglage.reglage.time if data_reglage.reglage.time > time else time
         time = self.time_aide if self.time_aide > time else time
         time = self.time_conducteur if self.time_conducteur > time else time
@@ -100,6 +101,7 @@ class DataReglages:
                 dr_conducteur = True if code_split[index+2] == "True" else False
                 self.update_data_reglage(p_id=p_id, dr_aide=dr_aide, dr_conducteur=dr_conducteur)
                 index += 3
+        self.get_time()
 
     def update_data_reglage(self, p_id, dr_aide, dr_conducteur):
         data_reglage = self.get_data_reglage_from_id(id_reglage=p_id)

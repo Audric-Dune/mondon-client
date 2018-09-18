@@ -50,9 +50,12 @@ class Reglage:
             for tuple_cliche in last_p_cliche:
                 cliche = get_cliche_from_code(tuple_cliche[0])
                 qty += len(cliche.colors) if cliche else 0
+            if qty == 0:
                 return False
             self.qty = qty
             return True
+        p_cliche = self.get_cliche_from_plan_prod(plan_prod=p)
+        last_p_cliche = self.get_cliche_from_plan_prod(plan_prod=last_p)
         if self.id == 14 or self.id == 15:
             for tuple_cliche in p_cliche:
                 if tuple_cliche in last_p_cliche:
@@ -86,6 +89,7 @@ class Reglage:
                 return False
             self.qty = qty
             return True
+        p_cliche = self.get_cliche_from_plan_prod(plan_prod=p)
         if self.id == 18:
             qty = 0
             for tuple_cliche in p_cliche:

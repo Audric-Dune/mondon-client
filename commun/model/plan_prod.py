@@ -232,6 +232,7 @@ class PlanProd(QObject):
         return new_refente
 
     def get_end(self):
+        print("get_end")
         if not self.longueur or not self.tours:
             self.end = self.start
         else:
@@ -240,6 +241,7 @@ class PlanProd(QObject):
         return self.end
 
     def set_tours(self, tours):
+        print("set_tours")
         self.tours = tours
         self.get_end()
         self.ON_TOURS_CHANGED.emit()
@@ -318,10 +320,10 @@ class PlanProd(QObject):
         self.ON_CHANGED_SIGNAL.emit()
 
     def definied_longueur(self):
+        print("definied_longueur")
         self.longueur = None
         if self.bobines_filles_selected:
             self.longueur = self.bobines_filles_selected[0].length
-        self.get_end()
 
     def init_current_store(self):
         self.current_refente_store = RefenteStore()
