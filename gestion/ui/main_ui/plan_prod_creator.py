@@ -105,6 +105,8 @@ class PlanProdCreator(QWidget):
             else:
                 settings_store_gestion.save_plan_prod()
         if bt_name == "cancel":
+            from gestion.stores.plan_prod_store import plan_prod_store
+            plan_prod_store.plans_prods.remove(settings_store_gestion.plan_prod)
             settings_store_gestion.plan_prod = None
         self.close()
 
