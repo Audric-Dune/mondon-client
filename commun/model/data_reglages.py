@@ -14,6 +14,7 @@ class DataReglages:
         self.init_data_reglage()
         self.time_aide = 0
         self.time_conducteur = 0
+        self.time_reglage = 0
 
     def init_data_reglage(self):
         from commun.stores.reglage_store import reglage_store
@@ -44,7 +45,16 @@ class DataReglages:
                     self.time_conducteur += time
                 if data_reglage.check_box_aide:
                     self.time_aide += time
-        print(self.time_aide)
+        self.time_reglage = self.get_time_reglage()
+
+    def get_time_reglage(self):
+        time = 0
+        for data_reglage in self.data_reglages:
+            if data_reglage.reglage.cat == "CHAUFFE":
+                time = data_reglage.reglage.time if data_reglage.reglage.time > time else time
+        time = self.time_aide if self.time_aide > time else time
+        time = self.time_conducteur if self.time_conducteur > time else time
+        return time
 
     def update_reglage(self):
         new_data_reglages = []
@@ -57,6 +67,7 @@ class DataReglages:
                     new_data_reglage = DataReglage(reglage=reglage)
                     new_data_reglages.append(new_data_reglage)
         self.data_reglages = new_data_reglages
+        self.get_time()
 
     def get_data_reglage_from_id(self, id_reglage):
         for data_reglage in self.data_reglages:

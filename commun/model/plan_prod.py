@@ -236,6 +236,7 @@ class PlanProd(QObject):
             self.end = self.start
         else:
             self.end = self.start + (((self.longueur * self.tours)/3)*(PERCENT_PROD_THEROIQUE_MAXI/100))
+        self.end += self.data_reglages.time_reglage*60
         return self.end
 
     def set_tours(self, tours):

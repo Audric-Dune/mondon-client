@@ -56,6 +56,10 @@ class TabReglage(QWidget):
                                      time=self.plan_prod.data_reglages.time_aide))
         vbox_time.addWidget(LineTime(parent=self, text="Temps de préparation du conducteur (C)",
                                      time=self.plan_prod.data_reglages.time_conducteur))
+        for data_reglage in self.plan_prod.data_reglages.data_reglages:
+            if not data_reglage.reglage.is_optionnel() and data_reglage.reglage.cat == "CHAUFFE":
+                vbox_time.addWidget(LineTime(parent=self, text=data_reglage.reglage.des,
+                                             time=data_reglage.reglage.time))
         self.vbox.addLayout(vbox_time)
         self.vbox.addStretch(0)
 
