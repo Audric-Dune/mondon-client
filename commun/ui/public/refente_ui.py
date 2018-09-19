@@ -39,7 +39,6 @@ class RefenteUi(MondonWidget):
         self.drag_ui(code_bobine, pose, index, mouse_pos)
         if not self.valid_index:
             self.valid_index = self.get_valid_index_from_bobine(bobine=self.bobine_drag.bobine)
-        print("self.valid_index", self.valid_index)
         e.accept()
 
     def get_valid_index_from_bobine(self, bobine):
@@ -154,9 +153,7 @@ class RefenteUi(MondonWidget):
     def dropEvent(self, e):
         if self.valid_index:
             index_drop = self.get_index_at_pos(e.pos())
-            print("index_drop", index_drop)
             valid_index_drop = min(self.valid_index, key=lambda x: abs(x-index_drop))
-            print("valid_index_drop", valid_index_drop)
             if index_drop == self.bobine_drag.bobine.index:
                 pass
             elif valid_index_drop in self.valid_index:

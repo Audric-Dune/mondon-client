@@ -1,6 +1,8 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from commun.utils.timestamp import timestamp_to_hour_little
+
 
 class Event:
 
@@ -14,3 +16,7 @@ class Event:
 
     def get_start(self):
         return self.start
+
+    def __repr__(self):
+        return "Event: start {}, end {}".format(timestamp_to_hour_little(self.start),
+                                                timestamp_to_hour_little(self.end))

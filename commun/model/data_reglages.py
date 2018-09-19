@@ -29,10 +29,8 @@ class DataReglages:
     def set_last_plan_prod(self, last_plan_prod):
         self.last_p = last_plan_prod
         self.update_reglage()
-        self.get_time()
 
     def get_time(self):
-        print("get_time")
         self.time_aide = 0
         self.time_conducteur = 0
         for data_reglage in self.data_reglages:

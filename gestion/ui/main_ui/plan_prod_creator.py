@@ -100,6 +100,7 @@ class PlanProdCreator(QWidget):
         self.bloc_bobines_selected.update_widget()
 
     def handle_click_bt(self, bt_name):
+        print("handle_click_bt", bt_name)
         if bt_name == "valid":
             if self.plan_prod.p_id:
                 settings_store_gestion.update_plan_prod_on_database(self.plan_prod)
@@ -107,10 +108,9 @@ class PlanProdCreator(QWidget):
                 settings_store_gestion.save_plan_prod()
         if bt_name == "cancel":
             from gestion.stores.plan_prod_store import plan_prod_store
-            try:
-                plan_prod_store.plans_prods.remove(settings_store_gestion.plan_prod)
-            except ValueError:
-                pass
+            if settings_store_gestion.plan_prod:
+                if not settings_store_gestion.plan_prod.p_id:
+                    plan_prod_store.plans_prods.remove(settings_store_gestion.plan_prod)
             settings_store_gestion.plan_prod = None
         self.close()
 

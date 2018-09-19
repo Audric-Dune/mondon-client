@@ -40,7 +40,6 @@ class PlanProdStore(QObject):
             new_plan_prod.data_reglages.update_data_reglage_from_code(data_plan_prod[11])
             new_plan_prod.get_end()
             self.plans_prods.append(new_plan_prod)
-            print(new_plan_prod)
         self.sort_plans_prods()
         self.update_plan_prod_from_last_plan_prod()
 

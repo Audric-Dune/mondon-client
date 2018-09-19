@@ -29,81 +29,82 @@ class SettingsStore(QObject):
         self.cursor = None
 
     def update_plans_prods(self):
-        self.cursor = None
-        from gestion.stores.plan_prod_store import plan_prod_store
-        plans_prods = plan_prod_store.plans_prods
-        plans_prods_update = []
-        last_plan_prod = None
-        for plan_prod in plans_prods:
-            self.set_plan_prod(plan_prod, plans_prods_update)
-            if last_plan_prod is None:
-                continue
-            else:
-                if self.is_meltable_plans_prods(plan_prod_1=last_plan_prod, plan_prod_2=plan_prod):
-                    self.merge_plan_prod(plan_prod_1=last_plan_prod, plan_prod_2=plan_prod)
-                    del plans_prods_update[-2:-1]
-                    plans_prods_update.append(last_plan_prod)
-            last_plan_prod = plan_prod
-        self.merge_plans_prods(plans_prods_update)
-        self.SETTINGS_CHANGED_SIGNAL.emit()
+        pass
+        # self.cursor = None
+        # from gestion.stores.plan_prod_store import plan_prod_store
+        # plans_prods = plan_prod_store.plans_prods
+        # plans_prods_update = []
+        # last_plan_prod = None
+        # for plan_prod in plans_prods:
+        #     self.set_plan_prod(plan_prod, plans_prods_update)
+        #     if last_plan_prod is None:
+        #         continue
+        #     else:
+        #         if self.is_meltable_plans_prods(plan_prod_1=last_plan_prod, plan_prod_2=plan_prod):
+        #             self.merge_plan_prod(plan_prod_1=last_plan_prod, plan_prod_2=plan_prod)
+        #             del plans_prods_update[-2:-1]
+        #             plans_prods_update.append(last_plan_prod)
+        #     last_plan_prod = plan_prod
+        # self.merge_plans_prods(plans_prods_update)
+        # self.SETTINGS_CHANGED_SIGNAL.emit()
 
-    def merge_plans_prods(self, plans_prods_update):
-        last_plan_prod = None
-        for plan_prod in plans_prods_update:
-            if last_plan_prod is None:
-                last_plan_prod = plan_prod
-            else:
-                if self.is_meltable_plans_prods(plan_prod_1=last_plan_prod, plan_prod_2=plan_prod):
-                    self.merge_plan_prod(plan_prod_1=last_plan_prod, plan_prod_2=plan_prod)
-                else:
-                    last_plan_prod = plan_prod
-
-    def merge_plan_prod(self, plan_prod_1, plan_prod_2):
-        plan_prod_1.end = plan_prod_2.end
-        plan_prod_1.tours += plan_prod_2.tours
-        self.update_plan_prod_on_database(plan_prod_1)
-        self.delete_plan_prod(plan_prod_2, update=False)
-
-    def is_meltable_plans_prods(self, plan_prod_1, plan_prod_2):
-        code_bob_1 = self.get_code_bobine_selected(plan_prod_1.bobines_filles_selected)
-        code_bob_2 = self.get_code_bobine_selected(plan_prod_2.bobines_filles_selected)
-        if code_bob_1 == code_bob_2 and plan_prod_1.end == plan_prod_2.start:
-            return True
-        return False
-
-    def set_plan_prod(self, plan_prod, plans_prods_update):
-        plan_prod.start = self.get_start(plans_prods=plans_prods_update)
-        plan_prod.get_end()
-        start_split = self.is_there_an_event_or_end_day_in_plan_prod(plan_prod)
-        if start_split:
-            self.split_plan_prod(plan_prod, start_split=start_split, plans_prods_update=plans_prods_update)
-        else:
-            self.cursor = plan_prod.end
-            self.update_plan_prod_on_database(plan_prod)
-            plans_prods_update.append(plan_prod)
-
-    def split_plan_prod(self, plan_prod, start_split, plans_prods_update):
-        total_tours = plan_prod.tours
-        plan_prod.tours = plan_prod.get_max_tour(end=start_split)
-        self.set_plan_prod(plan_prod, plans_prods_update)
-        from commun.model.plan_prod import PlanProd
-        new_plan_prod = PlanProd(start=None)
-        new_plan_prod.get_plan_prod_param(plan_prod)
-        new_plan_prod.tours = total_tours-plan_prod.tours
-        self.create_new_plan_prod(new_plan_prod)
-        p_id = Database.get_last_id_plan_prod()
-        new_plan_prod.p_id = p_id
-        self.set_plan_prod(new_plan_prod, plans_prods_update)
-
-    @staticmethod
-    def is_there_an_event_or_end_day_in_plan_prod(plan_prod):
-        from gestion.stores.event_store import event_store
-        for event in event_store.events:
-            if plan_prod.end > event.start > plan_prod.start:
-                return event.start
-        if plan_prod.end > timestamp_at_time(plan_prod.start, hours=FIN_PROD_SOIR):
-            return timestamp_at_time(plan_prod.start, hours=FIN_PROD_SOIR)
-        return False
+    # def merge_plans_prods(self, plans_prods_update):
+    #     last_plan_prod = None
+    #     for plan_prod in plans_prods_update:
+    #         if last_plan_prod is None:
+    #             last_plan_prod = plan_prod
+    #         else:
+    #             if self.is_meltable_plans_prods(plan_prod_1=last_plan_prod, plan_prod_2=plan_prod):
+    #                 self.merge_plan_prod(plan_prod_1=last_plan_prod, plan_prod_2=plan_prod)
+    #             else:
+    #                 last_plan_prod = plan_prod
+    #
+    # def merge_plan_prod(self, plan_prod_1, plan_prod_2):
+    #     plan_prod_1.end = plan_prod_2.end
+    #     plan_prod_1.tours += plan_prod_2.tours
+    #     self.update_plan_prod_on_database(plan_prod_1)
+    #     self.delete_plan_prod(plan_prod_2, update=False)
+    #
+    # def is_meltable_plans_prods(self, plan_prod_1, plan_prod_2):
+    #     code_bob_1 = self.get_code_bobine_selected(plan_prod_1.bobines_filles_selected)
+    #     code_bob_2 = self.get_code_bobine_selected(plan_prod_2.bobines_filles_selected)
+    #     if code_bob_1 == code_bob_2 and plan_prod_1.end == plan_prod_2.start:
+    #         return True
+    #     return False
+    #
+    # def set_plan_prod(self, plan_prod, plans_prods_update):
+    #     plan_prod.start = self.get_start(plans_prods=plans_prods_update)
+    #     plan_prod.get_end()
+    #     start_split = self.is_there_an_event_or_end_day_in_plan_prod(plan_prod)
+    #     if start_split:
+    #         self.split_plan_prod(plan_prod, start_split=start_split, plans_prods_update=plans_prods_update)
+    #     else:
+    #         self.cursor = plan_prod.end
+    #         self.update_plan_prod_on_database(plan_prod)
+    #         plans_prods_update.append(plan_prod)
+    #
+    # def split_plan_prod(self, plan_prod, start_split, plans_prods_update):
+    #     total_tours = plan_prod.tours
+    #     plan_prod.tours = plan_prod.get_max_tour(end=start_split)
+    #     self.set_plan_prod(plan_prod, plans_prods_update)
+    #     from commun.model.plan_prod import PlanProd
+    #     new_plan_prod = PlanProd(start=None)
+    #     new_plan_prod.get_plan_prod_param(plan_prod)
+    #     new_plan_prod.tours = total_tours-plan_prod.tours
+    #     self.create_new_plan_prod(new_plan_prod)
+    #     p_id = Database.get_last_id_plan_prod()
+    #     new_plan_prod.p_id = p_id
+    #     self.set_plan_prod(new_plan_prod, plans_prods_update)
+    #
+    # @staticmethod
+    # def is_there_an_event_or_end_day_in_plan_prod(plan_prod):
+    #     from gestion.stores.event_store import event_store
+    #     for event in event_store.events:
+    #         if plan_prod.end > event.start > plan_prod.start:
+    #             return event.start
+    #     if plan_prod.end > timestamp_at_time(plan_prod.start, hours=FIN_PROD_SOIR):
+    #         return timestamp_at_time(plan_prod.start, hours=FIN_PROD_SOIR)
+    #     return False
 
     def set(self, day_ago=None, plan_prod=None):
         if day_ago is not None:
@@ -262,19 +263,40 @@ class SettingsStore(QObject):
                                   encrier_1=plan_prod.encrier_1.color,
                                   encrier_2=plan_prod.encrier_2.color,
                                   encrier_3=plan_prod.encrier_3.color)
-        self.update_next_plan_prod_from_encrier(plan_prod.start)
+        self.update_next_tasks(start=plan_prod.start, end=plan_prod.end)
         self.SETTINGS_CHANGED_SIGNAL.emit()
 
+    def update_next_tasks(self, start, end):
+        tasks = self.get_next_tasks(start=start)
+        tasks = sorted(tasks, key=lambda t: t.get_start())
+        new_start = end
+        for task in tasks:
+            if task.plan_prod:
+                task.plan_prod.start = new_start
+                task.plan_prod.set_color_encrier_from_last_plan_prod()
+                task.plan_prod.data_reglages.update_reglage()
+                task.plan_prod.get_end()
+                new_start = task.plan_prod.end
+            if task.event:
+                duration = task.event.end - task.event.start
+                task.event.start = new_start
+                task.event.end = task.event.start + duration
+                new_start = task.event.end
+        for plan_prod in plan_prod_store.plans_prods:
+            print(plan_prod)
+
     @staticmethod
-    def update_next_plan_prod_from_encrier(start):
-        from gestion.stores.plan_prod_store import plan_prod_store
+    def get_next_tasks(start):
+        from commun.model.task import Task
+        tasks = []
         for plan_prod in plan_prod_store.plans_prods:
             if plan_prod.start > start:
-                plan_prod.set_color_encrier_from_last_plan_prod()
-                Database.update_encriers_plan_prod(p_id=plan_prod.p_id,
-                                                   encrier_1=plan_prod.encrier_1.color,
-                                                   encrier_2=plan_prod.encrier_2.color,
-                                                   encrier_3=plan_prod.encrier_3.color)
+                tasks.append(Task(start=plan_prod.start, plan_prod=plan_prod))
+        from gestion.stores.event_store import event_store
+        for event in event_store.events:
+            if event.start > start:
+                tasks.append(Task(start=event.start, event=event))
+        return tasks
 
     def save_event(self, event):
         Database.create_event_prod(start=event.start, end=event.end, p_type=event.type_event, info=event.info,
@@ -308,11 +330,12 @@ class SettingsStore(QObject):
         self.SETTINGS_CHANGED_SIGNAL.emit()
 
     def delete_plan_prod(self, plan_prod, update=True):
-        plan_prod_store.plans_prods.remove(plan_prod)
-        Database.delete_plan_prod(p_id=plan_prod.p_id)
-        if update:
-            self.update_plans_prods()
-        self.SETTINGS_CHANGED_SIGNAL.emit()
+        pass
+        # plan_prod_store.plans_prods.remove(plan_prod)
+        # Database.delete_plan_prod(p_id=plan_prod.p_id)
+        # if update:
+        #     self.update_plans_prods()
+        # self.SETTINGS_CHANGED_SIGNAL.emit()
 
     def set_item_focus(self, item):
         if self.day_ago <= 0:

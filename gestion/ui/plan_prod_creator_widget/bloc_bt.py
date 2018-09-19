@@ -15,7 +15,8 @@ class BlocBt(QWidget):
         super(BlocBt, self).__init__(parent=parent)
         self.plan_prod = plan_prod
         self.callback = callback
-        self.bt_valid = QPushButton("Validé")
+        self.bt_valid = QPushButton("Valider")
+        self.bt_cancel = QPushButton("Annuler")
         self.plan_prod.ON_CHANGED_SIGNAL.connect(self.update_bt)
         self.init_ui()
         self.update_bt()
@@ -28,12 +29,11 @@ class BlocBt(QWidget):
         self.bt_valid.setStyleSheet(button_little_stylesheet)
         self.bt_valid.setFixedSize(80, 25)
         self.bt_valid.clicked.connect(lambda: self.handle_bt_click(bt_name="valid"))
-        bt_cancel = QPushButton("Annuler")
-        bt_cancel.clicked.connect(lambda: self.handle_bt_click(bt_name="cancel"))
-        bt_cancel.setStyleSheet(button_little_red_stylesheet)
-        bt_cancel.setFixedSize(80, 25)
+        self.bt_cancel.clicked.connect(lambda: self.handle_bt_click(bt_name="cancel"))
+        self.bt_cancel.setStyleSheet(button_little_red_stylesheet)
+        self.bt_cancel.setFixedSize(80, 25)
         vbox.addWidget(self.bt_valid)
-        vbox.addWidget(bt_cancel)
+        vbox.addWidget(self.bt_cancel)
         self.setLayout(vbox)
 
     def update_bt(self):
