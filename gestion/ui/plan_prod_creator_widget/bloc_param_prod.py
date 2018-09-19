@@ -64,6 +64,7 @@ class BlocParamProd(MondonWidget):
         self.setLayout(self.hbox_master)
 
     def update_label(self):
+        self.plan_prod.get_end()
         if self.text_edit_tours.text() != self.plan_prod.tours:
             self.text_edit_tours.setText(str(self.plan_prod.tours))
         self.label_end.setText("Fin production : {}".format(timestamp_to_hour_little(self.plan_prod.end)))

@@ -28,7 +28,6 @@ class PlanProdCreator(QWidget):
         self.plan_prod.ON_TOURS_CHANGED.connect(self.handle_tours_plan_prod_changed)
         self.selector_manager = SelectorManager(parent=self, plan_prod=self.plan_prod)
         self.selector_manager.hide()
-        self.bloc_param_prod = BlocParamProd(plan_prod=self.plan_prod, parent=self)
         self.bloc_encrier = BlocEncrier(parent=self, plan_prod=self.plan_prod)
         self.bloc_encrier.ON_CHANGED_SIGNAL.connect(self.on_encrier_changed)
         self.bloc_poly_selected = BlocSelected(data_type="poly", parent=self, callback=self.show_selector)
@@ -39,6 +38,8 @@ class PlanProdCreator(QWidget):
         self.bloc_info = BlocInformation(parent=self, plan_prod=plan_prod)
         self.bloc_bt = BlocBt(parent=self, plan_prod=plan_prod, callback=self.handle_click_bt)
         self.bloc_tab_reglage = TabReglage(parent=self, plan_prod=plan_prod)
+        self.plan_prod.get_end()
+        self.bloc_param_prod = BlocParamProd(plan_prod=self.plan_prod, parent=self)
         self.init_ui()
         self.show()
 
@@ -106,7 +107,10 @@ class PlanProdCreator(QWidget):
                 settings_store_gestion.save_plan_prod()
         if bt_name == "cancel":
             from gestion.stores.plan_prod_store import plan_prod_store
-            plan_prod_store.plans_prods.remove(settings_store_gestion.plan_prod)
+            try:
+                plan_prod_store.plans_prods.remove(settings_store_gestion.plan_prod)
+            except ValueError:
+                pass
             settings_store_gestion.plan_prod = None
         self.close()
 

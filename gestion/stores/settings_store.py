@@ -336,4 +336,7 @@ class SettingsStore(QObject):
         self.plan_prod = None
         self.SETTINGS_CHANGED_SIGNAL.emit()
 
+    def on_data_reglage_changed(self):
+        self.plan_prod.ON_CHANGED_SIGNAL.emit()
+
 settings_store_gestion = SettingsStore()

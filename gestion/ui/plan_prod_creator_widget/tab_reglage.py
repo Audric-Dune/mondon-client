@@ -12,6 +12,7 @@ from commun.constants.stylesheets import check_box_stylesheet_2,\
     white_16_bold_label_stylesheet
 from commun.ui.public.checkbox_button import CheckboxButton
 from commun.utils.layout import clear_layout
+from gestion.stores.settings_store import settings_store_gestion
 
 
 class TabReglage(QWidget):
@@ -168,7 +169,7 @@ class LineReglage(QWidget):
                                               on_stylesheet=check_box_stylesheet_2,
                                               img_path="commun/assets/images/green_cross.png")
         check_box_conducteur.ON_CLICK_SIGNAL.connect(lambda: self.data_reglage.flip_check_box("conducteur"))
-        check_box_conducteur.ON_CLICK_SIGNAL.connect(self.parent().update_widget)
+        check_box_conducteur.ON_CLICK_SIGNAL.connect(settings_store_gestion.on_data_reglage_changed)
         check_box_conducteur.setFixedSize(20, 20)
         hbox.addWidget(check_box_conducteur)
         hbox.addWidget(self.get_time_label(conducteur=True))
@@ -179,7 +180,7 @@ class LineReglage(QWidget):
                                         on_stylesheet=check_box_stylesheet_2,
                                         img_path="commun/assets/images/green_cross.png")
         check_box_aide.ON_CLICK_SIGNAL.connect(lambda: self.data_reglage.flip_check_box("aide"))
-        check_box_aide.ON_CLICK_SIGNAL.connect(self.parent().update_widget)
+        check_box_aide.ON_CLICK_SIGNAL.connect(settings_store_gestion.on_data_reglage_changed)
         check_box_aide.setFixedSize(20, 20)
         hbox.addWidget(check_box_aide)
         hbox.addWidget(self.get_time_label(aide=True))
