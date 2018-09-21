@@ -54,12 +54,13 @@ class PlanProd(QObject):
         self.bobine_poly_selected = None
 
     def __repr__(self):
-        return "{}-{}, {}: cliché_1 {}, cliché_2 {}, cliché_3 {}".format(timestamp_to_hour_little(self.start),
-                                                                         timestamp_to_hour_little(self.end),
-                                                                         self.bobine_papier_selected.color,
-                                                                         self.encrier_1.color,
-                                                                         self.encrier_2.color,
-                                                                         self.encrier_3.color)
+        return "ID{}, {}-{}, {}: cliché_1 {}, cliché_2 {}, cliché_3 {}".format(self.p_id,
+                                                                               timestamp_to_hour_little(self.start),
+                                                                               timestamp_to_hour_little(self.end),
+                                                                               self.bobine_papier_selected.color,
+                                                                               self.encrier_1.color,
+                                                                               self.encrier_2.color,
+                                                                               self.encrier_3.color)
 
     def set_index_to_bobines_filles_selected(self):
         index = 0

@@ -100,7 +100,6 @@ class PlanProdCreator(QWidget):
         self.bloc_bobines_selected.update_widget()
 
     def handle_click_bt(self, bt_name):
-        print("handle_click_bt", bt_name)
         if bt_name == "valid":
             if self.plan_prod.p_id:
                 settings_store_gestion.update_plan_prod_on_database(self.plan_prod)

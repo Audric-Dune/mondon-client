@@ -138,6 +138,7 @@ class SettingsStore(QObject):
             bobine_poly.get_stock_at_time(time=self.plan_prod.start)
 
     def create_new_plan(self):
+        print("create_new_plan")
         from commun.model.plan_prod import PlanProd
         start_prod = self.get_start()
         if start_prod:
@@ -248,7 +249,7 @@ class SettingsStore(QObject):
         self.plan_prod = None
         self.SETTINGS_CHANGED_SIGNAL.emit()
 
-    def update_plan_prod_on_database(self, plan_prod):
+    def update_plan_prod_on_database(self, plan_prod, update_next_tasks=True):
         code_bobines_selected = self.get_code_bobine_selected(plan_prod.bobines_filles_selected)
         code_data_reglages = plan_prod.data_reglages.get_data_reglage_code()
         Database.update_plan_prod(p_id=plan_prod.p_id,
@@ -263,7 +264,8 @@ class SettingsStore(QObject):
                                   encrier_1=plan_prod.encrier_1.color,
                                   encrier_2=plan_prod.encrier_2.color,
                                   encrier_3=plan_prod.encrier_3.color)
-        self.update_next_tasks(start=plan_prod.start, end=plan_prod.end)
+        if update_next_tasks:
+            self.update_next_tasks(start=plan_prod.start, end=plan_prod.end)
         self.SETTINGS_CHANGED_SIGNAL.emit()
 
     def update_next_tasks(self, start, end):
@@ -277,13 +279,13 @@ class SettingsStore(QObject):
                 task.plan_prod.data_reglages.update_reglage()
                 task.plan_prod.get_end()
                 new_start = task.plan_prod.end
+                self.update_plan_prod_on_database(plan_prod=task.plan_prod, update_next_tasks=False)
             if task.event:
                 duration = task.event.end - task.event.start
                 task.event.start = new_start
                 task.event.end = task.event.start + duration
                 new_start = task.event.end
-        for plan_prod in plan_prod_store.plans_prods:
-            print(plan_prod)
+                self.save_event(event=task.event, update_next_tasks=False)
 
     @staticmethod
     def get_next_tasks(start):
@@ -298,12 +300,13 @@ class SettingsStore(QObject):
                 tasks.append(Task(start=event.start, event=event))
         return tasks
 
-    def save_event(self, event):
+    def save_event(self, event, update_next_tasks=True):
         Database.create_event_prod(start=event.start, end=event.end, p_type=event.type_event, info=event.info,
                                    ensemble=event.ensemble)
         from gestion.stores.event_store import event_store
         event_store.update()
-        self.update_plans_prods()
+        if update_next_tasks:
+            self.update_next_tasks(start=event.start, end=event.end)
         self.SETTINGS_CHANGED_SIGNAL.emit()
 
     def delete_item(self):
@@ -315,6 +318,7 @@ class SettingsStore(QObject):
             self.delete_plan_prod(plan_prod=self.focus)
 
     def focus_edit(self):
+        print(self.focus)
         from commun.model.event import Event
         from commun.model.plan_prod import PlanProd
         if isinstance(self.focus, Event):
@@ -329,13 +333,11 @@ class SettingsStore(QObject):
         self.update_plans_prods()
         self.SETTINGS_CHANGED_SIGNAL.emit()
 
-    def delete_plan_prod(self, plan_prod, update=True):
-        pass
-        # plan_prod_store.plans_prods.remove(plan_prod)
-        # Database.delete_plan_prod(p_id=plan_prod.p_id)
-        # if update:
-        #     self.update_plans_prods()
-        # self.SETTINGS_CHANGED_SIGNAL.emit()
+    def delete_plan_prod(self, plan_prod):
+        plan_prod_store.plans_prods.remove(plan_prod)
+        Database.delete_plan_prod(p_id=plan_prod.p_id)
+        self.update_next_tasks(start=plan_prod.start, end=plan_prod.start)
+        self.SETTINGS_CHANGED_SIGNAL.emit()
 
     def set_item_focus(self, item):
         if self.day_ago <= 0:

@@ -376,6 +376,7 @@ class Database:
     @classmethod
     def create_plan_prod(cls, start, refente, bobine_papier, code_bobines_selected, longueur, tours, bobine_poly,
                          encrier_1, encrier_2, encrier_3, code_data_reglages):
+        print("create_plan_prod")
         query = "INSERT INTO mondon_plan_prod (refente,bobine_papier,start,code_bobines_selected," \
                 "longueur,tours,bobine_poly,encrier_1,encrier_2,encrier_3,code_data_reglages) " \
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)".format(refente, bobine_papier, start, code_bobines_selected,
