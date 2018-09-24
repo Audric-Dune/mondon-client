@@ -59,4 +59,5 @@ class ProdUi(QWidget):
     def focusOutEvent(self, e):
         self.border_color = color_noir
         self.update()
-        settings_store_gestion.set_item_focus(item=None)
+        if not settings_store_gestion.standing_insert:
+            settings_store_gestion.set_item_focus(item=None)

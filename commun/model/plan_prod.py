@@ -87,6 +87,8 @@ class PlanProd(QObject):
         self.end = self.get_end()
 
     def update_from_last_plan_prod(self):
+        print(self.last_plan_prod)
+        self.data_reglages.last_p = self.last_plan_prod
         self.data_reglages.update_reglage()
         self.set_color_encrier_from_last_plan_prod()
 

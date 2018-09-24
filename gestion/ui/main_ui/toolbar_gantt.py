@@ -30,7 +30,8 @@ class ToolbarGantt(QWidget):
         self.bt_insert = ButtonMenu(parent=self, text="Insérer",
                                     icon="commun/assets/images/insert.png",
                                     icon_disabled="commun/assets/images/insert_disabled.png",
-                                    icon_hover="commun/assets/images/insert_hover.png")
+                                    icon_hover="commun/assets/images/insert_hover.png",
+                                    callback=self._handle_select_item_from_insert)
         self.bt_delete = ButtonMenu(parent=self, text="Supprimer",
                                     icon="commun/assets/images/delete.png",
                                     icon_disabled="commun/assets/images/delete_disabled.png",
@@ -60,16 +61,19 @@ class ToolbarGantt(QWidget):
         else:
             self.bt_add.set_disabled(False)
         if settings_store_gestion.focus:
+            self.bt_insert.set_disabled(False)
             self.bt_delete.set_disabled(False)
             self.bt_edit.set_disabled(False)
         else:
+            self.bt_insert.set_disabled(True)
             self.bt_delete.set_disabled(True)
             self.bt_edit.set_disabled(True)
+        if settings_store_gestion.standing_insert:
+            self.bt_insert.set_disabled(True)
         self.bt_delete.update_ui()
         self.bt_edit.update_ui()
 
     def init_bt(self):
-        self.bt_insert.set_disabled(True)
         self.bt_add.set_dropdown(callback=self._handle_select_item_from_add)
         self.bt_add.add_item_drop_down(name="plan_prod", literral_name="Plan de production")
         self.bt_add.add_item_drop_down(name="clean", literral_name="Nettoyage machine")
@@ -102,6 +106,10 @@ class ToolbarGantt(QWidget):
     @staticmethod
     def _handle_select_item_from_edit():
         settings_store_gestion.focus_edit()
+
+    @staticmethod
+    def _handle_select_item_from_insert():
+        settings_store_gestion.focus_insert()
 
     @staticmethod
     def _handle_click_bt_delete():

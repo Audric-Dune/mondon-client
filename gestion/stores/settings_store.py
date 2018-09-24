@@ -9,7 +9,7 @@ from commun.utils.timestamp import timestamp_at_day_ago, timestamp_at_time, time
 from commun.constants.param import DEBUT_PROD_MATIN, FIN_PROD_SOIR
 from commun.model.task import Task
 from commun.lib.base_de_donnee import Database
-from gestion.utils import get_code_bobine_selected
+from gestion.utils import get_code_bobine_selected, insert_plan_prod_1_before_plan_prod_2
 
 
 class SettingsStore(QObject):
@@ -28,6 +28,7 @@ class SettingsStore(QObject):
         self.plan_prod = None
         self.ech = 1
         self.focus = None
+        self.standing_insert = None
 
     def create_new_plan(self):
         print("create_new_plan")
@@ -42,6 +43,11 @@ class SettingsStore(QObject):
 
     def create_new_event(self, type_event):
         self.CREATE_EVENT_CONFIG_WINDOW.emit(type_event)
+
+    def focus_insert(self):
+        self.standing_insert = self.focus
+        self.focus = None
+        self.FOCUS_CHANGED_SIGNAL.emit()
 
     def focus_edit(self):
         print(self.focus)
@@ -95,6 +101,13 @@ class SettingsStore(QObject):
             self.ON_DAY_CHANGED.emit()
 
     def set_item_focus(self, item):
+        from commun.model.plan_prod import PlanProd
+        if self.standing_insert and isinstance(item, PlanProd):
+            print("INSERTION : ", self.standing_insert, "___ AVANT : ", item)
+            insert_plan_prod_1_before_plan_prod_2(plan_prod_1=self.standing_insert, plan_prod_2=item)
+            self.standing_insert = None
+            self.focus = None
+            self.SETTINGS_CHANGED_SIGNAL.emit()
         if self.day_ago <= 0:
             self.focus = item
             self.FOCUS_CHANGED_SIGNAL.emit()
@@ -325,7 +338,7 @@ class SettingsStore(QObject):
         self.SETTINGS_CHANGED_SIGNAL.emit()
 
     def update_plan_prod_on_database(self, plan_prod, update_next_tasks=True):
-        code_bobines_selected = get_code_bobine_selected(self.plan_prod.bobines_filles_selected)
+        code_bobines_selected = get_code_bobine_selected(plan_prod.bobines_filles_selected)
         code_data_reglages = plan_prod.data_reglages.get_data_reglage_code()
         Database.update_plan_prod(p_id=plan_prod.p_id,
                                   bobine_papier=plan_prod.bobine_papier_selected.code,
