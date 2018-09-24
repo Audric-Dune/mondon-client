@@ -59,8 +59,7 @@ class DataReglages:
                 if data_reglage:
                     new_data_reglages.append(data_reglage)
                 else:
-                    new_data_reglage = DataReglage(reglage=reglage)
-                    new_data_reglages.append(new_data_reglage)
+                    self.add_reglage(reglage)
         self.data_reglages = new_data_reglages
         self.get_time()
 

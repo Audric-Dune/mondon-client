@@ -29,10 +29,10 @@ class GantProd(QWidget):
         self.prods = prods
         self.events = events
         self.setFixedHeight(self.DEC_Y_TOP+self.DEC_Y_BOTTOM+50*5+6*3)
-        self.init_ui()
+        self.update_ui()
 
     def resizeEvent(self, e):
-        self.init_ui()
+        self.update_ui()
         super(GantProd, self).resizeEvent(e)
 
     def paintEvent(self, e):
@@ -125,7 +125,8 @@ class GantProd(QWidget):
         text_rect = QRect(0, self.DEC_Y_TOP+220, self.DEC_X_LEFT-10, 50)
         p.drawText(text_rect, Qt.AlignRight | Qt.AlignVCenter, "Arrêt production")
 
-    def init_ui(self):
+    def update_ui(self):
+        print("update_ui")
         for item in self.items:
             item.setParent(None)
         ech = (self.width()-self.DEC_X)/57600
@@ -143,7 +144,7 @@ class GantProd(QWidget):
             elif event.p_type == "tool":
                 y = self.DEC_Y_TOP + 165
             else:
-                y = self.DEC_Y_TOP + 221
+                y = self.DEC_Y_TOP + 219
             new_event.setGeometry(x, y, new_event.width(), new_event.height())
             self.items.append(new_event)
 
@@ -152,4 +153,4 @@ class GantProd(QWidget):
         self.end_day = timestamp_at_time(timestamp_at_day_ago(day_ago), hours=FIN_PROD_SOIR)
         self.prods = prods
         self.events = events
-        self.init_ui()
+        self.update_ui()

@@ -42,6 +42,7 @@ class TabProdBobine(QWidget):
         p.drawRect(0, 0, self.width()-1, self.height()-1)
 
     def update_widget(self):
+        print("TabProdBobine: update_widget")
         self.get_bobines()
         clear_layout(self.vbox)
         self.vbox.addWidget(LineLegend(parent=self))

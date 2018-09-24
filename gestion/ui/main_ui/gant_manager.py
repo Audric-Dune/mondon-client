@@ -14,6 +14,7 @@ class GantManager:
         self.gant_prod = GantProd(prods=self.prods, events=self.events)
         self.update_data()
         settings_store_gestion.SETTINGS_CHANGED_SIGNAL.connect(self.update_data)
+        settings_store_gestion.ON_DAY_CHANGED.connect(self.update_data)
 
     def update_data(self):
         day_ago = settings_store_gestion.day_ago

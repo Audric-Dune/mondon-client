@@ -75,10 +75,10 @@ class DayMenu(MondonWidget):
         self.label_date.setAlignment(Qt.AlignCenter)
         self.label_date.setText(date)
 
-    @staticmethod
-    def jour_moins():
+    def jour_moins(self):
         settings_store_gestion.set_day_ago(settings_store_gestion.day_ago + 1)
+        self.update_label()
 
-    @staticmethod
-    def jour_plus():
+    def jour_plus(self):
         settings_store_gestion.set_day_ago(settings_store_gestion.day_ago - 1)
+        self.update_label()

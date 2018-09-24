@@ -84,9 +84,9 @@ class BlocParamProd(MondonWidget):
         else:
             self.text_edit_tours.setStyleSheet(line_edit_green_stylesheet)
             self.plan_prod.set_tours(int(text_edit_value))
-            if self.plan_prod.is_valid_tours():
-                self.label_end.setStyleSheet(white_12_label_stylesheet)
-                self.text_edit_tours.setStyleSheet(line_edit_green_stylesheet)
-            else:
-                self.label_end.setStyleSheet(red_12_bold_label_stylesheet)
-                self.text_edit_tours.setStyleSheet(line_edit_red_stylesheet)
+            # if self.plan_prod.is_valid_tours():
+            #     self.label_end.setStyleSheet(white_12_label_stylesheet)
+            #     self.text_edit_tours.setStyleSheet(line_edit_green_stylesheet)
+            # else:
+            #     self.label_end.setStyleSheet(red_12_bold_label_stylesheet)
+            #     self.text_edit_tours.setStyleSheet(line_edit_red_stylesheet)

@@ -37,10 +37,11 @@ class BlocBt(QWidget):
         self.setLayout(vbox)
 
     def update_bt(self):
-        if self.plan_prod.is_valid():
-            self.bt_valid.setDisabled(False)
-        else:
-            self.bt_valid.setDisabled(True)
+        pass
+        # if self.plan_prod.is_valid():
+        #     self.bt_valid.setDisabled(False)
+        # else:
+        #     self.bt_valid.setDisabled(True)
 
     def paintEvent(self, e):
         p = QPainter(self)

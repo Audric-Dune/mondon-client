@@ -4,8 +4,9 @@
 
 class Task:
 
-    def __init__(self, start, plan_prod=None, event=None):
+    def __init__(self, start, end, plan_prod=None, event=None):
         self.start = start
+        self.end = end
         self.plan_prod = plan_prod
         self.event = event
 

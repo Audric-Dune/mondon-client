@@ -64,3 +64,28 @@ def init_bobine_fille_store(store, bobines):
 
 def get_time_prod(plan_prod):
     return (plan_prod.longueur * plan_prod.tours/3)*(PERCENT_PROD_THEROIQUE_MAXI/100)
+
+
+def get_code_bobine_selected(bobines_filles_selected):
+    def sort_item(items, sort_name, sort_asc):
+        items = sorted(items, key=lambda b: b.get_value(sort_name), reverse=not sort_asc)
+        return items
+    sort_item(items=bobines_filles_selected, sort_name="index", sort_asc=True)
+    code_bobines_selected = ""
+    for bobine in bobines_filles_selected:
+        code_bobines_selected += str(bobine.code)
+        code_bobines_selected += "_"
+        code_bobines_selected += str(bobine.pose)
+        code_bobines_selected += "_"
+        code_bobines_selected += str(bobine.index)
+        code_bobines_selected += "_"
+    return code_bobines_selected
+
+
+def get_color_encrier_last_plan_prod(color):
+    if color is None:
+        return None
+    elif color[0] == "_":
+        return color
+    else:
+        return "_{}".format(color)

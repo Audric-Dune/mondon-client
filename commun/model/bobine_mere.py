@@ -51,7 +51,7 @@ class BobineMere:
         for plan_prod in plan_prod_store.plans_prods:
             if timestamp_at_day_ago(0) <= plan_prod.start < ts:
                 code_bobine_mere_plan_prod = \
-                    plan_prod.bobine_papier_selected.code if self.color != "Polypro" else plan_prod.bobine_poly_selected.code
+                    plan_prod.bobine_papier_selected.code if self.color != "POLYPRO" else plan_prod.bobine_poly_selected.code
                 if code_bobine_mere_plan_prod == self.code:
                     stock -= count_bobine_mere_in_plan_prod(plan_prod)
                     stock_therme -= count_bobine_mere_in_plan_prod(plan_prod)
