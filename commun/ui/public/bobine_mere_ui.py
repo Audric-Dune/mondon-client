@@ -16,7 +16,7 @@ class BobineMereUI(QWidget):
         super(BobineMereUI, self).__init__(parent=parent)
         self.bobine = bobine
         self.ech = ech
-        self.setFixedHeight(100)
+        self.setFixedHeight(50)
         self.setFixedWidth(self.bobine.laize*ech)
         self.update()
         self.init_widget()

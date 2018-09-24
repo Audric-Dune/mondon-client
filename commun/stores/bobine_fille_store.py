@@ -6,7 +6,7 @@ class BobineFilleStore:
     def __init__(self):
         self.bobines = []
 
-    def add_bobine(self, bobine):
+    def add_item(self, bobine):
         self.bobines.append(bobine)
 
     def get_bobine(self, code):

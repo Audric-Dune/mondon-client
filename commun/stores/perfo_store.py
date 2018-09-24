@@ -6,7 +6,7 @@ class PerfoStore:
     def __init__(self):
         self.perfos = []
 
-    def add_perfo(self, perfo):
+    def add_item(self, perfo):
         self.perfos.append(perfo)
 
 

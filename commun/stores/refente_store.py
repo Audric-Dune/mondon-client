@@ -6,7 +6,7 @@ class RefenteStore:
     def __init__(self):
         self.refentes = []
 
-    def add_refente(self, refente):
+    def add_item(self, refente):
         self.refentes.append(refente)
 
 

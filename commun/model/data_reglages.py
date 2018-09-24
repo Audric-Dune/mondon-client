@@ -7,9 +7,9 @@ from commun.stores.reglage_store import reglage_store
 
 class DataReglages:
 
-    def __init__(self, plan_prod):
+    def __init__(self, plan_prod, last_plan_prod):
         self.p = plan_prod
-        self.last_p = None
+        self.last_p = last_plan_prod
         self.data_reglages = []
         self.init_data_reglage()
         self.time_aide = 0
@@ -25,10 +25,6 @@ class DataReglages:
         new_data_reglage = DataReglage(reglage=reglage)
         new_data_reglage.ON_DATA_CHANGED.connect(self.get_time)
         self.data_reglages.append(new_data_reglage)
-
-    def set_last_plan_prod(self, last_plan_prod):
-        self.last_p = last_plan_prod
-        self.update_reglage()
 
     def get_time(self):
         self.time_aide = 0

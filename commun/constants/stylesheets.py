@@ -68,7 +68,7 @@ red_title_label_stylesheet = create_qlabel_stylesheet(color=color_blanc,
 red_12_label_stylesheet = create_qlabel_stylesheet(color=color_blanc,
                                                    background_color=color_rouge,
                                                    font_size="12px")
-white_12_no_background_label_stylesheet = create_qlabel_stylesheet(color=color_blanc,font_size="12px")
+white_12_no_background_label_stylesheet = create_qlabel_stylesheet(color=color_blanc, font_size="12px")
 red_14_label_stylesheet = create_qlabel_stylesheet(color=color_blanc,
                                                    background_color=color_rouge,
                                                    font_size="14px")
@@ -288,7 +288,7 @@ button_no_radius_orange_stylesheet = """
     color_gris_moyen=color_gris_moyen.hex_string,
     color_orange=color_orange.hex_string,)
 
-button_no_radius_no_hover_stylesheet= """
+button_no_radius_no_hover_stylesheet = """
     QPushButton {{
         background-color: none;
         border: none;

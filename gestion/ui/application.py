@@ -4,6 +4,8 @@
 from PyQt5.QtWidgets import QApplication
 
 from gestion.ui.window.main_window import MainWindow
+from gestion.stores.plan_prod_store import plan_prod_store
+
 from commun.lib. base_de_donnee import Database
 from commun.stores.bobine_fille_store import bobine_fille_store
 from commun.stores.bobine_poly_store import bobine_poly_store
@@ -18,6 +20,7 @@ from commun.model.cliche import Cliche
 from commun.model.bobine_mere import BobineMere
 from commun.model.refente import Refente
 from commun.model.perfo import Perfo
+
 import xlrd
 
 
@@ -45,11 +48,11 @@ class Application(QApplication):
         if argv is None:
             argv = []
         super(Application, self).__init__(argv)
-        self.B130091AEPCLOLIVET = None
         self.main_window = None
         self.read_xls()
         self.init_refente_store()
         self.init_perfo_store()
+        plan_prod_store.get_plan_prod_from_database()
         self.init_ui()
 
     def init_ui(self):
@@ -71,7 +74,7 @@ class Application(QApplication):
                                   laize6=data_refente[8],
                                   laize7=data_refente[9],
                                   chute=data_refente[10])
-            refente_store.add_refente(new_refente)
+            refente_store.add_item(new_refente)
 
     @staticmethod
     def init_perfo_store():
@@ -93,7 +96,7 @@ class Application(QApplication):
                               bague6=data_perfo[13],
                               cale7=data_perfo[14],
                               bague7=data_perfo[15])
-            perfo_store.add_perfo(new_perfo)
+            perfo_store.add_item(new_perfo)
 
     def read_xls(self):
         self.get_cliche_from_xls()
@@ -236,7 +239,7 @@ class Application(QApplication):
                                          stock_therme=current_stock_therme,
                                          creation_time=current_creation_time,
                                          sommeil=current_sommeil)
-            bobine_fille_store.add_bobine(current_bobine)
+            bobine_fille_store.add_item(current_bobine)
 
     @staticmethod
     def extract_bobine_mere_from_line(sheet, current_row):
@@ -257,9 +260,9 @@ class Application(QApplication):
                                      stock=stock,
                                      stock_therme=stock_therme)
             if color == "POLYPRO":
-                bobine_poly_store.add_bobine(bobine_mere)
+                bobine_poly_store.add_item(bobine_mere)
             else:
-                bobine_papier_store.add_bobine(bobine_mere)
+                bobine_papier_store.add_item(bobine_mere)
 
     @staticmethod
     def is_sommeil(sommeil):

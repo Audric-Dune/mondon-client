@@ -24,7 +24,6 @@ class MainWindow(QMainWindow):
         settings_store_gestion.CREATE_PLAN_PROD_WINDOW.connect(self.create_plan_prod_creator_window)
         settings_store_gestion.CREATE_EVENT_CONFIG_WINDOW.connect(self.create_event_config_window)
         settings_store_gestion.CREATE_EVENT_CONFIG_EDIT_WINDOW.connect(self.create_event_config_edit_window)
-        plan_prod_store.get_plan_prod_from_database()
         self.gant_manager = GantManager()
         self.tab_prod_bobines = TabProdBobine(parent=self)
         self.toolbar_gantt = ToolbarGantt(parent=self)
