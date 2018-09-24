@@ -13,7 +13,6 @@ from gestion.utils import get_code_bobine_selected, insert_plan_prod_1_before_pl
 
 
 class SettingsStore(QObject):
-    DATA_BASE_CHANGED_SIGNAL = pyqtSignal()
     SETTINGS_CHANGED_SIGNAL = pyqtSignal()
     FOCUS_CHANGED_SIGNAL = pyqtSignal()
     CREATE_EVENT_CONFIG_WINDOW = pyqtSignal(str)
@@ -31,7 +30,6 @@ class SettingsStore(QObject):
         self.standing_insert = None
 
     def create_new_plan(self):
-        print("create_new_plan")
         from commun.model.plan_prod import PlanProd
         new_start = self.get_start_for_new_plan_prod()
         from gestion.stores.plan_prod_store import plan_prod_store
@@ -50,7 +48,6 @@ class SettingsStore(QObject):
         self.FOCUS_CHANGED_SIGNAL.emit()
 
     def focus_edit(self):
-        print(self.focus)
         from commun.model.event import Event
         from commun.model.plan_prod import PlanProd
         if isinstance(self.focus, Event):
@@ -318,12 +315,13 @@ class SettingsStore(QObject):
     # @staticmethod
 
     def save_plan_prod(self):
-        if self.plan_prod.p_id:
+        if not self.plan_prod.new_plan:
             self.update_plan_prod_on_database(plan_prod=self.plan_prod)
         else:
             code_bobines_selected = get_code_bobine_selected(self.plan_prod.bobines_filles_selected)
             code_data_reglages = self.plan_prod.data_reglages.get_data_reglage_code()
-            Database.create_plan_prod(bobine_papier=self.plan_prod.bobine_papier_selected.code,
+            Database.create_plan_prod(p_id=self.plan_prod.p_id,
+                                      bobine_papier=self.plan_prod.bobine_papier_selected.code,
                                       code_bobines_selected=code_bobines_selected,
                                       refente=self.plan_prod.refente_selected.code,
                                       start=self.plan_prod.start,
@@ -334,7 +332,9 @@ class SettingsStore(QObject):
                                       encrier_1=self.plan_prod.encrier_1.color,
                                       encrier_2=self.plan_prod.encrier_2.color,
                                       encrier_3=self.plan_prod.encrier_3.color)
-        self.DATA_BASE_CHANGED_SIGNAL.emit()
+            self.plan_prod.new_plan = False
+            from gestion.stores.plan_prod_store import plan_prod_store
+            plan_prod_store.plans_prods.append(self.plan_prod)
         self.SETTINGS_CHANGED_SIGNAL.emit()
 
     def update_plan_prod_on_database(self, plan_prod, update_next_tasks=True):
@@ -395,7 +395,6 @@ class SettingsStore(QObject):
         event_store.update()
         # if update_next_tasks:
         #     self.update_next_tasks(start=event.start, end=event.end)
-        self.DATA_BASE_CHANGED_SIGNAL.emit()
         self.SETTINGS_CHANGED_SIGNAL.emit()
 
     def delete_item(self):
@@ -410,12 +409,13 @@ class SettingsStore(QObject):
         Database.delete_event_prod(p_id=event.p_id)
         from gestion.stores.event_store import event_store
         event_store.update()
-        self.DATA_BASE_CHANGED_SIGNAL.emit()
         self.SETTINGS_CHANGED_SIGNAL.emit()
 
     def delete_plan_prod(self, plan_prod):
         Database.delete_plan_prod(p_id=plan_prod.p_id)
-        self.DATA_BASE_CHANGED_SIGNAL.emit()
+        from gestion.stores.plan_prod_store import plan_prod_store
+        plan_prod_store.plans_prods.remove(plan_prod)
         self.SETTINGS_CHANGED_SIGNAL.emit()
+
 
 settings_store_gestion = SettingsStore()

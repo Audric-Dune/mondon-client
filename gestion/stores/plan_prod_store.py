@@ -6,7 +6,6 @@ from PyQt5.QtCore import QObject
 
 from commun.lib.base_de_donnee import Database
 from commun.model.plan_prod import PlanProd
-from gestion.stores.settings_store import settings_store_gestion
 
 
 class PlanProdStore(QObject):
@@ -14,10 +13,8 @@ class PlanProdStore(QObject):
     def __init__(self):
         super(PlanProdStore, self).__init__()
         self.plans_prods = []
-        settings_store_gestion.DATA_BASE_CHANGED_SIGNAL.connect(self.get_plan_prod_from_database)
 
     def get_plan_prod_from_database(self):
-        self.plans_prods = []
         data_plan_prod_on_data_base = Database.get_plan_prod()
         for data in data_plan_prod_on_data_base:
             start = data[1]

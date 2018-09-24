@@ -31,7 +31,6 @@ class PlanProd(QObject):
 
     def __init__(self, last_plan_prod, data=None, start=None):
         super(PlanProd, self).__init__()
-        print("PlanProd")
         self.p_id = None
         self.start = None
         self.end = None
@@ -56,8 +55,12 @@ class PlanProd(QObject):
         self.current_bobine_poly_store = None
         self.init_current_store()
         if data:
+            self.new_plan = False
             self.update_from_data(data=data)
         else:
+            self.new_plan = True
+            import random
+            self.p_id = random.randint(0, 100000000)
             self.start = start
             self.end = start
             self.update_from_last_plan_prod()
@@ -87,7 +90,6 @@ class PlanProd(QObject):
         self.end = self.get_end()
 
     def update_from_last_plan_prod(self):
-        print(self.last_plan_prod)
         self.data_reglages.last_p = self.last_plan_prod
         self.data_reglages.update_reglage()
         self.set_color_encrier_from_last_plan_prod()

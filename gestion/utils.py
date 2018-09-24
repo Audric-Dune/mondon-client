@@ -92,8 +92,6 @@ def get_color_encrier_last_plan_prod(color):
 
 
 def insert_plan_prod_1_before_plan_prod_2(plan_prod_1, plan_prod_2):
-    print("1", plan_prod_1.end)
-    print("2", plan_prod_2.start)
     if int(plan_prod_1.end) == int(plan_prod_2.start):
         pass
     else:

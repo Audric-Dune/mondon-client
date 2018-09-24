@@ -374,24 +374,24 @@ class Database:
         return data_perfo
 
     @classmethod
-    def create_plan_prod(cls, start, refente, bobine_papier, code_bobines_selected, longueur, tours, bobine_poly,
+    def create_plan_prod(cls, p_id, start, refente, bobine_papier, code_bobines_selected, longueur, tours, bobine_poly,
                          encrier_1, encrier_2, encrier_3, code_data_reglages):
-        print("create_plan_prod")
-        query = "INSERT INTO mondon_plan_prod (refente,bobine_papier,start,code_bobines_selected," \
+        query = "INSERT INTO mondon_plan_prod (refente,bobine_papier,start,p_id,code_bobines_selected," \
                 "longueur,tours,bobine_poly,encrier_1,encrier_2,encrier_3,code_data_reglages) " \
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)".format(refente, bobine_papier, start, code_bobines_selected,
-                                                                  longueur, tours, bobine_poly, encrier_1, encrier_2,
-                                                                  encrier_3, code_data_reglages)
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)".format(refente, bobine_papier, start, p_id,
+                                                                     code_bobines_selected, longueur, tours,
+                                                                     bobine_poly, encrier_1, encrier_2, encrier_3,
+                                                                     code_data_reglages)
         try:
-            cls.run_query(query, (refente, bobine_papier, start, code_bobines_selected, longueur, tours, bobine_poly,
-                                  encrier_1, encrier_2, encrier_3, code_data_reglages))
+            cls.run_query(query, (refente, bobine_papier, start, p_id, code_bobines_selected, longueur, tours,
+                                  bobine_poly, encrier_1, encrier_2, encrier_3, code_data_reglages))
         except sqlite3.IntegrityError as e:
             logger.log("DATABASE", "(Ignorée) IntegrityError: {}".format(e))
             pass
 
     @classmethod
     def get_plan_prod(cls):
-        query = "SELECT id, start, tours, longueur, bobine_papier, refente, code_bobines_selected, bobine_poly, " \
+        query = "SELECT p_id, start, tours, longueur, bobine_papier, refente, code_bobines_selected, bobine_poly, " \
                 "encrier_1, encrier_2, encrier_3, code_data_reglages " \
                 "FROM mondon_plan_prod"
         data_plan_prod = cls.run_query(query, ())
@@ -402,7 +402,7 @@ class Database:
                          encrier_1, encrier_2, encrier_3, code_data_reglages):
         query = "UPDATE mondon_plan_prod " \
                 "SET start = ?, refente = ?, bobine_papier = ?, code_bobines_selected = ?, longueur = ?, tours = ?," \
-                "bobine_poly = ?, encrier_1 = ?, encrier_2 = ?, encrier_3 = ?, code_data_reglages = ? WHERE id = ? " \
+                "bobine_poly = ?, encrier_1 = ?, encrier_2 = ?, encrier_3 = ?, code_data_reglages = ? WHERE p_id = ? " \
             .format(start, refente, bobine_papier, code_bobines_selected, longueur, tours, bobine_poly, encrier_1,
                     encrier_2, encrier_3, code_data_reglages, p_id)
         try:
@@ -451,7 +451,7 @@ class Database:
     @classmethod
     def delete_plan_prod(cls, p_id):
         query = "DELETE FROM mondon_plan_prod " \
-                "WHERE id = ? ".format(p_id)
+                "WHERE p_id = ? ".format(p_id)
         try:
             cls.run_query(query, (p_id,))
         except sqlite3.IntegrityError as e:

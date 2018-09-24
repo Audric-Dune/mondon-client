@@ -52,7 +52,6 @@ class DataReglages:
         return time
 
     def update_reglage(self):
-        print(self.last_p)
         new_data_reglages = []
         for reglage in reglage_store.reglages:
             if reglage.is_active(p=self.p, last_p=self.last_p) or reglage.is_optionnel():

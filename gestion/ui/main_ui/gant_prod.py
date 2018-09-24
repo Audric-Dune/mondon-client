@@ -126,7 +126,6 @@ class GantProd(QWidget):
         p.drawText(text_rect, Qt.AlignRight | Qt.AlignVCenter, "Arrêt production")
 
     def update_ui(self):
-        print("update_ui")
         for item in self.items:
             item.setParent(None)
         ech = (self.width()-self.DEC_X)/57600
