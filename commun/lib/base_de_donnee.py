@@ -393,7 +393,7 @@ class Database:
     def get_plan_prod(cls):
         query = "SELECT p_id, start, tours, longueur, bobine_papier, refente, code_bobines_selected, bobine_poly, " \
                 "encrier_1, encrier_2, encrier_3, code_data_reglages " \
-                "FROM mondon_plan_prod"
+                "FROM mondon_plan_prod ORDER BY start"
         data_plan_prod = cls.run_query(query, ())
         return data_plan_prod
 

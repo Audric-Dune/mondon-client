@@ -5,8 +5,8 @@ from datetime import datetime
 
 from PyQt5.QtCore import pyqtSignal, QObject
 
-from commun.utils.timestamp import timestamp_at_day_ago, timestamp_at_time, timestamp_after_day_ago, is_vendredi
-from commun.constants.param import DEBUT_PROD_MATIN, FIN_PROD_SOIR
+from commun.utils.timestamp import timestamp_at_day_ago, timestamp_at_time, get_min_in_timestamp, get_hour_in_timestamp
+from commun.constants.param import DEBUT_PROD_MATIN
 from commun.model.task import Task
 from commun.lib.base_de_donnee import Database
 from gestion.utils import get_code_bobine_selected
@@ -101,6 +101,12 @@ class SettingsStore(QObject):
                 if p_task.plan_prod == plan_prod:
                     p_task.index = p_index
         tasks = self.get_tasks_at_day_ago(day_ago=self.day_ago)
+        plan_1_in_tasks = False
+        for task in tasks:
+            if task.plan_prod == plan_1:
+                plan_1_in_tasks = True
+        if not plan_1_in_tasks:
+            tasks.append(Task(plan_prod=plan_1, start=plan_1.start, end=plan_1.end))
         index = 0
         for task in tasks:
             if task.plan_prod == plan_2:
@@ -112,6 +118,7 @@ class SettingsStore(QObject):
                 task.index = index
                 index += 1
         tasks = sorted(tasks, key=lambda t: t.get_index())
+        print(tasks)
         self.update_plans_prods(tasks=tasks)
 
     def set(self, day_ago=None, plan_prod=None):
@@ -188,14 +195,18 @@ class SettingsStore(QObject):
         if tasks is None:
             tasks = self.get_tasks_at_day_ago(day_ago=self.day_ago)
         for task in tasks:
+            start_day = timestamp_at_time(timestamp_at_day_ago(day_ago=self.day_ago), hours=DEBUT_PROD_MATIN)
             if task.index == 0:
                 from gestion.stores.plan_prod_store import plan_prod_store
-                start_day = timestamp_at_time(timestamp_at_day_ago(day_ago=self.day_ago), hours=DEBUT_PROD_MATIN)
                 last_plan_prod = plan_prod_store.get_last_plan_prod(start_plan_prod=start_day)
                 task.plan_prod.update_from_start(start=start_day, last_plan_prod=last_plan_prod)
             else:
                 last_plan_prod = get_task_from_index(task.index-1).plan_prod
-                start = get_end_from_index_task(index=task.index-1)
+                start_task = task.plan_prod.start
+                if get_min_in_timestamp(start_task) == 0 and get_hour_in_timestamp(start_task) == DEBUT_PROD_MATIN and start_task != start_day:
+                    start = start_task
+                else:
+                    start = get_end_from_index_task(index=task.index-1)
                 task.plan_prod.update_from_start(start=start, last_plan_prod=last_plan_prod)
             self.update_plan_prod_on_database(plan_prod=task.plan_prod)
         self.SETTINGS_CHANGED_SIGNAL.emit()
@@ -399,13 +410,11 @@ class SettingsStore(QObject):
                                   encrier_2=plan_prod.encrier_2.color,
                                   encrier_3=plan_prod.encrier_3.color)
 
-    def save_event(self, event, update_next_tasks=True):
+    def save_event(self, event):
         Database.create_event_prod(start=event.start, end=event.end, p_type=event.type_event, info=event.info,
                                    ensemble=event.ensemble)
         from gestion.stores.event_store import event_store
         event_store.update()
-        # if update_next_tasks:
-        #     self.update_next_tasks(start=event.start, end=event.end)
         self.SETTINGS_CHANGED_SIGNAL.emit()
 
     def delete_item(self):
@@ -426,6 +435,7 @@ class SettingsStore(QObject):
         Database.delete_plan_prod(p_id=plan_prod.p_id)
         from gestion.stores.plan_prod_store import plan_prod_store
         plan_prod_store.plans_prods.remove(plan_prod)
+        self.update_plans_prods()
         self.SETTINGS_CHANGED_SIGNAL.emit()
 
 

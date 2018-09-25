@@ -35,7 +35,10 @@ class PlanProdStore(QObject):
         for plan_prod in self.plans_prods:
             if plan_prod is None:
                 continue
-            if plan_prod.start < start_plan_prod:
+            if last_plan_prod is None:
+                if plan_prod.start < start_plan_prod:
+                    last_plan_prod = plan_prod
+            elif last_plan_prod.start < plan_prod.start < start_plan_prod:
                 last_plan_prod = plan_prod
         return last_plan_prod
 
