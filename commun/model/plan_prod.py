@@ -89,6 +89,13 @@ class PlanProd(QObject):
         self.data_reglages.update_data_reglage_from_code(data[11])
         self.end = self.get_end()
 
+    def update_from_start(self, start):
+        from gestion.stores.plan_prod_store import plan_prod_store
+        self.start = start
+        plan_prod_store.get_last_plan_prod(start_plan_prod=start)
+        self.update_from_last_plan_prod()
+        self.end = self.get_end()
+
     def update_from_last_plan_prod(self):
         print("UPDATE_ ", self, " _FROM_LAST_PLAN_PROD_ ", self.last_plan_prod)
         self.data_reglages.last_p = self.last_plan_prod
@@ -302,5 +309,5 @@ class PlanProd(QObject):
         return "ID{}, {}-{}, {}".format(self.p_id,
                                         timestamp_to_hour_little(self.start),
                                         timestamp_to_hour_little(self.end),
-                                        self.bobine_papier_selected.color,
+                                        self.bobine_papier_selected.color if self.bobine_papier_selected else None,
                                         self.bobine_poly_selected)

@@ -70,20 +70,6 @@ class SettingsStore(QObject):
                 start = task.end
         return start
 
-    @staticmethod
-    def get_tasks_at_day_ago(day_ago):
-        tasks = []
-        from gestion.stores.plan_prod_store import plan_prod_store
-        for plan_prod in plan_prod_store.plans_prods:
-            if timestamp_at_day_ago(day_ago-1) > plan_prod.start > timestamp_at_day_ago(day_ago):
-                tasks.append(Task(start=plan_prod.start, plan_prod=plan_prod, end=plan_prod.end))
-        from gestion.stores.event_store import event_store
-        for event in event_store.events:
-            if timestamp_at_day_ago(day_ago-1) > event.start > timestamp_at_day_ago(day_ago):
-                tasks.append(Task(start=event.start, event=event, end=event.end))
-        tasks = sorted(tasks, key=lambda t: t.get_start())
-        return tasks
-
     def set_day_ago(self, day_ago):
         # Test si nouveau jour est un samedi ou dimanche
         new_day = timestamp_at_day_ago(day_ago)
@@ -152,20 +138,37 @@ class SettingsStore(QObject):
     #             return self.get_end_at_start(start, end=event.end)
     #     return False
 
-    def update_plans_prods(self):
+    @staticmethod
+    def get_tasks_at_day_ago(day_ago):
+        tasks = []
         from gestion.stores.plan_prod_store import plan_prod_store
-        last_plan_prod = None
         for plan_prod in plan_prod_store.plans_prods:
-            if plan_prod.start < timestamp_at_day_ago(self.day_ago):
-                pass
-            elif last_plan_prod is None:
-                pass
-            elif plan_prod.last_plan_prod.start < timestamp_at_day_ago(self.day_ago):
-                pass
+            if plan_prod.start > timestamp_at_day_ago(day_ago):
+                tasks.append(Task(start=plan_prod.start, plan_prod=plan_prod, end=plan_prod.end))
+        from gestion.stores.event_store import event_store
+        for event in event_store.events:
+            if event.start > timestamp_at_day_ago(day_ago):
+                tasks.append(Task(start=event.start, event=event, end=event.end))
+        tasks = sorted(tasks, key=lambda t: t.get_start())
+        index = 0
+        for task in tasks:
+            task.index = index
+            index += 1
+        return tasks
+
+    def update_plans_prods(self):
+        def get_end_from_index_task(index):
+            for p_task in tasks:
+                if p_task.index == index:
+                    return p_task.plan_prod.end
+        tasks = self.get_tasks_at_day_ago(day_ago=self.day_ago)
+        for task in tasks:
+            if task.index == 0:
+                task.plan_prod.update_from_start(start=timestamp_at_time(timestamp_at_day_ago(day_ago=self.day_ago),
+                                                                         hours=DEBUT_PROD_MATIN))
             else:
-                plan_prod.last_plan_prod = last_plan_prod
-                plan_prod.update_from_last_plan_prod()
-            last_plan_prod = plan_prod
+                task.plan_prod.update_from_start(start=get_end_from_index_task(index=task.index-1))
+            self.update_plan_prod_on_database(plan_prod=task.plan_prod)
         self.SETTINGS_CHANGED_SIGNAL.emit()
         # self.cursor = None
         # plans_prods = plan_prod_store.plans_prods
