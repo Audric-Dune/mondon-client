@@ -94,6 +94,7 @@ class DataReglages:
                 dr_conducteur = True if code_split[index+2] == "True" else False
                 self.update_data_reglage(p_id=p_id, dr_aide=dr_aide, dr_conducteur=dr_conducteur)
                 index += 3
+        self.update_reglage()
         self.get_time()
 
     def update_data_reglage(self, p_id, dr_aide, dr_conducteur):

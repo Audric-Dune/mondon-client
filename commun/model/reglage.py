@@ -24,24 +24,28 @@ class Reglage:
         :param last_p: ancien plan de prod
         :return: True si le réglage est actif
         """
-        if last_p is None:
-            return False
         if self.id == 0 or self.id == 23:
+            if last_p is None:
+                return False
             if p.perfo_selected and p.perfo_selected.code == last_p.perfo_selected.code:
                 return False
             return True
         if self.id == 1 or self.id == 2 or self.id == 3 or self.id == 20 or self.id == 21:
+            if last_p is None:
+                return False
             if p.refente_selected and p.refente_selected.code == last_p.refente_selected.code:
                 return False
             return True
         if self.id == 4:
             if p.bobine_papier_selected is None:
                 return True
+            if last_p is None:
+                return False
             if p.bobine_papier_selected.code == last_p.bobine_papier_selected.code:
                 return False
             return True
         p_cliche = self.get_cliche_from_plan_prod(plan_prod=p)
-        last_p_cliche = self.get_cliche_from_plan_prod(plan_prod=last_p)
+        last_p_cliche = self.get_cliche_from_plan_prod(plan_prod=last_p) if last_p else []
         if self.id == 12:
             for tuple_cliche in p_cliche:
                 if tuple_cliche in last_p_cliche:
@@ -55,7 +59,7 @@ class Reglage:
             self.qty = qty
             return True
         p_cliche = self.get_cliche_from_plan_prod(plan_prod=p)
-        last_p_cliche = self.get_cliche_from_plan_prod(plan_prod=last_p)
+        last_p_cliche = self.get_cliche_from_plan_prod(plan_prod=last_p) if last_p else []
         if self.id == 14 or self.id == 15:
             for tuple_cliche in p_cliche:
                 if tuple_cliche in last_p_cliche:
@@ -72,6 +76,8 @@ class Reglage:
         if self.id == 16:
             qty = 0
             for i in range(1, 4):
+                if last_p is None:
+                    return False
                 if self.color_encrier_changed(encrier=getattr(p, "encrier_{}".format(i)),
                                               last_encrier=getattr(last_p, "encrier_{}".format(i))):
                     qty += 1
@@ -82,8 +88,12 @@ class Reglage:
         if self.id == 17:
             qty = 0
             for i in range(1, 4):
-                if self.remplissage_encrier(encrier=getattr(p, "encrier_{}".format(i)),
-                                            last_encrier=getattr(last_p, "encrier_{}".format(i))):
+                if last_p is None:
+                    encrier = getattr(p, "encrier_{}".format(i))
+                    if encrier.color:
+                        qty += 1
+                elif self.remplissage_encrier(encrier=getattr(p, "encrier_{}".format(i)),
+                                              last_encrier=getattr(last_p, "encrier_{}".format(i))):
                     qty += 1
             if qty == 0:
                 return False
@@ -107,6 +117,8 @@ class Reglage:
             self.qty = qty
             return True
         if self.id == 22:
+            if last_p is None:
+                return False
             qty_laize_from_p = self.get_qty_laize_from_plan_prod(plan_prod=p)
             qty_laize_from_last_p = self.get_qty_laize_from_plan_prod(plan_prod=last_p)
             if qty_laize_from_p > qty_laize_from_last_p:
@@ -114,6 +126,8 @@ class Reglage:
         if self.id == 24:
             if p.bobine_poly_selected is None:
                 return True
+            if last_p is None:
+                return False
             if p.bobine_poly_selected.code == last_p.bobine_poly_selected.code:
                 return False
             return True
