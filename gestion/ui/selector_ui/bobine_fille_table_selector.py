@@ -47,7 +47,7 @@ class BobineFilleTableSelector(TableModel):
         return elements
 
     def get_columns(self):
-        return ['code', 'laize', 'color', 'gr', 'length', 'poses', 'codes_cliche', 'colors_cliche', 'vente_mensuelle', 'stock_at_time',
+        return ['code', 'laize', 'color', 'gr', 'length', 'poses', 'vente_mensuelle', 'stock_at_time',
                 'stock_therme_at_time', 'etat', 'sommeil']
 
     def get_column_width(self, column):
@@ -98,8 +98,8 @@ class BobineFilleTableSelector(TableModel):
         index = 0
         for name in filter_store.list_filter_bobine_fille:
             if not filter_store.filter_mode_bobine_fille[index]:
-                continue
-            if not self.is_valid_bobine_from_filter(bobine, name):
+                pass
+            elif not self.is_valid_bobine_from_filter(bobine, name):
                 return False
             index += 1
         return True
