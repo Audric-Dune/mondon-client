@@ -20,3 +20,6 @@ class DataReglage(QWidget):
         if name_check_box == "aide":
             self.check_box_aide = False if self.check_box_aide else True
         self.ON_DATA_CHANGED.emit()
+
+    def __repr__(self):
+        return "{}".format(self.reglage.des)

@@ -153,9 +153,21 @@ class SettingsStore(QObject):
     #     return False
 
     def update_plans_prods(self):
-        pass
+        from gestion.stores.plan_prod_store import plan_prod_store
+        last_plan_prod = None
+        for plan_prod in plan_prod_store.plans_prods:
+            if plan_prod.start < timestamp_at_day_ago(self.day_ago):
+                pass
+            elif last_plan_prod is None:
+                pass
+            elif plan_prod.last_plan_prod.start < timestamp_at_day_ago(self.day_ago):
+                pass
+            else:
+                plan_prod.last_plan_prod = last_plan_prod
+                plan_prod.update_from_last_plan_prod()
+            last_plan_prod = plan_prod
+        self.SETTINGS_CHANGED_SIGNAL.emit()
         # self.cursor = None
-        # from gestion.stores.plan_prod_store import plan_prod_store
         # plans_prods = plan_prod_store.plans_prods
         # plans_prods_update = []
         # last_plan_prod = None
@@ -335,9 +347,11 @@ class SettingsStore(QObject):
             self.plan_prod.new_plan = False
             from gestion.stores.plan_prod_store import plan_prod_store
             plan_prod_store.plans_prods.append(self.plan_prod)
+        self.update_plans_prods()
         self.SETTINGS_CHANGED_SIGNAL.emit()
 
-    def update_plan_prod_on_database(self, plan_prod, update_next_tasks=True):
+    @staticmethod
+    def update_plan_prod_on_database(plan_prod):
         code_bobines_selected = get_code_bobine_selected(plan_prod.bobines_filles_selected)
         code_data_reglages = plan_prod.data_reglages.get_data_reglage_code()
         Database.update_plan_prod(p_id=plan_prod.p_id,
@@ -352,8 +366,6 @@ class SettingsStore(QObject):
                                   encrier_1=plan_prod.encrier_1.color,
                                   encrier_2=plan_prod.encrier_2.color,
                                   encrier_3=plan_prod.encrier_3.color)
-        if update_next_tasks:
-            self.update_next_tasks(start=plan_prod.start, end=plan_prod.end)
 
     def update_next_tasks(self, start, end):
         tasks = self.get_next_tasks(start=start)

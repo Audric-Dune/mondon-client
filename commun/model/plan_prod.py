@@ -90,6 +90,7 @@ class PlanProd(QObject):
         self.end = self.get_end()
 
     def update_from_last_plan_prod(self):
+        print("UPDATE_ ", self, " _FROM_LAST_PLAN_PROD_ ", self.last_plan_prod)
         self.data_reglages.last_p = self.last_plan_prod
         self.data_reglages.update_reglage()
         self.set_color_encrier_from_last_plan_prod()
@@ -298,11 +299,8 @@ class PlanProd(QObject):
         self.ON_CHANGED_SIGNAL.emit()
 
     def __repr__(self):
-        return "ID{}, {}-{}, {}: cliché_1 {}, cliché_2 {}, cliché_3 {}, Polypro{}".format(self.p_id,
-                                                                                          timestamp_to_hour_little(self.start),
-                                                                                          timestamp_to_hour_little(self.end),
-                                                                                          self.bobine_papier_selected.color,
-                                                                                          self.encrier_1.color,
-                                                                                          self.encrier_2.color,
-                                                                                          self.encrier_3.color,
-                                                                                          self.bobine_poly_selected)
+        return "ID{}, {}-{}, {}".format(self.p_id,
+                                        timestamp_to_hour_little(self.start),
+                                        timestamp_to_hour_little(self.end),
+                                        self.bobine_papier_selected.color,
+                                        self.bobine_poly_selected)
