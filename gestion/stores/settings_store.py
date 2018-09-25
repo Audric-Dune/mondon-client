@@ -9,7 +9,7 @@ from commun.utils.timestamp import timestamp_at_day_ago, timestamp_at_time, time
 from commun.constants.param import DEBUT_PROD_MATIN, FIN_PROD_SOIR
 from commun.model.task import Task
 from commun.lib.base_de_donnee import Database
-from gestion.utils import get_code_bobine_selected, insert_plan_prod_1_before_plan_prod_2
+from gestion.utils import get_code_bobine_selected
 
 
 class SettingsStore(QObject):
@@ -87,13 +87,32 @@ class SettingsStore(QObject):
         from commun.model.plan_prod import PlanProd
         if self.standing_insert and isinstance(item, PlanProd):
             print("INSERTION : ", self.standing_insert, "___ AVANT : ", item)
-            insert_plan_prod_1_before_plan_prod_2(plan_prod_1=self.standing_insert, plan_prod_2=item)
+            self.insert_plan_prod_1_before_plan_prod_2(plan_1=self.standing_insert, plan_2=item)
             self.standing_insert = None
             self.focus = None
             self.SETTINGS_CHANGED_SIGNAL.emit()
         if self.day_ago <= 0:
             self.focus = item
             self.FOCUS_CHANGED_SIGNAL.emit()
+
+    def insert_plan_prod_1_before_plan_prod_2(self, plan_1, plan_2):
+        def set_index_to_plan_prod(p_index, plan_prod):
+            for p_task in tasks:
+                if p_task.plan_prod == plan_prod:
+                    p_task.index = p_index
+        tasks = self.get_tasks_at_day_ago(day_ago=self.day_ago)
+        index = 0
+        for task in tasks:
+            if task.plan_prod == plan_2:
+                set_index_to_plan_prod(plan_prod=plan_1, p_index=index)
+                index += 1
+                set_index_to_plan_prod(plan_prod=plan_2, p_index=index)
+                index += 1
+            elif task.plan_prod != plan_1:
+                task.index = index
+                index += 1
+        tasks = sorted(tasks, key=lambda t: t.get_index())
+        self.update_plans_prods(tasks=tasks)
 
     def set(self, day_ago=None, plan_prod=None):
         if day_ago is not None:
@@ -156,18 +175,28 @@ class SettingsStore(QObject):
             index += 1
         return tasks
 
-    def update_plans_prods(self):
+    def update_plans_prods(self, tasks=None):
         def get_end_from_index_task(index):
             for p_task in tasks:
                 if p_task.index == index:
                     return p_task.plan_prod.end
-        tasks = self.get_tasks_at_day_ago(day_ago=self.day_ago)
+
+        def get_task_from_index(index):
+            for p_task in tasks:
+                if p_task.index == index:
+                    return p_task
+        if tasks is None:
+            tasks = self.get_tasks_at_day_ago(day_ago=self.day_ago)
         for task in tasks:
             if task.index == 0:
-                task.plan_prod.update_from_start(start=timestamp_at_time(timestamp_at_day_ago(day_ago=self.day_ago),
-                                                                         hours=DEBUT_PROD_MATIN))
+                from gestion.stores.plan_prod_store import plan_prod_store
+                start_day = timestamp_at_time(timestamp_at_day_ago(day_ago=self.day_ago), hours=DEBUT_PROD_MATIN)
+                last_plan_prod = plan_prod_store.get_last_plan_prod(start_plan_prod=start_day)
+                task.plan_prod.update_from_start(start=start_day, last_plan_prod=last_plan_prod)
             else:
-                task.plan_prod.update_from_start(start=get_end_from_index_task(index=task.index-1))
+                last_plan_prod = get_task_from_index(task.index-1).plan_prod
+                start = get_end_from_index_task(index=task.index-1)
+                task.plan_prod.update_from_start(start=start, last_plan_prod=last_plan_prod)
             self.update_plan_prod_on_database(plan_prod=task.plan_prod)
         self.SETTINGS_CHANGED_SIGNAL.emit()
         # self.cursor = None
@@ -369,39 +398,6 @@ class SettingsStore(QObject):
                                   encrier_1=plan_prod.encrier_1.color,
                                   encrier_2=plan_prod.encrier_2.color,
                                   encrier_3=plan_prod.encrier_3.color)
-
-    def update_next_tasks(self, start, end):
-        tasks = self.get_next_tasks(start=start)
-        tasks = sorted(tasks, key=lambda t: t.get_start())
-        new_start = end
-        for task in tasks:
-            if task.plan_prod:
-                task.plan_prod.start = new_start
-                task.plan_prod.set_color_encrier_from_last_plan_prod()
-                task.plan_prod.data_reglages.update_reglage()
-                task.plan_prod.get_end()
-                new_start = task.plan_prod.end
-                self.update_plan_prod_on_database(plan_prod=task.plan_prod, update_next_tasks=False)
-    #         if task.event:
-    #             duration = task.event.end - task.event.start
-    #             task.event.start = new_start
-    #             task.event.end = task.event.start + duration
-    #             new_start = task.event.end
-    #             self.save_event(event=task.event, update_next_tasks=False)
-
-    @staticmethod
-    def get_next_tasks(start):
-        from commun.model.task import Task
-        tasks = []
-        from gestion.stores.plan_prod_store import plan_prod_store
-        for plan_prod in plan_prod_store.plans_prods:
-            if plan_prod.start > start:
-                tasks.append(Task(start=plan_prod.start, plan_prod=plan_prod, end=plan_prod.end))
-        from gestion.stores.event_store import event_store
-        for event in event_store.events:
-            if event.start > start:
-                tasks.append(Task(start=event.start, event=event, end=event.end))
-        return tasks
 
     def save_event(self, event, update_next_tasks=True):
         Database.create_event_prod(start=event.start, end=event.end, p_type=event.type_event, info=event.info,

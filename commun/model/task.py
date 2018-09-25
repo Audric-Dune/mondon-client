@@ -14,6 +14,9 @@ class Task:
     def get_start(self):
         return self.start
 
+    def get_index(self):
+        return self.index
+
     def __repr__(self):
         if self.plan_prod:
             return "Index: {} Plan production: {}".format(self.index, self.plan_prod)
