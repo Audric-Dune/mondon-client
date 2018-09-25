@@ -21,11 +21,8 @@ class PlanProdStore(QObject):
             new_plan_prod = PlanProd(last_plan_prod=self.get_last_plan_prod(start_plan_prod=start), data=data)
             self.plans_prods.append(new_plan_prod)
         self.sort_plans_prods()
-
-    def update_plan_prod_from_last_plan_prod(self):
         for plan_prod in self.plans_prods:
-            plan_prod.get_last_plan_prod()
-            plan_prod.set_color_encrier_from_last_plan_prod()
+            plan_prod.update_from_last_plan_prod()
 
     def sort_plans_prods(self):
         self.plans_prods = sorted(self.plans_prods, key=lambda b: b.get_start(), reverse=False)

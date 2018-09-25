@@ -5,7 +5,7 @@ from datetime import datetime
 
 from PyQt5.QtCore import pyqtSignal, QObject
 
-from commun.utils.timestamp import timestamp_at_day_ago, timestamp_at_time, get_min_in_timestamp, get_hour_in_timestamp
+from commun.utils.timestamp import timestamp_at_day_ago, timestamp_at_time, get_day_ago
 from commun.constants.param import DEBUT_PROD_MATIN
 from commun.model.task import Task
 from commun.lib.base_de_donnee import Database
@@ -101,6 +101,7 @@ class SettingsStore(QObject):
                     p_task.index = p_index
                     if day_ago is not None:
                         p_task.day_ago = day_ago
+        memo_day_ago_plan_prod_1 = get_day_ago(plan_1.start)
         tasks = self.get_tasks_at_day_ago(day_ago=self.day_ago)
         plan_1_in_tasks = False
         for task in tasks:
@@ -124,6 +125,7 @@ class SettingsStore(QObject):
                 index += 1
         tasks = sorted(tasks, key=lambda t: t.get_index())
         self.update_plans_prods(tasks=tasks)
+        self.update_plans_prods(day_ago=memo_day_ago_plan_prod_1)
 
     def set(self, day_ago=None, plan_prod=None):
         if day_ago is not None:
@@ -178,7 +180,7 @@ class SettingsStore(QObject):
             index += 1
         return tasks
 
-    def update_plans_prods(self, tasks=None):
+    def update_plans_prods(self, tasks=None, day_ago=None):
         def get_end_from_index_task(index, p_day_ago):
             for p_task in tasks:
                 if p_task.index == index and p_task.day_ago == p_day_ago:
@@ -188,9 +190,9 @@ class SettingsStore(QObject):
             for p_task in tasks:
                 if p_task.index == index and p_task.day_ago == p_day_ago:
                     return p_task
-        current_day_ago = self.day_ago
+        current_day_ago = self.day_ago if day_ago is None else day_ago
         if tasks is None:
-            tasks = self.get_tasks_at_day_ago(day_ago=self.day_ago)
+            tasks = self.get_tasks_at_day_ago(day_ago=current_day_ago)
         for task in tasks:
             if task.index == 0:
                 if current_day_ago != task.day_ago:
@@ -204,6 +206,8 @@ class SettingsStore(QObject):
                 start = get_end_from_index_task(index=task.index-1, p_day_ago=current_day_ago)
                 task.plan_prod.update_from_start(start=start, last_plan_prod=last_plan_prod)
             self.update_plan_prod_on_database(plan_prod=task.plan_prod)
+        from gestion.stores.plan_prod_store import plan_prod_store
+        plan_prod_store.sort_plans_prods()
         self.SETTINGS_CHANGED_SIGNAL.emit()
 
     def on_data_reglage_changed(self):
