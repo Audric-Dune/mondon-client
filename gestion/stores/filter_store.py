@@ -17,11 +17,12 @@ class FilterStore(QObject):
         self.dicts_filter = {}
         # FILTER BOBINE FILLE
         self.list_filter_bobine_fille = ["laize", "color", "gr", "length", "poses",
-                                         "vente_mensuelle", "stock_at_time", "stock_therme_at_time", "etat", "sommeil"]
-        self.title_filter_bobine_fille = ["Laize", "Couleur", "Grammage", "Longueur", "Pose(s)",
-                                          "Vente mensuelle", "Stock", "Stock à therme", "Etat", "Sommeil"]
-        self.filter_mode_bobine_fille = [True, True, True, True, False, False, False, False, True, True]
-        self.sort_mode_bobine_fille = [True, True, True, True, False, True, True, True, False, False]
+                                         "vente_mensuelle", "stock_at_time", "stock_therme_at_time", "qte_a_prod",
+                                         "etat", "sommeil"]
+        self.title_filter_bobine_fille = ["Laize", "Couleur", "Grammage", "Longueur", "Pose(s)", "Vente mensuelle",
+                                          "Stock", "Stock à therme", "Production opti.", "Etat", "Sommeil"]
+        self.filter_mode_bobine_fille = [True, True, True, True, False, False, False, False, True, True, True]
+        self.sort_mode_bobine_fille = [True, True, True, True, False, True, True, True, True, False, False]
         # FILTER POLY
         self.list_filter_poly = ["code", "laize", "length", "famille", "stock_at_time", "stock_therme_at_time"]
         self.title_filter_poly = ["Code", "Laize", "Longueur", "Famille", "Stock", "Stock à therme"]

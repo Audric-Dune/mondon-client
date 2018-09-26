@@ -20,6 +20,7 @@ from commun.model.cliche import Cliche
 from commun.model.bobine_mere import BobineMere
 from commun.model.refente import Refente
 from commun.model.perfo import Perfo
+from commun.utils.seuil_alerte import seuil_alerte
 
 import xlrd
 
@@ -101,6 +102,7 @@ class Application(QApplication):
     def read_xls(self):
         self.get_cliche_from_xls()
         self.get_bobine_fille_from_xls()
+        self.get_seuil_alerte_from_xls()
         self.get_vente_annuelle_from_xls()
         self.get_bobine_mere_from_xls()
         self.get_data_reglage_from_xls()
@@ -151,6 +153,24 @@ class Application(QApplication):
         while current_row < max_row:
             self.extract_data_reglage_from_line(sheet, current_row)
             current_row += 1
+
+    def get_seuil_alerte_from_xls(self):
+        xls = open_xls('BASE DE DONNEE SEUIL ALERTE.xls')
+        sheet = xls.sheet_by_name("data")
+        max_row = sheet.nrows
+        current_row = 1
+        while current_row < max_row:
+            self.extract_seuil_alerte_from_line(sheet, current_row)
+            current_row += 1
+        print(seuil_alerte)
+
+    @staticmethod
+    def extract_seuil_alerte_from_line(sheet, current_row):
+        p_min = sheet.cell_value(current_row, 0)
+        p_max = sheet.cell_value(current_row, 1)
+        p_seuil = sheet.cell_value(current_row, 2)
+        p_qte = sheet.cell_value(current_row, 3)
+        seuil_alerte.append({'p_min': p_min, 'p_max': p_max, 'p_seuil': p_seuil, 'p_qte': p_qte})
 
     @staticmethod
     def extract_data_reglage_from_line(sheet, current_row):

@@ -38,6 +38,7 @@ class BobineFille:
         self.vente_annuelle = 0
         self.vente_mensuelle = 0
         self.etat = ""
+        self.qte_a_prod = 0
         self.update_bobine_from_cliche()
 
     def update_bobine_from_cliche(self):
@@ -82,10 +83,9 @@ class BobineFille:
         self.get_etat()
 
     def get_etat(self):
-        if self.vente_mensuelle > self.stock_therme_at_time:
-            self.etat = "RUPTURE"
-        elif self.vente_annuelle < self.stock_therme_at_time:
-            self.etat = "SURSTOCK"
+        from commun.utils.seuil_alerte import get_etat, get_qte_a_prod
+        self.etat = get_etat(bobine=self)
+        self.qte_a_prod = int(get_qte_a_prod(bobine=self))
 
     def get_stock_at_time(self, day_ago=None, time=None):
         def get_piste_in_plan_prod(p_bobine, p_plan_prod):
@@ -139,6 +139,8 @@ class BobineFille:
             return self.stock_therme_at_time
         if value_name == "vente_mensuelle":
             return self.vente_mensuelle
+        if value_name == "qte_a_prod":
+            return self.qte_a_prod
         return 0
 
     def __repr__(self):

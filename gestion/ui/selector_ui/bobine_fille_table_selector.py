@@ -48,7 +48,7 @@ class BobineFilleTableSelector(TableModel):
 
     def get_columns(self):
         return ['code', 'laize', 'color', 'gr', 'length', 'poses', 'vente_mensuelle', 'stock_at_time',
-                'stock_therme_at_time', 'etat', 'sommeil']
+                'stock_therme_at_time', 'qte_a_prod', 'etat', 'sommeil']
 
     def get_column_width(self, column):
         """
