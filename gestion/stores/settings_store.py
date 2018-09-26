@@ -5,8 +5,8 @@ from datetime import datetime
 
 from PyQt5.QtCore import pyqtSignal, QObject
 
-from commun.utils.timestamp import timestamp_at_day_ago, timestamp_at_time, get_day_ago
-from commun.constants.param import DEBUT_PROD_MATIN
+from commun.utils.timestamp import timestamp_at_day_ago, timestamp_at_time, get_day_ago, is_vendredi
+from commun.constants.param import DEBUT_PROD_MATIN, FIN_PROD_SOIR, FIN_PROD_SOIR_VENDREDI
 from commun.model.task import Task
 from commun.lib.base_de_donnee import Database
 from gestion.utils import get_code_bobine_selected
@@ -85,7 +85,7 @@ class SettingsStore(QObject):
 
     def set_item_focus(self, item):
         from commun.model.plan_prod import PlanProd
-        if self.standing_insert and isinstance(item, PlanProd):
+        if self.standing_insert and isinstance(item, PlanProd) and self.day_ago <= 0:
             self.insert_plan_prod_1_before_plan_prod_2(plan_1=self.standing_insert, plan_2=item)
             self.standing_insert = None
             self.focus = None
@@ -124,8 +124,9 @@ class SettingsStore(QObject):
                 task.index = index
                 index += 1
         tasks = sorted(tasks, key=lambda t: t.get_index())
+        print(tasks)
         self.update_plans_prods(tasks=tasks)
-        self.update_plans_prods(day_ago=memo_day_ago_plan_prod_1)
+        # self.update_plans_prods(day_ago=memo_day_ago_plan_prod_1)
 
     def set(self, day_ago=None, plan_prod=None):
         if day_ago is not None:
@@ -190,6 +191,7 @@ class SettingsStore(QObject):
             for p_task in tasks:
                 if p_task.index == index and p_task.day_ago == p_day_ago:
                     return p_task
+        day_ago_for_next_update = []
         current_day_ago = self.day_ago if day_ago is None else day_ago
         if tasks is None:
             tasks = self.get_tasks_at_day_ago(day_ago=current_day_ago)
@@ -204,10 +206,20 @@ class SettingsStore(QObject):
             else:
                 last_plan_prod = get_task_from_index(task.index-1, p_day_ago=current_day_ago).plan_prod
                 start = get_end_from_index_task(index=task.index-1, p_day_ago=current_day_ago)
-                task.plan_prod.update_from_start(start=start, last_plan_prod=last_plan_prod)
-            self.update_plan_prod_on_database(plan_prod=task.plan_prod)
+                fin_prod = FIN_PROD_SOIR_VENDREDI if is_vendredi(last_plan_prod.start) else FIN_PROD_SOIR
+                if start > timestamp_at_time(timestamp_at_day_ago(day_ago=current_day_ago), hours=fin_prod):
+                    start = timestamp_at_time(timestamp_at_day_ago(day_ago=current_day_ago-1), hours=DEBUT_PROD_MATIN-1)
+                    task.plan_prod.update_from_start(start=start, last_plan_prod=last_plan_prod)
+                    if current_day_ago-1 not in day_ago_for_next_update:
+                        day_ago_for_next_update.append(current_day_ago-1)
+                else:
+                    task.plan_prod.update_from_start(start=start, last_plan_prod=last_plan_prod)
+            # self.update_plan_prod_on_database(plan_prod=task.plan_prod)
         from gestion.stores.plan_prod_store import plan_prod_store
         plan_prod_store.sort_plans_prods()
+        if day_ago_for_next_update:
+            for day_ago in day_ago_for_next_update:
+                self.update_plans_prods(day_ago=day_ago)
         self.SETTINGS_CHANGED_SIGNAL.emit()
 
     def on_data_reglage_changed(self):
@@ -215,7 +227,8 @@ class SettingsStore(QObject):
 
     def save_plan_prod(self):
         if not self.plan_prod.new_plan:
-            self.update_plan_prod_on_database(plan_prod=self.plan_prod)
+            # self.update_plan_prod_on_database(plan_prod=self.plan_prod)
+            pass
         else:
             code_bobines_selected = get_code_bobine_selected(self.plan_prod.bobines_filles_selected)
             code_data_reglages = self.plan_prod.data_reglages.get_data_reglage_code()
@@ -276,7 +289,7 @@ class SettingsStore(QObject):
         self.SETTINGS_CHANGED_SIGNAL.emit()
 
     def delete_plan_prod(self, plan_prod):
-        Database.delete_plan_prod(p_id=plan_prod.p_id)
+        # Database.delete_plan_prod(p_id=plan_prod.p_id)
         from gestion.stores.plan_prod_store import plan_prod_store
         plan_prod_store.plans_prods.remove(plan_prod)
         self.update_plans_prods()
