@@ -45,7 +45,7 @@ class LineEncrier(QWidget):
             self.hbox.addWidget(label_color_encrier)
             return
         if refente:
-            self.hbox.addSpacing(980-refente.laize-refente.dec)
+            self.hbox.addSpacing(980-refente.laize-refente.dec+refente.chute)
         else:
             self.hbox.addStretch()
         current_index = 0
