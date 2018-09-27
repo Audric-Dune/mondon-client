@@ -56,14 +56,14 @@ class DayMenu(MondonWidget):
         self.bt_jour_plus.clicked.connect(self.jour_plus)
         self.bt_jour_plus.setStyleSheet(button_stylesheet)
         self.bt_jour_plus.setFixedSize(self.PIXMAPBUTTON_SIZE)
-        self.bt_jour_plus.addImage("commun/assets/images/fleche_suivant.png")
+        self.bt_jour_plus.add_image("commun/assets/images/fleche_suivant.png")
 
         # Bouton jour moins
         self.bt_jour_moins.setToolTip("Changement jour précédent")
         self.bt_jour_moins.clicked.connect(self.jour_moins)
         self.bt_jour_moins.setStyleSheet(button_stylesheet)
         self.bt_jour_moins.setFixedSize(self.PIXMAPBUTTON_SIZE)
-        self.bt_jour_moins.addImage("commun/assets/images/fleche_precedent.png")
+        self.bt_jour_moins.add_image("commun/assets/images/fleche_precedent.png")
 
     def on_settings_gestion_changed(self):
         self.update_widget()

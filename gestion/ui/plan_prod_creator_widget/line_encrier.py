@@ -1,22 +1,24 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtWidgets import QHBoxLayout, QWidget, QLabel
-from PyQt5.QtGui import QPen, QPainter, QColor, QDrag, QFont
+from PyQt5.QtWidgets import QHBoxLayout, QLabel
+from PyQt5.QtGui import QDrag
 
 from commun.constants.colors import color_noir, color_blanc
 from commun.constants.stylesheets import black_16_italic_label_stylesheet
 from commun.utils.layout import clear_layout
 from commun.ui.public.cliche_ui import ClicheUi
+from commun.ui.public.mondon_widget import MondonWidget
 from PyQt5.QtCore import Qt, QMimeData
 
 
-class LineEncrier(QWidget):
+class LineEncrier(MondonWidget):
 
     def __init__(self, parent=None, plan_prod=None, index=None):
         super(LineEncrier, self).__init__(parent=parent)
         self.setFixedHeight(80)
-        self.border_color = color_noir
+        self.background_color = color_blanc
+        self.set_border(color=color_noir)
         self.width_F = 1
         self.plan_prod = plan_prod
         self.index = index
@@ -25,7 +27,7 @@ class LineEncrier(QWidget):
         self.update_widget()
 
     def init_widget(self):
-        self.hbox.setContentsMargins(10, 0, 0, 10)
+        self.hbox.setContentsMargins(0, 0, 0, 0)
         self.hbox.setSpacing(0)
         self.setLayout(self.hbox)
 
@@ -103,23 +105,3 @@ class LineEncrier(QWidget):
             drag = QDrag(self)
             drag.setMimeData(mime_data)
             drag.exec_(Qt.MoveAction)
-
-    def paintEvent(self, e):
-        p = QPainter(self)
-        color = self.border_color.rgb_components
-        qcolor = QColor(color[0], color[1], color[2])
-        pen = QPen()
-        pen.setWidthF(self.width_F)
-        pen.setColor(qcolor)
-        p.setPen(pen)
-        color = color_blanc.rgb_components
-        qcolor = QColor(color[0], color[1], color[2])
-        p.fillRect(0, 0, self.width(), self.height(), qcolor)
-        p.drawRect(0.5*self.width_F, 0.5*self.width_F, self.width()-self.width_F, self.height()-self.width_F)
-        p.setFont(QFont('Decorative', 12))
-        p.translate(self.width()-5, self.height()-8)
-        p.rotate(-90)
-        color = color_noir.rgb_components
-        qcolor = QColor(color[0], color[1], color[2])
-        pen.setColor(qcolor)
-        p.drawText(0, 0, "Encrier {}".format(self.index))

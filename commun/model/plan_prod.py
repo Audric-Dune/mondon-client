@@ -167,22 +167,37 @@ class PlanProd(QObject):
         for encrier in self.encriers:
             encrier.bobines_filles_selected = self.bobines_filles_selected
 
-    def update_encrier(self, bobine):
+    def update_encrier(self):
         self.set_bobines_fille_selected_to_encriers()
-        if bobine.colors_cliche is not None:
-            for color in bobine.colors_cliche:
-                self.set_color_encrier_from_bobine(color, bobine.colors_cliche)
+        for encrier in self.encriers:
+            encrier.reset_color()
+        self.set_color_encrier_from_last_plan_prod()
+        for bobine in self.bobines_filles_selected:
+            if bobine.colors_cliche is not None:
+                for color in bobine.colors_cliche:
+                    self.set_color_encrier_from_bobine(color, bobine.colors_cliche)
 
     def add_bobine_selected(self, bobine, pose):
         from commun.model.bobine_fille_selected import BobineFilleSelected
         new_bobine = BobineFilleSelected(bobine, pose=pose)
         self.bobines_filles_selected.append(new_bobine)
         self.update_all_current_store()
-        self.update_encrier(bobine=bobine)
+        self.update_encrier()
+        self.ON_CHANGED_SIGNAL.emit()
+
+    def del_bobine_selected(self, bobine):
+        self.bobines_filles_selected.remove(bobine)
+        self.update_all_current_store()
+        self.update_encrier()
         self.ON_CHANGED_SIGNAL.emit()
 
     def add_refente_selected(self, refente):
         self.set_refente(refente)
+        self.update_all_current_store()
+        self.ON_CHANGED_SIGNAL.emit()
+
+    def del_refente_selected(self):
+        self.set_refente(refente=None)
         self.update_all_current_store()
         self.ON_CHANGED_SIGNAL.emit()
 
@@ -191,13 +206,28 @@ class PlanProd(QObject):
         self.update_all_current_store()
         self.ON_CHANGED_SIGNAL.emit()
 
+    def del_perfo_selected(self):
+        self.perfo_selected = None
+        self.update_all_current_store()
+        self.ON_CHANGED_SIGNAL.emit()
+
     def add_bobine_papier_selected(self, bobine):
         self.bobine_papier_selected = bobine
         self.update_all_current_store()
         self.ON_CHANGED_SIGNAL.emit()
 
+    def del_papier_selected(self):
+        self.bobine_papier_selected = None
+        self.update_all_current_store()
+        self.ON_CHANGED_SIGNAL.emit()
+
     def add_bobine_poly_selected(self, bobine):
         self.bobine_poly_selected = bobine
+        self.update_all_current_store()
+        self.ON_CHANGED_SIGNAL.emit()
+
+    def del_poly_selected(self):
+        self.bobine_poly_selected = None
         self.update_all_current_store()
         self.ON_CHANGED_SIGNAL.emit()
 

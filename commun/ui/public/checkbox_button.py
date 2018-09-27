@@ -29,11 +29,11 @@ class CheckboxButton(PixmapButton):
 
     def flip_button(self):
         if self.is_check:
-            self.removeImage()
+            self.remove_image()
             self.setStyleSheet(self.off_stylesheet)
             self.is_check = False
         else:
-            self.addImage(self.img_path)
+            self.add_image(self.img_path)
             self.setStyleSheet(self.on_stylesheet)
             self.is_check = True
 
@@ -41,7 +41,7 @@ class CheckboxButton(PixmapButton):
         self.disabled = p_bool
         self.enabled = False if p_bool else True
         if p_bool:
-            self.removeImage()
+            self.remove_image()
             self.setStyleSheet(self.disbled_stylesheet)
 
     def mouseReleaseEvent(self, *args, **kwargs):

@@ -18,7 +18,7 @@ class Refente:
         self.laize5 = laize5
         self.laize6 = laize6
         self.laize7 = laize7
-        self.chute = chute
+        self.chute = chute if chute else 0
 
     @staticmethod
     def get_laize_from_refente(laizes, chute):

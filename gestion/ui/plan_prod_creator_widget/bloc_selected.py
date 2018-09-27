@@ -3,10 +3,11 @@
 
 from PyQt5.Qt import Qt
 from PyQt5.QtGui import QColor, QPainter, QPen
-from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel, QWidget
+from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel, QWidget, QPushButton
 
-from commun.constants.colors import color_blanc, color_gris_noir, color_noir
-from commun.constants.stylesheets import gray_18_label_stylesheet
+from commun.constants.colors import color_blanc, color_gris_noir, color_noir, color_orange
+from commun.constants.stylesheets import gray_18_label_stylesheet, button_delete_bobine_selected_stylesheet
+from commun.ui.public.pixmap_button import PixmapButton
 from commun.ui.public.mondon_widget import MondonWidget
 from commun.ui.public.bobine_mere_ui import BobineMereUI
 from commun.ui.public.refente_ui import RefenteUi
@@ -25,29 +26,54 @@ class BlocSelected(MondonWidget):
     def __init__(self, data_type, callback,  parent=None):
         super(BlocSelected, self).__init__(parent=parent)
         self.background_color = color_blanc
+        self.set_border(color=color_noir)
         self.data_type = data_type
         self.parent = parent
         self.callback = callback
-        self.master_hbox = QVBoxLayout()
+        self.master_hbox = QHBoxLayout()
+        self.master_hbox.setContentsMargins(0, 0, 10, 0)
+        self.clear_bt = PixmapButton(parent=self)
+        self.setMinimumHeight(50)
+        self.init_button()
         self.init_ui()
 
     def init_ui(self):
         self.master_hbox.addLayout(self.get_content())
+        if self.data_type != "bobine":
+            self.master_hbox.addWidget(self.clear_bt)
+        else:
+            self.clear_bt.hide()
+            self.master_hbox.setContentsMargins(0, 0, 0, 0)
         self.setLayout(self.master_hbox)
+
+    def init_button(self):
+        self.clear_bt.clicked.connect(self.handle_clicked_bt_delete)
+        self.clear_bt.setStyleSheet(button_delete_bobine_selected_stylesheet)
+        self.clear_bt.setContentsMargins(0)
+        self.clear_bt.setFixedSize(15, 15)
+        self.clear_bt.add_image("commun/assets/images/delete.png")
 
     def update_widget(self):
         clear_layout(self.master_hbox)
+        self.clear_bt = PixmapButton(parent=self)
+        self.init_button()
         self.master_hbox.addLayout(self.get_content())
-        self.update()
+        if self.data_type != "bobine":
+            self.master_hbox.addWidget(self.clear_bt)
 
     def get_content(self):
         content_layout = QVBoxLayout()
         content_layout.setContentsMargins(0, 0, 0, 0)
         if self.data_type == "perfo":
             if self.parent.plan_prod.perfo_selected:
-                content_ui = PerfoUi(perfo=self.parent.plan_prod.perfo_selected)
-                content_layout.addWidget(content_ui)
+                perfo_ui = PerfoUi(perfo=self.parent.plan_prod.perfo_selected)
+                content_ui = QHBoxLayout()
+                content_ui.setContentsMargins(1, 5, 0, 5)
+                content_ui.addWidget(perfo_ui)
+                content_ui.addStretch(0)
+                content_layout.addLayout(content_ui)
             else:
+                self.clear_bt.hide()
                 content_layout.addLayout(self.get_ui_select(text="une campagne de perforation"))
             return content_layout
         if self.data_type == "papier":
@@ -63,11 +89,13 @@ class BlocSelected(MondonWidget):
                     content_ui.addWidget(BobineMereUI(bobine=self.parent.plan_prod.bobine_papier_selected))
                     refente = self.parent.plan_prod.refente_selected
                     content_ui.addWidget(DecBobineRefente(dec=refente.dec))
+                    content_ui.addStretch(0)
                     content_layout.addLayout(content_ui)
                 else:
                     content_ui = BobineMereUI(bobine=self.parent.plan_prod.bobine_papier_selected)
                     content_layout.addWidget(content_ui)
             else:
+                self.clear_bt.hide()
                 content_layout.addLayout(self.get_ui_select(text="une bobine mère papier"))
             return content_layout
         if self.data_type == "poly":
@@ -83,11 +111,13 @@ class BlocSelected(MondonWidget):
                     content_ui.addWidget(BobineMereUI(bobine=self.parent.plan_prod.bobine_poly_selected))
                     refente = self.parent.plan_prod.refente_selected
                     content_ui.addWidget(DecBobineRefente(dec=refente.dec))
+                    content_ui.addStretch(0)
                     content_layout.addLayout(content_ui)
                 else:
                     content_ui = BobineMereUI(bobine=self.parent.plan_prod.bobine_poly_selected)
                     content_layout.addWidget(content_ui)
             else:
+                self.clear_bt.hide()
                 content_layout.addLayout(self.get_ui_select(text="une bobine mère polypro"))
             return content_layout
         if self.data_type == "refente":
@@ -102,18 +132,24 @@ class BlocSelected(MondonWidget):
                 content_ui.addWidget(RefenteUi(refente=refente,
                                                bobines_selected=self.parent.plan_prod.bobines_filles_selected))
                 content_ui.addWidget(DecBobineRefente(dec=refente.dec))
+                content_ui.addStretch(0)
                 content_layout.addLayout(content_ui)
             else:
+                self.clear_bt.hide()
                 content_layout.addLayout(self.get_ui_select(text="une refente"))
             return content_layout
         if self.data_type == "bobine":
-            content_layout.setContentsMargins(0, 0, 0, 5)
+            content_layout.setContentsMargins(0, 0, 0, 0)
+            content_layout.setSpacing(2)
             if self.parent.plan_prod.bobines_filles_selected:
                 content_layout.addWidget(LegendBobineSelected())
                 for value in group_bobine(bobines=self.parent.plan_prod.bobines_filles_selected).values():
                     content_layout.addWidget(LineBobineSelected(bobine=value[0], amount=value[1]))
+                self.set_border(color=None)
             else:
+                self.clear_bt.hide()
                 content_layout.addLayout(self.get_ui_select(text="une bobine fille"))
+                self.set_border(color=color_noir)
             return content_layout
 
     def is_selected(self):
@@ -129,25 +165,16 @@ class BlocSelected(MondonWidget):
             return True
         return False
 
-    def paintEvent(self, e):
-        if not self.is_selected():
-            p = QPainter(self)
-            color = color_gris_noir.rgb_components
-            qcolor_gris_noir = QColor(color[0], color[1], color[2])
-            pen = QPen()
-            pen.setStyle(Qt.CustomDashLine)
-            pen.setDashPattern([10, 3])
-            pen.setColor(qcolor_gris_noir)
-            p.setPen(pen)
-            p.drawRect(0, 0, self.width()-1, self.height()-1)
-        if self.is_selected() and self.data_type == "bobine":
-            p = QPainter(self)
-            color = color_noir.rgb_components
-            qcolor_noir = QColor(color[0], color[1], color[2])
-            pen = QPen()
-            pen.setColor(qcolor_noir)
-            p.setPen(pen)
-            p.drawRect(10, 10, self.width()-20, self.height()-20)
+    def handle_clicked_bt_delete(self):
+        if self.data_type == "refente" and self.parent.plan_prod.refente_selected:
+            self.parent.plan_prod.del_refente_selected()
+        if self.data_type == "papier" and self.parent.plan_prod.bobine_papier_selected:
+            self.parent.plan_prod.del_papier_selected()
+        if self.data_type == "poly" and self.parent.plan_prod.bobine_poly_selected:
+            self.parent.plan_prod.del_poly_selected()
+        if self.data_type == "perfo" and self.parent.plan_prod.perfo_selected:
+            self.parent.plan_prod.del_perfo_selected()
+        self.parent.update()
 
     @staticmethod
     def get_ui_select(text):
@@ -161,3 +188,5 @@ class BlocSelected(MondonWidget):
         filter_store.set_data_type(self.data_type)
         self.callback()
         super(BlocSelected, self).mouseDoubleClickEvent(e)
+
+

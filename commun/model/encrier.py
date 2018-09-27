@@ -12,7 +12,10 @@ class Encrier:
     def set_color(self, color):
         self.color = color
 
-    def __str__(self):
+    def reset_color(self):
+        self.color = None
+
+    def __repr__(self):
         return "Encrier: couleur {}, bobines {}, refente {}".format(self.color,
                                                                     self.bobines_filles_selected,
                                                                     self.refente)

@@ -1,18 +1,20 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtWidgets import QHBoxLayout, QLabel, QWidget
+from PyQt5.QtWidgets import QHBoxLayout, QLabel
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QColor, QPainter, QPen
 
-from commun.constants.colors import color_noir
+from commun.ui.public.mondon_widget import MondonWidget
+from commun.constants.colors import color_blanc, color_noir
 from commun.constants.stylesheets import black_14_label_stylesheet
 
 
-class LegendBobineSelected(QWidget):
+class LegendBobineSelected(MondonWidget):
 
     def __init__(self, parent=None):
         super(LegendBobineSelected, self).__init__(parent=parent)
+        self.background_color = color_blanc
+        self.set_border(color=color_noir)
         self.init_widget()
 
     def init_widget(self):
@@ -26,6 +28,7 @@ class LegendBobineSelected(QWidget):
         hbox.addWidget(self.get_label("Production"))
         hbox.addWidget(self.get_label("Stock prévisionnel"))
         hbox.addWidget(self.get_label("Etat prévisionnel"))
+        self.setFixedHeight(30)
         self.setLayout(hbox)
 
     @staticmethod
@@ -41,12 +44,3 @@ class LegendBobineSelected(QWidget):
         if width is not None:
             label.setFixedWidth(width)
         return label
-
-    def paintEvent(self, event):
-        p = QPainter(self)
-        color = color_noir.rgb_components
-        qcolor_noir = QColor(color[0], color[1], color[2])
-        pen = QPen()
-        pen.setColor(qcolor_noir)
-        p.setPen(pen)
-        p.drawLine(1, self.height()-1, self.width()-1, self.height()-1)

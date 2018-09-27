@@ -24,7 +24,7 @@ class MondonWidget(QWidget):
         self.background_color = None
         self.border_color = None
         self.border_size = None
-        self.border_manager = None
+        self.border_manager = {"left": False, "top": False, "right": False, "bottom": False}
         self.padding = 0
         data_store_manager.DATA_CHANGED_SIGNAL.connect(self._handle_data_changed)
         settings_store.SETTINGS_CHANGED_SIGNAL.connect(self._handle_settings_changed)

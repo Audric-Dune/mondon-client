@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPen, QPainter, QColor
 
-from commun.constants.colors import color_gris, color_gris_moyen
+from commun.constants.colors import color_gris, color_noir
 from commun.constants.stylesheets import black_16_label_stylesheet
 from commun.utils.color_bobine import get_color_bobine
 
@@ -16,7 +16,7 @@ class BobineMereUI(QWidget):
         super(BobineMereUI, self).__init__(parent=parent)
         self.bobine = bobine
         self.ech = ech
-        self.setFixedHeight(50)
+        self.setFixedHeight(60)
         self.setFixedWidth(self.bobine.laize*ech)
         self.update()
         self.init_widget()
@@ -44,10 +44,10 @@ class BobineMereUI(QWidget):
     def paintEvent(self, e):
         p = QPainter(self)
         qcolor_font = self.get_qcolor_of_bobine(self.bobine)
-        color = color_gris_moyen.rgb_components
-        qcolor_gris = QColor(color[0], color[1], color[2])
+        color = color_noir.rgb_components
+        qcolor_noir = QColor(color[0], color[1], color[2])
         pen = QPen()
-        pen.setColor(qcolor_gris)
+        pen.setColor(qcolor_noir)
         p.setPen(pen)
         p.fillRect(0, 0, self.width(), self.height(), qcolor_font)
         p.drawRect(0, 0, self.width()-1, self.height()-1)

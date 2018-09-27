@@ -10,6 +10,7 @@ class PixmapButton(QPushButton):
 
     def __init__(self, parent=None):
         super(PixmapButton, self).__init__(parent)
+        self.installEventFilter(self)
         self.content = QLabel()
         self.vbox = QVBoxLayout()
         self.setContentsMargins()
@@ -27,13 +28,13 @@ class PixmapButton(QPushButton):
         self.content.setPixmap(pixmap)
         self.content.setScaledContents(True)
 
-    def removeImage(self):
+    def remove_image(self):
         self.img = None
         pixmap = QPixmap(self.img)
         self.content.setPixmap(pixmap)
 
-    def addImage(self, img):
+    def add_image(self, img):
         self._set_image(img)
 
     def setContentsMargins(self, margin=5):
-         self.vbox.setContentsMargins(margin, margin, margin, margin)
+        self.vbox.setContentsMargins(margin, margin, margin, margin)

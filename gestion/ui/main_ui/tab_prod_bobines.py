@@ -10,11 +10,12 @@ from commun.constants.colors import color_blanc, color_noir
 from commun.utils.timestamp import timestamp_at_day_ago
 from commun.utils.layout import clear_layout
 from commun.stores.bobine_fille_store import bobine_fille_store
+from commun.ui.public.mondon_widget import MondonWidget
 
 from gestion.stores.settings_store import settings_store_gestion
 
 
-class TabProdBobine(QWidget):
+class TabProdBobine(MondonWidget):
 
     def __init__(self, parent=None):
         super(TabProdBobine, self).__init__(parent=parent)

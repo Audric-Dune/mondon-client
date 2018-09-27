@@ -44,10 +44,13 @@ class PlanProdCreator(QWidget):
         self.show()
 
     def init_ui(self):
+        master_vbox = QVBoxLayout()
         master_hbox = QHBoxLayout()
         master_hbox.addLayout(self.get_plan_prod_selector_ui())
         master_hbox.addLayout(self.get_plan_prod_reglage_ui())
-        self.setLayout(master_hbox)
+        master_vbox.addLayout(master_hbox)
+        master_vbox.addStretch(0)
+        self.setLayout(master_vbox)
 
     def on_encrier_changed(self):
         self.bloc_tab_reglage.update_widget()
@@ -55,6 +58,7 @@ class PlanProdCreator(QWidget):
     def get_plan_prod_reglage_ui(self):
         master_vbox = QVBoxLayout()
         master_vbox.addWidget(self.bloc_tab_reglage)
+        master_vbox.addStretch(0)
         return master_vbox
 
     def get_plan_prod_selector_ui(self):
@@ -71,6 +75,7 @@ class PlanProdCreator(QWidget):
         master_vbox.addLayout(vbox)
         master_vbox.addWidget(self.bloc_bt)
         # master_vbox.addWidget(self.bloc_info)
+        master_vbox.addStretch(0)
         return master_vbox
 
     def update_bloc_selected(self):
@@ -79,6 +84,7 @@ class PlanProdCreator(QWidget):
         self.bloc_refente_selected.update_widget()
         self.bloc_perfo_selected.update_widget()
         self.bloc_papier_selected.update_widget()
+        self.update_encriers()
 
     def update_encriers(self):
         self.bloc_encrier.line_encrier_1.update_widget()
@@ -109,5 +115,5 @@ class PlanProdCreator(QWidget):
         self.selector_manager.show()
     
     def closeEvent(self, e):
-        self.handle_click_bt(bt_name="cancel")
-        super(PlanProdCreator, self).closeEvent(e)
+        settings_store_gestion.plan_prod = None
+        self.close()

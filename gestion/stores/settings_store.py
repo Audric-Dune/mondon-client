@@ -101,7 +101,6 @@ class SettingsStore(QObject):
                     p_task.index = p_index
                     if day_ago is not None:
                         p_task.day_ago = day_ago
-        memo_day_ago_plan_prod_1 = get_day_ago(plan_1.start)
         tasks = self.get_tasks_at_day_ago(day_ago=self.day_ago)
         plan_1_in_tasks = False
         for task in tasks:
@@ -126,7 +125,6 @@ class SettingsStore(QObject):
         tasks = sorted(tasks, key=lambda t: t.get_index())
         print(tasks)
         self.update_plans_prods(tasks=tasks)
-        # self.update_plans_prods(day_ago=memo_day_ago_plan_prod_1)
 
     def set(self, day_ago=None, plan_prod=None):
         if day_ago is not None:
@@ -214,7 +212,7 @@ class SettingsStore(QObject):
                         day_ago_for_next_update.append(current_day_ago-1)
                 else:
                     task.plan_prod.update_from_start(start=start, last_plan_prod=last_plan_prod)
-            # self.update_plan_prod_on_database(plan_prod=task.plan_prod)
+            self.update_plan_prod_on_database(plan_prod=task.plan_prod)
         from gestion.stores.plan_prod_store import plan_prod_store
         plan_prod_store.sort_plans_prods()
         if day_ago_for_next_update:
@@ -227,8 +225,7 @@ class SettingsStore(QObject):
 
     def save_plan_prod(self):
         if not self.plan_prod.new_plan:
-            # self.update_plan_prod_on_database(plan_prod=self.plan_prod)
-            pass
+            self.update_plan_prod_on_database(plan_prod=self.plan_prod)
         else:
             code_bobines_selected = get_code_bobine_selected(self.plan_prod.bobines_filles_selected)
             code_data_reglages = self.plan_prod.data_reglages.get_data_reglage_code()
@@ -289,7 +286,7 @@ class SettingsStore(QObject):
         self.SETTINGS_CHANGED_SIGNAL.emit()
 
     def delete_plan_prod(self, plan_prod):
-        # Database.delete_plan_prod(p_id=plan_prod.p_id)
+        Database.delete_plan_prod(p_id=plan_prod.p_id)
         from gestion.stores.plan_prod_store import plan_prod_store
         plan_prod_store.plans_prods.remove(plan_prod)
         self.update_plans_prods()

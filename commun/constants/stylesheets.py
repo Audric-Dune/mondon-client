@@ -210,6 +210,15 @@ button_stylesheet = """
     color_gris_moyen=color_gris_moyen.hex_string,
     color_rouge=color_rouge.hex_string,)
 
+button_delete_bobine_selected_stylesheet = """
+    QPushButton {{
+        background-color: transparent;
+        border: none;
+    }}
+""".format(
+    color_rouge=color_rouge.hex_string,
+    color_rouge_clair=color_rouge_clair.hex_string)
+
 button_14_stylesheet = """
     QPushButton {{
         background-color: {color_vert_fonce};
