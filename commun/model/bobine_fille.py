@@ -34,12 +34,28 @@ class BobineFille:
         self.creation_time = creation_time
         self.gr = gr
         self.poses = poses if poses else [0]
+        self.init_sommeil = sommeil
         self.sommeil = "Sommeil" if sommeil else ""
         self.vente_annuelle = 0
         self.vente_mensuelle = 0
         self.etat = ""
         self.qte_a_prod = 0
         self.update_bobine_from_cliche()
+
+    def get_new_bobine_with_poses(self, poses):
+        return BobineFille(code=self.code,
+                           name=self.name,
+                           laize=self.laize,
+                           length=self.length,
+                           color=self.color,
+                           stock=self.init_stock,
+                           stock_therme=self.init_stock_therme,
+                           creation_time=self.creation_time,
+                           codes_cliche=self.codes_cliche,
+                           colors_cliche=self.colors_cliche,
+                           gr=self.gr,
+                           poses=poses,
+                           sommeil=self.init_sommeil)
 
     def update_bobine_from_cliche(self):
         """

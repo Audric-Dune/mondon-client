@@ -1,7 +1,8 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from commun.utils.filter_matthis import is_valid_refente_bobines_fille_bobines_fille_selected
+from commun.utils.filter_matthis import is_valid_refente_bobines_fille_bobines_fille_selected,\
+    is_valid_bobine_fille_and_pose_for_refente_bobines_filles_selected_with_bobines_filles
 
 
 UTILISE_MATTHIS = True
@@ -348,48 +349,70 @@ def is_valid_bobine_fille_and_bobine_papier(bobine_fille,
                                             bobine_papier,
                                             refentes,
                                             bobines_fille_selected):
-    available_pose = bobine_fille.poses
     bobine_fille.valid_poses = []
     for refente in refentes:
         if not is_valid_refente_for_bobine_papier(refente, bobine_papier):
             continue
-        for pose in available_pose:
-            if bobine_fille.valid_poses == available_pose:
-                return True
-            if pose in bobine_fille.valid_poses:
-                continue
-            if not is_valid_bobine_fille_and_pose_for_refente(bobine_fille, pose, refente, bobines_fille_selected):
-                continue
-            if bobines_fille_selected:
-                new_bobines_fille_selected = bobines_fille_selected.copy()
-            else:
-                new_bobines_fille_selected = []
-            from commun.model.bobine_fille_selected import BobineFilleSelected
-            new_bobine_fille_selected = BobineFilleSelected(bobine=bobine_fille, pose=pose)
-            new_bobines_fille_selected.append(new_bobine_fille_selected)
-            if is_valid_refente_bobines_fille_bobines_fille_selected(refente,
-                                                                     bobines_fille,
-                                                                     new_bobines_fille_selected):
+        for pose in bobine_fille.poses:
+            if is_valid_bobine_fille_and_pose_for_refente_bobines_filles_selected_with_bobines_filles(bobine_fille=bobine_fille,
+                                                                                                      pose=pose,
+                                                                                                      bobines_filles=bobines_fille,
+                                                                                                      refente=refente,
+                                                                                                      bobines_fille_selected=bobines_fille_selected):
                 bobine_fille.valid_poses.append(pose)
     if bobine_fille.valid_poses:
         return True
     return False
 
 
-def get_available_pose(bobine):
-    """
-    Trouve les combinaisons de poses possible pour une bobine
-    Exemple: bobines.poses [1, 2, 3] retourne [1, 2, 3, 4, 5, 6]
-    :param bobine: bobine fille
-    :return: un tableau de combinaisons de poses
-    """
-    from itertools import combinations
-    available_pose = []
-    for lenght in range(1, len(bobine.poses)+1):
-        comb = combinations(bobine.poses, lenght)
-        for i in list(comb):
-            available_pose.append(sum(i))
-    return list(set(available_pose))
+# ANCIEN
+# def is_valid_bobine_fille_and_bobine_papier(bobine_fille,
+#                                             bobines_fille,
+#                                             bobine_papier,
+#                                             refentes,
+#                                             bobines_fille_selected):
+#     available_pose = bobine_fille.poses
+#     bobine_fille.valid_poses = []
+#     for refente in refentes:
+#         if not is_valid_refente_for_bobine_papier(refente, bobine_papier):
+#             continue
+#         for pose in available_pose:
+#             if bobine_fille.valid_poses == available_pose:
+#                 return True
+#             if pose in bobine_fille.valid_poses:
+#                 continue
+#             if not is_valid_bobine_fille_and_pose_for_refente(bobine_fille, pose, refente, bobines_fille_selected):
+#                 continue
+#             if bobines_fille_selected:
+#                 new_bobines_fille_selected = bobines_fille_selected.copy()
+#             else:
+#                 new_bobines_fille_selected = []
+#             from commun.model.bobine_fille_selected import BobineFilleSelected
+#             new_bobine_fille_selected = BobineFilleSelected(bobine=bobine_fille, pose=pose)
+#             new_bobines_fille_selected.append(new_bobine_fille_selected)
+#             if is_valid_refente_bobines_fille_bobines_fille_selected(refente,
+#                                                                      bobines_fille,
+#                                                                      new_bobines_fille_selected):
+#                 bobine_fille.valid_poses.append(pose)
+#     if bobine_fille.valid_poses:
+#         return True
+#     return False
+
+
+# def get_available_pose(bobine):
+#     """
+#     Trouve les combinaisons de poses possible pour une bobine
+#     Exemple: bobines.poses [1, 2, 3] retourne [1, 2, 3, 4, 5, 6]
+#     :param bobine: bobine fille
+#     :return: un tableau de combinaisons de poses
+#     """
+#     from itertools import combinations
+#     available_pose = []
+#     for lenght in range(1, len(bobine.poses)+1):
+#         comb = combinations(bobine.poses, lenght)
+#         for i in list(comb):
+#             available_pose.append(sum(i))
+#     return list(set(available_pose))
 
 
 def is_valid_bobine_fille_for_contrainte(bobine_fille, contrainte):
@@ -413,7 +436,7 @@ def is_valid_bobine_fille_for_bobine_papier(bobine_fille, bobine_papier):
         return False
     return True
 
-
+# ___________________DANGER_______________________
 def is_valid_bobine_fille_for_refente(bobine_fille, refente, bobines_fille_selected):
     if not refente:
         return True

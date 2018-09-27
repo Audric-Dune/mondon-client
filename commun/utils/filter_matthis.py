@@ -14,6 +14,40 @@ def is_valid_refente_bobines_fille_bobines_fille_selected(refente, bobines_fille
                                                          max_solutions=1)) > 0
 
 
+def is_valid_bobine_fille_and_pose_for_refente_bobines_filles_selected_with_bobines_filles(refente,
+                                                                                           bobine_fille,
+                                                                                           pose,
+                                                                                           bobines_filles,
+                                                                                           bobines_fille_selected=None):
+    """
+    On suppose que la bobine fille est dans bobine filles selected
+    """
+    new_bobine_fille_selected = BobineFilleSelected(bobine=bobine_fille, pose=pose)
+    if bobines_fille_selected is None:
+        bobines_fille_selected = []
+    new_bobines_filles_selected = bobines_fille_selected + [new_bobine_fille_selected]
+    new_bobines_filles = remove_bobine_fille_and_pose_in_bobines_filles(bobine_fille=bobine_fille,
+                                                                        pose=pose,
+                                                                        bobines_filles=bobines_filles)
+    return is_valid_refente_bobines_fille_bobines_fille_selected(refente=refente,
+                                                                 bobines_fille=new_bobines_filles,
+                                                                 bobines_fille_selected=new_bobines_filles_selected)
+
+
+def remove_bobine_fille_and_pose_in_bobines_filles(bobine_fille, pose, bobines_filles):
+    if pose == 0:
+        return bobines_filles
+    new_bobines_filles = []
+    for current_bobine in bobines_filles:
+        if current_bobine.code == bobine_fille.code:
+            new_poses = current_bobine.poses.copy().remove(pose)
+            if new_poses:
+                new_bobine = current_bobine.get_new_bobine_with_poses(poses=new_poses)
+                new_bobines_filles.append(new_bobine)
+        else:
+            new_bobines_filles.append(current_bobine)
+    return new_bobines_filles
+
 # Determine s'il existe des combinaisons valides de bobines pour une refente.
 # S'arrete de chercher après avoir trouvé `max_solutions`.
 def get_bobine_fille_combinaisons_for_refente(refente, bobines_fille, bobines_fille_selected=None, max_solutions=1):
