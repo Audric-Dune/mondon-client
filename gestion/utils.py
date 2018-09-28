@@ -57,7 +57,6 @@ def init_store(store, items):
 
 def init_bobine_fille_store(store, bobines):
     for bobine in bobines:
-        print(bobine.sommeil)
         if bobine.sommeil == "Sommeil":
             pass
         elif bobine.vente_annuelle == 0:

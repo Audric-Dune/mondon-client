@@ -259,6 +259,7 @@ class PlanProd(QObject):
         self.ON_CHANGED_SIGNAL.emit()
 
     def filter_bobine_papier_bobine_fille_refente_store(self, contrainte):
+        print('filter_bobine_papier_bobine_fille_refente_store')
         length_bobines_papier = len(self.current_bobine_papier_store.bobines)
         length_bobines_fille = len(self.current_bobine_fille_store.bobines)
         length_refentes = len(self.current_refente_store.refentes)

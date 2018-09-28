@@ -123,7 +123,6 @@ class SettingsStore(QObject):
                 task.index = index
                 index += 1
         tasks = sorted(tasks, key=lambda t: t.get_index())
-        print(tasks)
         self.update_plans_prods(tasks=tasks)
 
     def set(self, day_ago=None, plan_prod=None):

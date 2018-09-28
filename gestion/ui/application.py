@@ -162,7 +162,6 @@ class Application(QApplication):
         while current_row < max_row:
             self.extract_seuil_alerte_from_line(sheet, current_row)
             current_row += 1
-        print(seuil_alerte)
 
     @staticmethod
     def extract_seuil_alerte_from_line(sheet, current_row):

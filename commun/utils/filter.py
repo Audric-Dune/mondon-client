@@ -324,10 +324,8 @@ def filter_bobines_fille_for_contrainte(bobines_fille, contrainte):
 def filter_bobines_fille(bobines_fille, bobines_papier, refentes, bobines_fille_selected):
     new_bobines_fille = []
     for bobine_fille in bobines_fille:
-        from commun.model.bobine_fille_valid import BobineFilleValid
-        bobine_fille_valid = BobineFilleValid(bobine=bobine_fille)
-        if is_valid_bobine_fille(bobine_fille_valid, bobines_fille, bobines_papier, refentes, bobines_fille_selected):
-            new_bobines_fille.append(bobine_fille_valid)
+        if is_valid_bobine_fille(bobine_fille, bobines_fille, bobines_papier, refentes, bobines_fille_selected):
+            new_bobines_fille.append(bobine_fille)
     return new_bobines_fille
 
 
