@@ -38,7 +38,7 @@ window_arret_height_init = 135
 padding_arret = 5
 # Width selector_ui bobine
 width_search_bar = 250
-dict_width_selector_bobine = {"laize": 100, "color": 120, "gr": 120, "length": 100, "poses": 100,
+dict_width_selector_bobine = {"laize": 100, "color": 120, "gr": 120, "length": 100, "valid_poses": 100,
                               "vente_mensuelle": 150, "stock_at_time": 100, "stock_therme_at_time": 150, "etat": 120,
                               "sommeil": 100, "qte_a_prod": 150}
 dict_width_selector_refente = {"code_perfo": 120, "laize_fille": 1000, "laize": 160}

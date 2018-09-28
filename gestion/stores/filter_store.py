@@ -16,7 +16,7 @@ class FilterStore(QObject):
         self.data_type = None
         self.dicts_filter = {}
         # FILTER BOBINE FILLE
-        self.list_filter_bobine_fille = ["laize", "color", "gr", "length", "poses",
+        self.list_filter_bobine_fille = ["laize", "color", "gr", "length", "valid_poses",
                                          "vente_mensuelle", "stock_at_time", "stock_therme_at_time", "qte_a_prod",
                                          "etat", "sommeil"]
         self.title_filter_bobine_fille = ["Laize", "Couleur", "Grammage", "Longueur", "Pose(s)", "Vente mensuelle",
@@ -106,7 +106,7 @@ class FilterStore(QObject):
         if self.data_type == "bobine":
             for bobine in settings_store_gestion.plan_prod.current_bobine_fille_store.bobines:
                 value = getattr(bobine, name_filter)
-                if name_filter == "poses":
+                if name_filter == "valid_poses":
                     for pose in value:
                         if new_dict_filter.get(pose) is None:
                             new_dict_filter[pose] = True
