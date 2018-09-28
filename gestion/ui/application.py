@@ -102,7 +102,7 @@ class Application(QApplication):
     def read_xls(self):
         self.get_cliche_from_xls()
         self.get_bobine_fille_from_xls()
-        # self.get_seuil_alerte_from_xls()
+        self.get_seuil_alerte_from_xls()
         self.get_vente_annuelle_from_xls()
         self.get_bobine_mere_from_xls()
         self.get_data_reglage_from_xls()
@@ -227,8 +227,7 @@ class Application(QApplication):
                                 sommeil=current_sommeil)
         cliche_store.add_cliche(current_cliche)
 
-    @staticmethod
-    def extract_bobine_from_line(sheet, current_row, last_bobine_id):
+    def extract_bobine_from_line(self, sheet, current_row, last_bobine_id):
         current_id = sheet.cell_value(current_row, 1)
         current_laize = sheet.cell_value(current_row, 3)
         current_laize = 173.3 if current_laize == 173 else current_laize
@@ -248,6 +247,8 @@ class Application(QApplication):
             current_stock_therme = sheet.cell_value(current_row, 10)
             current_creation_time = sheet.cell_value(current_row, 11)
             current_sommeil = sheet.cell_value(current_row, 12)
+            if self.no_colors_from_cliches(current_code_cliche):
+                return
             current_bobine = BobineFille(code=current_id,
                                          name=current_name,
                                          color=current_color,
@@ -260,6 +261,23 @@ class Application(QApplication):
                                          creation_time=current_creation_time,
                                          sommeil=current_sommeil)
             bobine_fille_store.add_item(current_bobine)
+
+    def no_colors_from_cliches(self, codes_cliches):
+        if not codes_cliches:
+            return False
+        for code_cliche in codes_cliches:
+            if self.no_colors_from_cliche(code_cliche):
+                return False
+        return True
+
+    @staticmethod
+    def no_colors_from_cliche(code_cliche):
+        for cliche in cliche_store.cliches:
+            if code_cliche == cliche.code:
+                if cliche.colors:
+                    return True
+                return False
+        return False
 
     @staticmethod
     def extract_bobine_mere_from_line(sheet, current_row):

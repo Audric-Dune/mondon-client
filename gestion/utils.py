@@ -57,8 +57,14 @@ def init_store(store, items):
 
 def init_bobine_fille_store(store, bobines):
     for bobine in bobines:
-        new_bobine = BobineFilleValid(bobine=bobine)
-        store.add_item(new_bobine)
+        print(bobine.sommeil)
+        if bobine.sommeil == "Sommeil":
+            pass
+        elif bobine.vente_annuelle == 0:
+            pass
+        else:
+            new_bobine = BobineFilleValid(bobine=bobine)
+            store.add_item(new_bobine)
     return store
 
 

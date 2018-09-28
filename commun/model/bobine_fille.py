@@ -153,6 +153,8 @@ class BobineFille:
             return self.stock_at_time
         if value_name == "stock_therme_at_time":
             return self.stock_therme_at_time
+        if value_name == "vente_annuelle":
+            return self.vente_annuelle
         if value_name == "vente_mensuelle":
             return self.vente_mensuelle
         if value_name == "qte_a_prod":

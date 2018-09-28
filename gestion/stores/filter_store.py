@@ -16,13 +16,14 @@ class FilterStore(QObject):
         self.data_type = None
         self.dicts_filter = {}
         # FILTER BOBINE FILLE
-        self.list_filter_bobine_fille = ["laize", "color", "gr", "length", "valid_poses",
-                                         "vente_mensuelle", "stock_at_time", "stock_therme_at_time", "qte_a_prod",
-                                         "etat", "sommeil"]
-        self.title_filter_bobine_fille = ["Laize", "Couleur", "Grammage", "Longueur", "Pose(s)", "Vente mensuelle",
+        self.list_filter_bobine_fille = ['laize', 'color', 'gr', 'length', 'codes_cliche', 'colors_cliche',
+                                         'valid_poses', 'vente_annuelle', 'vente_mensuelle', 'stock_at_time',
+                                         'stock_therme_at_time', 'qte_a_prod', 'etat', 'sommeil']
+        self.title_filter_bobine_fille = ["Laize", "Couleur", "Grammage", "Longueur", "Code(s) cliché(s)",
+                                          "Couleur(s) cliché(s)", "Pose(s)", "Vente annuelle", "Vente mensuelle",
                                           "Stock", "Stock à therme", "Production opti.", "Etat", "Sommeil"]
-        self.filter_mode_bobine_fille = [True, True, True, True, False, False, False, False, True, True, True]
-        self.sort_mode_bobine_fille = [True, True, True, True, False, True, True, True, True, False, False]
+        self.filter_mode_bobine_fille = [True, True, True, True, False, False, False, False, False, False, False, False, True, True, True]
+        self.sort_mode_bobine_fille = [True, True, True, True, False, False, False, True, True, True, True, True, False, False, True]
         # FILTER POLY
         self.list_filter_poly = ["code", "laize", "length", "famille", "stock_at_time", "stock_therme_at_time"]
         self.title_filter_poly = ["Code", "Laize", "Longueur", "Famille", "Stock", "Stock à therme"]
@@ -111,8 +112,11 @@ class FilterStore(QObject):
                         if new_dict_filter.get(pose) is None:
                             new_dict_filter[pose] = True
                 else:
-                    if new_dict_filter.get(value) is None:
-                        new_dict_filter[value] = True
+                    try:
+                        if new_dict_filter.get(value) is None:
+                            new_dict_filter[value] = True
+                    except TypeError:
+                        pass
         if self.data_type == "poly":
             for bobine in settings_store_gestion.plan_prod.current_bobine_poly_store.bobines:
                 if name_filter == "famille":
