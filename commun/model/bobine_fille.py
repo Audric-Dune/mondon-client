@@ -40,6 +40,7 @@ class BobineFille:
         self.vente_mensuelle = 0
         self.etat = ""
         self.qte_a_prod = 0
+        self.contrainte = [self.color, self.gr, self.length]
         self.update_bobine_from_cliche()
 
     def get_new_bobine_with_poses(self, poses):

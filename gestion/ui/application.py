@@ -102,7 +102,7 @@ class Application(QApplication):
     def read_xls(self):
         self.get_cliche_from_xls()
         self.get_bobine_fille_from_xls()
-        self.get_seuil_alerte_from_xls()
+        # self.get_seuil_alerte_from_xls()
         self.get_vente_annuelle_from_xls()
         self.get_bobine_mere_from_xls()
         self.get_data_reglage_from_xls()

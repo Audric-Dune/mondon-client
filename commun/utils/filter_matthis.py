@@ -51,10 +51,6 @@ def remove_bobine_fille_and_pose_in_bobines_filles(bobine_fille, pose, bobines_f
 # Determine s'il existe des combinaisons valides de bobines pour une refente.
 # S'arrete de chercher après avoir trouvé `max_solutions`.
 def get_bobine_fille_combinaisons_for_refente(refente, bobines_fille, bobines_fille_selected=None, max_solutions=1):
-    # print("get_bobine_fille_combinaisons_for_refente")
-    # print("Refente: ", refente)
-    # print("Bobines_selected: ", bobines_fille_selected)
-    # print("Bobines: ", bobines_fille)
     if bobines_fille_selected is None:
         bobines_fille_selected = []
     # Prépare une liste avec les solutions
@@ -356,13 +352,10 @@ def _is_valid_refente_for_bobines_pose(refente_buffer, bobines_poses_by_laize, m
 
 
 # Compare si deux bobines filles sont compatible (copiée de filter.py)
+# Optimisation Audric
 def is_valid_bobine_fille_for_bobine_fille(bobine_fille, bobine_fille_contrainte):
     if not bobine_fille_contrainte:
         return True
-    if bobine_fille.color != bobine_fille_contrainte.color:
-        return False
-    if bobine_fille.gr != bobine_fille_contrainte.gr:
-        return False
-    if bobine_fille.length != bobine_fille_contrainte.length:
+    if bobine_fille.contrainte != bobine_fille_contrainte.contrainte:
         return False
     return True
