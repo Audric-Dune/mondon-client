@@ -239,24 +239,25 @@ class PlanProd(QObject):
     def update_all_current_store(self):
         self.init_current_store()
         self.definied_longueur()
-        contrainte = self.get_contrainte()
-        self.current_bobine_papier_store.bobines = \
-            filter.filter_bobines_papier_for_contrainte(bobines_papier=self.current_bobine_papier_store.bobines,
-                                                        contrainte=contrainte)
-        self.current_refente_store.refentes = \
-            filter.filter_refentes_for_contrainte(refentes=self.current_refente_store.refentes,
-                                                  contrainte=contrainte)
-        self.current_bobine_fille_store.bobines = \
-            filter.filter_bobines_fille_for_contrainte(bobines_fille=self.current_bobine_fille_store.bobines,
-                                                       contrainte=contrainte)
-        self.filter_bobine_papier_bobine_fille_refente_store(contrainte)
-        self.current_bobine_poly_store.bobines = \
-            filter.filter_bobines_poly_for_bobines_papier(bobines_poly=self.current_bobine_poly_store.bobines,
-                                                          bobines_papier=self.current_bobine_papier_store.bobines)
-        self.current_perfo_store.perfos = \
-            filter.filter_perfos_for_refentes(perfos=self.current_perfo_store.perfos,
-                                              refentes=self.current_refente_store.refentes)
-        self.ON_CHANGED_SIGNAL.emit()
+        if not self.plan_prod_is_empty():
+            contrainte = self.get_contrainte()
+            self.current_bobine_papier_store.bobines = \
+                filter.filter_bobines_papier_for_contrainte(bobines_papier=self.current_bobine_papier_store.bobines,
+                                                            contrainte=contrainte)
+            self.current_refente_store.refentes = \
+                filter.filter_refentes_for_contrainte(refentes=self.current_refente_store.refentes,
+                                                      contrainte=contrainte)
+            self.current_bobine_fille_store.bobines = \
+                filter.filter_bobines_fille_for_contrainte(bobines_fille=self.current_bobine_fille_store.bobines,
+                                                           contrainte=contrainte)
+            self.filter_bobine_papier_bobine_fille_refente_store(contrainte)
+            self.current_bobine_poly_store.bobines = \
+                filter.filter_bobines_poly_for_bobines_papier(bobines_poly=self.current_bobine_poly_store.bobines,
+                                                              bobines_papier=self.current_bobine_papier_store.bobines)
+            self.current_perfo_store.perfos = \
+                filter.filter_perfos_for_refentes(perfos=self.current_perfo_store.perfos,
+                                                  refentes=self.current_refente_store.refentes)
+            self.ON_CHANGED_SIGNAL.emit()
 
     def filter_bobine_papier_bobine_fille_refente_store(self, contrainte):
         print('filter_bobine_papier_bobine_fille_refente_store')
@@ -288,6 +289,19 @@ class PlanProd(QObject):
                 or new_length_bobines_papier != length_bobines_papier\
                 or new_length_refentes != length_refentes:
             self.filter_bobine_papier_bobine_fille_refente_store(contrainte)
+    
+    def plan_prod_is_empty(self):
+        if self.bobines_filles_selected:
+            return False
+        if self.refente_selected:
+            return False
+        if self.bobine_papier_selected:
+            return False
+        if self.perfo_selected:
+            return False
+        if self.bobine_poly_selected:
+            return False
+        return True
 
     def get_contrainte(self):
         bobine_poly = None

@@ -24,6 +24,7 @@ class PlanProdCreator(QWidget):
         self.setWindowFlags(Qt.Dialog)
         self.setFocusPolicy(Qt.ClickFocus)
         self.plan_prod = plan_prod
+        self.master_vbox = QVBoxLayout()
         self.plan_prod.ON_CHANGED_SIGNAL.connect(self.handle_plan_prod_changed)
         self.plan_prod.ON_TOURS_CHANGED.connect(self.handle_tours_plan_prod_changed)
         self.selector_manager = SelectorManager(parent=self, plan_prod=self.plan_prod)
@@ -44,13 +45,12 @@ class PlanProdCreator(QWidget):
         self.show()
 
     def init_ui(self):
-        master_vbox = QVBoxLayout()
         master_hbox = QHBoxLayout()
         master_hbox.addLayout(self.get_plan_prod_selector_ui())
         master_hbox.addLayout(self.get_plan_prod_reglage_ui())
-        master_vbox.addLayout(master_hbox)
-        master_vbox.addStretch(0)
-        self.setLayout(master_vbox)
+        self.master_vbox.addLayout(master_hbox)
+        # self.master_vbox.addStretch(0)
+        self.setLayout(self.master_vbox)
 
     def on_encrier_changed(self):
         self.bloc_tab_reglage.update_widget()
@@ -84,12 +84,16 @@ class PlanProdCreator(QWidget):
         self.bloc_refente_selected.update_widget()
         self.bloc_perfo_selected.update_widget()
         self.bloc_papier_selected.update_widget()
-        self.update_encriers()
 
     def update_encriers(self):
         self.bloc_encrier.line_encrier_1.update_widget()
         self.bloc_encrier.line_encrier_2.update_widget()
         self.bloc_encrier.line_encrier_3.update_widget()
+
+    # def update_window(self):
+    #     print("update_window")
+    #     print(self.master_vbox.sizeHint())
+    #     self.update()
 
     def handle_plan_prod_changed(self):
         self.update_bloc_selected()
@@ -99,11 +103,13 @@ class PlanProdCreator(QWidget):
             self.selector_manager.hide()
         self.bloc_param_prod.update_label()
         # self.bloc_info.update_widget()
+        # self.update_window()
 
     def handle_tours_plan_prod_changed(self):
         self.bloc_param_prod.update_label()
         # self.bloc_info.update_widget()
         self.bloc_bobines_selected.update_widget()
+        # self.update_window()
 
     def handle_click_bt(self, bt_name):
         if bt_name == "valid":

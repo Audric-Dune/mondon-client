@@ -3,7 +3,7 @@
 
 from PyQt5.Qt import Qt
 from PyQt5.QtGui import QColor, QPainter, QPen
-from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel, QWidget, QPushButton
+from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel, QWidget, QPushButton, QSizePolicy
 
 from commun.constants.colors import color_blanc, color_gris_noir, color_noir, color_orange
 from commun.constants.stylesheets import gray_18_label_stylesheet, button_delete_bobine_selected_stylesheet
@@ -33,7 +33,6 @@ class BlocSelected(MondonWidget):
         self.master_hbox = QHBoxLayout()
         self.master_hbox.setContentsMargins(0, 0, 10, 0)
         self.clear_bt = PixmapButton(parent=self)
-        self.setMinimumHeight(50)
         self.init_button()
         self.init_ui()
 
