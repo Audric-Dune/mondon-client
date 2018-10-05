@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5.Qt import Qt
-from PyQt5.QtGui import QColor, QPainter, QPen
-from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel, QWidget, QPushButton, QSizePolicy
+from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel, QWidget, QMessageBox
 
 from commun.constants.colors import color_blanc, color_gris_noir, color_noir, color_orange
 from commun.constants.stylesheets import gray_18_label_stylesheet, button_delete_bobine_selected_stylesheet

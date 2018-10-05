@@ -242,7 +242,6 @@ class PlanProd(QObject):
             self.longueur = self.bobines_filles_selected[0].length
 
     def update_all_current_store(self):
-        print("update_all_current_store")
         self.init_current_store()
         self.definied_longueur()
         if not self.plan_prod_is_empty():

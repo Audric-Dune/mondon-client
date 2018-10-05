@@ -59,7 +59,7 @@ class RefenteUi(MondonWidget):
     def is_valid_refente_buffer_with_bobines_buffer(self, bobines_buffer, refente_buffer):
         bb = bobines_buffer.copy()
         rb = refente_buffer.copy()
-        if self.is_complete_refente(rb):
+        if not bb:
             return True
         index = 0
         for laize in rb:
@@ -130,7 +130,7 @@ class RefenteUi(MondonWidget):
                     bobine = bobine_widget.bobine
                 except AttributeError:
                     continue
-                if bobine.code == code_bobine and bobine.pose == pose and bobine.index == index:
+                if bobine is not None and bobine.code == code_bobine and bobine.pose == pose and bobine.index == index:
                     bobine_pos = bobine_widget.pos()
             if self.delta_x_drag is None:
                 self.delta_x_drag = mouse_pos.x() - bobine_pos.x()
@@ -162,6 +162,7 @@ class RefenteUi(MondonWidget):
                                                     bobines=self.bobines_selected)
                 from gestion.stores.settings_store import settings_store_gestion
                 settings_store_gestion.plan_prod.bobines_filles_selected = self.bobines_selected
+                settings_store_gestion.plan_prod.update_all_current_store()
                 settings_store_gestion.plan_prod.ON_CHANGED_SIGNAL.emit()
         self.delta_x_drag = None
         self.delta_y_drag = None
@@ -186,14 +187,16 @@ class RefenteUi(MondonWidget):
     def get_new_bobines_fille_selected(self, bobine, bobines, index_bobine):
         bobines_buffer = self.get_bobine_buffer(bobines)
         bobines_buffer = self.remove_value_in_buffer(buffer=bobines_buffer, element=bobine)
+        bobine.index = index_bobine
         index = 0
         while index < len(self.refente.laizes):
             laize = self.refente.laizes[index]
             if laize is None:
                 index += 1
             elif index == index_bobine:
-                bobine.index = index
                 index += bobine.pose if bobine.pose else 1
+            elif not bobines_buffer:
+                break
             else:
                 for k, p_bobine in bobines_buffer.items():
                     if laize == p_bobine.laize and index in self.get_valid_index_from_bobine(p_bobine):
@@ -238,7 +241,7 @@ class RefenteUi(MondonWidget):
 
     def get_bobine_for_index_in_laize(self, index, laize):
         if self.bobines_selected is None:
-            return False
+            return None
         for bobine in self.bobines_selected:
             if bobine.index == index:
                 return bobine
@@ -248,7 +251,7 @@ class RefenteUi(MondonWidget):
                     return bobine
                 else:
                     continue
-        return False
+        return None
 
     def is_valid_bobine_in_refente_at_index(self, bobine, index):
         init_index = index
