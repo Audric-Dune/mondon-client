@@ -322,14 +322,14 @@ def filter_bobines_fille_for_contrainte(bobines_fille, contrainte):
 
 
 def filter_bobines_fille(bobines_fille, bobines_papier, refentes, bobines_fille_selected):
-    import time
-    t0 = time.time()
+    # import time
+    # t0 = time.time()
     new_bobines_fille = []
     for bobine_fille in bobines_fille:
         if is_valid_bobine_fille(bobine_fille, bobines_fille, bobines_papier, refentes, bobines_fille_selected):
             new_bobines_fille.append(bobine_fille)
-    t1 = time.time()
-    print(t1-t0)
+    # t1 = time.time()
+    # print(t1-t0)
     return new_bobines_fille
 
 

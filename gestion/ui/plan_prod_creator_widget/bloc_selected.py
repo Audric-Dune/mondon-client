@@ -73,6 +73,7 @@ class BlocSelected(MondonWidget):
                 content_layout.addLayout(content_ui)
             else:
                 self.clear_bt.hide()
+                content_layout.setContentsMargins(0, 15, 0, 15)
                 content_layout.addLayout(self.get_ui_select(text="une campagne de perforation"))
             return content_layout
         if self.data_type == "papier":
@@ -81,7 +82,7 @@ class BlocSelected(MondonWidget):
                     refente = self.parent.plan_prod.refente_selected
                     content_ui = QHBoxLayout()
                     content_ui.setSpacing(0)
-                    content_ui.setContentsMargins(0, 0, 0, 0)
+                    content_ui.setContentsMargins(1, 5, 0, 5)
                     space = QWidget()
                     space.setFixedWidth(980-refente.laize-refente.dec)
                     content_ui.addWidget(space)
@@ -95,6 +96,7 @@ class BlocSelected(MondonWidget):
                     content_layout.addWidget(content_ui)
             else:
                 self.clear_bt.hide()
+                content_layout.setContentsMargins(0, 15, 0, 15)
                 content_layout.addLayout(self.get_ui_select(text="une bobine mère papier"))
             return content_layout
         if self.data_type == "poly":
@@ -103,7 +105,7 @@ class BlocSelected(MondonWidget):
                     refente = self.parent.plan_prod.refente_selected
                     content_ui = QHBoxLayout()
                     content_ui.setSpacing(0)
-                    content_ui.setContentsMargins(0, 0, 0, 0)
+                    content_ui.setContentsMargins(1, 5, 0, 5)
                     space = QWidget()
                     space.setFixedWidth(980-refente.laize-refente.dec)
                     content_ui.addWidget(space)
@@ -118,6 +120,7 @@ class BlocSelected(MondonWidget):
             else:
                 self.clear_bt.hide()
                 content_layout.addLayout(self.get_ui_select(text="une bobine mère polypro"))
+                content_layout.setContentsMargins(0, 15, 0, 15)
             return content_layout
         if self.data_type == "refente":
             if self.parent.plan_prod.refente_selected:
@@ -135,6 +138,7 @@ class BlocSelected(MondonWidget):
                 content_layout.addLayout(content_ui)
             else:
                 self.clear_bt.hide()
+                content_layout.setContentsMargins(0, 15, 0, 15)
                 content_layout.addLayout(self.get_ui_select(text="une refente"))
             return content_layout
         if self.data_type == "bobine":
@@ -147,6 +151,7 @@ class BlocSelected(MondonWidget):
                 self.set_border(color=None)
             else:
                 self.clear_bt.hide()
+                content_layout.setContentsMargins(0, 15, 0, 15)
                 content_layout.addLayout(self.get_ui_select(text="une bobine fille"))
                 self.set_border(color=color_noir)
             return content_layout

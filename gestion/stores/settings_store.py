@@ -220,6 +220,7 @@ class SettingsStore(QObject):
         self.SETTINGS_CHANGED_SIGNAL.emit()
 
     def on_data_reglage_changed(self):
+        print("ON_CHANGED_SIGNAL__on_data_reglage_changed")
         self.plan_prod.ON_CHANGED_SIGNAL.emit()
 
     def save_plan_prod(self):

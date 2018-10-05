@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
-from PyQt5.QtWidgets import QVBoxLayout, QLabel, QWidget, QHBoxLayout
+from PyQt5.QtWidgets import QVBoxLayout, QWidget, QHBoxLayout, QDesktopWidget
 from PyQt5.QtCore import Qt
 
 from gestion.ui.plan_prod_creator_widget.bloc_information import BlocInformation
@@ -10,7 +10,6 @@ from gestion.ui.plan_prod_creator_widget.bloc_selected import BlocSelected
 from gestion.ui.plan_prod_creator_widget.bloc_bt import BlocBt
 from gestion.ui.selector_ui.selector_manager import SelectorManager
 from gestion.stores.filter_store import filter_store
-from gestion.stores.plan_prod_store import plan_prod_store
 from gestion.stores.settings_store import settings_store_gestion
 from gestion.ui.plan_prod_creator_widget.bloc_param_prod import BlocParamProd
 from gestion.ui.plan_prod_creator_widget.bloc_encrier import BlocEncrier
@@ -43,14 +42,21 @@ class PlanProdCreator(QWidget):
         self.bloc_param_prod = BlocParamProd(plan_prod=self.plan_prod, parent=self)
         self.init_ui()
         self.show()
+        self.move_on_center()
 
     def init_ui(self):
         master_hbox = QHBoxLayout()
         master_hbox.addLayout(self.get_plan_prod_selector_ui())
         master_hbox.addLayout(self.get_plan_prod_reglage_ui())
         self.master_vbox.addLayout(master_hbox)
-        # self.master_vbox.addStretch(0)
         self.setLayout(self.master_vbox)
+
+    def move_on_center(self):
+        print("move_on_center")
+        window_rect = self.frameGeometry()
+        center_point = QDesktopWidget().availableGeometry().center()
+        window_rect.moveCenter(center_point)
+        self.move(window_rect.topLeft())
 
     def on_encrier_changed(self):
         self.bloc_tab_reglage.update_widget()
@@ -90,11 +96,6 @@ class PlanProdCreator(QWidget):
         self.bloc_encrier.line_encrier_2.update_widget()
         self.bloc_encrier.line_encrier_3.update_widget()
 
-    # def update_window(self):
-    #     print("update_window")
-    #     print(self.master_vbox.sizeHint())
-    #     self.update()
-
     def handle_plan_prod_changed(self):
         self.update_bloc_selected()
         self.update_encriers()
@@ -103,13 +104,12 @@ class PlanProdCreator(QWidget):
             self.selector_manager.hide()
         self.bloc_param_prod.update_label()
         # self.bloc_info.update_widget()
-        # self.update_window()
+        self.move_on_center()
 
     def handle_tours_plan_prod_changed(self):
         self.bloc_param_prod.update_label()
         # self.bloc_info.update_widget()
         self.bloc_bobines_selected.update_widget()
-        # self.update_window()
 
     def handle_click_bt(self, bt_name):
         if bt_name == "valid":

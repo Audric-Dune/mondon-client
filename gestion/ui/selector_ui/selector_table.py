@@ -6,7 +6,6 @@ from PyQt5.QtWidgets import QVBoxLayout
 from commun.constants.colors import color_bleu_gris
 from commun.ui.public.mondon_widget import MondonWidget
 from gestion.stores.filter_store import filter_store
-from gestion.stores.settings_store import settings_store_gestion
 from gestion.ui.selector_ui.selector_pose import SelectorPose
 
 
@@ -55,4 +54,3 @@ class SelectorTable(MondonWidget):
             self.selector_pose = SelectorPose(self.handle_selected_bobine, bobine)
             self.selector_pose.show()
         self.update_widget()
-        settings_store_gestion.plan_prod.get_new_item_selected_from_store()

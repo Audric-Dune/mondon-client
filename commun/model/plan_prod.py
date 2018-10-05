@@ -189,6 +189,7 @@ class PlanProd(QObject):
         self.bobines_filles_selected.remove(bobine)
         self.update_all_current_store()
         self.update_encrier()
+        self.get_new_item_selected_from_store()
         self.ON_CHANGED_SIGNAL.emit()
 
     def add_refente_selected(self, refente):
@@ -199,6 +200,7 @@ class PlanProd(QObject):
     def del_refente_selected(self):
         self.set_refente(refente=None)
         self.update_all_current_store()
+        self.get_new_item_selected_from_store()
         self.ON_CHANGED_SIGNAL.emit()
 
     def add_perfo_selected(self, perfo):
@@ -209,6 +211,7 @@ class PlanProd(QObject):
     def del_perfo_selected(self):
         self.perfo_selected = None
         self.update_all_current_store()
+        self.get_new_item_selected_from_store()
         self.ON_CHANGED_SIGNAL.emit()
 
     def add_bobine_papier_selected(self, bobine):
@@ -219,6 +222,7 @@ class PlanProd(QObject):
     def del_papier_selected(self):
         self.bobine_papier_selected = None
         self.update_all_current_store()
+        self.get_new_item_selected_from_store()
         self.ON_CHANGED_SIGNAL.emit()
 
     def add_bobine_poly_selected(self, bobine):
@@ -229,6 +233,7 @@ class PlanProd(QObject):
     def del_poly_selected(self):
         self.bobine_poly_selected = None
         self.update_all_current_store()
+        self.get_new_item_selected_from_store()
         self.ON_CHANGED_SIGNAL.emit()
 
     def definied_longueur(self):
@@ -237,6 +242,7 @@ class PlanProd(QObject):
             self.longueur = self.bobines_filles_selected[0].length
 
     def update_all_current_store(self):
+        print("update_all_current_store")
         self.init_current_store()
         self.definied_longueur()
         if not self.plan_prod_is_empty():
@@ -257,10 +263,8 @@ class PlanProd(QObject):
             self.current_perfo_store.perfos = \
                 filter.filter_perfos_for_refentes(perfos=self.current_perfo_store.perfos,
                                                   refentes=self.current_refente_store.refentes)
-            self.ON_CHANGED_SIGNAL.emit()
 
     def filter_bobine_papier_bobine_fille_refente_store(self, contrainte):
-        print('filter_bobine_papier_bobine_fille_refente_store')
         length_bobines_papier = len(self.current_bobine_papier_store.bobines)
         length_bobines_fille = len(self.current_bobine_fille_store.bobines)
         length_refentes = len(self.current_refente_store.refentes)
@@ -289,7 +293,7 @@ class PlanProd(QObject):
                 or new_length_bobines_papier != length_bobines_papier\
                 or new_length_refentes != length_refentes:
             self.filter_bobine_papier_bobine_fille_refente_store(contrainte)
-    
+
     def plan_prod_is_empty(self):
         if self.bobines_filles_selected:
             return False
@@ -334,19 +338,18 @@ class PlanProd(QObject):
         return True
 
     def get_new_item_selected_from_store(self):
-        if len(self.current_bobine_poly_store.bobines) == 1:
+        if len(self.current_bobine_poly_store.bobines) == 1 and not self.bobine_poly_selected:
             self.bobine_poly_selected = self.current_bobine_poly_store.bobines[0]
-        if len(self.current_perfo_store.perfos) == 1:
+        if len(self.current_perfo_store.perfos) == 1 and not self.perfo_selected:
             self.perfo_selected = self.current_perfo_store.perfos[0]
         if self.refente_selected:
             for perfo in perfo_store.perfos:
                 if perfo.code == self.refente_selected.code_perfo:
                     self.perfo_selected = perfo
-        if len(self.current_bobine_papier_store.bobines) == 1:
+        if len(self.current_bobine_papier_store.bobines) == 1 and not self.bobine_papier_selected:
             self.bobine_papier_selected = self.current_bobine_papier_store.bobines[0]
-        if len(self.current_refente_store.refentes) == 1:
+        if len(self.current_refente_store.refentes) == 1 and not self.refente_selected:
             self.add_refente_selected(self.current_refente_store.refentes[0])
-        self.ON_CHANGED_SIGNAL.emit()
 
     def __repr__(self):
         return "ID{}, {}-{}, {}".format(self.p_id,
