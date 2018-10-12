@@ -152,7 +152,8 @@ class RefenteUi(MondonWidget):
 
     def dropEvent(self, e):
         if self.valid_index:
-            index_drop = self.get_index_at_pos(e.pos())
+            index_drop = self.get_index_at_pos(pos_x=e.pos().x()-self.delta_x_drag)
+            print(index_drop)
             valid_index_drop = min(self.valid_index, key=lambda x: abs(x-index_drop))
             if index_drop == self.bobine_drag.bobine.index:
                 pass
@@ -170,19 +171,20 @@ class RefenteUi(MondonWidget):
         self.delete_bobine_drag()
         e.accept()
 
-    def get_index_at_pos(self, pos):
+    def get_index_at_pos(self, pos_x):
         counter = 0
         index = 0
         for laize in self.refente.laizes:
             counter += laize
-            if pos.x() < counter:
+            if pos_x < counter:
                 counter_decimal = counter-laize
                 while counter_decimal <= counter:
                     counter_decimal += laize/10
-                    if pos.x() < counter_decimal:
+                    if pos_x < counter_decimal:
                         return index
                     index += 0.1
             index += 1
+        print("get_index_at_pos :", index)
 
     def get_new_bobines_fille_selected(self, bobine, bobines, index_bobine):
         bobines_buffer = self.get_bobine_buffer(bobines)

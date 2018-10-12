@@ -52,6 +52,7 @@ class BlocSelected(MondonWidget):
         self.clear_bt.add_image("commun/assets/images/delete.png")
 
     def update_widget(self):
+        print("update_widget")
         clear_layout(self.master_hbox)
         self.clear_bt = PixmapButton(parent=self)
         self.init_button()

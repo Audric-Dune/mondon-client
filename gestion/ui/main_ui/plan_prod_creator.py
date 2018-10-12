@@ -40,6 +40,7 @@ class PlanProdCreator(QWidget):
         self.bloc_tab_reglage = TabReglage(parent=self, plan_prod=plan_prod)
         self.plan_prod.get_end()
         self.bloc_param_prod = BlocParamProd(plan_prod=self.plan_prod, parent=self)
+        self.memo_move = False
         self.init_ui()
         self.show()
         self.move_on_center()
@@ -52,7 +53,6 @@ class PlanProdCreator(QWidget):
         self.setLayout(self.master_vbox)
 
     def move_on_center(self):
-        print("move_on_center")
         window_rect = self.frameGeometry()
         center_point = QDesktopWidget().availableGeometry().center()
         window_rect.moveCenter(center_point)
@@ -104,7 +104,13 @@ class PlanProdCreator(QWidget):
             self.selector_manager.hide()
         self.bloc_param_prod.update_label()
         # self.bloc_info.update_widget()
-        self.move_on_center()
+        self.memo_move = True
+
+    def paintEvent(self, e):
+        super(PlanProdCreator, self).paintEvent(e)
+        if self.memo_move:
+            self.move_on_center()
+            self.memo_move = False
 
     def handle_tours_plan_prod_changed(self):
         self.bloc_param_prod.update_label()
